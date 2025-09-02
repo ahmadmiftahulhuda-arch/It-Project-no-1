@@ -1,125 +1,95 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+        body {
+            background: #f5f6fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        .login-card img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+
+        .login-card h5 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .btn-google {
+            border: 1px solid #ddd;
+            background: #fff;
+            font-weight: 500;
+        }
+
+        .btn-google img {
+            width: 20px;
+            margin-right: 8px;
+        }
+        .btn-google {
+            border: 1px solid #ddd;
+            background: #fff;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        /* Hover sesuai Material Design */
+        .btn-google:hover {
+            background: #f5f5f5; /* abu-abu bersih */
+        }
+        .btn-google:active {
+            background: #e0e0e0; /* abu-abu lebih gelap saat klik */
+        }
+
+
+        .divider {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .form-check-label {
+            font-size: 14px;
+        }
+
+        .login-card .btn-primary {
+            background: #1a73e8;
+            border: none;
+            font-weight: bold;
+        }
+
+        .login-card .btn-primary:hover {
+            background: #0c5fd6;
+        }
+
+        .forgot-link {
+            font-size: 13px;
+            color: #0c5fd6;
+            text-decoration: none;
+        }
+
+        /* Animasi Fade-in + Scale */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-body {
-    background: #f5f6fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Card Login */
 .login-card {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 380px;
-    text-align: center;
-}
-
-.login-card img {
-    width: 60px;
-    margin-bottom: 10px;
-}
-
-.login-card h5 {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.login-card p {
-    font-size: 14px;
-    color: #666;
-}
-
-/* Tombol Google */
-.btn-google {
-    border: 1px solid #ddd;
-    background: #fff;
-    font-weight: 500;
-    color: #444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px;
-    transition: background 0.3s ease;
-}
-
-.btn-google:hover {
-    background: #f5f5f5;
-}
-
-.btn-google img {
-    width: 20px;
-}
-
-/* Divider */
-.divider {
-    text-align: center;
-    margin: 15px 0;
-    font-size: 13px;
-    color: #777;
-    position: relative;
-}
-
-.divider::before,
-.divider::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 35%;
-    height: 1px;
-    background: #ddd;
-}
-
-.divider::before {
-    left: 0;
-}
-
-.divider::after {
-    right: 0;
-}
-
-/* Input */
-.form-control {
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-/* Lupa password */
-.forgot-link {
-    font-size: 13px;
-    text-decoration: none;
-    color: #1a73e8;
-}
-
-.forgot-link:hover {
-    text-decoration: underline;
-}
-
-/* Checkbox */
-.form-check-label {
-    font-size: 14px;
-}
-
-/* Tombol login utama */
-.btn-primary {
-    background: #1a73e8;
-    border: none;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 6px;
-}
-
-.btn-primary:hover {
-    background: #0c5fd6;
+    animation: fadeInScale 0.5s ease forwards;
 }
