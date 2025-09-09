@@ -29,6 +29,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            scroll-behavior: smooth;
         }
         
         /* ===== NAVBAR STYLES ===== */
@@ -42,6 +43,12 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
         
         .logo {
@@ -50,10 +57,16 @@
             font-weight: bold;
             display: flex;
             align-items: center;
+            text-decoration: none;
         }
         
         .logo i {
             margin-right: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover i {
+            transform: rotate(-10deg);
         }
         
         .navbar ul {
@@ -75,11 +88,24 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
+            position: relative;
         }
         
-        .navbar ul li a:hover, 
-        .navbar ul li a.active {
-            background-color: rgba(255, 255, 255, 0.15);
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .navbar ul li a:hover::after, 
+        .navbar ul li a.active::after {
+            width: 70%;
         }
         
         .btn-warning {
@@ -94,12 +120,30 @@
             gap: 0.5rem;
             font-weight: 500;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .btn-warning:hover::before {
+            left: 100%;
         }
         
         .btn-warning:hover {
             background-color: #e0a800;
             border-color: #d39e00;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         /* ===== BREADCRUMB ===== */
@@ -149,7 +193,13 @@
             border-radius: 10px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .filter-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
         
         .filter-title {
@@ -173,9 +223,15 @@
             background-color: white;
             border-radius: 10px;
             padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
         
         .stat-icon {
@@ -225,10 +281,16 @@
         .table-container {
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             padding: 1.5rem;
             margin-bottom: 2rem;
             overflow-x: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .table-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
         
         .table-header {
@@ -267,6 +329,10 @@
             padding: 1rem;
             border-bottom: 1px solid #dee2e6;
             vertical-align: middle;
+        }
+        
+        .loans-table tr {
+            transition: background-color 0.3s;
         }
         
         .loans-table tr:hover {
@@ -311,6 +377,11 @@
         .btn-sm {
             padding: 0.25rem 0.5rem;
             font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-sm:hover {
+            transform: translateY(-2px);
         }
         
         /* ===== PAGINATION ===== */
@@ -356,74 +427,163 @@
         
         /* ===== FOOTER STYLES ===== */
         .footer {
-            background-color: var(--dark-color);
+            background-color: #2d3748;
             color: white;
-            padding: 3rem 0 1.5rem;
-            margin-top: auto;
+            padding: 40px 0 20px;
+            margin-top: 2rem;
         }
         
-        .footer-content {
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #1a56db;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .footer-links a:hover {
+            color: #1a56db;
+            padding-left: 5px;
+        }
+        
+        .contact-info {
+            margin-bottom: 15px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #1a56db;
+            min-width: 20px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: #1a56db;
+            transform: translateY(-3px);
+        }
+        
+        .opening-hours {
+            margin-bottom: 15px;
+        }
+        
+        .opening-hours div {
+            margin-bottom: 5px;
+            display: flex;
             justify-content: space-between;
         }
         
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .footer h5 {
-            color: #fff;
-            margin-bottom: 1.2rem;
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        .footer h5::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-color);
-        }
-        
-        .quick-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 0.7rem;
-            transition: color 0.3s;
-        }
-        
-        .quick-links a:hover {
-            color: white;
-        }
-        
-        .footer p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .footer i {
-            width: 20px;
-            margin-top: 4px;
-        }
-        
-        .copyright {
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding: 20px;
             text-align: center;
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            width: 100%;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+        
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         /* ===== RESPONSIVE ADJUSTMENTS ===== */
@@ -470,8 +630,20 @@
                 align-items: flex-start;
             }
             
-            .footer-section {
-                flex: 0 0 100%;
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .footer-section h3 {
+                font-size: 1.3rem;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
             }
         }
         
@@ -489,15 +661,14 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">
+    <nav class="navbar" id="navbar">
+        <a href="/home" class="logo">
             <i class="fas fa-building"></i>SarPras TI
-        </div>
+        </a>
         <ul>
             <li><a href="/home">Beranda</a></li>
             <li><a href="/kalender">Kalender Perkuliahan</a></li>
             <li><a href="/peminjaman" class="active">Daftar Peminjaman</a></li>
-            <li><a href="/berita">Berita</a></li>
             <li><a href="/about">Tentang</a></li>
             <li>
                 <a href="/login" class="btn-warning">
@@ -512,7 +683,7 @@
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Daftar Peminjaman</li>
                 </ol>
             </nav>
@@ -793,35 +964,133 @@
         </div>
     </div>
 
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h5>Prodi Teknologi Informasi</h5>
-                    <p>Sistem Peminjaman Sarana Prasarana</p>
-                    <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
-                </div>
-                <div class="footer-section quick-links">
-                    <h5>Link Cepat</h5>
-                    <a href="#">Beranda</a>
-                    <a href="#">Kalender</a>
-                    <a href="#">Peminjaman</a>
-                    <a href="#">Panduan</a>
-                </div>
-                <div class="footer-section">
-                    <h5>Kontak</h5>
-                    <p><i class="fa-solid fa-phone"></i> (021) 7918-1234</p>
-                    <p><i class="fa-solid fa-envelope"></i> info@ti.university.ac.id</p>
-                    <p><i class="fa-solid fa-location-dot"></i> Gedung Teknologi Informasi</p>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Tentang Kami</h3>
+                <p>Layanan peminjaman alat dan barang untuk mendukung kegiatan akademik dan non-akademik di lingkungan sekolah/kampus.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            <div class="copyright">
-                <p>© 2025 Program Studi Teknologi Informasi. Semua hak cipta dilindungi.</p>
+            
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <ul class="footer-links">
+                    <li><a href="/home">Beranda</a></li>
+                    <li><a href="#">Katalog Alat</a></li>
+                    <li><a href="#">Cara Meminjam</a></li>
+                    <li><a href="#">Syarat & Ketentuan</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
             </div>
+            
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Pendidikan No. 123, Kampus Universitas Contoh</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>(021) 1234-5678</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>peminjaman@example.ac.id</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <div class="opening-hours">
+                    <div>
+                        <span>Senin - Kamis:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Jumat:</span>
+                        <span>08:00 - 15:00</span>
+                    </div>
+                    <div>
+                        <span>Sabtu:</span>
+                        <span>08:00 - 12:00</span>
+                    </div>
+                    <div>
+                        <span>Minggu & Hari Libur:</span>
+                        <span>Tutup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sistem Peminjaman Alat - Nama Sekolah/Kampus. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Animation on scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.stat-card, .filter-section, .table-container');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = 1;
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Initialize elements for animation
+        document.querySelectorAll('.stat-card, .filter-section, .table-container').forEach(element => {
+            element.style.opacity = 0;
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    </script>
 </body>
 </html>

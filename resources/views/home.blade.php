@@ -13,6 +13,9 @@
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
         }
         
         * {
@@ -83,8 +86,8 @@
         }
         
         .btn-warning {
-            background-color: #ffc107;
-            border-color: #ffc107;
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
             color: #212529;
             padding: 0.5rem 1rem;
             border-radius: 4px;
@@ -121,6 +124,7 @@
             display: flex;
             justify-content: center;
             gap: 1rem;
+            flex-wrap: wrap;
         }
         
         .btn-hero {
@@ -184,6 +188,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .calendar table {
@@ -204,10 +210,39 @@
             position: relative;
             border-radius: 8px;
             transition: background-color 0.2s;
+            height: 50px;
+            width: 14.28%;
+            cursor: pointer;
         }
         
         .calendar td:hover {
-            background-color: #f5f8fa;
+            background-color: #f0f2f5;
+        }
+        
+        .calendar .today {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .calendar .has-event {
+            position: relative;
+        }
+        
+        .calendar .has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+        }
+        
+        .calendar .has-event.today::after {
+            background-color: white;
         }
         
         .status-indicators {
@@ -231,15 +266,15 @@
         }
         
         .available {
-            background-color: #28a745;
+            background-color: var(--success-color);
         }
         
         .occupied {
-            background-color: #dc3545;
+            background-color: var(--danger-color);
         }
         
         .projector-occupied {
-            background-color: #ffc107;
+            background-color: var(--warning-color);
         }
         
         /* ===== DASHBOARD STYLES ===== */
@@ -258,6 +293,12 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .stats-card h5 {
@@ -293,11 +334,12 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
-            border-top: 4px solid #28a745;
+            border-top: 4px solid var(--success-color);
+            height: 100%;
         }
         
         .room-card.occupied {
-            border-top: 4px solid #dc3545;
+            border-top: 4px solid var(--danger-color);
         }
         
         .room-card:hover {
@@ -375,6 +417,22 @@
             border-radius: 4px;
         }
         
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions .btn {
+            margin-bottom: 0.5rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .quick-actions .btn:hover {
+            background-color: #f0f7ff;
+            transform: translateX(5px);
+        }
+        
         /* ===== FOOTER STYLES ===== */
         .footer {
             background-color: var(--dark-color);
@@ -447,6 +505,69 @@
             width: 100%;
         }
         
+        /* ===== NEW STYLES ===== */
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calendar-nav-btn {
+            background: #f0f2f5;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calendar-nav-btn:hover {
+            background: #e4e6eb;
+        }
+        
+        .calendar-title {
+            margin: 0;
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .card-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .card-action a {
+            font-size: 0.9rem;
+        }
+        
+        .quick-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
         /* ===== RESPONSIVE ADJUSTMENTS ===== */
         @media (max-width: 992px) {
             .navbar ul {
@@ -494,6 +615,42 @@
             .footer-section {
                 flex: 0 0 100%;
             }
+            
+            .calendar-navigation {
+                margin-top: 1rem;
+            }
+            
+            .room-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .calendar-title {
+                margin: 0.5rem 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-section p {
+                font-size: 1rem;
+            }
+            
+            .btn-hero {
+                padding: 0.6rem 1.2rem;
+                font-size: 1rem;
+            }
+            
+            .calendar td, .calendar th {
+                padding: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -524,8 +681,12 @@
                 <h1 class="display-4 fw-bold">Sistem Peminjaman Sarana Prasarana</h1>
                 <p class="lead">Kelola dan pantau ketersediaan ruangan serta proyektor secara real-time</p>
                 <div class="hero-buttons">
-                    <a href="#" class="btn btn-hero btn-hero-primary">Lihat Ketersediaan</a>
-                    <a href="#" class="btn btn-hero btn-hero-outline">Peminjaman Lanjut</a>
+                    <a href="#" class="btn btn-hero btn-hero-primary">
+                        <i class="fas fa-calendar-check me-2"></i>Lihat Ketersediaan
+                    </a>
+                    <a href="#" class="btn btn-hero btn-hero-outline">
+                        <i class="fas fa-hand-holding me-2"></i>Peminjaman Lanjut
+                    </a>
                 </div>
             </div>
         </div>
@@ -541,10 +702,18 @@
                         <h3 class="section-title">
                             <i class="fa-solid fa-calendar-days"></i> Kalender Interaktif
                         </h3>
+                        <div class="calendar-navigation">
+                            <button class="calendar-nav-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h4 class="calendar-title">September 2025</h4>
+                            <button class="calendar-nav-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
                     <p>Lihat jadwal penggunaan ruangan dan proyektor secara real-time</p>
                     
-                    <h4 class="my-3">September 2025</h4>
                     <div class="calendar">
                         <table>
                             <thead>
@@ -561,7 +730,7 @@
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td>2</td>
+                                    <td class="has-event">2</td>
                                     <td>3</td>
                                     <td>4</td>
                                     <td>5</td>
@@ -571,7 +740,7 @@
                                 <tr>
                                     <td>8</td>
                                     <td>9</td>
-                                    <td>10</td>
+                                    <td class="has-event">10</td>
                                     <td>11</td>
                                     <td>12</td>
                                     <td>13</td>
@@ -582,7 +751,7 @@
                                     <td>16</td>
                                     <td>17</td>
                                     <td>18</td>
-                                    <td>19</td>
+                                    <td class="today has-event">19</td>
                                     <td>20</td>
                                     <td>21</td>
                                 </tr>
@@ -630,40 +799,56 @@
                 </h3>
                 <p>Informasi lengkap ketersediaan ruangan</p>
                 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="room-card">
-                            <div class="room-status available-status">Kosong</div>
-                            <h4>Lab Komputer 1</h4>
-                            <p class="text-muted">Kapasitas: 30 orang</p>
-                            <p class="room-features">30 PC. Proyektor. AC</p>
+                <div class="room-grid">
+                    <div class="room-card">
+                        <div class="room-status available-status">Kosong</div>
+                        <h4>Lab Komputer 1</h4>
+                        <p class="text-muted">Kapasitas: 30 orang</p>
+                        <p class="room-features">30 PC. Proyektor. AC</p>
+                        <div class="card-action">
+                            <div class="quick-info">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Tersedia sampai 16:00</span>
+                            </div>
                             <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="room-card">
-                            <div class="room-status available-status">Kosong</div>
-                            <h4>Lab Komputer 2</h4>
-                            <p class="text-muted">Kapasitas: 25 orang</p>
-                            <p class="room-features">25 PC. Proyektor. AC</p>
+                    <div class="room-card">
+                        <div class="room-status available-status">Kosong</div>
+                        <h4>Lab Komputer 2</h4>
+                        <p class="text-muted">Kapasitas: 25 orang</p>
+                        <p class="room-features">25 PC. Proyektor. AC</p>
+                        <div class="card-action">
+                            <div class="quick-info">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Tersedia sepanjang hari</span>
+                            </div>
                             <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="room-card occupied">
-                            <div class="room-status occupied-status">Terpakai</div>
-                            <h4>Ruang Kelas A</h4>
-                            <p class="text-muted">Kapasitas: 40 orang</p>
-                            <p class="room-features">Whiteboard. Proyektor. AC</p>
+                    <div class="room-card occupied">
+                        <div class="room-status occupied-status">Terpakai</div>
+                        <h4>Ruang Kelas A</h4>
+                        <p class="text-muted">Kapasitas: 40 orang</p>
+                        <p class="room-features">Whiteboard. Proyektor. AC</p>
+                        <div class="card-action">
+                            <div class="quick-info">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Siap 14:30</span>
+                            </div>
                             <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="room-card occupied">
-                            <div class="room-status occupied-status">Terpakai</div>
-                            <h4>Lab Jaringan</h4>
-                            <p class="text-muted">Kapasitas: 20 orang</p>
-                            <p class="room-features">Router, Switch, Proyektor</p>
+                    <div class="room-card occupied">
+                        <div class="room-status occupied-status">Terpakai</div>
+                        <h4>Lab Jaringan</h4>
+                        <p class="text-muted">Kapasitas: 20 orang</p>
+                        <p class="room-features">Router, Switch, Proyektor</p>
+                        <div class="card-action">
+                            <div class="quick-info">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Siap 15:45</span>
+                            </div>
                             <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                         </div>
                     </div>
@@ -678,25 +863,27 @@
                     </h3>
                     <p>Informasi terkini ketersediaan sarana prasarana</p>
                     
-                    <div class="updated-time">Diperbarui 2 menit lalu</div>
-                    <div class="stats-card">
-                        <h5>Ruangan Kosong</h5>
-                        <p class="display-6">12</p>
-                        <p>dari 18 ruangan tersedia</p>
-                    </div>
-                    
-                    <div class="updated-time">Diperbarui 1 menit lalu</div>
-                    <div class="stats-card">
-                        <h5>Ruangan Terpakai</h5>
-                        <p class="display-6">6</p>
-                        <p>sedang digunakan</p>
-                    </div>
-                    
-                    <div class="updated-time">Diperbarui 30 detik lalu</div>
-                    <div class="stats-card">
-                        <h5>Proyektor Terpakai</h5>
-                        <p class="display-6">4</p>
-                        <p>dari 8 proyektor</p>
+                    <div class="stats-grid">
+                        <div class="stats-card">
+                            <div class="updated-time">Diperbarui 2 menit lalu</div>
+                            <h5>Ruangan Kosong</h5>
+                            <p class="display-6">12</p>
+                            <p>dari 18 ruangan tersedia</p>
+                        </div>
+                        
+                        <div class="stats-card">
+                            <div class="updated-time">Diperbarui 1 menit lalu</div>
+                            <h5>Ruangan Terpakai</h5>
+                            <p class="display-6">6</p>
+                            <p>sedang digunakan</p>
+                        </div>
+                        
+                        <div class="stats-card">
+                            <div class="updated-time">Diperbarui 30 detik lalu</div>
+                            <h5>Proyektor Terpakai</h5>
+                            <p class="display-6">4</p>
+                            <p>dari 8 proyektor</p>
+                        </div>
                     </div>
                 </div>
                 
@@ -737,11 +924,44 @@
                                     <td><span class="badge bg-danger">Terpakai</span></td>
                                     <td>Ruang Seminar</td>
                                 </tr>
+                                <tr>
+                                    <td>PROJ-005</td>
+                                    <td><span class="badge bg-success">Tersedia</span></td>
+                                    <td>Gudang</td>
+                                </tr>
+                                <tr>
+                                    <td>PROJ-006</td>
+                                    <td><span class="badge bg-warning text-dark">Perawatan</span></td>
+                                    <td>Workshop</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="text-end mt-3">
                         <a href="#" class="btn btn-sm btn-primary">Lihat Semua</a>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <h3 class="section-title">
+                        <i class="fa-solid fa-bolt"></i> Akses Cepat
+                    </h3>
+                    <p>Lakukan peminjaman dengan cepat</p>
+                    
+                    <div class="quick-actions">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-door-open me-2"></i> Pinjam Ruangan
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-projector me-2"></i> Pinjam Proyektor
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-calendar-check me-2"></i> Jadwal Saya
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-file-lines me-2"></i> Panduan Peminjaman
+                        </a>
                     </div>
                 </div>
             </div>
@@ -778,5 +998,50 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Script untuk navigasi kalender
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarTitle = document.querySelector('.calendar-title');
+            const prevBtn = document.querySelector('.calendar-nav-btn:first-child');
+            const nextBtn = document.querySelector('.calendar-nav-btn:last-child');
+            
+            let currentDate = new Date(2025, 8, 1); // September 2025 (bulan dimulai dari 0)
+            
+            function updateCalendarTitle() {
+                const options = { year: 'numeric', month: 'long' };
+                calendarTitle.textContent = currentDate.toLocaleDateString('id-ID', options);
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendarTitle();
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendarTitle();
+            });
+            
+            // Tandai hari ini di kalender
+            const today = new Date();
+            if (today.getMonth() === 8 && today.getFullYear() === 2025) {
+                const todayCell = document.querySelector(`.calendar td:not([class*="has-event"]):contains("${today.getDate()}")`);
+            }
+            
+            // Animasi hover untuk kartu
+            const roomCards = document.querySelectorAll('.room-card');
+            roomCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.08)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
