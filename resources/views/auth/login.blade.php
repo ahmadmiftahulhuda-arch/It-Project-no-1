@@ -324,13 +324,9 @@
                 <div class="logo-container">
                     <div class="logo">IT</div>
                 </div>
-                <h1 class="header-title">Sistem Booking Fasilitas & Infrastruktur</h1>
-                <p class="header-subtitle">Departemen Teknologi Informasi - POLITALA</p>
+                <h1 class="header-title">Masuk ke Akun Anda</h1>
+                <p class="header-subtitle">Gunakan email POLITALA Anda untuk mengakses sistem peminjaman</p>
             </div>
-            
-            <div class="login-form-container">
-                <h2>Masuk ke Akun Anda</h2>
-                <p class="intro-text">Gunakan email POLITALA Anda untuk mengakses sistem peminjaman</p>
 
                 <!-- Tombol Google -->
                 <a href="{{ route('google.login') }}" class="btn btn-google">

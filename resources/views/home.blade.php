@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Peminjaman Sarana Prasarana</title>
+    <title>Beranda - Sistem Peminjaman Sarana Prasarana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -13,9 +13,6 @@
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
         }
         
         * {
@@ -29,9 +26,7 @@
             background-color: #f5f8fa;
             color: #333;
             line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            scroll-behavior: smooth;
         }
         
         /* ===== NAVBAR STYLES ===== */
@@ -45,6 +40,12 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
         
         .logo {
@@ -53,10 +54,16 @@
             font-weight: bold;
             display: flex;
             align-items: center;
+            text-decoration: none;
         }
         
         .logo i {
             margin-right: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover i {
+            transform: rotate(-10deg);
         }
         
         .navbar ul {
@@ -78,16 +85,29 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
+            position: relative;
         }
         
-        .navbar ul li a:hover, 
-        .navbar ul li a.active {
-            background-color: rgba(255, 255, 255, 0.15);
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .navbar ul li a:hover::after, 
+        .navbar ul li a.active::after {
+            width: 70%;
         }
         
         .btn-warning {
-            background-color: var(--warning-color);
-            border-color: var(--warning-color);
+            background-color: #ffc107;
+            border-color: #ffc107;
             color: #212529;
             padding: 0.5rem 1rem;
             border-radius: 4px;
@@ -97,71 +117,123 @@
             gap: 0.5rem;
             font-weight: 500;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .btn-warning:hover::before {
+            left: 100%;
         }
         
         .btn-warning:hover {
             background-color: #e0a800;
             border-color: #d39e00;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         /* ===== HERO SECTION ===== */
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 3.5rem 0;
-            margin-bottom: 2.5rem;
+            padding: 5rem 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,138.7C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
         }
         
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content h1 {
+            animation: fadeInDown 1s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-content p {
+            animation: fadeInUp 1s ease;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
         }
         
         .hero-buttons {
-            margin-top: 2rem;
             display: flex;
-            justify-content: center;
             gap: 1rem;
+            justify-content: center;
             flex-wrap: wrap;
         }
         
-        .btn-hero {
-            padding: 0.8rem 1.8rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-        
-        .btn-hero-primary {
+        .btn-primary {
             background-color: white;
             color: var(--primary-color);
             border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .btn-hero-primary:hover {
+        .btn-primary:hover {
             background-color: #f8f9fa;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .btn-hero-outline {
+        .btn-outline-light {
             background-color: transparent;
-            border: 2px solid white;
             color: white;
+            border: 2px solid white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .btn-hero-outline:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .btn-outline-light:hover {
+            background-color: white;
+            color: var(--primary-color);
             transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         /* ===== MAIN CONTENT ===== */
         .main-content {
-            padding: 0 1rem;
-            flex: 1;
+            padding: 3rem 1rem;
         }
         
         .section-title {
@@ -174,398 +246,396 @@
             gap: 10px;
         }
         
-        /* ===== CALENDAR STYLES ===== */
-        .calendar-container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            padding: 1.8rem;
-            margin-bottom: 2.5rem;
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            margin: 3rem 0;
         }
         
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .calendar table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .calendar th {
-            color: var(--primary-color);
-            text-align: center;
-            padding: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .calendar td {
-            text-align: center;
-            padding: 0.8rem;
-            position: relative;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-            height: 50px;
-            width: 14.28%;
-            cursor: pointer;
-        }
-        
-        .calendar td:hover {
-            background-color: #f0f2f5;
-        }
-        
-        .calendar .today {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
-        }
-        
-        .calendar .has-event {
-            position: relative;
-        }
-        
-        .calendar .has-event::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--danger-color);
-        }
-        
-        .calendar .has-event.today::after {
-            background-color: white;
-        }
-        
-        .status-indicators {
-            display: flex;
-            flex-wrap: wrap;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
-            margin-top: 1.8rem;
+            margin: 2rem 0;
         }
         
-        .status-indicator {
-            display: flex;
-            align-items: center;
-        }
-        
-        .status-color {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-        
-        .available {
-            background-color: var(--success-color);
-        }
-        
-        .occupied {
-            background-color: var(--danger-color);
-        }
-        
-        .projector-occupied {
-            background-color: var(--warning-color);
-        }
-        
-        /* ===== DASHBOARD STYLES ===== */
-        .dashboard-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            padding: 1.8rem;
-            margin-bottom: 2rem;
-            height: 100%;
-        }
-        
-        .stats-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        .feature-card {
+            background: white;
             border-radius: 10px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--primary-color);
-            transition: transform 0.3s;
-        }
-        
-        .stats-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stats-card h5 {
-            color: #495057;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stats-card .display-6 {
-            color: var(--primary-color);
-            font-weight: 700;
-        }
-        
-        .stats-card p {
-            color: #6c757d;
-            margin-bottom: 0;
-            font-size: 0.9rem;
-        }
-        
-        .updated-time {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 0.8rem;
-        }
-        
-        /* ===== ROOM CARDS ===== */
-        .room-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            border-top: 4px solid var(--success-color);
-            height: 100%;
-        }
-        
-        .room-card.occupied {
-            border-top: 4px solid var(--danger-color);
-        }
-        
-        .room-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .room-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-        
-        .available-status {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .occupied-status {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .room-card h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            padding-right: 80px;
-        }
-        
-        .room-features {
-            color: #6c757d;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-        
-        /* ===== PROJECTOR TABLE ===== */
-        .projector-table-container {
-            overflow-x: auto;
-        }
-        
-        .projector-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            min-width: 300px;
-        }
-        
-        .projector-table th {
-            background-color: #f8f9fa;
-            padding: 0.8rem;
-            text-align: left;
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
-        }
-        
-        .projector-table td {
-            padding: 0.8rem;
-            border-bottom: 1px solid #dee2e6;
-            vertical-align: middle;
-        }
-        
-        .projector-table tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .badge {
-            padding: 0.4em 0.6em;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border-radius: 4px;
-        }
-        
-        /* ===== QUICK ACTIONS ===== */
-        .quick-actions .btn {
-            margin-bottom: 0.5rem;
-            text-align: left;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .quick-actions .btn:hover {
-            background-color: #f0f7ff;
-            transform: translateX(5px);
-        }
-        
-        /* ===== FOOTER STYLES ===== */
-        .footer {
-            background-color: var(--dark-color);
-            color: white;
-            padding: 3rem 0 1.5rem;
-            margin-top: auto;
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: space-between;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .footer h5 {
-            color: #fff;
-            margin-bottom: 1.2rem;
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        .footer h5::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-color);
-        }
-        
-        .quick-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 0.7rem;
-            transition: color 0.3s;
-        }
-        
-        .quick-links a:hover {
-            color: white;
-        }
-        
-        .footer p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .footer i {
-            width: 20px;
-            margin-top: 4px;
-        }
-        
-        .copyright {
             text-align: center;
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
         }
         
-        /* ===== NEW STYLES ===== */
-        .calendar-navigation {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
         
-        .calendar-nav-btn {
-            background: #f0f2f5;
-            border: none;
+        .feature-icon {
+            background-color: var(--primary-color);
+            color: white;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
         }
         
-        .calendar-nav-btn:hover {
-            background: #e4e6eb;
+        .feature-card:hover .feature-icon {
+            transform: rotate(15deg) scale(1.1);
         }
         
-        .calendar-title {
-            margin: 0;
-            font-weight: 600;
+        .feature-content h4 {
             color: var(--primary-color);
-            min-width: 150px;
-            text-align: center;
+            margin-bottom: 0.8rem;
         }
         
-        .room-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+        /* ===== STATS SECTION ===== */
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin: 3rem 0;
+            border-radius: 12px;
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+        }
+        
+        /* ===== HOW IT WORKS SECTION ===== */
+        .how-it-works {
+            margin: 3rem 0;
+        }
+        
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* ===== TESTIMONIALS SECTION ===== */
+        .testimonials-section {
+            margin: 3rem 0;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .testimonial-text::before {
+            content: """;
+            position: absolute;
+            left: 0;
+            top: -10px;
+            font-size: 3rem;
+            color: var(--primary-color);
+            font-family: Arial, sans-serif;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
             gap: 1rem;
         }
         
-        .card-action {
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .author-info h5 {
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+        }
+        
+        .author-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            border-radius: 12px;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-content p {
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+        
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes shine {
+            from {
+                left: -100%;
+            }
+            to {
+                left: 100%;
+            }
+        }
+        
+        /* ===== FOOTER STYLES ===== */
+        .footer {
+            background-color: #2d3748;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #1a56db;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .footer-links a:hover {
+            color: #1a56db;
+            padding-left: 5px;
+        }
+        
+        .contact-info {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #1a56db;
+            min-width: 20px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: #1a56db;
+            transform: translateY(-3px);
+        }
+        
+        .opening-hours {
+            margin-bottom: 15px;
+        }
+        
+        .opening-hours div {
+            margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
         }
         
-        .card-action a {
-            font-size: 0.9rem;
-        }
-        
-        .quick-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: #6c757d;
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         /* ===== RESPONSIVE ADJUSTMENTS ===== */
@@ -577,19 +647,6 @@
             
             .navbar ul li {
                 margin: 0.3rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn-hero {
-                width: 80%;
-            }
-            
-            .footer-section {
-                flex: 0 0 48%;
             }
         }
         
@@ -604,67 +661,55 @@
             }
             
             .hero-section {
-                padding: 2.5rem 0;
+                padding: 3rem 0;
             }
             
-            .calendar-container, 
-            .dashboard-card {
-                padding: 1.2rem;
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
             }
             
-            .footer-section {
-                flex: 0 0 100%;
-            }
-            
-            .calendar-navigation {
-                margin-top: 1rem;
-            }
-            
-            .room-grid {
+            .features-grid, .testimonials-grid {
                 grid-template-columns: 1fr;
             }
             
-            .calendar-header {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .step {
                 flex-direction: column;
-                align-items: flex-start;
+                text-align: center;
             }
             
-            .calendar-title {
-                margin: 0.5rem 0;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .hero-section h1 {
-                font-size: 2rem;
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
             
-            .hero-section p {
-                font-size: 1rem;
+            .footer-section h3 {
+                font-size: 1.3rem;
             }
             
-            .btn-hero {
-                padding: 0.6rem 1.2rem;
-                font-size: 1rem;
-            }
-            
-            .calendar td, .calendar th {
-                padding: 0.5rem;
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">
+    <nav class="navbar" id="navbar">
+        <a href="/home" class="logo">
             <i class="fas fa-building"></i>SarPras TI
-        </div>
+        </a>
         <ul>
             <li><a href="/home" class="active">Beranda</a></li>
             <li><a href="/kalender">Kalender Perkuliahan</a></li>
             <li><a href="/peminjaman">Daftar Peminjaman</a></li>
-            <li><a href="/berita">Berita</a></li>
             <li><a href="/about">Tentang</a></li>
             <li>
                 <a href="/login" class="btn-warning">
@@ -679,13 +724,13 @@
         <div class="container">
             <div class="hero-content">
                 <h1 class="display-4 fw-bold">Sistem Peminjaman Sarana Prasarana</h1>
-                <p class="lead">Kelola dan pantau ketersediaan ruangan serta proyektor secara real-time</p>
+                <p class="lead">Platform digital untuk pengelolaan dan peminjaman fasilitas di Program Studi Teknologi Informasi</p>
                 <div class="hero-buttons">
-                    <a href="#" class="btn btn-hero btn-hero-primary">
-                        <i class="fas fa-calendar-check me-2"></i>Lihat Ketersediaan
+                    <a href="/peminjaman" class="btn-primary">
+                        <i class="fa-solid fa-calendar-check"></i> Ajukan Peminjaman
                     </a>
-                    <a href="#" class="btn btn-hero btn-hero-outline">
-                        <i class="fas fa-hand-holding me-2"></i>Peminjaman Lanjut
+                    <a href="/kalender" class="btn-outline-light">
+                        <i class="fa-solid fa-calendar-days"></i> Lihat Kalender
                     </a>
                 </div>
             </div>
@@ -694,354 +739,362 @@
 
     <!-- Main Content -->
     <div class="container main-content">
-        <div class="row">
-            <!-- Calendar Section -->
-            <div class="col-lg-8">
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <h3 class="section-title">
-                            <i class="fa-solid fa-calendar-days"></i> Kalender Interaktif
-                        </h3>
-                        <div class="calendar-navigation">
-                            <button class="calendar-nav-btn">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <h4 class="calendar-title">September 2025</h4>
-                            <button class="calendar-nav-btn">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-star"></i> Layanan Kami
+            </h2>
+            <p>Kami menyediakan berbagai layanan untuk mendukung kegiatan akademik di Program Studi Teknologi Informasi</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-door-open"></i>
                     </div>
-                    <p>Lihat jadwal penggunaan ruangan dan proyektor secara real-time</p>
-                    
-                    <div class="calendar">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Sen</th>
-                                    <th>Sel</th>
-                                    <th>Rab</th>
-                                    <th>Kam</th>
-                                    <th>Jum</th>
-                                    <th>Sab</th>
-                                    <th>Min</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td class="has-event">2</td>
-                                    <td>3</td>
-                                    <td>4</td>
-                                    <td>5</td>
-                                    <td>6</td>
-                                    <td>7</td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td>9</td>
-                                    <td class="has-event">10</td>
-                                    <td>11</td>
-                                    <td>12</td>
-                                    <td>13</td>
-                                    <td>14</td>
-                                </tr>
-                                <tr>
-                                    <td>15</td>
-                                    <td>16</td>
-                                    <td>17</td>
-                                    <td>18</td>
-                                    <td class="today has-event">19</td>
-                                    <td>20</td>
-                                    <td>21</td>
-                                </tr>
-                                <tr>
-                                    <td>22</td>
-                                    <td>23</td>
-                                    <td>24</td>
-                                    <td>25</td>
-                                    <td>26</td>
-                                    <td>27</td>
-                                    <td>28</td>
-                                </tr>
-                                <tr>
-                                    <td>29</td>
-                                    <td>30</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="feature-content">
+                        <h4>Peminjaman Ruangan</h4>
+                        <p>Pinjam ruangan kelas, laboratorium, atau ruang meeting dengan mudah dan cepat.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-projector"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Peminjaman Proyektor</h4>
+                        <p>Layanan peminjaman proyektor untuk keperluan presentasi dan pembelajaran.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-laptop"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Peminjaman Perangkat</h4>
+                        <p>Pinjam perangkat TI seperti laptop, tablet, atau perangkat pendukung lainnya.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="statRooms">50+</div>
+                        <div class="stat-label">Ruangan Tersedia</div>
                     </div>
                     
-                    <div class="status-indicators">
-                        <div class="status-indicator">
-                            <div class="status-color available"></div>
-                            <span>Ruangan Kosong</span>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statProjectors">30+</div>
+                        <div class="stat-label">Proyektor</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-number" id="statUsers">500+</div>
+                        <div class="stat-label">Pengguna</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-number" id="statLoans">1200+</div>
+                        <div class="stat-label">Peminjaman/Bulan</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section class="how-it-works">
+            <h2 class="section-title">
+                <i class="fa-solid fa-gears"></i> Cara Kerja Sistem
+            </h2>
+            <p>Proses peminjaman yang mudah dan cepat melalui beberapa langkah sederhana</p>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Login ke Sistem</h4>
+                        <p>Masuk ke sistem menggunakan akun kampus Anda yang terdaftar.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Pilih Jenis Peminjaman</h4>
+                        <p>Tentukan apakah Anda ingin meminjam ruangan, proyektor, atau perangkat lainnya.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Periksa Ketersediaan</h4>
+                        <p>Lihat kalender untuk memastikan fasilitas yang Anda butuhkan tersedia pada waktu yang diinginkan.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Ajukan Peminjaman</h4>
+                        <p>Isi formulir peminjaman dengan detail yang diperlukan dan kirim permintaan Anda.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Konfirmasi & Pengambilan</h4>
+                        <p>Tunggu konfirmasi dan ambil fasilitas yang dipinjam pada waktu yang telah ditentukan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimonials Section -->
+        <section class="testimonials-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-comment"></i> Testimonial Pengguna
+            </h2>
+            <p>Apa kata mereka tentang sistem peminjaman kami</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Sistem yang sangat memudahkan untuk meminjam ruangan dan proyektor. Tidak perlu lagi antri atau menunggu lama untuk konfirmasi.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fa-solid fa-user"></i>
                         </div>
-                        <div class="status-indicator">
-                            <div class="status-color occupied"></div>
-                            <span>Ruangan Terpakai</span>
-                        </div>
-                        <div class="status-indicator">
-                            <div class="status-color projector-occupied"></div>
-                            <span>Proyektor Terpakai</span>
+                        <div class="author-info">
+                            <h5>Dr. Ahmad S.T., M.T.</h5>
+                            <p>Dosen Teknologi Informasi</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Room Details Section -->
-                <h3 class="section-title">
-                    <i class="fa-solid fa-door-open"></i> Detail Ruangan
-                </h3>
-                <p>Informasi lengkap ketersediaan ruangan</p>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Sebagai mahasiswa, saya sangat terbantu dengan adanya sistem ini. Bisa meminjam proyektor untuk presentasi kapan saja dengan mudah.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h5>Rina Wijaya</h5>
+                            <p>Mahasiswa TI Angkatan 2021</p>
+                        </div>
+                    </div>
+                </div>
                 
-                <div class="room-grid">
-                    <div class="room-card">
-                        <div class="room-status available-status">Kosong</div>
-                        <h4>Lab Komputer 1</h4>
-                        <p class="text-muted">Kapasitas: 30 orang</p>
-                        <p class="room-features">30 PC. Proyektor. AC</p>
-                        <div class="card-action">
-                            <div class="quick-info">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>Tersedia sampai 16:00</span>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
-                        </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Pengelolaan inventaris menjadi lebih terstruktur dan efisien sejak menggunakan sistem ini. Laporan pun bisa dihasilkan dengan mudah.
                     </div>
-                    <div class="room-card">
-                        <div class="room-status available-status">Kosong</div>
-                        <h4>Lab Komputer 2</h4>
-                        <p class="text-muted">Kapasitas: 25 orang</p>
-                        <p class="room-features">25 PC. Proyektor. AC</p>
-                        <div class="card-action">
-                            <div class="quick-info">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>Tersedia sepanjang hari</span>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fa-solid fa-user"></i>
                         </div>
-                    </div>
-                    <div class="room-card occupied">
-                        <div class="room-status occupied-status">Terpakai</div>
-                        <h4>Ruang Kelas A</h4>
-                        <p class="text-muted">Kapasitas: 40 orang</p>
-                        <p class="room-features">Whiteboard. Proyektor. AC</p>
-                        <div class="card-action">
-                            <div class="quick-info">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>Siap 14:30</span>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
-                        </div>
-                    </div>
-                    <div class="room-card occupied">
-                        <div class="room-status occupied-status">Terpakai</div>
-                        <h4>Lab Jaringan</h4>
-                        <p class="text-muted">Kapasitas: 20 orang</p>
-                        <p class="room-features">Router, Switch, Proyektor</p>
-                        <div class="card-action">
-                            <div class="quick-info">
-                                <i class="fa-solid fa-clock"></i>
-                                <span>Siap 15:45</span>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                        <div class="author-info">
+                            <h5>Budi Santoso, A.Md.</h5>
+                            <p>Staff Administrasi</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Mulai Pinjam Fasilitas Sekarang</h2>
+                <p>Daftar atau login untuk mengakses layanan peminjaman sarana prasarana Program Studi Teknologi Informasi</p>
+                <div class="hero-buttons">
+                    <a href="/login" class="btn-primary">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                    <a href="/peminjaman" class="btn-outline-light">
+                        <i class="fa-solid fa-circle-info"></i> Pelajari Lebih Lanjut
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Tentang Kami</h3>
+                <p>Layanan peminjaman alat dan barang untuk mendukung kegiatan akademik dan non-akademik di lingkungan sekolah/kampus.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
             
-            <!-- Dashboard Section -->
-            <div class="col-lg-4">
-                <div class="dashboard-card">
-                    <h3 class="section-title">
-                        <i class="fa-solid fa-gauge-high"></i> Dashboard Real-time
-                    </h3>
-                    <p>Informasi terkini ketersediaan sarana prasarana</p>
-                    
-                    <div class="stats-grid">
-                        <div class="stats-card">
-                            <div class="updated-time">Diperbarui 2 menit lalu</div>
-                            <h5>Ruangan Kosong</h5>
-                            <p class="display-6">12</p>
-                            <p>dari 18 ruangan tersedia</p>
-                        </div>
-                        
-                        <div class="stats-card">
-                            <div class="updated-time">Diperbarui 1 menit lalu</div>
-                            <h5>Ruangan Terpakai</h5>
-                            <p class="display-6">6</p>
-                            <p>sedang digunakan</p>
-                        </div>
-                        
-                        <div class="stats-card">
-                            <div class="updated-time">Diperbarui 30 detik lalu</div>
-                            <h5>Proyektor Terpakai</h5>
-                            <p class="display-6">4</p>
-                            <p>dari 8 proyektor</p>
-                        </div>
-                    </div>
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <ul class="footer-links">
+                    <li><a href="/home">Beranda</a></li>
+                    <li><a href="#">Katalog Alat</a></li>
+                    <li><a href="#">Cara Meminjam</a></li>
+                    <li><a href="#">Syarat & Ketentuan</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Pendidikan No. 123, Kampus Universitas Contoh</span>
                 </div>
-                
-                <!-- Projector Status -->
-                <div class="dashboard-card">
-                    <h3 class="section-title">
-                        <i class="fa-solid fa-projector"></i> Status Proyektor
-                    </h3>
-                    <p>Status dan lokasi proyektor saat ini</p>
-                    
-                    <div class="projector-table-container">
-                        <table class="projector-table">
-                            <thead>
-                                <tr>
-                                    <th>Kode</th>
-                                    <th>Status</th>
-                                    <th>Lokasi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PROJ-001</td>
-                                    <td><span class="badge bg-success">Tersedia</span></td>
-                                    <td>Gudang</td>
-                                </tr>
-                                <tr>
-                                    <td>PROJ-002</td>
-                                    <td><span class="badge bg-danger">Terpakai</span></td>
-                                    <td>Lab Komputer 2</td>
-                                </tr>
-                                <tr>
-                                    <td>PROJ-003</td>
-                                    <td><span class="badge bg-success">Tersedia</span></td>
-                                    <td>Gudang</td>
-                                </tr>
-                                <tr>
-                                    <td>PROJ-004</td>
-                                    <td><span class="badge bg-danger">Terpakai</span></td>
-                                    <td>Ruang Seminar</td>
-                                </tr>
-                                <tr>
-                                    <td>PROJ-005</td>
-                                    <td><span class="badge bg-success">Tersedia</span></td>
-                                    <td>Gudang</td>
-                                </tr>
-                                <tr>
-                                    <td>PROJ-006</td>
-                                    <td><span class="badge bg-warning text-dark">Perawatan</span></td>
-                                    <td>Workshop</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-end mt-3">
-                        <a href="#" class="btn btn-sm btn-primary">Lihat Semua</a>
-                    </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>(021) 1234-5678</span>
                 </div>
-                
-                <!-- Quick Actions -->
-                <div class="dashboard-card">
-                    <h3 class="section-title">
-                        <i class="fa-solid fa-bolt"></i> Akses Cepat
-                    </h3>
-                    <p>Lakukan peminjaman dengan cepat</p>
-                    
-                    <div class="quick-actions">
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-door-open me-2"></i> Pinjam Ruangan
-                        </a>
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-projector me-2"></i> Pinjam Proyektor
-                        </a>
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-calendar-check me-2"></i> Jadwal Saya
-                        </a>
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fa-solid fa-file-lines me-2"></i> Panduan Peminjaman
-                        </a>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>peminjaman@example.ac.id</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <div class="opening-hours">
+                    <div>
+                        <span>Senin - Kamis:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Jumat:</span>
+                        <span>08:00 - 15:00</span>
+                    </div>
+                    <div>
+                        <span>Sabtu:</span>
+                        <span>08:00 - 12:00</span>
+                    </div>
+                    <div>
+                        <span>Minggu & Hari Libur:</span>
+                        <span>Tutup</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h5>Prodi Teknologi Informasi</h5>
-                    <p>Sistem Peminjaman Sarana Prasarana</p>
-                    <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
-                </div>
-                <div class="footer-section quick-links">
-                    <h5>Link Cepat</h5>
-                    <a href="#">Beranda</a>
-                    <a href="#">Ruangan</a>
-                    <a href="#">Proyektor</a>
-                    <a href="#">Panduan</a>
-                </div>
-                <div class="footer-section">
-                    <h5>Kontak</h5>
-                    <p><i class="fa-solid fa-phone"></i> (021) 7918-1234</p>
-                    <p><i class="fa-solid fa-envelope"></i> info@ti.university.ac.id</p>
-                    <p><i class="fa-solid fa-location-dot"></i> Gedung Teknologi Informasi</p>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>© 2025 Program Studi Teknologi Informasi. Semua hak cipta dilindungi.</p>
-            </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sistem Peminjaman Alat - Nama Sekolah/Kampus. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Script untuk navigasi kalender
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarTitle = document.querySelector('.calendar-title');
-            const prevBtn = document.querySelector('.calendar-nav-btn:first-child');
-            const nextBtn = document.querySelector('.calendar-nav-btn:last-child');
-            
-            let currentDate = new Date(2025, 8, 1); // September 2025 (bulan dimulai dari 0)
-            
-            function updateCalendarTitle() {
-                const options = { year: 'numeric', month: 'long' };
-                calendarTitle.textContent = currentDate.toLocaleDateString('id-ID', options);
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
             }
-            
-            prevBtn.addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                updateCalendarTitle();
-            });
-            
-            nextBtn.addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                updateCalendarTitle();
-            });
-            
-            // Tandai hari ini di kalender
-            const today = new Date();
-            if (today.getMonth() === 8 && today.getFullYear() === 2025) {
-                const todayCell = document.querySelector(`.calendar td:not([class*="has-event"]):contains("${today.getDate()}")`);
-            }
-            
-            // Animasi hover untuk kartu
-            const roomCards = document.querySelectorAll('.room-card');
-            roomCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px)';
-                    this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.08)';
-                });
-            });
         });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Animation on scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.feature-card, .step, .testimonial-card');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = 1;
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Initialize elements for animation
+        document.querySelectorAll('.feature-card, .step, .testimonial-card').forEach(element => {
+            element.style.opacity = 0;
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        // Counter animation for stats
+        const startCounters = () => {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target') || counter.innerText.replace('+', ''));
+                const count = +counter.innerText.replace('+', '');
+                const increment = Math.ceil(target / speed);
+                
+                if (count < target) {
+                    counter.innerText = Math.min(count + increment, target) + '+';
+                    setTimeout(() => startCounters(), 1);
+                }
+            });
+        };
+        
+        // Initialize counters with data attributes
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('statRooms').setAttribute('data-target', '50');
+            document.getElementById('statProjectors').setAttribute('data-target', '30');
+            document.getElementById('statUsers').setAttribute('data-target', '500');
+            document.getElementById('statLoans').setAttribute('data-target', '1200');
+            
+            // Reset counters to 0 for animation
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                stat.innerText = '0+';
+            });
+            
+            // Start counter animation when stats section is in view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startCounters();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(document.querySelector('.stats-section'));
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
     </script>
 </body>
 </html>

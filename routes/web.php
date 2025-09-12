@@ -47,12 +47,34 @@ Route::get('/peminjaman', function () {
     return view('peminjaman');
 });
 
-Route::get('/berita', function () {
-    return view('berita');
-});
-
 Route::get('/about', function () {
     return view('about');
+});
+
+// ✅ Halaman dashboard admin
+Route::get('/admin/login', function () {
+    return view('admin/login');
+});
+Route::get('/admin/dashboard', function () {
+    return view('admin/dashboard');
+});
+Route::get('/admin/item', function () {
+    return view('admin/item');
+});
+Route::get('/admin/peminjaman', function () {
+    return view('admin/peminjaman');
+});
+Route::get('/admin/pengembalian', function () {
+    return view('admin/pengembalian');
+});
+Route::get('/admin/pengguna', function () {
+    return view('admin/pengguna');
+});
+Route::get('/admin/laporan', function () {
+    return view('admin/laporan');
+});
+Route::get('/admin/pengaturan', function () {
+    return view('admin/pengaturan');
 });
 
 // ✅ Auth routes
@@ -71,7 +93,6 @@ Route::post('/reset-password', [AuthController::class, 'reset'])->name('password
 
 // ✅ Hanya user login yang bisa akses
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     
     // Tambahkan route admin lainnya di sini
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');

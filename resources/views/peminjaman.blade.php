@@ -146,6 +146,43 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
+         /* ===== HERO SECTION ===== */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3.5rem 0;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,138.7C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content h1 {
+            animation: fadeInDown 1s ease;
+        }
+        
+        .hero-content p {
+            animation: fadeInUp 1s ease;
+        }
         /* ===== BREADCRUMB ===== */
         .breadcrumb-container {
             background-color: #e9ecef;
@@ -677,6 +714,15 @@
             </li>
         </ul>
     </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="display-4 fw-bold">Peminjaman</h1>
+                <p class="lead">Lihat jadwal perkuliahan, ujian, dan kegiatan akademik Program Studi Teknologi Informasi</p>
+            </div>
+        </div>
+    </section>
 
     <!-- Breadcrumb -->
     <div class="breadcrumb-container">
