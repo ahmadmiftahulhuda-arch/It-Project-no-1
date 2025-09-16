@@ -724,18 +724,6 @@
         </div>
     </section>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-container">
-        <div class="container">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Daftar Peminjaman</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="container main-content">
         <!-- Page Header -->
@@ -1016,16 +1004,16 @@
     </a>
 
     <!-- Footer -->
-    <footer class="footer">
+      <footer class="footer">
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Layanan peminjaman alat dan barang untuk mendukung kegiatan akademik dan non-akademik di lingkungan sekolah/kampus.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             
@@ -1033,9 +1021,9 @@
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
                     <li><a href="/home">Beranda</a></li>
-                    <li><a href="#">Katalog Alat</a></li>
-                    <li><a href="#">Cara Meminjam</a></li>
-                    <li><a href="#">Syarat & Ketentuan</a></li>
+                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                    <li><a href="/about">Tentang</a></li>
+                    <li><a href="/">Syarat & Ketentuan</a></li>
                     <li><a href="#">FAQ</a></li>
                 </ul>
             </div>
@@ -1044,11 +1032,11 @@
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>Jl. Pendidikan No. 123, Kampus Universitas Contoh</span>
+                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
                 </div>
                 <div class="contact-info">
                     <i class="fas fa-phone"></i>
-                    <span>(021) 1234-5678</span>
+                    <span>(0512) 2021065</span>
                 </div>
                 <div class="contact-info">
                     <i class="fas fa-envelope"></i>
@@ -1065,14 +1053,10 @@
                     </div>
                     <div>
                         <span>Jumat:</span>
-                        <span>08:00 - 15:00</span>
+                        <span>08:00 - 16:00</span>
                     </div>
                     <div>
-                        <span>Sabtu:</span>
-                        <span>08:00 - 12:00</span>
-                    </div>
-                    <div>
-                        <span>Minggu & Hari Libur:</span>
+                        <span>Sabtu & Minggu:</span>
                         <span>Tutup</span>
                     </div>
                 </div>
@@ -1080,7 +1064,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2023 Sistem Peminjaman Alat - Nama Sekolah/Kampus. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
