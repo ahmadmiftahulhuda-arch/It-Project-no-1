@@ -51,6 +51,10 @@ Route::get('/about', function () {
     return view('about');
 });
 
+Route::get('/syaratdanketentuan', function () {
+    return view('syaratdanketentuan');
+});
+
 // ✅ Halaman dashboard admin
 Route::get('/admin/login', function () {
     return view('admin/login');

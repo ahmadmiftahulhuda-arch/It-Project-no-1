@@ -784,12 +784,12 @@
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <div class="stat-number" id="statRooms">50+</div>
+                        <div class="stat-number" id="statRooms">20+</div>
                         <div class="stat-label">Ruangan Tersedia</div>
                     </div>
                     
                     <div class="stat-item">
-                        <div class="stat-number" id="statProjectors">30+</div>
+                        <div class="stat-number" id="statProjectors">10+</div>
                         <div class="stat-label">Proyektor</div>
                     </div>
                     
@@ -859,7 +859,7 @@
         <!-- Testimonials Section -->
         <section class="testimonials-section">
             <h2 class="section-title">
-                <i class="fa-solid fa-comment"></i> Testimonial Pengguna
+                <i class="fa-solid fa-comment"></i> Feedback Peminjaman SarPras TI
             </h2>
             <p>Apa kata mereka tentang sistem peminjaman kami</p>
             
@@ -873,7 +873,7 @@
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="author-info">
-                            <h5>Dr. Ahmad S.T., M.T.</h5>
+                            <h5>Prof. Dr. Tahul Ambatukam</h5>
                             <p>Dosen Teknologi Informasi</p>
                         </div>
                     </div>
@@ -881,30 +881,30 @@
                 
                 <div class="testimonial-card">
                     <div class="testimonial-text">
-                        Sebagai mahasiswa, saya sangat terbantu dengan adanya sistem ini. Bisa meminjam proyektor untuk presentasi kapan saja dengan mudah.
+                        Sebagai mahasiswa, saya sangat terbantu dengan adanya sistem ini. Bisa meminjam proyektor untuk melakukan perkuliahan dengan mudah.
                     </div>
                     <div class="testimonial-author">
                         <div class="author-avatar">
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="author-info">
-                            <h5>Rina Wijaya</h5>
-                            <p>Mahasiswa TI Angkatan 2021</p>
+                            <h5>M. Dimas Aprianto</h5>
+                            <p>Mahasiswa TI Angkatan 2024</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="testimonial-card">
                     <div class="testimonial-text">
-                        Pengelolaan inventaris menjadi lebih terstruktur dan efisien sejak menggunakan sistem ini. Laporan pun bisa dihasilkan dengan mudah.
+                        Sistem ini memudahkan saya untuk melakukan pengecekan ketersedian ruangan untuk saya meminjam yang akan saya gunakan untuk Seminar Proposal.
                     </div>
                     <div class="testimonial-author">
                         <div class="author-avatar">
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="author-info">
-                            <h5>Budi Santoso, A.Md.</h5>
-                            <p>Staff Administrasi</p>
+                            <h5>Ferdi 55</h5>
+                            <p>Mahasiswa TI Angkatan 2023</p>
                         </div>
                     </div>
                 </div>
@@ -937,12 +937,12 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Layanan peminjaman alat dan barang untuk mendukung kegiatan akademik dan non-akademik di lingkungan sekolah/kampus.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             
@@ -950,9 +950,9 @@
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
                     <li><a href="/home">Beranda</a></li>
-                    <li><a href="#">Katalog Alat</a></li>
-                    <li><a href="#">Cara Meminjam</a></li>
-                    <li><a href="#">Syarat & Ketentuan</a></li>
+                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                    <li><a href="/about">Tentang</a></li>
+                    <li><a href="/">Syarat & Ketentuan</a></li>
                     <li><a href="#">FAQ</a></li>
                 </ul>
             </div>
@@ -961,11 +961,11 @@
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>Jl. Pendidikan No. 123, Kampus Universitas Contoh</span>
+                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
                 </div>
                 <div class="contact-info">
                     <i class="fas fa-phone"></i>
-                    <span>(021) 1234-5678</span>
+                    <span>(0512) 2021065</span>
                 </div>
                 <div class="contact-info">
                     <i class="fas fa-envelope"></i>
@@ -982,14 +982,10 @@
                     </div>
                     <div>
                         <span>Jumat:</span>
-                        <span>08:00 - 15:00</span>
+                        <span>08:00 - 16:00</span>
                     </div>
                     <div>
-                        <span>Sabtu:</span>
-                        <span>08:00 - 12:00</span>
-                    </div>
-                    <div>
-                        <span>Minggu & Hari Libur:</span>
+                        <span>Sabtu & Minggu:</span>
                         <span>Tutup</span>
                     </div>
                 </div>
@@ -997,7 +993,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2023 Sistem Peminjaman Alat - Nama Sekolah/Kampus. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
