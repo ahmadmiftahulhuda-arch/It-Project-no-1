@@ -1023,7 +1023,7 @@
                     <li><a href="/home">Beranda</a></li>
                     <li><a href="/kalender">Kalender Perkuliahan</a></li>
                     <li><a href="/about">Tentang</a></li>
-                    <li><a href="/">Syarat & Ketentuan</a></li>
+                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
                     <li><a href="#">FAQ</a></li>
                 </ul>
             </div>

@@ -4,91 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Syarat & Ketentuan Peminjaman Sarpas</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
+    <style>:root {
+            --primary-color: #3b5998;
+            --secondary-color: #6d84b4;
+            --accent-color: #4c6baf;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f8fa;
             color: #333;
             line-height: 1.6;
+            scroll-behavior: smooth;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .breadcrumb {
-            background-color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
-        }
-        
-        .breadcrumb-content {
+        /* ===== NAVBAR STYLES ===== */
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 0.8rem 1rem;
             display: flex;
-            list-style: none;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
         
-        .breadcrumb-content li {
-            margin-right: 0.5rem;
+        .navbar.scrolled {
+            padding: 0.5rem 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
         
-        .breadcrumb-content li:after {
-            content: ">";
-            margin-left: 0.5rem;
-            color: #777;
-        }
-        
-        .breadcrumb-content li:last-child:after {
-            content: "";
-        }
-        
-        .breadcrumb-content a {
-            color: var(--secondary-color);
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
             text-decoration: none;
         }
         
-        .breadcrumb-content a:hover {
-            text-decoration: underline;
+        .logo i {
+            margin-right: 10px;
+            transition: transform 0.3s;
         }
         
-        .content {
+        .logo:hover i {
+            transform: rotate(-10deg);
+        }
+        
+        .navbar ul {
+            list-style: none;
             display: flex;
-            gap: 2rem;
-            margin-bottom: 3rem;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+        
+        .navbar ul li {
+            margin-left: 1.2rem;
+        }
+        
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .navbar ul li a:hover::after, 
+        .navbar ul li a.active::after {
+            width: 70%;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .btn-warning:hover::before {
+            left: 100%;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+      /* ===== HERO SECTION ===== */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3.5rem 0;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,138.7C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content h1 {
+            animation: fadeInDown 1s ease;
+        }
+        
+        .hero-content p {
+            animation: fadeInUp 1s ease;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            padding: 0 1rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         main {
@@ -205,34 +307,142 @@
             margin-top: 2rem;
         }
         
-        footer {
-            background-color: var(--dark-color);
+        /* ===== FOOTER STYLES ===== */
+        .footer {
+            background-color: #2d3748;
             color: white;
-            padding: 2rem 0;
-            text-align: center;
+            padding: 40px 0 20px;
+            margin-top: 2rem;
         }
         
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-            margin-bottom: 1.5rem;
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
         }
         
         .footer-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #1a56db;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .footer-links a:hover {
+            color: #1a56db;
+            padding-left: 5px;
+        }
+        
+        .contact-info {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #1a56db;
+            min-width: 20px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: #1a56db;
+            transform: translateY(-3px);
+        }
+        
+        .opening-hours {
+            margin-bottom: 15px;
+        }
+        
+        .opening-hours div {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
         }
         
         .footer-bottom {
-            margin-top: 2rem;
-            padding-top: 1rem;
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding: 20px;
+            text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
         }
         
         @media (max-width: 768px) {
@@ -249,25 +459,84 @@
                 text-align: center;
             }
         }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-sm:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
     </style>
 </head>
 <body>
-    <header>
+     <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">
+            <i class="fas fa-building"></i>SarPras TI
+        </a>
+        <ul>
+            <li><a href="/home">Beranda</a></li>
+            <li><a href="/kalender">Kalender Perkuliahan</a></li>
+            <li><a href="/peminjaman">Daftar Peminjaman</a></li>
+            <li><a href="/about">Tentang</a></li>
+            <li>
+                <a href="/login" class="btn-warning">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
         <div class="container">
-            <h1>Syarat dan Ketentuan Peminjaman</h1>
-            <p class="subtitle">Sarana dan Prasarana (Sarpas)</p>
+            <div class="hero-content">
+                <h1 class="display-4 fw-bold">Syarat dan Ketentuan Peminjaman</h1>
+                <p class="lead"></p>
+            </div>
         </div>
-    </header>
-    
-    <div class="breadcrumb">
-        <div class="container">
-            <ul class="breadcrumb-content">
-                <li><a href="#">Beranda</a></li>
-                <li><a href="#">Layanan</a></li>
-                <li>Peminjaman Sarpas</li>
-            </ul>
-        </div>
-    </div>
+    </section>
+
     
     <div class="container">
         <div class="content">
@@ -339,45 +608,12 @@
                         <p><strong>Catatan Penting:</strong> Dengan menyetujui syarat dan ketentuan ini, peminjam dianggap telah membaca, memahami, dan menyetujui semua ketentuan yang berlaku.</p>
                     </div>
                 </div>
-                
-                <div class="action-buttons">
-                    <a href="#" class="btn">Ajukan Peminjaman</a>
-                    <a href="#" class="btn btn-outline">Download Formulir</a>
-                </div>
             </main>
-            
-            <aside>
-                <div class="info-box">
-                    <h3>Informasi Kontak</h3>
-                    <ul class="contact-info">
-                        <li><i>📞</i> (021) 1234-5678</li>
-                        <li><i>✉️</i> sarpas@example.com</li>
-                        <li><i>🏢</i> Gedung Utama, Lantai 3</li>
-                        <li><i>🕒</i> Senin - Jumat, 08:00 - 16:00</li>
-                    </ul>
-                </div>
-                
-                <div class="info-box">
-                    <h3>Dokumen yang Diperlukan</h3>
-                    <ul>
-                        <li>Formulir Peminjaman</li>
-                        <li>Fotokopi KTP/Kartu Identitas</li>
-                        <li>Surat Pengantar (jika diperlukan)</li>
-                        <li>Proposal Kegiatan (untuk peminjaman besar)</li>
-                    </ul>
-                </div>
-                
-                <div class="info-box">
-                    <h3>Status Peminjaman</h3>
-                    <p>Periksa status permohonan peminjaman Anda dengan memasukkan kode referensi.</p>
-                    <form>
-                        <input type="text" placeholder="Masukkan kode referensi" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
-                        <button type="submit" class="btn" style="width: 100%;">Cek Status</button>
-                    </form>
-                </div>
-            </aside>
-        </div>
-    </div>
+
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
     
     <footer class="footer">
         <div class="footer-container">
@@ -396,9 +632,9 @@
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
                     <li><a href="/home">Beranda</a></li>
-                    <li><a href="#">Kalender Perkuliahan</a></li>
-                    <li><a href="#">Tentang</a></li>
-                    <li><a href="#">Syarat & Ketentuan</a></li>
+                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                    <li><a href="/about">Tentang</a></li>
+                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
                     <li><a href="#">FAQ</a></li>
                 </ul>
             </div>

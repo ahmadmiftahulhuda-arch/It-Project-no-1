@@ -779,33 +779,6 @@
             </div>
         </section>
         
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="container">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number" id="statRooms">20+</div>
-                        <div class="stat-label">Ruangan Tersedia</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-number" id="statProjectors">10+</div>
-                        <div class="stat-label">Proyektor</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-number" id="statUsers">500+</div>
-                        <div class="stat-label">Pengguna</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-number" id="statLoans">1200+</div>
-                        <div class="stat-label">Peminjaman/Bulan</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
         <!-- How It Works Section -->
         <section class="how-it-works">
             <h2 class="section-title">
@@ -910,22 +883,6 @@
                 </div>
             </div>
         </section>
-        
-        <!-- CTA Section -->
-        <section class="cta-section">
-            <div class="cta-content">
-                <h2>Mulai Pinjam Fasilitas Sekarang</h2>
-                <p>Daftar atau login untuk mengakses layanan peminjaman sarana prasarana Program Studi Teknologi Informasi</p>
-                <div class="hero-buttons">
-                    <a href="/login" class="btn-primary">
-                        <i class="fa-solid fa-right-to-bracket"></i> Login
-                    </a>
-                    <a href="/peminjaman" class="btn-outline-light">
-                        <i class="fa-solid fa-circle-info"></i> Pelajari Lebih Lanjut
-                    </a>
-                </div>
-            </div>
-        </section>
     </div>
 
     <!-- Back to top button -->
@@ -952,7 +909,7 @@
                     <li><a href="/home">Beranda</a></li>
                     <li><a href="/kalender">Kalender Perkuliahan</a></li>
                     <li><a href="/about">Tentang</a></li>
-                    <li><a href="/">Syarat & Ketentuan</a></li>
+                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
                     <li><a href="#">FAQ</a></li>
                 </ul>
             </div>
