@@ -55,6 +55,16 @@ Route::get('/syaratdanketentuan', function () {
     return view('syaratdanketentuan');
 });
 
+// ✅ Halaman login user
+Route::get('/user/login', function () {
+    return view('user/login');
+});
+
+// ✅ Halaman user setelah login
+Route::get('/user/home', function () {
+    return view('user/home');
+});
+
 // ✅ Halaman dashboard admin
 Route::get('/admin/login', function () {
     return view('admin/login');
