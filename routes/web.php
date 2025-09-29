@@ -6,7 +6,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GoogleAuthController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
-use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,12 +17,6 @@ Route::get('/about', function () {
     return view('about');
 })->name('about'); 
 
-Route::get('/post', function () {
-    return view('post');
-})->name('post');
-
-
-Route::post('/create-post', [PostController::class, 'createPost']);
 // ✅ Google Auth Routes
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
@@ -78,6 +71,10 @@ Route::get('/about', function () {
 
 Route::get('/post', function () {
     return view('post');
+});
+
+Route::get('/syaratdanketentuan', function () {
+    return view('syaratdanketentuan');
 });
 
 Route::get('/login', function () {

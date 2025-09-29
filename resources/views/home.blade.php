@@ -251,6 +251,10 @@
         }
         
         /* ===== MAIN CONTENT ===== */
+        .nav-tabs .nav-item {
+            margin: 0 5px;
+        }
+
         .main-content {
             padding: 2rem 0; /* Diperkecil dari 3rem */
         }
@@ -519,6 +523,10 @@
             padding: 0.4rem; /* Diperkecil */
             border-radius: 0.4rem; /* Diperkecil */
             margin-bottom: 1.2rem; /* Diperkecil */
+            display: flex;
+            justify-content: center; /* ketengah */
+            gap: 15px;               /* jarak antar tombol */
+            flex-wrap: wrap;         /* biar tidak overflow di layar kecil */
         }
         
         .tab-button {
@@ -953,30 +961,27 @@
     <div class="tab-container">
         <div class="tab-nav">
             <button @click="tab='available'" 
-                    :class="tab==='available' ? 'tab-button active' : 'tab-button'"
-                    class="tab-button">
-                <i class="ri-calendar-check-line"></i><span>Info Ruangan Tersedia</span>
+                :class="tab==='available' ? 'tab-button active' : 'tab-button'">
+            <i class="ri-calendar-check-line"></i><span>Info Ruangan Tersedia</span>
             </button>
 
             <button @click="tab='used'" 
-                    :class="tab==='used' ? 'tab-button active' : 'tab-button'"
-                    class="tab-button">
+                    :class="tab==='used' ? 'tab-button active' : 'tab-button'">
                 <i class="ri-calendar-close-line"></i><span>Info Ruangan Terpakai</span>
             </button>
 
             <button @click="tab='projectors'" 
-                    :class="tab==='projectors' ? 'tab-button active' : 'tab-button'"
-                    class="tab-button">
+                    :class="tab==='projectors' ? 'tab-button active' : 'tab-button'">
                 <i class="ri-slideshow-line"></i><span>Status Proyektor</span>
             </button>
 
             <button @click="tab='statistics'" 
-                    :class="tab==='statistics' ? 'tab-button active' : 'tab-button'"
-                    class="tab-button">
+                    :class="tab==='statistics' ? 'tab-button active' : 'tab-button'">
                 <i class="ri-bar-chart-line"></i><span>Statistik Penggunaan</span>
             </button>
         </div>
     </div>
+
 
     <!-- Filter Section -->
     <div class="tab-container">
