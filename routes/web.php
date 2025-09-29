@@ -94,6 +94,32 @@ Route::post('/login', function (Request $request) {
     ]);
 });
 
+// ✅ Halaman dashboard admin
+Route::get('/admin/login', function () {
+    return view('admin/login');
+});
+Route::get('/admin/dashboard', function () {
+    return view('admin/dashboard');
+});
+Route::get('/admin/item', function () {
+    return view('admin/item');
+});
+Route::get('/admin/peminjaman', function () {
+    return view('admin/peminjaman');
+});
+Route::get('/admin/pengembalian', function () {
+    return view('admin/pengembalian');
+});
+Route::get('/admin/pengguna', function () {
+    return view('admin/pengguna');
+});
+Route::get('/admin/laporan', function () {
+    return view('admin/laporan');
+});
+Route::get('/admin/pengaturan', function () {
+    return view('admin/pengaturan');
+});
+
 // ✅ Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
