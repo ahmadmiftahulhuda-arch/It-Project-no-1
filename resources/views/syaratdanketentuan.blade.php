@@ -635,7 +635,7 @@
                     <li><a href="/kalender">Kalender Perkuliahan</a></li>
                     <li><a href="/about">Tentang</a></li>
                     <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
             
