@@ -77,6 +77,10 @@ Route::get('/syaratdanketentuan', function () {
     return view('syaratdanketentuan');
 });
 
+Route::get('/faq', function () {
+    return view('faq');
+});
+
 Route::get('/login', function () {
     return view('auth.login');  // otomatis ke resources/views/auth/login.blade.php
 })->name('login');
