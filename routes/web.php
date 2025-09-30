@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FeedbackController;
 
 Route::get('/home', function () {
     return view('home');
@@ -105,6 +106,8 @@ Route::get('/admin/login', function () {
 Route::get('/admin/dashboard', function () {
     return view('admin/dashboard');
 });
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
 Route::get('/admin/item', function () {
     return view('admin/item');
 });
@@ -123,7 +126,16 @@ Route::get('/admin/laporan', function () {
 Route::get('/admin/pengaturan', function () {
     return view('admin/pengaturan');
 });
-
+// Route untuk Feedback
+Route::prefix('admin')->group(function () {
+    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+    Route::get('/feedback/{id}/edit', [FeedbackController::class, 'edit'])->name('feedback.edit');
+    Route::put('/feedback/{id}', [FeedbackController::class, 'update'])->name('feedback.update');
+    Route::delete('/feedback/{id}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
+    Route::get('/feedback/{id}', [FeedbackController::class, 'show'])->name('feedback.show');
+});
 // ✅ Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

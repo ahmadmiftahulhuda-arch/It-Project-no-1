@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('peminjaman', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    Schema::create('peminjaman', function (Blueprint $table) {
+        $table->id('id_peminjaman'); // ganti id default jadi id_peminjaman
+        $table->string('nama_peminjam');
+        $table->date('tgl_pinjam');
+        // kolom lainnya...
+        $table->timestamps();
+    });
+
     }
 
     /**

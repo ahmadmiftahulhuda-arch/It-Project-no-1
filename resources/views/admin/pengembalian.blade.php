@@ -673,6 +673,10 @@
                 <a href="/admin/pengembalian" class="menu-item active">
                     <i class="fas fa-undo"></i>
                     <span>Pengembalian</span>
+                <a href="/admin/feedback" class="menu-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Feedback</span>
+                </a>
                 </a>
                 <a href="/admin/pengguna" class="menu-item">
                     <i class="fas fa-users"></i>
