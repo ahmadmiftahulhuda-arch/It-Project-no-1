@@ -1,14 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\GoogleAuthController;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\ProjectorController;
+use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\JadwalPerkuliahanController;
 
 Route::get('/home', function () {
     return view('home');
@@ -165,3 +167,16 @@ Route::fallback(function () {
 Route::get('/dashboard', function () {
     return view('home'); // arahkan ke home.blade.php
 })->middleware('auth')->name('dashboard');
+
+// Proyektor routes
+    Route::get('/projectors', [ProjectorController::class, 'index'])->name('projectors.index');
+    Route::get('/projectors/{id}', [ProjectorController::class, 'show'])->name('projectors.show');
+
+// Routes untuk manajemen proyektor
+Route::resource('projectors', ProjectorController::class);
+
+// Route untuk halaman proyektor (alternatif)
+Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('admin.proyektor');
+
+// Halaman utama jadwal perkuliahan
+ Route::resource('jadwal-perkuliahan', JadwalPerkuliahanController::class);
