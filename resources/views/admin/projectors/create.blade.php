@@ -267,7 +267,7 @@
                 <i class="fas fa-hand-holding"></i>
                 <span>Peminjaman</span>
             </a>
-            <a href="/admin/pengembalian" class="menu-item active">
+            <a href="/admin/pengembalian" class="menu-item">
                 <i class="fas fa-undo"></i>
                 <span>Pengembalian</span>
             </a>
@@ -279,8 +279,8 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/projectos" class="menu-item">
-                <i class="fas fa-projector"></i>
+            <a href="/admin/projectos" class="menu-item active">
+                <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
             <a href="/admin/jadwal-perkuliahan" class="menu-item">
