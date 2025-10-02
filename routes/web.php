@@ -169,14 +169,14 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 // Proyektor routes
-    Route::get('/projectors', [ProjectorController::class, 'index'])->name('projectors.index');
-    Route::get('/projectors/{id}', [ProjectorController::class, 'show'])->name('projectors.show');
+    Route::get('/admin/projectors', [ProjectorController::class, 'index'])->name('projectors.index');
+    Route::get('/admin/projectors/{id}', [ProjectorController::class, 'create'])->name('projectors.create');
 
 // Routes untuk manajemen proyektor
-Route::resource('projectors', ProjectorController::class);
+Route::resource('/admin/projectors', ProjectorController::class);
 
 // Route untuk halaman proyektor (alternatif)
 Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('admin.proyektor');
 
 // Halaman utama jadwal perkuliahan
- Route::resource('jadwal-perkuliahan', JadwalPerkuliahanController::class);
+ Route::resource('/admin/jadwal-perkuliahan', JadwalPerkuliahanController::class);
