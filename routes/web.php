@@ -11,6 +11,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProjectorController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\JadwalPerkuliahanController;
+use App\Http\Controllers\RuanganController;
 
 Route::get('/home', function () {
     return view('home');
@@ -180,3 +181,7 @@ Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('adm
 
 // Halaman utama jadwal perkuliahan
  Route::resource('/admin/jadwal-perkuliahan', JadwalPerkuliahanController::class);
+
+ Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('ruangan', RuanganController::class);
+});
