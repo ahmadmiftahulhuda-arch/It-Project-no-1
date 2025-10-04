@@ -22,7 +22,7 @@ class MataKuliahController extends Controller
             $query->where('semester', $request->semester);
         }
 
-        $mataKuliahs = $query->get();
+        $mataKuliahs = $query->paginate(10);
 
         return view('admin.mata_kuliah.index', compact('mataKuliahs'));
     }
