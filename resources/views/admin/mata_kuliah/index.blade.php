@@ -148,7 +148,7 @@
             <a href="/admin/proyektor">
                 <i class="fas fa-video"></i><span>Proyektor</span>
             </a>
-            <a href="/admin/jadwalperkuliahan">
+            <a href="/admin/jadwal-perkuliahan">
                 <i class="fas fa-calendar-alt"></i><span>Jadwal Perkuliahan</span>
             </a>
             <a href="/admin/ruangan">

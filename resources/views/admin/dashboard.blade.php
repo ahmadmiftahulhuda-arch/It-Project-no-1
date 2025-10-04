@@ -518,6 +518,14 @@
                     <i class="fas fa-comment-dots"></i>
                     <span>Feedback</span>
                 </a>
+                <a href="/admin/mata_kuliah" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Matakuliah</span>
+            </a>
+            <a href="/admin/kelas" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Kelas</span>
+            </a>
                 <a href="/admin/pengguna" class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>Pengguna</span>
