@@ -732,7 +732,7 @@
                     <i class="fas fa-clock"></i>
                     <span>Slot Waktu</span>
                 </a>
-                <a href="/admin/matakuliah" class="menu-item">
+                <a href="/admin/mata_kuliah" class="menu-item">
                     <i class="fas fa-book"></i>
                     <span>Matakuliah</span>
                 </a>

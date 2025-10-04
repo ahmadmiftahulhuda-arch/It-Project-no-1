@@ -12,6 +12,8 @@ use App\Http\Controllers\ProjectorController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\JadwalPerkuliahanController;
 use App\Http\Controllers\RuanganController;
+use App\Http\Controllers\MataKuliahController;
+
 
 Route::get('/home', function () {
     return view('home');
@@ -184,4 +186,8 @@ Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('adm
 
  Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);
+});
+
+Route::prefix('admin')->group(function () {
+    Route::resource('mata_kuliah', MataKuliahController::class);
 });
