@@ -13,6 +13,7 @@ use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\JadwalPerkuliahanController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\MataKuliahController;
+use App\Http\Controllers\SlotWaktuController;
 
 
 Route::get('/home', function () {
@@ -190,4 +191,8 @@ Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('adm
 
 Route::prefix('admin')->group(function () {
     Route::resource('mata_kuliah', MataKuliahController::class);
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('slotwaktu', SlotWaktuController::class);
 });
