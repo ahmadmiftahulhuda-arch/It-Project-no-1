@@ -7,34 +7,57 @@ use Illuminate\Http\Request;
 
 class SlotWaktuController extends Controller
 {
+    /**
+     * Menampilkan semua data slot waktu
+     */
     public function index()
     {
         $slotWaktu = SlotWaktu::all();
-        return view('slotwaktu.index', compact('slotWaktu'));
+        return view('admin.slotwaktu.index', ['slotwaktu' => $slotWaktu]);
     }
 
+    /**
+     * Menampilkan form tambah slot waktu
+     */
     public function create()
     {
-        return view('slotwaktu.create');
+        return view('admin.slotwaktu.create');
     }
 
+    /**
+     * Menyimpan data slot waktu baru ke database
+     */
     public function store(Request $request)
     {
         $request->validate([
             'id_slot' => 'required|unique:slot_waktus,id_slot',
             'waktu' => 'required',
+        ], [
+            'id_slot.required' => 'ID Slot wajib diisi.',
+            'id_slot.unique' => 'ID Slot sudah digunakan.',
+            'waktu.required' => 'Waktu wajib diisi.',
         ]);
 
-        SlotWaktu::create($request->all());
-        return redirect()->route('slotwaktu.index')->with('success', 'Slot waktu berhasil ditambahkan.');
+        SlotWaktu::create([
+            'id_slot' => $request->id_slot,
+            'waktu' => $request->waktu,
+        ]);
+
+        return redirect()->route('admin.slotwaktu.index')->with('success', 'Slot waktu berhasil ditambahkan.');
     }
 
+    /**
+     * Menampilkan form edit untuk slot waktu tertentu
+     */
     public function edit($id)
     {
         $slot = SlotWaktu::findOrFail($id);
-        return view('slotwaktu.edit', compact('slot'));
+        return view('admin.slotwaktu.edit', compact('slot'));
     }
 
+    /**
+     * Memperbarui data slot waktu
+     */
     public function update(Request $request, $id)
     {
         $slot = SlotWaktu::findOrFail($id);
@@ -42,16 +65,28 @@ class SlotWaktuController extends Controller
         $request->validate([
             'id_slot' => 'required|unique:slot_waktus,id_slot,' . $slot->id,
             'waktu' => 'required',
+        ], [
+            'id_slot.required' => 'ID Slot wajib diisi.',
+            'id_slot.unique' => 'ID Slot sudah digunakan.',
+            'waktu.required' => 'Waktu wajib diisi.',
         ]);
 
-        $slot->update($request->all());
-        return redirect()->route('slotwaktu.index')->with('success', 'Slot waktu berhasil diperbarui.');
+        $slot->update([
+            'id_slot' => $request->id_slot,
+            'waktu' => $request->waktu,
+        ]);
+
+        return redirect()->route('admin.slotwaktu.index')->with('success', 'Slot waktu berhasil diperbarui.');
     }
 
+    /**
+     * Menghapus data slot waktu
+     */
     public function destroy($id)
     {
         $slot = SlotWaktu::findOrFail($id);
         $slot->delete();
-        return redirect()->route('slotwaktu.index')->with('success', 'Slot waktu berhasil dihapus.');
+
+        return redirect()->route('admin.slotwaktu.index')->with('success', 'Slot waktu berhasil dihapus.');
     }
 }
