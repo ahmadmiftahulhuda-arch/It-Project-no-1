@@ -15,6 +15,9 @@ use App\Http\Controllers\JadwalPerkuliahanController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\SlotWaktuController;
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\MahasiswaController;
+
 
 
 Route::get('/home', function () {
@@ -256,3 +259,15 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
     });
 });
+
+// Routes untuk manajemen kelas
+Route::get('/admin/dashboard', [KelasController::class, 'index'])->name('admin.dashboard');
+Route::get('/admin/kelas', [KelasController::class, 'index'])->name('admin.kelas.index');
+Route::post('/admin/kelas', [KelasController::class, 'store'])->name('admin.kelas.store');
+Route::put('/admin/kelas/{kela}', [KelasController::class, 'update'])->name('admin.kelas.update');
+Route::delete('/admin/kelas/{kela}', [KelasController::class, 'destroy'])->name('admin.kelas.destroy');
+Route::get('/admin/kelas/{kela}', [KelasController::class, 'show'])->name('admin.kelas.show');
+
+Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
+Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
+Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
