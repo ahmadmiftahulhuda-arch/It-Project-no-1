@@ -9,16 +9,48 @@ class Peminjaman extends Model
 {
     use HasFactory;
 
-    protected $table = 'peminjaman'; 
-    protected $primaryKey = 'id_peminjaman'; 
+    // Nama tabel di database (supaya tidak salah jadi 'peminjamen')
+    protected $table = 'peminjamans';
+
+    // Kolom yang boleh diisi (mass assignment)
     protected $fillable = [
-        'nama_peminjam',
-        'tgl_pinjam',
-        // tambahkan field lain sesuai tabel
+        'user_id',
+        'tanggal',
+        'ruang',
+        'proyektor',
+        'keperluan',
+        'status',
+        'returned_at',
+        'waktu_mulai',
+        'waktu_selesai'
     ];
 
-    public function feedback()
+    // Default values untuk waktu
+    protected $attributes = [
+        'waktu_mulai' => '08:00:00',
+        'waktu_selesai' => '17:00:00',
+    ];
+
+    /**
+     * Relasi ke User
+     * Setiap peminjaman dimiliki oleh 1 user
+     */
+    public function user()
     {
-        return $this->hasMany(Feedback::class, 'id_peminjaman', 'id_peminjaman');
+        return $this->belongsTo(User::class);
+    }
+
+    // Scope untuk riwayat
+    public function scopeRiwayat($query)
+    {
+        return $query->whereIn('status', ['disetujui', 'ditolak', 'selesai'])
+                    ->orWhereNotNull('returned_at');
+    }
+
+    // Scope untuk peminjaman aktif
+    public function scopeAktif($query)
+    {
+        return $query->where('status', 'disetujui')
+                    ->whereNull('returned_at');
     }
 }
