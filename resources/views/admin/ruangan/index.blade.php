@@ -865,87 +865,54 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode Ruang</th>
-                            <th>Nama Ruang</th>
+                            <th>Kode Ruangan</th>
+                            <th>Nama Ruangan</th>
                             <th>Kapasitas</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="ruangan-table-body">
-                        <!-- Data ruangan akan ditampilkan di sini -->
-                        <tr>
-                            <td>1</td>
-                            <td class="font-semibold">LAB-001</td>
-                            <td>Laboratorium Komputer A</td>
-                            <td>30 Orang</td>
-                            <td>
-                                <span class="badge status-tersedia">Tersedia</span>
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2 action-buttons">
-                                    <!-- Edit -->
-                                    <a href="#" class="btn btn-warning-custom btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <!-- Delete -->
-                                    <form action="#" method="POST" class="d-inline">
-                                        <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
-                                                class="btn btn-danger-custom btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td class="font-semibold">LAB-002</td>
-                            <td>Laboratorium Komputer B</td>
-                            <td>25 Orang</td>
-                            <td>
-                                <span class="badge status-digunakan">Sedang Digunakan</span>
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2 action-buttons">
-                                    <!-- Edit -->
-                                    <a href="#" class="btn btn-warning-custom btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <!-- Delete -->
-                                    <form action="#" method="POST" class="d-inline">
-                                        <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
-                                                class="btn btn-danger-custom btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td class="font-semibold">R-101</td>
-                            <td>Ruang Kelas 101</td>
-                            <td>40 Orang</td>
-                            <td>
-                                <span class="badge status-maintenance">Maintenance</span>
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2 action-buttons">
-                                    <!-- Edit -->
-                                    <a href="#" class="btn btn-warning-custom btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <!-- Delete -->
-                                    <form action="#" method="POST" class="d-inline">
-                                        <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
-                                                class="btn btn-danger-custom btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody>
+                        @forelse($ruangan as $index => $r)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td class="font-semibold">{{ $r->kode_ruangan }}</td>
+                                <td>{{ $r->nama_ruangan }}</td>
+                                <td>{{ $r->kapasitas }} Orang</td>
+                                <td>
+                                    @if($r->status == 'Tersedia')
+                                        <span class="badge status-tersedia">Tersedia</span>
+                                    @elseif($r->status == 'Sedang Digunakan')
+                                        <span class="badge status-digunakan">Sedang Digunakan</span>
+                                    @elseif($r->status == 'Maintenance')
+                                        <span class="badge status-maintenance">Maintenance</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ $r->status }}</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 action-buttons">
+                                        <a href="{{ route('admin.ruangan.edit', $r->id) }}" class="btn btn-warning-custom btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.ruangan.destroy', $r->id) }}" method="POST" onsubmit="return confirm('Yakin hapus ruangan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger-custom btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-box-open fa-2x mb-2"></i><br>
+                                    Tidak ada data ruangan yang ditemukan.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
