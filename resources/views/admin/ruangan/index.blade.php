@@ -18,7 +18,7 @@
             --light: #f8f9fa;
             --dark: #343a40;
             --gray: #6c757d;
-            --sidebar-width: 250px;
+            --sidebar-width: 260px;
             --text-light: #6c757d;
             --text-dark: #495057;
             --bg-light: #f5f8fa;
@@ -35,7 +35,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - Diperbarui */
         .sidebar {
             position: fixed;
             top: 0;
@@ -110,11 +110,12 @@
         }
 
         .menu-item i {
-            margin-right: 10px;
+            margin-right: 12px;
             width: 20px;
             text-align: center;
             opacity: 0.8;
             flex-shrink: 0;
+            font-size: 18px;
         }
 
         .menu-item span {
@@ -131,65 +132,71 @@
             min-height: 100vh;
         }
 
-        /* Header */
+        /* Header Styles - Diperbarui */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            padding: 15px 25px;
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
             border: 1px solid var(--border-light);
         }
 
         .search-bar {
-            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-light);
+            border-radius: 20px;
+            padding: 8px 15px;
             width: 300px;
         }
 
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-
         .search-bar input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border: 1px solid var(--border-light);
-            border-radius: 30px;
+            border: none;
+            background: transparent;
             outline: none;
-            transition: all 0.3s;
-            background-color: var(--bg-light);
-        }
-
-        .search-bar input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+            color: var(--text-dark);
+            width: 100%;
+            margin-left: 10px;
         }
 
         .user-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
         }
 
-        .notification-btn,
-        .theme-toggle {
+        .notification-btn, .theme-toggle {
             width: 40px;
             height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-light);
-            border-radius: 50%;
+            background-color: var(--bg-light);
+            margin-left: 10px;
             cursor: pointer;
+            position: relative;
             transition: all 0.3s;
             color: var(--text-dark);
+        }
+
+        .notification-btn::after {
+            content: '3';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .notification-btn:hover,
@@ -201,12 +208,12 @@
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 10px;
+            margin-left: 15px;
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
@@ -215,6 +222,7 @@
             justify-content: center;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
         }
 
         /* Page Title */
@@ -503,50 +511,87 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .sidebar {
-                width: 70px;
-                overflow: hidden;
+                width: 80px;
             }
-
-            .sidebar-header h2,
-            .menu-item span {
+            
+            .sidebar-header h2, .menu-item span {
                 display: none;
             }
-
+            
             .menu-item {
                 justify-content: center;
                 padding: 15px;
             }
-
+            
             .menu-item i {
                 margin-right: 0;
             }
-
+            
             .main-content {
-                margin-left: 70px;
+                margin-left: 80px;
             }
+        }
 
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
             .header {
                 flex-direction: column;
-                gap: 15px;
+                align-items: flex-start;
             }
-
+            
             .search-bar {
                 width: 100%;
+                margin-bottom: 15px;
             }
-
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
             .stats-container {
                 grid-template-columns: 1fr;
             }
-
+            
             .filter-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1100;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: var(--primary);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
         }
 
         /* Dark Mode */
-        body.dark-mode {
+        .dark-mode {
             --bg-light: #121212;
             --bg-card: #1e1e1e;
             --text-dark: #e0e0e0;
@@ -613,20 +658,6 @@
         }
 
         .menu-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
             display: none;
         }
 
@@ -639,7 +670,7 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar dengan desain yang diperbarui -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -647,7 +678,7 @@
             </div>
             <h2>Admin TI</h2>
         </div>
-
+        
         <div class="sidebar-menu">
             <a href="/admin/dashboard" class="menu-item">
                 <i class="fas fa-home"></i>
@@ -669,8 +700,8 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/proyektor" class="menu-item">
-                <i class="fas fa-projector"></i>
+            <a href="/admin/projectors" class="menu-item">
+                <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
             <a href="/admin/jadwal-perkuliahan" class="menu-item">
@@ -710,23 +741,23 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
+        <!-- Header dengan desain yang diperbarui -->
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.ruangan.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" name="cari" placeholder="Cari ruang..." value="{{ request('cari') }}">
                 <button type="submit" style="display: none;"></button>
             </form>
-
+            
             <div class="user-actions">
                 <div class="notification-btn">
                     <i class="fas fa-bell"></i>
                 </div>
-
+                
                 <div class="theme-toggle" id="theme-toggle">
                     <i class="fas fa-moon"></i>
                 </div>
-
+                
                 <div class="user-profile">
                     <div class="user-avatar">A</div>
                     <div>
@@ -842,168 +873,145 @@
                         </tr>
                     </thead>
                     <tbody id="ruangan-table-body">
-                        @forelse ($ruangan as $r)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td class="font-semibold">{{ $r->kode_ruangan }}</td>
-                                <td>{{ $r->nama_ruangan }}</td>
-                                <td>{{ $r->kapasitas }} Orang</td>
-                                <td>
-                                    @if($r->status == 'Tersedia')
-                                        <span class="badge status-tersedia">Tersedia</span>
-                                    @elseif($r->status == 'Sedang Digunakan')
-                                        <span class="badge status-digunakan">Sedang Digunakan</span>
-                                    @else
-                                        <span class="badge status-maintenance">Maintenance</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-2 action-buttons">
-                                        <!-- Edit -->
-                                        <a href="{{ route('admin.ruangan.edit', $r->id) }}" class="btn btn-warning-custom btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <!-- Delete -->
-                                        <form action="{{ route('admin.ruangan.destroy', $r->id) }}" method="POST" class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
-                                                    class="btn btn-danger-custom btn-sm">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="empty-state">
-                                    <i class="fas fa-door-closed"></i><br>
-                                    Tidak ada ruangan ditemukan
-                                </td>
-                            </tr>
-                        @endforelse
+                        <!-- Data ruangan akan ditampilkan di sini -->
+                        <tr>
+                            <td>1</td>
+                            <td class="font-semibold">LAB-001</td>
+                            <td>Laboratorium Komputer A</td>
+                            <td>30 Orang</td>
+                            <td>
+                                <span class="badge status-tersedia">Tersedia</span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2 action-buttons">
+                                    <!-- Edit -->
+                                    <a href="#" class="btn btn-warning-custom btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <!-- Delete -->
+                                    <form action="#" method="POST" class="d-inline">
+                                        <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
+                                                class="btn btn-danger-custom btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="font-semibold">LAB-002</td>
+                            <td>Laboratorium Komputer B</td>
+                            <td>25 Orang</td>
+                            <td>
+                                <span class="badge status-digunakan">Sedang Digunakan</span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2 action-buttons">
+                                    <!-- Edit -->
+                                    <a href="#" class="btn btn-warning-custom btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <!-- Delete -->
+                                    <form action="#" method="POST" class="d-inline">
+                                        <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
+                                                class="btn btn-danger-custom btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="font-semibold">R-101</td>
+                            <td>Ruang Kelas 101</td>
+                            <td>40 Orang</td>
+                            <td>
+                                <span class="badge status-maintenance">Maintenance</span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2 action-buttons">
+                                    <!-- Edit -->
+                                    <a href="#" class="btn btn-warning-custom btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <!-- Delete -->
+                                    <form action="#" method="POST" class="d-inline">
+                                        <button type="submit" onclick="return confirm('Yakin hapus ruangan ini?')" 
+                                                class="btn btn-danger-custom btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
 
-        <!-- Pagination dihapus - semua data ditampilkan dalam satu halaman -->
+    <div class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
 
-        <div class="menu-toggle" id="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Toggle theme
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
 
-                if (document.body.classList.contains('dark-mode')) {
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                    localStorage.setItem('darkMode', 'enabled');
-                } else {
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                    localStorage.setItem('darkMode', 'disabled');
-                }
+        // Toggle sidebar on mobile
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Auto-submit form search ketika mengetik (dengan debounce)
+        let searchTimeout;
+        const searchInputs = document.querySelectorAll('input[name="cari"]');
+
+        searchInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    // Submit form yang sesuai
+                    const form = this.closest('form');
+                    if (form) {
+                        form.submit();
+                    }
+                }, 800);
             });
+        });
 
-            // Toggle sidebar on mobile
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.querySelector('.sidebar');
-
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
+        // Auto-submit filter ketika perubahan select box
+        const filterSelects = document.querySelectorAll('#filterForm select');
+        filterSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
             });
+        });
 
-            // Auto-submit form search ketika mengetik (dengan debounce)
-            let searchTimeout;
-            const searchInputs = document.querySelectorAll('input[name="cari"]');
-
-            searchInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        // Submit form yang sesuai
-                        const form = this.closest('form');
-                        if (form) {
-                            form.submit();
-                        }
-                    }, 800);
-                });
-            });
-
-            // Auto-submit filter ketika perubahan select box
-            const filterSelects = document.querySelectorAll('#filterForm select');
-            filterSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    document.getElementById('filterForm').submit();
-                });
-            });
-
-            // Konfirmasi untuk semua aksi (kecuali form filter dan search)
-            document.querySelectorAll('form').forEach(form => {
-                if (form.id !== 'filterForm' && form.id !== 'searchForm') {
-                    form.addEventListener('submit', function(e) {
-                        const button = this.querySelector('button[type="submit"]');
-                        const actionText = button.textContent.trim();
-
-                        if (!confirm(`Apakah Anda yakin ingin ${actionText.toLowerCase()} ruangan ini?`)) {
-                            e.preventDefault();
-                        }
-                    });
-                }
-            });
-
-            // Terapkan dark mode jika sebelumnya diaktifkan
+        // Terapkan dark mode jika sebelumnya diaktifkan
+        document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('darkMode') === 'enabled') {
                 document.body.classList.add('dark-mode');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
-
-            // Tampilkan parameter filter yang aktif
-            function showActiveFilters() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const activeFilters = [];
-
-                if (urlParams.get('cari')) {
-                    activeFilters.push(`Pencarian: "${urlParams.get('cari')}"`);
-                }
-                if (urlParams.get('status')) {
-                    const statusText = {
-                        'Tersedia': 'Tersedia',
-                        'Sedang Digunakan': 'Sedang Digunakan',
-                        'Maintenance': 'Maintenance'
-                    }[urlParams.get('status')] || urlParams.get('status');
-                    activeFilters.push(`Status: ${statusText}`);
-                }
-                if (urlParams.get('kapasitas')) {
-                    activeFilters.push(`Kapasitas Minimal: ${urlParams.get('kapasitas')}`);
-                }
-
-                if (activeFilters.length > 0) {
-                    // Hapus alert existing jika ada
-                    const existingAlert = document.querySelector('.filter-alert');
-                    if (existingAlert) {
-                        existingAlert.remove();
-                    }
-
-                    const filterInfo = document.createElement('div');
-                    filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
-                    filterInfo.innerHTML = `
-                        <strong>Filter Aktif:</strong> ${activeFilters.join(', ')}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    `;
-                    document.querySelector('.filter-section').appendChild(filterInfo);
-                }
-            }
-
-            // Panggil fungsi saat halaman dimuat
-            document.addEventListener('DOMContentLoaded', function() {
-                showActiveFilters();
-            });
-        </script>
-    </div>
+        });
+    </script>
 </body>
 </html>

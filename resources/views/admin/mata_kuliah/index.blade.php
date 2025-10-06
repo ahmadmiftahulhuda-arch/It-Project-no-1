@@ -546,6 +546,10 @@
                 <i class="fas fa-door-open"></i>
                 <span>Ruangan</span>
             </a>
+            <a href="{{ route('admin.slotwaktu.index') }}" class="menu-item">
+                <i class="fas fa-clock"></i>
+                <span>Slot Waktu</span>
+            </a>
             <a href="{{ route('mata_kuliah.index') }}" class="menu-item active">
                 <i class="fas fa-book"></i>
                 <span>Matakuliah</span>

@@ -455,7 +455,7 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
+     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -493,7 +493,7 @@
         <div class="page-title">
             <div>
                 <h1>Edit Slot Waktu</h1>
-                <p>Perbarui jadwal slot waktu {{ $slotwaktu->id_slot }}</p>
+                <p>Perbarui jadwal slot waktu {{ $slot->id_slot }}</p>
             </div>
             <div class="action-buttons">
                 <a href="{{ route('admin.slotwaktu.index') }}" class="btn btn-outline">
@@ -504,7 +504,7 @@
 
         <!-- Form Container -->
         <div class="form-container">
-            <form action="{{ route('admin.slotwaktu.update', $slotwaktu->id) }}" method="POST">
+            <form action="{{ route('admin.slotwaktu.update', $slot->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -514,7 +514,7 @@
                             <label for="id_slot">ID Slot <span class="text-danger">*</span></label>
                             <input type="text" id="id_slot" name="id_slot"
                                    class="form-control @error('id_slot') is-invalid @enderror"
-                                   value="{{ old('id_slot', $slotwaktu->id_slot) }}" readonly>
+                                   value="{{ old('id_slot', $slot->id_slot) }}" readonly>
                             <small class="text-muted">ID Slot tidak dapat diubah</small>
                             @error('id_slot')
                                 <div class="error-message">{{ $message }}</div>
@@ -527,7 +527,7 @@
                             <label for="waktu">Waktu <span class="text-danger">*</span></label>
                             <input type="text" id="waktu" name="waktu"
                                    class="form-control @error('waktu') is-invalid @enderror"
-                                   value="{{ old('waktu', $slotwaktu->waktu) }}"
+                                   value="{{ old('waktu', $slot->waktu) }}"
                                    placeholder="Contoh: 07:00 - 09:00" required>
                             @error('waktu')
                                 <div class="error-message">{{ $message }}</div>
@@ -564,7 +564,6 @@
             }
         });
 
-        // Terapkan dark mode jika sebelumnya diaktifkan
         if (localStorage.getItem('darkMode') === 'enabled') {
             document.body.classList.add('dark-mode');
             themeToggle.innerHTML = '<i class="fas fa-sun"></i>';

@@ -18,7 +18,7 @@
             --light: #f8f9fa;
             --dark: #343a40;
             --gray: #6c757d;
-            --sidebar-width: 250px;
+            --sidebar-width: 260px;
             --text-light: #6c757d;
             --text-dark: #495057;
             --bg-light: #f5f8fa;
@@ -35,7 +35,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - Desain dari kode pertama */
         .sidebar {
             position: fixed;
             top: 0;
@@ -110,11 +110,12 @@
         }
 
         .menu-item i {
-            margin-right: 10px;
+            margin-right: 12px;
             width: 20px;
             text-align: center;
             opacity: 0.8;
             flex-shrink: 0;
+            font-size: 18px;
         }
 
         .menu-item span {
@@ -131,65 +132,71 @@
             min-height: 100vh;
         }
 
-        /* Header */
+        /* Header Styles - Desain dari kode pertama */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            padding: 15px 25px;
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
             border: 1px solid var(--border-light);
         }
 
         .search-bar {
-            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-light);
+            border-radius: 20px;
+            padding: 8px 15px;
             width: 300px;
         }
 
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-
         .search-bar input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border: 1px solid var(--border-light);
-            border-radius: 30px;
+            border: none;
+            background: transparent;
             outline: none;
-            transition: all 0.3s;
-            background-color: var(--bg-light);
-        }
-
-        .search-bar input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+            color: var(--text-dark);
+            width: 100%;
+            margin-left: 10px;
         }
 
         .user-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
         }
 
-        .notification-btn,
-        .theme-toggle {
+        .notification-btn, .theme-toggle {
             width: 40px;
             height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-light);
-            border-radius: 50%;
+            background-color: var(--bg-light);
+            margin-left: 10px;
             cursor: pointer;
+            position: relative;
             transition: all 0.3s;
             color: var(--text-dark);
+        }
+
+        .notification-btn::after {
+            content: '3';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .notification-btn:hover,
@@ -201,12 +208,12 @@
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 10px;
+            margin-left: 15px;
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
@@ -215,6 +222,7 @@
             justify-content: center;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
         }
 
         /* Page Title */
@@ -503,50 +511,87 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .sidebar {
-                width: 70px;
-                overflow: hidden;
+                width: 80px;
             }
-
-            .sidebar-header h2,
-            .menu-item span {
+            
+            .sidebar-header h2, .menu-item span {
                 display: none;
             }
-
+            
             .menu-item {
                 justify-content: center;
                 padding: 15px;
             }
-
+            
             .menu-item i {
                 margin-right: 0;
             }
-
+            
             .main-content {
-                margin-left: 70px;
+                margin-left: 80px;
             }
+        }
 
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
             .header {
                 flex-direction: column;
-                gap: 15px;
+                align-items: flex-start;
             }
-
+            
             .search-bar {
                 width: 100%;
+                margin-bottom: 15px;
             }
-
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
             .stats-container {
                 grid-template-columns: 1fr;
             }
-
+            
             .filter-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1100;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: var(--primary);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
         }
 
         /* Dark Mode */
-        body.dark-mode {
+        .dark-mode {
             --bg-light: #121212;
             --bg-card: #1e1e1e;
             --text-dark: #e0e0e0;
@@ -613,20 +658,6 @@
         }
 
         .menu-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
             display: none;
         }
 
@@ -638,7 +669,7 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar dengan desain dari kode pertama -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -646,38 +677,86 @@
             </div>
             <h2>Admin TI</h2>
         </div>
-
+        
         <div class="sidebar-menu">
-            <a href="/admin/dashboard" class="menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
-            <a href="{{ route('admin.dashboard') }}" class="menu-item"><i class="fas fa-hand-holding"></i><span>Peminjaman</span></a>
-            <a href="/admin/pengembalian" class="menu-item"><i class="fas fa-undo"></i><span>Pengembalian</span></a>
-            <a href="/admin/riwayat" class="menu-item"><i class="fas fa-history"></i><span>Riwayat Peminjaman</span></a>
-            <a href="/admin/feedback" class="menu-item"><i class="fas fa-comment"></i><span>Feedback</span></a>
-            <a href="/admin/proyektor" class="menu-item"><i class="fas fa-projector"></i><span>Proyektor</span></a>
-            <a href="/admin/jadwal-perkuliahan" class="menu-item"><i class="fas fa-calendar-alt"></i><span>Jadwal Perkuliahan</span></a>
-            <a href="{{ route('admin.ruangan.index') }}" class="menu-item"><i class="fas fa-door-open"></i><span>Ruangan</span></a>
-            <a href="{{ route('admin.slotwaktu.index') }}" class="menu-item active"><i class="fas fa-clock"></i><span>Slot Waktu</span></a>
-            <a href="/admin/mata_kuliah" class="menu-item"><i class="fas fa-book"></i><span>Matakuliah</span></a>
-            <a href="/admin/kelas" class="menu-item"><i class="fas fa-users"></i><span>Kelas</span></a>
-            <a href="/admin/pengguna" class="menu-item"><i class="fas fa-users"></i><span>Pengguna</span></a>
-            <a href="/admin/laporan" class="menu-item"><i class="fas fa-chart-bar"></i><span>Statistik</span></a>
-            <a href="/admin/pengaturan" class="menu-item"><i class="fas fa-cog"></i><span>Pengaturan</span></a>
+            <a href="/admin/dashboard" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ route('admin.dashboard') }}" class="menu-item">
+                <i class="fas fa-hand-holding"></i>
+                <span>Peminjaman</span>
+            </a>
+            <a href="/admin/pengembalian" class="menu-item">
+                <i class="fas fa-undo"></i>
+                <span>Pengembalian</span>
+            </a>
+            <a href="/admin/riwayat" class="menu-item">
+                <i class="fas fa-history"></i>
+                <span>Riwayat Peminjaman</span>
+            </a>
+            <a href="/admin/feedback" class="menu-item">
+                <i class="fas fa-comment"></i>
+                <span>Feedback</span>
+            </a>
+            <a href="/admin/projectors" class="menu-item">
+                <i class="fas fa-video"></i>
+                <span>Proyektor</span>
+            </a>
+            <a href="/admin/jadwal-perkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
+            </a>
+            <a href="{{ route('admin.ruangan.index') }}" class="menu-item">
+                <i class="fas fa-door-open"></i>
+                <span>Ruangan</span>
+            </a>
+            <a href="{{ route('admin.slotwaktu.index') }}" class="menu-item active">
+                <i class="fas fa-clock"></i>
+                <span>Slot Waktu</span>
+            </a>
+            <a href="/admin/mata_kuliah" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Matakuliah</span>
+            </a>
+            <a href="/admin/kelas" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Kelas</span>
+            </a>
+            <a href="/admin/pengguna" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Pengguna</span>
+            </a>
+            <a href="/admin/laporan" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Statistik</span>
+            </a>
+            <a href="/admin/pengaturan" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
+        <!-- Header dengan desain dari kode pertama -->
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.slotwaktu.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" name="cari" placeholder="Cari slot waktu..." value="{{ request('cari') }}">
                 <button type="submit" style="display: none;"></button>
             </form>
-
+            
             <div class="user-actions">
-                <div class="notification-btn"><i class="fas fa-bell"></i></div>
-                <div class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></div>
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                </div>
+                
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+                
                 <div class="user-profile">
                     <div class="user-avatar">A</div>
                     <div>
@@ -688,7 +767,7 @@
             </div>
         </div>
 
-        <!-- Page Title -->
+        <!-- Konten halaman Manajemen Slot Waktu (tidak diubah) -->
         <div class="page-title">
             <div>
                 <h1>Manajemen Slot Waktu</h1>
@@ -740,7 +819,7 @@
                         <tr>
                             <th>No</th>
                             <th>ID SLot Waktu</th>
-                            <th>Slot Waktu</th>
+                            <th>Waktu</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -748,16 +827,8 @@
                         @forelse ($slotwaktu as $slot)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $slot->nama_slot }}</td>
-                                <td>{{ $slot->jam_mulai }}</td>
-                                <td>{{ $slot->jam_selesai }}</td>
-                                <td>
-                                    @if($slot->status == 'Aktif')
-                                        <span class="badge status-tersedia">Aktif</span>
-                                    @else
-                                        <span class="badge status-maintenance">Nonaktif</span>
-                                    @endif
-                                </td>
+                                <td>{{ $slot->id_slot }}</td>
+                                <td>{{ $slot->waktu }}</td>
                                 <td>
                                     <div class="d-flex gap-2 action-buttons">
                                         <a href="{{ route('admin.slotwaktu.edit', $slot->id) }}" class="btn btn-warning-custom btn-sm">
@@ -786,12 +857,18 @@
         </div>
     </div>
 
-    <!-- Script (sama seperti halaman Ruangan) -->
+    <div class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Script untuk fungsi navbar dan sidebar -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Theme Toggle
         const themeToggle = document.getElementById('theme-toggle');
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
+
             if (document.body.classList.contains('dark-mode')) {
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('darkMode', 'enabled');
@@ -800,20 +877,32 @@
                 localStorage.setItem('darkMode', 'disabled');
             }
         });
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
 
-        // Auto search dan filter
-        document.querySelectorAll('input[name="cari"]').forEach(input => {
-            let timer;
-            input.addEventListener('input', function() {
-                clearTimeout(timer);
-                timer = setTimeout(() => this.form.submit(), 800);
-            });
+        // Toggle sidebar on mobile
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
         });
-        document.querySelectorAll('#filterForm select').forEach(sel => sel.addEventListener('change', () => document.getElementById('filterForm').submit()));
+
+        // Terapkan dark mode jika sebelumnya diaktifkan
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Auto search dan filter
+            document.querySelectorAll('input[name="cari"]').forEach(input => {
+                let timer;
+                input.addEventListener('input', function() {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => this.form.submit(), 800);
+                });
+            });
+            document.querySelectorAll('#filterForm select').forEach(sel => sel.addEventListener('change', () => document.getElementById('filterForm').submit()));
+        });
     </script>
 </body>
 </html>
