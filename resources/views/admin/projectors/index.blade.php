@@ -475,20 +475,52 @@
             color: var(--text-dark);
         }
 
-        .filter-actions {
+        /* Perbaikan khusus untuk button filter dan reset */
+        .filter-buttons {
             display: flex;
             gap: 8px;
             align-items: end;
             height: 38px;
         }
 
-        .filter-actions .btn {
+        .filter-buttons .btn {
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             white-space: nowrap;
             font-size: 0.85rem;
+            padding: 8px 16px;
+            min-width: 90px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .filter-buttons .btn-primary {
+            background: var(--primary);
+            border: none;
+            color: white;
+            box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
+        }
+
+        .filter-buttons .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+        }
+
+        .filter-buttons .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .filter-buttons .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
         }
 
         /* Table */
@@ -802,6 +834,16 @@
             .filter-group {
                 min-width: 120px;
             }
+            
+            .filter-buttons {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .filter-buttons .btn {
+                width: 100%;
+                min-width: auto;
+            }
         }
 
         @media (max-width: 768px) {
@@ -862,12 +904,13 @@
                 width: 100%;
             }
 
-            .filter-actions {
+            .filter-buttons {
                 width: 100%;
                 justify-content: stretch;
+                flex-direction: row;
             }
 
-            .filter-actions .btn {
+            .filter-buttons .btn {
                 flex: 1;
             }
 
@@ -947,6 +990,10 @@
             
             .pagination-container {
                 padding: 15px 0;
+            }
+            
+            .filter-buttons {
+                flex-direction: column;
             }
         }
 
@@ -1156,15 +1203,11 @@
                             <option value="kode" {{ request('sort') == 'kode' ? 'selected' : '' }}>Kode A-Z</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label>&nbsp;</label>
-                        <button type="submit" class="btn btn-primary" style="padding: 8px 15px;">
+                    <div class="filter-buttons">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-filter"></i> Filter
                         </button>
-                    </div>
-                    <div class="filter-group">
-                        <label>&nbsp;</label>
-                        <a href="{{ route('projectors.index') }}" class="btn btn-outline" style="padding: 8px 15px;">
+                        <a href="{{ route('projectors.index') }}" class="btn btn-outline">
                             <i class="fas fa-refresh"></i> Reset
                         </a>
                     </div>
@@ -1295,10 +1338,6 @@
                 <i class="fas fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
-
-        <div class="menu-toggle" id="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1379,14 +1418,6 @@
             document.getElementById('status').value = status;
             document.getElementById('filterForm').submit();
         }
-
-        // Toggle sidebar on mobile
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
     </script>
 </body>
 </html>

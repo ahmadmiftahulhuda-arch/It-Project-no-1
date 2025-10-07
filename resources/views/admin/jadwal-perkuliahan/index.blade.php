@@ -1167,7 +1167,7 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/proyektor" class="menu-item">
+            <a href="/admin/projectors" class="menu-item">
                 <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
