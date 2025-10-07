@@ -8,12 +8,31 @@ use Illuminate\Http\Request;
 class SlotWaktuController extends Controller
 {
     /**
-     * Menampilkan semua data slot waktu
+     * Menampilkan semua data slot waktu dengan fitur pencarian
      */
-    public function index()
+    public function index(Request $request)
     {
-        $slotWaktu = SlotWaktu::all();
-        return view('admin.slotwaktu.index', ['slotwaktu' => $slotWaktu]);
+        $query = SlotWaktu::query();
+        
+        // Pencarian berdasarkan input pengguna
+        if ($request->has('cari') && !empty($request->cari)) {
+            $searchTerm = $request->cari;
+            
+            // Tentukan jenis pencarian
+            $searchType = $request->get('search_type', 'jam'); // default ke pencarian jam
+            
+            if ($searchType == 'id') {
+                // Pencarian berdasarkan ID slot
+                $query->where('id_slot', 'LIKE', '%' . $searchTerm . '%');
+            } else {
+                // Pencarian berdasarkan jam/waktu
+                $query->where('waktu', 'LIKE', '%' . $searchTerm . '%');
+            }
+        }
+        
+        $slotwaktu = $query->get();
+        
+        return view('admin.slotwaktu.index', compact('slotwaktu'));
     }
 
     /**

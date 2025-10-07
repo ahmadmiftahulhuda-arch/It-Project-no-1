@@ -744,7 +744,7 @@
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.slotwaktu.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" name="cari" placeholder="Cari slot waktu..." value="{{ request('cari') }}">
+                <input type="text" id="searchInput" name="cari" placeholder="Cari slot waktu berdasarkan jam (contoh: 08:00)..." value="{{ request('cari') }}">
                 <button type="submit" style="display: none;"></button>
             </form>
             
@@ -783,20 +783,19 @@
             </div>
         </div>
 
-        <!-- Filter Section -->
+        <!-- Filter Section - Diperbaiki untuk pencarian jam yang lebih baik -->
         <div class="filter-section">
             <form id="filterForm" method="GET" action="{{ route('admin.slotwaktu.index') }}">
                 <div class="filter-grid">
                     <div class="filter-group">
-                        <label for="search">Cari Slot Waktu</label>
-                        <input type="text" id="search" name="cari" placeholder="Cari berdasarkan jam..." value="{{ request('cari') }}">
+                        <label for="search">Cari Berdasarkan Jam</label>
+                        <input type="text" id="search" name="cari" placeholder="Contoh: 8:00" value="{{ request('cari') }}">
                     </div>
                     <div class="filter-group">
-                        <label for="status_filter">Status Slot</label>
-                        <select id="status_filter" name="status">
-                            <option value="Semua" {{ request('status') == 'Semua' ? 'selected' : '' }}>Semua</option>
-                            <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="Nonaktif" {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        <label for="search_type">Jenis Pencarian</label>
+                        <select id="search_type" name="search_type">
+                            <option value="jam" {{ request('search_type') == 'jam' ? 'selected' : '' }}>Pencarian berdasarkan jam</option>
+                            <option value="id" {{ request('search_type') == 'id' ? 'selected' : '' }}>Pencarian berdasarkan ID</option>
                         </select>
                     </div>
                 </div>
@@ -818,7 +817,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>ID SLot Waktu</th>
+                            <th>ID Slot Waktu</th>
                             <th>Waktu</th>
                             <th>Aksi</th>
                         </tr>
@@ -893,15 +892,51 @@
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
             
+            // Format pencarian jam - validasi input
+            const searchInput = document.getElementById('search');
+            const searchHeader = document.getElementById('searchInput');
+            
+            function validateTimeInput(input) {
+                // Format jam yang diizinkan: HH:MM (24 jam)
+                const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                
+                if (input.value && !timePattern.test(input.value)) {
+                    input.style.borderColor = 'red';
+                } else {
+                    input.style.borderColor = '';
+                    input.title = '';
+                }
+            }
+            
+            // Validasi input saat mengetik
+            searchInput.addEventListener('input', function() {
+                validateTimeInput(this);
+                searchHeader.value = this.value; // Sinkronisasi dengan input di header
+            });
+            
+            searchHeader.addEventListener('input', function() {
+                validateTimeInput(this);
+                searchInput.value = this.value; // Sinkronisasi dengan input di filter
+            });
+            
             // Auto search dan filter
+            let timer;
+            function submitFormWithDelay(form) {
+                clearTimeout(timer);
+                timer = setTimeout(() => form.submit(), 800);
+            }
+            
             document.querySelectorAll('input[name="cari"]').forEach(input => {
-                let timer;
                 input.addEventListener('input', function() {
-                    clearTimeout(timer);
-                    timer = setTimeout(() => this.form.submit(), 800);
+                    submitFormWithDelay(this.form);
                 });
             });
-            document.querySelectorAll('#filterForm select').forEach(sel => sel.addEventListener('change', () => document.getElementById('filterForm').submit()));
+            
+            document.querySelectorAll('#filterForm select').forEach(sel => {
+                sel.addEventListener('change', () => {
+                    document.getElementById('filterForm').submit();
+                });
+            });
         });
     </script>
 </body>
