@@ -666,7 +666,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="stat-title">Total Kelas</div>
-                        <div class="stat-value">{{ $total_kelas ?? '0' }}</div> 
+                        <div class="stat-value">{{ $totalKelas ?? '0' }}</div> 
                     </div>
                     <div class="stat-icon bg-primary-light">
                         <i class="fas fa-university"></i>
@@ -679,7 +679,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="stat-title">Total Mahasiswa</div>
-                        <div class="stat-value">{{ $total_mahasiswa ?? '0' }}</div> 
+                        <div class="stat-value">{{ $totalMahasiswa ?? '0' }}</div> 
                     </div>
                     <div class="stat-icon bg-success-light">
                         <i class="fas fa-user-graduate"></i>
@@ -692,7 +692,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="stat-title">Rata-rata per Kelas</div>
-                        <div class="stat-value">{{ $rata_rata_mahasiswa ?? '0' }}</div> 
+                        <div class="stat-value">{{ $rataRata ?? '0' }}</div> 
                     </div>
                     <div class="stat-icon bg-info-light">
                         <i class="fas fa-chart-pie"></i>
