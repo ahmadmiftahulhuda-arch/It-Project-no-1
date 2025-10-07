@@ -131,7 +131,6 @@ Route::prefix('pengembalian')->group(function () {
     Route::post('/{id}/ajukan', [PeminjamanController::class, 'ajukanPengembalian'])->name('user.pengembalian.ajukan');
 });
 
-// ================================
-// FALLBACK (404)
-// ================================
-Route::fallback(fn() => response()->view('errors.404', [], 404));
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('ruangan', RuanganController::class);
+});
