@@ -4,184 +4,134 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Response;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\User\PeminjamanController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProjectorController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\JadwalPerkuliahanController;
+use App\Http\Controllers\RuanganController;
+use App\Http\Controllers\MataKuliahController;
+use App\Http\Controllers\SlotWaktuController;
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\MahasiswaController;
 
-Route::get('/home', function () {
-    return view('home');
-})->name('home');   // kasih nama 'home'
+// ================================
+// HALAMAN UMUM (PUBLIC ROUTES)
+// ================================
+Route::get('/', fn() => view('home'))->name('home');
+Route::view('/about', 'about')->name('about');
+Route::view('/kalender', 'kalender');
+Route::view('/peminjaman', 'peminjaman');
+Route::view('/berita', 'berita');
+Route::view('/post', 'post');
+Route::view('/syaratdanketentuan', 'syaratdanketentuan');
+Route::view('/faq', 'faq');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about'); 
-
-// ✅ Google Auth Routes
+// ================================
+// AUTHENTIKASI DAN GOOGLE LOGIN
+// ================================
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 
-// ✅ CSS Assets
-Route::get('/style.css', function () {
-    $path = resource_path('css/style.css');
-    $content = File::get($path);
-
-    return Response::make($content, 200, [
-        'Content-Type' => 'text/css'
-    ]);
-});
-
-Route::get('/css/login.css', function () {
-    $path = resource_path('css/login.css');
-    $content = File::get($path);
-
-    return Response::make($content, 200, [
-        'Content-Type' => 'text/css'
-    ]);
-});
-
-Route::get('/', function () {
-    return view('home');
-})->name('dashboard');
-
-// ✅ Halaman bebas diakses (public)
-Route::get('/', function () {
-    return view('home');
-});
-
-Route::get('/home', function () {
-    return view('home');
-});
-
-Route::get('/kalender', function () {
-    return view('kalender');
-});
-
-Route::get('/peminjaman', function () {
-    return view('peminjaman');
-});
-
-Route::get('/berita', function () {
-    return view('berita');
-});
-
-Route::get('/about', function () {
-    return view('about');
-});
-
-Route::get('/post', function () {
-    return view('post');
-});
-
-Route::get('/syaratdanketentuan', function () {
-    return view('syaratdanketentuan');
-});
-
-Route::get('/faq', function () {
-    return view('faq');
-});
-
-Route::get('/login', function () {
-    return view('auth.login');  // otomatis ke resources/views/auth/login.blade.php
-})->name('login');
-
-Route::post('/login', function (Request $request) {
-    $credentials = $request->only('email', 'password');
-
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-        return redirect()->route('dashboard'); // Redirect ke dashboard
-    }
-
-    return back()->withErrors([
-        'email' => 'Email atau password salah.',
-    ]);
-});
-
-// ✅ Halaman dashboard admin
-Route::get('/admin/login', function () {
-    return view('admin/login');
-});
-Route::get('/admin/dashboard', function () {
-    return view('admin/dashboard');
-});
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
-Route::get('/admin/item', function () {
-    return view('admin/item');
-});
-Route::get('/admin/peminjaman', function () {
-    return view('admin/peminjaman');
-});
-Route::get('/admin/pengembalian', function () {
-    return view('admin/pengembalian');
-});
-Route::get('/admin/pengguna', function () {
-    return view('admin/pengguna');
-});
-Route::get('/admin/laporan', function () {
-    return view('admin/laporan');
-});
-Route::get('/admin/pengaturan', function () {
-    return view('admin/pengaturan');
-});
-// Route untuk Feedback
-Route::prefix('admin')->group(function () {
-    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
-    Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
-    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
-    Route::get('/feedback/{id}/edit', [FeedbackController::class, 'edit'])->name('feedback.edit');
-    Route::put('/feedback/{id}', [FeedbackController::class, 'update'])->name('feedback.update');
-    Route::delete('/feedback/{id}', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
-    Route::get('/feedback/{id}', [FeedbackController::class, 'show'])->name('feedback.show');
-});
-// ✅ Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-});
-// ✅ Password Reset Routes (Tambahkan ini)
+
+// Password Reset
 Route::get('/forgot-password', [AuthController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 
-// ✅ Hanya user login yang bisa akses
+// ================================
+// HALAMAN LOGIN DAN DASHBOARD
+// ================================
+Route::get('/login', fn() => view('auth.login'))->name('login');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    
-    // Tambahkan route admin lainnya di sini
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
 });
 
-// Fallback route untuk menangani 404
-Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
+// ================================
+// ADMIN ROUTES
+// ================================
+Route::prefix('admin')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Feedback
+    Route::resource('feedback', FeedbackController::class);
+
+    // Projector
+    Route::resource('projectors', ProjectorController::class);
+
+    // Jadwal Perkuliahan
+    Route::resource('jadwal-perkuliahan', JadwalPerkuliahanController::class);
+    Route::post('/jadwal-perkuliahan/import', [JadwalPerkuliahanController::class, 'import'])->name('jadwal-perkuliahan.import');
+    Route::get('/template', [JadwalPerkuliahanController::class, 'downloadTemplate'])->name('template');
+    Route::post('/jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])->name('jadwal-perkuliahan.delete-all');
+
+    // Ruangan, Mata Kuliah, Slot Waktu
+    Route::resource('ruangan', RuanganController::class);
+    Route::resource('mata_kuliah', MataKuliahController::class);
+    Route::resource('slotwaktu', SlotWaktuController::class);
+
+    // Kelas & Mahasiswa
+    Route::resource('kelas', KelasController::class);
+    Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
+    Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
+    Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
+
+    // Admin Peminjaman, Pengembalian, Riwayat
+    Route::prefix('peminjaman')->group(function () {
+        Route::get('/', [AdminController::class, 'peminjaman'])->name('admin.peminjaman.index');
+        Route::post('/', [AdminController::class, 'store'])->name('admin.peminjaman.store');
+        Route::put('/{id}/approve', [AdminController::class, 'approve'])->name('admin.peminjaman.approve');
+        Route::put('/{id}/reject', [AdminController::class, 'reject'])->name('admin.peminjaman.reject');
+        Route::put('/{id}/complete', [AdminController::class, 'complete'])->name('admin.peminjaman.complete');
+        Route::put('/{id}', [AdminController::class, 'update'])->name('admin.peminjaman.update');
+        Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.peminjaman.destroy');
+    });
+
+    Route::prefix('pengembalian')->group(function () {
+        Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
+        Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
+        Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])->name('admin.pengembalian.kembalikan');
+        Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])->name('admin.pengembalian.destroy');
+    });
+
+    Route::prefix('riwayat')->group(function () {
+        Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');
+        Route::put('/{id}', [AdminController::class, 'updateRiwayat'])->name('admin.riwayat.update');
+        Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
+    });
 });
-Route::get('/dashboard', function () {
-    return view('home'); // arahkan ke home.blade.php
-})->middleware('auth')->name('dashboard');
 
-// Proyektor routes
-    Route::get('/admin/projectors', [ProjectorController::class, 'index'])->name('projectors.index');
-    Route::get('/admin/projectors/{id}', [ProjectorController::class, 'create'])->name('projectors.create');
+// ================================
+// ROUTES UNTUK USER
+// ================================
+Route::prefix('peminjaman')->group(function () {
+    Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');
+    Route::get('/create', [PeminjamanController::class, 'create'])->name('user.peminjaman.create');
+    Route::post('/', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
+    Route::get('/{id}', [PeminjamanController::class, 'show'])->name('user.peminjaman.show');
+    Route::get('/{id}/edit', [PeminjamanController::class, 'edit'])->name('user.peminjaman.edit');
+    Route::put('/{id}', [PeminjamanController::class, 'update'])->name('user.peminjaman.update');
+    Route::delete('/{id}', [PeminjamanController::class, 'destroy'])->name('user.peminjaman.destroy');
+    Route::get('/riwayat/user', [PeminjamanController::class, 'riwayat'])->name('user.peminjaman.riwayat');
+});
 
-// Routes untuk manajemen proyektor
-Route::resource('/admin/projectors', ProjectorController::class);
+Route::prefix('pengembalian')->group(function () {
+    Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
+    Route::get('/{id}', [PeminjamanController::class, 'showPengembalian'])->name('user.pengembalian.show');
+    Route::post('/{id}/ajukan', [PeminjamanController::class, 'ajukanPengembalian'])->name('user.pengembalian.ajukan');
+});
 
-// Route untuk halaman proyektor (alternatif)
-Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('admin.proyektor');
-
-// Halaman utama jadwal perkuliahan
- Route::resource('/admin/jadwal-perkuliahan', JadwalPerkuliahanController::class);
- Route::post('/admin/jadwal-perkuliahan/import', [JadwalPerkuliahanController::class, 'import'])
-    ->name('jadwal-perkuliahan.import');
-Route::get('/template', [JadwalPerkuliahanController::class, 'downloadTemplate'])->name('template');
-Route::post('jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])
-    ->name('jadwal-perkuliahan.delete-all');
+// ================================
+// FALLBACK (404)
+// ================================
+Route::fallback(fn() => response()->view('errors.404', [], 404));

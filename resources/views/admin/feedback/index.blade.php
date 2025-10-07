@@ -720,7 +720,7 @@
                     <i class="fas fa-projector"></i>
                     <span>Proyektor</span>
                 </a>
-                <a href="/admin/jadwalperkuliahan" class="menu-item">
+                <a href="/admin/jadwal-perkuliahan" class="menu-item">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Jadwal Perkuliahan</span>
                 </a>
@@ -732,7 +732,7 @@
                     <i class="fas fa-clock"></i>
                     <span>Slot Waktu</span>
                 </a>
-                <a href="/admin/matakuliah" class="menu-item">
+                <a href="/admin/mata_kuliah" class="menu-item">
                     <i class="fas fa-book"></i>
                     <span>Matakuliah</span>
                 </a>

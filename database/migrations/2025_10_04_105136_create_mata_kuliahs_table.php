@@ -9,23 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-    Schema::create('peminjaman', function (Blueprint $table) {
-        $table->id('id_peminjaman'); // ganti id default jadi id_peminjaman
-        $table->string('nama_peminjam');
-        $table->date('tgl_pinjam');
-        // kolom lainnya...
+   public function up(): void
+{
+    Schema::create('mata_kuliahs', function (Blueprint $table) {
+        $table->id();
+        $table->string('kode')->unique();
+        $table->string('nama');
+        $table->integer('semester');
         $table->timestamps();
     });
-
-    }
+}
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjaman');
+        Schema::dropIfExists('mata_kuliahs');
     }
 };

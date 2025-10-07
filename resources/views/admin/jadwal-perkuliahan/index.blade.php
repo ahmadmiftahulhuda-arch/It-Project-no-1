@@ -1179,7 +1179,7 @@
                 <i class="fas fa-door-open"></i>
                 <span>Ruangan</span>
             </a>
-            <a href="/admin/matakuliah" class="menu-item">
+            <a href="/admin/mata_kuliah" class="menu-item">
                 <i class="fas fa-book"></i>
                 <span>Matakuliah</span>
             </a>
