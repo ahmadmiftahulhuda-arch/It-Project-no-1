@@ -17,6 +17,7 @@ use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\SlotWaktuController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PenggunaController;
 
 
 
@@ -222,6 +223,11 @@ Route::prefix('pengembalian')->group(function () {
     Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
     Route::get('/{id}', [PeminjamanController::class, 'showPengembalian'])->name('user.pengembalian.show');
     Route::post('/{id}/ajukan', [PeminjamanController::class, 'ajukanPengembalian'])->name('user.pengembalian.ajukan');
+});
+
+//routes pengguna
+Route::prefix('admin')->group(function () {
+    Route::resource('pengguna', PenggunaController::class);
 });
 
 // ================================
