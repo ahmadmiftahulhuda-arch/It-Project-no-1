@@ -7,18 +7,25 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Jalankan migrasi.
      */
     public function up(): void
     {
         Schema::create('penggunas', function (Blueprint $table) {
             $table->id();
+            $table->string('nama'); // Sesuai $request->nama di controller
+            $table->string('nim', 20)->nullable()->unique(); // Sesuai validasi unique:penggunas,nim
+            $table->string('email')->unique();
+            $table->enum('peran', ['Admin Lab', 'Asisten', 'Mahasiswa'])->default('Mahasiswa');
+            $table->string('jurusan')->nullable();
+            $table->enum('status', ['Aktif', 'Non-Aktif'])->default('Aktif');
+            $table->date('tanggal_bergabung')->nullable();
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse (rollback) migrasi.
      */
     public function down(): void
     {
