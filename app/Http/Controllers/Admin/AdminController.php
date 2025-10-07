@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\User;
@@ -326,5 +327,33 @@ class AdminController extends Controller
 
         return redirect()->route('admin.riwayat')
                         ->with('success', 'Riwayat peminjaman berhasil diperbarui.');
+    }
+
+    /**
+     * Display dashboard admin
+     */
+    public function dashboard()
+    {
+        // Statistik untuk dashboard
+        $totalPeminjaman = Peminjaman::count();
+        $peminjamanPending = Peminjaman::where('status', 'pending')->count();
+        $peminjamanDisetujui = Peminjaman::where('status', 'disetujui')->count();
+        $peminjamanDitolak = Peminjaman::where('status', 'ditolak')->count();
+        $peminjamanSelesai = Peminjaman::where('status', 'selesai')->count();
+
+        // Peminjaman terbaru
+        $peminjamanTerbaru = Peminjaman::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalPeminjaman',
+            'peminjamanPending',
+            'peminjamanDisetujui',
+            'peminjamanDitolak',
+            'peminjamanSelesai',
+            'peminjamanTerbaru'
+        ));
     }
 }
