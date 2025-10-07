@@ -180,3 +180,8 @@ Route::get('/admin/proyektor', [ProjectorController::class, 'index'])->name('adm
 
 // Halaman utama jadwal perkuliahan
  Route::resource('/admin/jadwal-perkuliahan', JadwalPerkuliahanController::class);
+ Route::post('/admin/jadwal-perkuliahan/import', [JadwalPerkuliahanController::class, 'import'])
+    ->name('jadwal-perkuliahan.import');
+Route::get('/template', [JadwalPerkuliahanController::class, 'downloadTemplate'])->name('template');
+Route::post('jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])
+    ->name('jadwal-perkuliahan.delete-all');
