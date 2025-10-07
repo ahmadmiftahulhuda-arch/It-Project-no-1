@@ -18,7 +18,6 @@ use App\Http\Controllers\SlotWaktuController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenggunaController;
-
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
 // ================================
@@ -111,6 +110,10 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
     });
 });
+//routes pengguna
+Route::prefix('admin')->group(function () {
+    Route::resource('pengguna', PenggunaController::class);
+});
 
 // ================================
 // ROUTES UNTUK USER
@@ -132,48 +135,6 @@ Route::prefix('pengembalian')->group(function () {
     Route::post('/{id}/ajukan', [PeminjamanController::class, 'ajukanPengembalian'])->name('user.pengembalian.ajukan');
 });
 
-<<<<<<< HEAD
-//routes pengguna
-Route::prefix('admin')->group(function () {
-    Route::resource('pengguna', PenggunaController::class);
-});
-
-// ================================
-// ROUTES UNTUK ADMIN PEMINJAMAN, PENGEMBALIAN, RIWAYAT
-// ================================
-
-Route::prefix('admin')->group(function () {
-    // Dashboard - redirect ke peminjaman
-    Route::get('/dashboard', [AdminController::class, 'peminjaman'])->name('admin.dashboard');
-    Route::get('/', [AdminController::class, 'peminjaman'])->name('admin.home');
-    
-    // Route peminjaman admin
-    Route::prefix('peminjaman')->group(function () {
-        Route::get('/', [AdminController::class, 'peminjaman'])->name('admin.peminjaman.index');
-        Route::post('/', [AdminController::class, 'store'])->name('admin.peminjaman.store');
-        Route::put('/{id}/approve', [AdminController::class, 'approve'])->name('admin.peminjaman.approve');
-        Route::put('/{id}/reject', [AdminController::class, 'reject'])->name('admin.peminjaman.reject');
-        Route::put('/{id}/complete', [AdminController::class, 'complete'])->name('admin.peminjaman.complete');
-        Route::put('/{id}', [AdminController::class, 'update'])->name('admin.peminjaman.update');
-        Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.peminjaman.destroy');
-    });
-    
-    // Route pengembalian admin
-    Route::prefix('pengembalian')->group(function () {
-        Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
-        Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
-        Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])->name('admin.pengembalian.kembalikan');
-        Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])->name('admin.pengembalian.destroy');
-    });
-    
-    // Route riwayat admin
-    Route::prefix('riwayat')->group(function () {
-        Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');
-        Route::put('/{id}', [AdminController::class, 'updateRiwayat'])->name('admin.riwayat.update');
-        Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
-    });
-=======
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);
->>>>>>> a4a278e4a2ba7f53eed47a955df2a4f3de80bc1e
 });
