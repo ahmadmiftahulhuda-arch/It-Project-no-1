@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('peminjamans', function (Blueprint $table) {
@@ -15,9 +14,12 @@ return new class extends Migration
             $table->string('ruang');
             $table->boolean('proyektor')->default(false);
             $table->text('keperluan');
-            $table->enum('status', ['pending', 'disetujui', 'ditolak', 'selesai'])->default('pending');
+            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->time('waktu_mulai'); // ✅ tambahkan
+            $table->time('waktu_selesai'); // ✅ tambahkan
             $table->timestamps();
         });
+
     }
 
     public function down(): void
