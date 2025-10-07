@@ -7,6 +7,7 @@
     <title>Daftar Peminjaman - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /* ===== VARIABEL CSS ===== */
         :root {
@@ -70,6 +71,12 @@
             border-radius: 6px;
             margin: 0 2px;
             font-size: 0.85rem;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
         }
 
         .btn-action-disabled {
@@ -572,6 +579,18 @@
         .time-indicator.old {
             color: #6c757d;
         }
+
+        /* ===== LOADING SPINNER ===== */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
     </style>
 </head>
 
@@ -670,13 +689,23 @@
                     <div>
                         <select class="form-select" id="ruang-filter">
                             <option value="semua">Semua Ruang</option>
-                            <option value="Ruang A">Ruang A</option>
-                            <option value="Ruang B">Ruang B</option>
-                            <option value="Ruang C">Ruang C</option>
+                            <option value="Lab A">Lab A</option>
+                            <option value="Lab B">Lab B</option>
+                            <option value="Lab C">Lab C</option>
+                            <option value="Ruang Meeting">Ruang Meeting</option>
+                            <option value="Ruang Seminar">Ruang Seminar</option>
                         </select>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Memuat data...</p>
         </div>
 
         <!-- Tabel Peminjaman -->
@@ -694,7 +723,7 @@
                             <th width="150" class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tableBody">
                         @forelse($peminjamans as $peminjaman)
                             @php
                                 // Tentukan apakah peminjaman sedang berlangsung
@@ -795,17 +824,19 @@
 
                                         <!-- Tombol Hapus - hanya aktif untuk status 'pending' -->
                                         @if ($peminjaman->status == 'pending')
-                                            <form action="{{ route('user.peminjaman.destroy', $peminjaman->id) }}" method="POST" style="display: inline;">
+                                            <form action="{{ route('user.peminjaman.destroy', $peminjaman->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-action btn-delete" title="Hapus Peminjaman" onclick="return confirm('Apakah Anda yakin ingin menghapus peminjaman ini?')">
+                                                <button type="button" class="btn btn-danger btn-action btn-delete" 
+                                                        title="Hapus Peminjaman"
+                                                        data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>
                                         @else
                                             <button class="btn btn-danger btn-action btn-action-disabled"
-                                                title="Tidak dapat menghapus peminjaman yang sudah {{ $peminjaman->status == 'disetujui' ? 'disetujui' : 'ditolak' }}"
-                                                disabled>
+                                                    title="Tidak dapat menghapus peminjaman yang sudah {{ $peminjaman->status == 'disetujui' ? 'disetujui' : 'ditolak' }}"
+                                                    disabled>
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         @endif
@@ -898,10 +929,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ===== KONFIRMASI HAPUS =====
-        function confirmDelete(e) {
-            e.preventDefault();
-            if (confirm('Apakah Anda yakin ingin menghapus data peminjaman ini?')) {
-                window.location.href = e.currentTarget.href;
+        function confirmDelete(event) {
+            event.preventDefault();
+            const button = event.currentTarget;
+            const keperluan = button.getAttribute('data-keperluan');
+            
+            if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
+                // Submit form terdekat
+                const form = button.closest('form');
+                if (form) {
+                    form.submit();
+                }
             }
         }
 
@@ -958,7 +996,7 @@
                 const waktu = cells[1].querySelector('.time-badge').textContent.trim();
                 const ruang = cells[2].textContent.trim();
                 const proyektor = cells[3].textContent.trim();
-                const keperluan = cells[4].textContent.trim();
+                const keperluan = cells[4].querySelector('.text-truncate-custom').textContent.trim();
                 const status = cells[5].textContent.trim();
 
                 // Buat konten modal
@@ -1041,6 +1079,17 @@
             });
         }
 
+        // ===== LOADING STATE =====
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.querySelector('.table-container').style.opacity = '0.5';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.querySelector('.table-container').style.opacity = '1';
+        }
+
         // ===== INISIALISASI EVENT LISTENER =====
         document.addEventListener('DOMContentLoaded', function() {
             // Event listener untuk tombol hapus
@@ -1084,6 +1133,19 @@
 
             // Inisialisasi filter saat halaman dimuat
             filterTable();
+
+            // Sembunyikan loading setelah halaman dimuat
+            setTimeout(() => {
+                hideLoading();
+            }, 500);
+        });
+
+        // Handle page transitions
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('a') && e.target.getAttribute('href') && 
+                !e.target.getAttribute('href').startsWith('#')) {
+                showLoading();
+            }
         });
     </script>
 </body>

@@ -323,6 +323,121 @@
             color: white;
         }
 
+        .btn-danger {
+            background: var(--danger);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(244, 67, 54, 0.2);
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
+            color: white;
+        }
+
+        /* Import Form Styles */
+        .import-form {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+        }
+
+        .dark-mode .import-form {
+            background: var(--bg-card);
+            border-color: var(--border-light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .import-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .import-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .import-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-dark);
+            font-size: 0.85rem;
+        }
+
+        .dark-mode .file-input-wrapper input[type="file"] {
+            background: #2a2a2a;
+            border-color: var(--border-light);
+            color: var(--text-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .template-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .template-link:hover {
+            color: var(--secondary);
+        }
+
         /* Stats Cards */
         .stats-container {
             display: grid;
@@ -922,6 +1037,32 @@
             .page-title h1 {
                 font-size: 1.5rem;
             }
+
+            .import-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+
+            .import-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .file-input-wrapper {
+                max-width: none;
+            }
+
+            .page-title-actions {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .page-title-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 576px) {
@@ -985,6 +1126,13 @@
         .filter-group input,
         .table {
             transition: all 0.3s ease;
+        }
+
+        /* Page Title Actions */
+        .page-title-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
     </style>
 </head>
@@ -1083,17 +1231,71 @@
         </div>
 
         <!-- Page Title -->
-        <div class="page-title">
-            <div>
-                <h1>Manajemen Jadwal Perkuliahan</h1>
-                <p>Kelola jadwal perkuliahan Lab Teknologi Informasi</p>
+<div class="page-title">
+    <div>
+        <h1>Manajemen Jadwal Perkuliahan</h1>
+        <p>Kelola jadwal perkuliahan Lab Teknologi Informasi</p>
+    </div>
+    <div class="page-title-actions">
+        <a href="{{ route('jadwal-perkuliahan.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Jadwal
+        </a>
+        <!-- Di view -->
+<form action="{{ route('jadwal-perkuliahan.delete-all') }}" method="POST" onsubmit="return confirmDeleteAll()">
+    @csrf
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Hapus Semua
+    </button>
+</form>
+    </div>
+</div>
+
+        <!-- Import Excel Form -->
+        <form action="{{ route('jadwal-perkuliahan.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
+            @csrf
+            <div class="import-header">
+                <h3 class="import-title">
+                    <i class="fas fa-file-import me-2"></i>Import Data dari Excel
+                </h3>
+                <div class="import-actions">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                    </div>
+                    <button class="btn btn-success" type="submit">
+                        <i class="fas fa-upload me-1"></i> Import Excel
+                    </button>
+                    
+                </div>
             </div>
-            <div>
-                <a href="{{ route('jadwal-perkuliahan.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Jadwal
-                </a>
-            </div>
-        </div>
+            <!-- Alert untuk pesan sukses/error import -->
+            @if(session('import_success'))
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('import_success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('import_error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('import_error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </form>
 
         <!-- Stats Cards -->
         <div class="stats-container">
@@ -1416,6 +1618,17 @@
                 document.getElementById('filterForm').submit();
             }, 800);
         });
+
+        // Konfirmasi hapus semua data
+        function confirmDeleteAll() {
+            const totalData = {{ $jadwal->total() ?? 0 }};
+            if (totalData === 0) {
+                alert('Tidak ada data yang bisa dihapus!');
+                return false;
+            }
+            
+            return confirm(`Apakah Anda yakin ingin menghapus SEMUA data jadwal perkuliahan?\n\nTotal data yang akan dihapus: ${totalData} jadwal\n\nTindakan ini tidak dapat dibatalkan!`);
+        }
     </script>
 </body>
 </html>

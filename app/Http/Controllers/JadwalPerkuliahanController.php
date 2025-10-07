@@ -1,11 +1,12 @@
 <?php
-// app/Http/Controllers/JadwalPerkuliahanController.php
 
 namespace App\Http\Controllers;
 
-use App\Models\JadwalPerkuliahan;
 use Illuminate\Http\Request;
+use App\Models\JadwalPerkuliahan;
+use App\Imports\JadwalPerkuliahanImport;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JadwalPerkuliahanController extends Controller
 {
@@ -123,4 +124,27 @@ class JadwalPerkuliahanController extends Controller
         return redirect()->route('jadwal-perkuliahan.index')
                          ->with('success', 'Jadwal perkuliahan berhasil dihapus.');
     }
+    public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls'
+    ]);
+
+    Excel::import(new JadwalPerkuliahanImport, $request->file('file'));
+
+    return redirect()->route('jadwal-perkuliahan.index')
+        ->with('success', 'Data jadwal perkuliahan berhasil diimport dari Excel.');
+}
+public function deleteAll(Request $request)
+{
+    try {
+        \App\Models\JadwalPerkuliahan::truncate();
+        
+        return redirect()->route('jadwal-perkuliahan.index')
+            ->with('success', 'Semua data berhasil dihapus!');
+    } catch (\Exception $e) {
+        return redirect()->route('jadwal-perkuliahan.index')
+            ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+    }
+}
 }
