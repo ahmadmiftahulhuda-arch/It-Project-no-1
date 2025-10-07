@@ -16,8 +16,8 @@
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
-            --font-size-base: 0.9rem; /* Diperkecil dari 1rem */
-            --line-height-base: 1.5; /* Diperkecil dari 1.6 */
+            --font-size-base: 0.9rem;
+            --line-height-base: 1.5;
             --container-max-width: 1200px;
         }
         
@@ -1048,22 +1048,18 @@
     <!-- Tab Content -->
 <div class="tab-container">
     <div x-show="tab==='available'">
-        {{-- Memanggil konten dari file rooms/available.blade.php --}}
         @include('rooms.available')
     </div>
 
     <div x-show="tab==='used'">
-        {{-- Memanggil konten dari file rooms/used.blade.php --}}
         @include('rooms.used')
     </div>
 
     <div x-show="tab==='projectors'">
-        {{-- Memanggil konten dari file rooms/projectors.blade.php --}}
         @include('rooms.projectors')
     </div>
 
     <div x-show="tab==='statistics'">
-        {{-- Memanggil konten dari file rooms/statistics.blade.php --}}
         @include('rooms.statistics')
     </div>
 </div>
@@ -1089,7 +1085,7 @@
                 
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fa-solid fa-projector"></i>
+                        <i class="fa-solid fa-video"></i>
                     </div>
                     <div class="feature-content">
                         <h4>Peminjaman Proyektor</h4>
