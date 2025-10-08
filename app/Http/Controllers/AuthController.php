@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Pengguna; // <-- Ditambahkan
 
 class AuthController extends Controller
 {
@@ -22,7 +23,17 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+            // Cek peran pengguna dari tabel 'penggunas'
+            $user = Auth::user();
+            $pengguna = Pengguna::where('email', $user->email)->first();
+
+            // Arahkan berdasarkan peran
+            if ($pengguna && $pengguna->peran === 'Admin') {
+                return redirect()->intended('/admin/dashboard'); // Arahkan ke dashboard admin
+            } 
+
+            return redirect()->intended('/'); // Arahkan ke halaman utama untuk user biasa
         }
 
         return back()->withErrors([

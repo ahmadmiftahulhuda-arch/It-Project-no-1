@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengguna;
+use App\Models\User; // Ditambahkan
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash; // Ditambahkan
 use Illuminate\Support\Facades\Validator;
 
 class PenggunaController extends Controller
@@ -44,7 +46,8 @@ class PenggunaController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nim' => 'nullable|string|max:20|unique:penggunas,nim',
-            'email' => 'required|email|unique:penggunas,email',
+            'email' => 'required|email|unique:penggunas,email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
             'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
             'jurusan' => 'nullable|string|max:255',
             'status' => 'required|in:Aktif,Non-Aktif',
@@ -58,11 +61,18 @@ class PenggunaController extends Controller
         }
 
         try {
-            // Simpan data baru
-            Pengguna::create($validator->validated());
+            // 1. Simpan data ke tabel 'penggunas'
+            $pengguna = Pengguna::create($validator->validated());
             
+            // 2. Buat data login di tabel 'users'
+            User::create([
+                'name' => $pengguna->nama,
+                'email' => $pengguna->email,
+                'password' => Hash::make($request->password),
+            ]);
+
             return redirect()->route('pengguna.index')
-                ->with('success', 'Pengguna berhasil ditambahkan');
+                ->with('success', 'Pengguna berhasil ditambahkan dengan data login.');
         } catch (\Exception $e) {
             return redirect()->route('pengguna.create')
                 ->with('error', 'Gagal menambahkan pengguna: ' . $e->getMessage())
@@ -103,13 +113,14 @@ class PenggunaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = Pengguna::findOrFail($id);
+        $pengguna = Pengguna::findOrFail($id);
 
         // Validasi data
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nim' => 'nullable|string|max:20|unique:penggunas,nim,' . $id,
             'email' => 'required|email|unique:penggunas,email,' . $id,
+            'password' => 'nullable|string|min:6|confirmed',
             'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
             'jurusan' => 'nullable|string|max:255',
             'status' => 'required|in:Aktif,Non-Aktif',
@@ -123,7 +134,26 @@ class PenggunaController extends Controller
         }
 
         try {
-            $user->update($validator->validated());
+            $validatedData = $validator->validated();
+
+            // Cari user login berdasarkan email LAMA
+            $user = User::where('email', $pengguna->email)->first();
+
+            // Update tabel 'penggunas'
+            $pengguna->update($validatedData);
+
+            // Jika ada data user login yang cocok
+            if ($user) {
+                $user->name = $validatedData['nama'];
+                $user->email = $validatedData['email'];
+                
+                // Jika admin mengisi password baru
+                if (!empty($validatedData['password'])) {
+                    $user->password = Hash::make($validatedData['password']);
+                }
+                
+                $user->save();
+            }
             
             return redirect()->route('pengguna.index')
                 ->with('success', 'Pengguna berhasil diperbarui');

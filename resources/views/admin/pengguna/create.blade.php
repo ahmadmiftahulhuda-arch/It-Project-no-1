@@ -61,6 +61,26 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                   id="password" name="password" placeholder="Masukkan password baru" required>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="password_confirmation" 
+                                   name="password_confirmation" placeholder="Ketik ulang password" required>
+                        </div>
+                    </div>
+                </div>
+
 
 
                 <div class="row">

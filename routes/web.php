@@ -118,6 +118,15 @@ Route::prefix('admin')->group(function () {
 // ================================
 // ROUTES UNTUK USER
 // ================================
+
+
+
+// Feedback Routes for User
+Route::prefix('user/feedback')->middleware('auth')->group(function () {
+    Route::get('/create', [FeedbackController::class, 'createForUser'])->name('user.feedback.create');
+    Route::post('/', [FeedbackController::class, 'storeForUser'])->name('user.feedback.store');
+});
+
 Route::prefix('peminjaman')->group(function () {
     Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');
     Route::get('/create', [PeminjamanController::class, 'create'])->name('user.peminjaman.create');

@@ -127,6 +127,29 @@
                             </div>
                         </div>
 
+                        <hr class="my-4">
+
+                        <h6 class="text-dark mb-3">Ubah Password (Opsional)</h6>
+                        <div class="row">
+                             <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password Baru</label>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                           id="password" name="password" placeholder="Isi untuk mengubah password">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+                                    <input type="password" class="form-control" id="password_confirmation" 
+                                           name="password_confirmation" placeholder="Ketik ulang password baru">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('pengguna.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-times me-1"></i>Batal

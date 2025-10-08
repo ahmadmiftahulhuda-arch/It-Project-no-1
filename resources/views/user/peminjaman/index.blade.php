@@ -625,6 +625,11 @@
                             <i class="fas fa-undo me-1"></i> Pengembalian
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('user.pengembalian.index') }}">
+                            <i class="fas fa-undo me-1"></i> Feedback
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -824,19 +829,20 @@
 
                                         <!-- Tombol Hapus - hanya aktif untuk status 'pending' -->
                                         @if ($peminjaman->status == 'pending')
-                                            <form action="{{ route('user.peminjaman.destroy', $peminjaman->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('user.peminjaman.destroy', $peminjaman->id) }}"
+                                                method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-action btn-delete" 
-                                                        title="Hapus Peminjaman"
-                                                        data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}">
+                                                <button type="button" class="btn btn-danger btn-action btn-delete"
+                                                    title="Hapus Peminjaman"
+                                                    data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>
                                         @else
                                             <button class="btn btn-danger btn-action btn-action-disabled"
-                                                    title="Tidak dapat menghapus peminjaman yang sudah {{ $peminjaman->status == 'disetujui' ? 'disetujui' : 'ditolak' }}"
-                                                    disabled>
+                                                title="Tidak dapat menghapus peminjaman yang sudah {{ $peminjaman->status == 'disetujui' ? 'disetujui' : 'ditolak' }}"
+                                                disabled>
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         @endif
@@ -933,7 +939,7 @@
             event.preventDefault();
             const button = event.currentTarget;
             const keperluan = button.getAttribute('data-keperluan');
-            
+
             if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
                 // Submit form terdekat
                 const form = button.closest('form');
@@ -1142,7 +1148,7 @@
 
         // Handle page transitions
         document.addEventListener('click', function(e) {
-            if (e.target.matches('a') && e.target.getAttribute('href') && 
+            if (e.target.matches('a') && e.target.getAttribute('href') &&
                 !e.target.getAttribute('href').startsWith('#')) {
                 showLoading();
             }
@@ -1151,3 +1157,7 @@
 </body>
 
 </html>
+                                button.classList.add('fade-out');
+            });
+        }, 5000);
+    });                         

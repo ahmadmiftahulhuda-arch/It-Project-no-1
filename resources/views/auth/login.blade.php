@@ -347,6 +347,14 @@
                 <!-- Form Login -->
                 <form method="POST" action="/login">
                     @csrf
+
+                    {{-- Display Validation Errors --}}
+                    @error('email')
+                        <div class="alert alert-danger mb-3" role="alert">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
                     <div class="mb-3">
                         <input type="email" name="email" class="form-control" placeholder="Email POLITALA (contoh: user@politala.ac.id)" required>
                     </div>
