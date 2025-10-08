@@ -20,10 +20,18 @@ class Peminjaman extends Model
         'proyektor',
         'keperluan',
         'status',
-        'returned_at',
         'waktu_mulai',
         'waktu_selesai'
     ];
+
+    /**
+     * Relasi ke Pengembalian
+     * Setiap peminjaman memiliki satu proses pengembalian.
+     */
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class);
+    }
 
     // Default values untuk waktu
     protected $attributes = [
@@ -43,14 +51,14 @@ class Peminjaman extends Model
     // Scope untuk riwayat
     public function scopeRiwayat($query)
     {
-        return $query->whereIn('status', ['disetujui', 'ditolak', 'selesai'])
-                    ->orWhereNotNull('returned_at');
+        return $query->whereHas('pengembalian')
+                    ->orWhereIn('status', ['ditolak', 'selesai', 'proses-pengembalian']);
     }
 
     // Scope untuk peminjaman aktif
     public function scopeAktif($query)
     {
         return $query->where('status', 'disetujui')
-                    ->whereNull('returned_at');
+                    ->whereDoesntHave('pengembalian');
     }
 }

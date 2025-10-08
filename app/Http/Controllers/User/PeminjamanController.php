@@ -129,10 +129,10 @@ class PeminjamanController extends Controller
     {
         $userId = auth()->id() ?? 1;
         
-        // Peminjaman aktif yang bisa dikembalikan (status disetujui dan belum dikembalikan)
+        // Peminjaman aktif yang bisa dikembalikan (status disetujui dan belum ada record pengembalian)
         $activeQuery = Peminjaman::where('user_id', $userId)
                           ->where('status', 'disetujui')
-                          ->whereNull('returned_at') // Hanya yang belum dikembalikan
+                          ->whereDoesntHave('pengembalian') // Cek relasi, bukan kolom
                           ->whereDate('tanggal', '<=', Carbon::now());
 
         if ($request->has('search') && $request->search != '') {
@@ -145,22 +145,22 @@ class PeminjamanController extends Controller
 
         $peminjamans = $activeQuery->orderBy('tanggal', 'desc')->get();
 
-        // Riwayat pengembalian (yang sudah dikembalikan)
-        $historyQuery = Peminjaman::where('user_id', $userId)
-                          ->whereNotNull('returned_at') // Yang sudah dikembalikan
-                          ->orWhere('status', 'selesai'); // Atau status selesai
+        // Riwayat pengembalian (yang sudah ada record pengembalian)
+        $historyQuery = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->with('peminjaman');
 
-        $pengembalians = $historyQuery->orderBy('returned_at', 'desc')->get();
+        $pengembalians = $historyQuery->orderBy('created_at', 'desc')->get();
 
         // Statistik
         $pendingReturns = $peminjamans->count();
-        $returnedCount = Peminjaman::where('user_id', $userId)
-                          ->whereNotNull('returned_at')
-                          ->count();
+        $returnedCount = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->count();
         
         $overdueCount = Peminjaman::where('user_id', $userId)
                           ->where('status', 'disetujui')
-                          ->whereNull('returned_at')
+                          ->whereDoesntHave('pengembalian') // Cek relasi
                           ->whereDate('tanggal', '<', Carbon::now())
                           ->count();
 
@@ -179,26 +179,23 @@ class PeminjamanController extends Controller
             $userId = auth()->id() ?? 1;
             $peminjaman = Peminjaman::where('user_id', $userId)
                                    ->where('status', 'disetujui')
-                                   ->whereNull('returned_at') // Pastikan belum dikembalikan
+                                   ->whereDoesntHave('pengembalian') // Pastikan belum pernah diajukan
                                    ->findOrFail($id);
             
-            // Update peminjaman
+            // Update status peminjaman
             $peminjaman->update([
-                'status' => 'selesai',
-                'returned_at' => Carbon::now()
+                'status' => 'proses-pengembalian',
             ]);
 
-            // Buat record pengembalian
+            // Buat record pengembalian untuk diverifikasi admin
             Pengembalian::create([
                 'peminjaman_id' => $peminjaman->id,
                 'tanggal_pengembalian' => Carbon::now(),
-                'kondisi_ruangan' => 'baik',
-                'kondisi_proyektor' => $peminjaman->proyektor ? 'baik' : 'tidak_ada',
-                'keterangan' => 'Pengembalian oleh user',
-                'status' => 'dikembalikan',
+                'status' => 'pending', // Status awal saat diajukan user
+                'keterangan' => 'Diajukan oleh user',
             ]);
 
-            return redirect()->route('user.pengembalian.index')->with('success', 'Pengembalian berhasil diajukan.');
+            return redirect()->route('user.pengembalian.index')->with('success', 'Pengajuan pengembalian berhasil. Menunggu verifikasi admin.');
                 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

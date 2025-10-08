@@ -76,6 +76,7 @@ class AdminController extends Controller
     public function pengembalian(Request $request)
     {
         $query = Peminjaman::where('status', 'disetujui')
+                          ->whereDoesntHave('pengembalian') // Hanya tampilkan yg belum dikembalikan
                           ->whereDate('tanggal', '<=', Carbon::now());
 
         // Filter pencarian
@@ -90,9 +91,9 @@ class AdminController extends Controller
             });
         }
 
-        $peminjamans = $query->orderBy('tanggal', 'desc')->paginate(10);
+        $pengembalians = $query->orderBy('tanggal', 'desc')->paginate(10);
 
-        return view('admin.pengembalian.index', compact('peminjamans'));
+        return view('admin.pengembalian.index', compact('pengembalians'));
     }
 
     /**
