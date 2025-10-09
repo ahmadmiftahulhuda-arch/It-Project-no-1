@@ -504,7 +504,7 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+   <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">

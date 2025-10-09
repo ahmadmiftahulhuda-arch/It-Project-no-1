@@ -16,7 +16,7 @@
             --light: #f8f9fa;
             --dark: #343a40;
             --gray: #6c757d;
-            --sidebar-width: 260px;
+            --sidebar-width: 250px;
             --text-light: #6c757d;
             --text-dark: #495057;
             --bg-light: #f5f8fa;
@@ -24,44 +24,26 @@
             --border-light: #e9ecef;
         }
 
-        .dark-mode {
-            --bg-light: #121212;
-            --bg-card: #1e1e1e;
-            --text-dark: #e0e0e0;
-            --text-light: #a0a0a0;
-            --border-light: #333;
-            --dark: #f0f0f0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-light);
             color: var(--text-dark);
-            transition: all 0.3s ease;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Styles - Warna diubah seperti kode pertama */
+        /* Sidebar Styles */
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: var(--sidebar-width);
+            height: 100%;
             background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            transition: all 0.3s ease;
-            overflow-y: auto;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
+            transition: all 0.3s;
+            z-index: 1000;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
@@ -86,7 +68,6 @@
             padding: 20px 0;
         }
 
-        /* Scrollbar styling untuk sidebar */
         .sidebar-menu::-webkit-scrollbar {
             width: 6px;
         }
@@ -126,12 +107,11 @@
         }
 
         .menu-item i {
-            margin-right: 12px;
+            margin-right: 10px;
             width: 20px;
             text-align: center;
             opacity: 0.8;
             flex-shrink: 0;
-            font-size: 18px;
         }
 
         .menu-item span {
@@ -140,80 +120,73 @@
             text-overflow: ellipsis;
         }
 
-        /* Main Content Styles */
+        /* Main Content */
         .main-content {
-            flex: 1;
             margin-left: var(--sidebar-width);
             padding: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             min-height: 100vh;
         }
 
-        /* Header Styles - Dipertahankan dari kode kedua */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
+            background: var(--bg-card);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
             border: 1px solid var(--border-light);
         }
 
         .search-bar {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-light);
-            border-radius: 20px;
-            padding: 8px 15px;
+            position: relative;
             width: 300px;
         }
 
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
         .search-bar input {
-            border: none;
-            background: transparent;
-            outline: none;
-            color: var(--text-dark);
             width: 100%;
-            margin-left: 10px;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
         }
 
         .user-actions {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
-        .notification-btn, .theme-toggle {
+        .notification-btn,
+        .theme-toggle {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--bg-light);
-            margin-left: 10px;
+            background: var(--bg-light);
+            border-radius: 50%;
             cursor: pointer;
-            position: relative;
             transition: all 0.3s;
             color: var(--text-dark);
-        }
-
-        .notification-btn::after {
-            content: '3';
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 18px;
-            height: 18px;
-            background-color: var(--danger);
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .notification-btn:hover,
@@ -225,12 +198,12 @@
         .user-profile {
             display: flex;
             align-items: center;
-            margin-left: 15px;
+            gap: 10px;
         }
 
         .user-avatar {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
@@ -239,43 +212,76 @@
             justify-content: center;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-right: 10px;
         }
 
-        /* Dashboard Content */
-        .dashboard-title {
+        /* Page Title */
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
 
-        .dashboard-title h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
+        .page-title h1 {
             color: var(--dark);
             margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 1.8rem;
         }
 
-        .dashboard-title p {
+        .page-title p {
             color: var(--text-light);
-            margin-top: 5px;
+            margin: 0;
         }
 
-        /* Stats Grid */
-        .stats-grid {
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Stats Cards */
+        .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border-light);
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             transition: all 0.3s;
+            border: 1px solid var(--border-light);
         }
 
         .stat-card:hover {
@@ -283,104 +289,234 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0.9;
         }
 
-        .bg-primary { background-color: rgba(59, 89, 152, 0.15); color: var(--primary); }
-        .bg-success { background-color: rgba(76, 175, 80, 0.15); color: var(--success); }
-        .bg-warning { background-color: rgba(255, 152, 0, 0.15); color: var(--warning); }
-        .bg-danger { background-color: rgba(244, 67, 54, 0.15); color: var(--danger); }
+        .stat-icon.pending {
+            background: #ffb74d;
+        }
 
-        .stat-value {
+        .stat-icon.approved {
+            background: #66bb6a;
+        }
+
+        .stat-icon.rejected {
+            background: #ef5350;
+        }
+
+        .stat-icon.total {
+            background: var(--primary);
+        }
+
+        .stat-info h3 {
+            margin: 0;
             font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 5px;
         }
 
-        .stat-label {
+        .stat-info p {
+            margin: 0;
             color: var(--text-light);
             font-size: 0.9rem;
         }
 
-        /* Table Styles */
-        .table-container {
-            background-color: var(--bg-card);
-            border-radius: 12px;
+        /* Filter Section */
+        .filter-section {
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-light);
-            margin-bottom: 20px;
         }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
             color: var(--dark);
         }
 
-        .data-table {
+        .filter-group input,
+        .filter-group select {
             width: 100%;
-            border-collapse: collapse;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
         }
 
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-light);
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
         }
 
-        .data-table th {
-            color: var(--text-light);
+        /* Table */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table thead th {
+            background: #f8f9fa;
+            border-bottom: 2px solid var(--border-light);
             font-weight: 600;
-            font-size: 0.9rem;
-            background: var(--bg-light);
+            color: var(--dark);
+            padding: 15px;
         }
 
-        .data-table tr:last-child td {
-            border-bottom: none;
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: var(--border-light);
         }
 
-        .data-table tbody tr {
+        .table tbody tr {
             transition: all 0.3s;
         }
 
-        .data-table tbody tr:hover {
-            background: var(--bg-light);
+        .table tbody tr:hover {
+            background: #f8f9fa;
         }
 
-        .status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        /* Status Badges */
+        .badge {
+            padding: 8px 12px;
+            border-radius: 4px;
             font-weight: 500;
+            font-size: 0.8rem;
         }
 
-        .status-available { background-color: rgba(46, 204, 113, 0.15); color: var(--success); }
-        .status-pending { background-color: rgba(241, 196, 15, 0.15); color: var(--warning); }
-        .status-borrowed { background-color: rgba(52, 152, 219, 0.15); color: var(--primary); }
+        .status-menunggu {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
 
-        /* Modal Styles */
+        .status-disetujui {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-ditolak {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-selesai {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .status-berlangsung {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-success-custom {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-danger-custom {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-warning-custom {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-info-custom {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-link {
+            color: var(--primary);
+            border: 1px solid var(--border-light);
+            padding: 8px 15px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -388,7 +524,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -525,131 +661,89 @@
             background: var(--secondary);
         }
 
-        /* Button Styles untuk aksi di header */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-outline {
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            background: transparent;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
+        /* Responsive */
+        @media (max-width: 768px) {
             .sidebar {
-                width: 80px;
+                width: 70px;
+                overflow: hidden;
             }
-            
-            .sidebar-header h2, .menu-item span {
+
+            .sidebar-header h2,
+            .menu-item span {
                 display: none;
             }
-            
+
             .menu-item {
                 justify-content: center;
                 padding: 15px;
             }
-            
+
             .menu-item i {
                 margin-right: 0;
             }
-            
-            .main-content {
-                margin-left: 80px;
-            }
-        }
 
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                z-index: 1000;
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
             .main-content {
-                margin-left: 0;
+                margin-left: 70px;
             }
-            
+
             .header {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 15px;
             }
-            
+
             .search-bar {
                 width: 100%;
-                margin-bottom: 15px;
             }
-            
-            .user-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .stats-grid {
+
+            .stats-container {
                 grid-template-columns: 1fr;
             }
-            
-            .menu-toggle {
-                display: block;
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1100;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                background-color: var(--primary);
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+            .filter-grid {
+                grid-template-columns: 1fr;
             }
         }
 
         /* Dark Mode */
+        body.dark-mode {
+            --bg-light: #121212;
+            --bg-card: #1e1e1e;
+            --text-dark: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border-light: #333;
+            --dark: #f0f0f0;
+        }
+
         body.dark-mode .sidebar {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         body.dark-mode .header,
         body.dark-mode .stat-card,
+        body.dark-mode .filter-section,
         body.dark-mode .table-container {
             background: var(--bg-card);
             color: var(--text-dark);
             border-color: var(--border-light);
         }
 
-        body.dark-mode .data-table th {
+        body.dark-mode .table thead th {
             background: #252525;
             color: var(--text-dark);
             border-color: var(--border-light);
         }
 
-        body.dark-mode .data-table tbody tr {
+        body.dark-mode .table tbody tr {
             border-color: var(--border-light);
         }
 
-        body.dark-mode .data-table tbody tr:hover {
+        body.dark-mode .table tbody tr:hover {
             background: #2a2a2a;
         }
 
-        body.dark-mode .search-bar input {
+        body.dark-mode .search-bar input,
+        body.dark-mode .filter-group input,
+        body.dark-mode .filter-group select {
             background: #2a2a2a;
             border-color: var(--border-light);
             color: var(--text-dark);
@@ -661,19 +755,37 @@
             color: var(--text-dark);
         }
 
-        body.dark-mode .dashboard-title h1 {
+        body.dark-mode .page-title h1 {
             color: var(--text-dark);
         }
 
-        body.dark-mode .dashboard-title p {
+        body.dark-mode .page-title p {
             color: var(--text-light);
         }
 
-        body.dark-mode .stat-label {
+        body.dark-mode .stat-info p {
             color: var(--text-light);
+        }
+
+        body.dark-mode .filter-group label {
+            color: var(--text-dark);
         }
 
         .menu-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
             display: none;
         }
 
@@ -684,184 +796,203 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Sidebar - Warna diubah seperti kode pertama -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <i class="fas fa-laptop-code"></i>
-                </div>
-                <h2>Admin TI</h2>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-laptop-code"></i>
             </div>
-            
-            <div class="sidebar-menu">
-                <a href="/admin/dashboard" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/admin/peminjaman" class="menu-item">
-                    <i class="fas fa-hand-holding"></i>
-                    <span>Peminjaman</span>
-                </a>
-                <a href="/admin/pengembalian" class="menu-item">
-                    <i class="fas fa-undo"></i>
-                    <span>Pengembalian</span>
-                </a>
-                <a href="/admin/riwayat" class="menu-item">
-                    <i class="fas fa-history"></i>
-                    <span>Riwayat Peminjaman</span>
-                </a>
-                <a href="/admin/feedback" class="menu-item active">
-                    <i class="fas fa-comment"></i>
-                    <span>Feedback</span>
-                </a>
-                <a href="/admin/proyektor" class="menu-item">
-                    <i class="fas fa-projector"></i>
-                    <span>Proyektor</span>
-                </a>
-                <a href="/admin/jadwal-perkuliahan" class="menu-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Jadwal Perkuliahan</span>
-                </a>
-                <a href="/admin/ruangan" class="menu-item">
-                    <i class="fas fa-door-open"></i>
-                    <span>Ruangan</span>
-                </a>
-                <a href="/admin/slotwaktu" class="menu-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Slot Waktu</span>
-                </a>
-                <a href="/admin/mata_kuliah" class="menu-item">
-                    <i class="fas fa-book"></i>
-                    <span>Matakuliah</span>
-                </a>
-                <a href="/admin/kelas" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Kelas</span>
-                </a>
-                <a href="/admin/pengguna" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Pengguna</span>
-                </a>
-                <a href="/admin/laporan" class="menu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Statistik</span>
-                </a>
-                <a href="/admin/pengaturan" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
+            <h2>Admin TI</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="/admin/dashboard" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
+                <i class="fas fa-hand-holding"></i>
+                <span>Peminjaman</span>
+            </a>
+            <a href="/admin/pengembalian" class="menu-item">
+                <i class="fas fa-undo"></i>
+                <span>Pengembalian</span>
+            </a>
+            <a href="/admin/riwayat" class="menu-item">
+                <i class="fas fa-history"></i>
+                <span>Riwayat Peminjaman</span>
+            </a>
+            <a href="/admin/feedback" class="menu-item active">
+                <i class="fas fa-comment"></i>
+                <span>Feedback</span>
+            </a>
+            <a href="/admin/proyektor" class="menu-item">
+                <i class="fas fa-video"></i>
+                <span>Proyektor</span>
+            </a>
+            <a href="/admin/jadwalperkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
+            </a>
+            <a href="/admin/ruangan" class="menu-item">
+                <i class="fas fa-door-open"></i>
+                <span>Ruangan</span>
+            </a>
+            <a href="/admin/slotwaktu" class="menu-item">
+                <i class="fas fa-clock"></i>
+                <span>Slot Waktu</span>
+            </a>
+            <a href="/admin/matakuliah" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Matakuliah</span>
+            </a>
+            <a href="/admin/kelas" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Kelas</span>
+            </a>
+            <a href="/admin/pengguna" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Pengguna</span>
+            </a>
+            <a href="/admin/laporan" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Statistik</span>
+            </a>
+            <a href="/admin/pengaturan" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari feedback...">
+            </div>
+
+            <div class="user-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                </div>
+
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div>
+                        <div>Admin Lab</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <div>
+                <h1>Manajemen Feedback</h1>
+                <p>Kelola feedback dari pengguna Lab Teknologi Informasi</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-outline">
+                    <i class="fas fa-file-export"></i> Ekspor
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="total-feedback">{{ $totalFeedback ?? 0 }}</h3>
+                    <p>Total Feedback</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="average-rating">{{ number_format($averageRating ?? 0, 1) }}</h3>
+                    <p>Rating Rata-rata</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="published-count">{{ $published ?? 0 }}</h3>
+                    <p>Dipublikasikan</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon rejected">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="draft-count">{{ $draft ?? 0 }}</h3>
+                    <p>Draft</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="search">Cari Feedback</label>
+                    <input type="text" id="search" name="search" placeholder="Cari...">
+                </div>
+                <div class="filter-group">
+                    <label for="status_filter">Status</label>
+                    <select id="status_filter" name="status">
+                        <option value="">Semua Status</option>
+                        <option value="published">Dipublikasikan</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="rating_filter">Rating</label>
+                    <select id="rating_filter" name="rating">
+                        <option value="">Semua Rating</option>
+                        <option value="5">5 Bintang</option>
+                        <option value="4">4 Bintang</option>
+                        <option value="3">3 Bintang</option>
+                        <option value="2">2 Bintang</option>
+                        <option value="1">1 Bintang</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="date_filter">Tanggal Feedback</label>
+                    <input type="date" id="date_filter" name="date">
+                </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-filter me-1"></i> Terapkan Filter
+                </button>
+                <a href="/admin/feedback" class="btn btn-outline btn-sm">
+                    <i class="fas fa-refresh me-1"></i> Reset
                 </a>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header - Dipertahankan dari kode kedua -->
-            <div class="header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari barang, peminjam, atau lainnya...">
-                </div>
-                
-                <div class="user-actions">
-                    <div class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    
-                    <div class="theme-toggle" id="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                    
-                    <div class="user-profile">
-                        <div class="user-avatar">A</div>
-                        <div>
-                            <div>Admin Lab</div>
-                            <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Feedback Page - Konten asli dipertahankan -->
-            <div class="dashboard-title">
-                <h1>Manajemen Feedback</h1>
-                <p>Kelola feedback dari pengguna Lab Teknologi Informasi</p>
-            </div>
-
-            <!-- Feedback Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">{{ $totalFeedback ?? 0 }}</div>
-                            <div class="stat-label">Total Feedback</div>
-                        </div>
-                        <div class="stat-icon bg-primary">
-                            <i class="fas fa-comment-dots"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">{{ number_format($averageRating ?? 0, 1) }}</div>
-                            <div class="stat-label">Rating Rata-rata</div>
-                        </div>
-                        <div class="stat-icon bg-warning">
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">{{ $published ?? 0 }}</div>
-                            <div class="stat-label">Dipublikasikan</div>
-                        </div>
-                        <div class="stat-icon bg-success">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">{{ $draft ?? 0 }}</div>
-                            <div class="stat-label">Draft</div>
-                        </div>
-                        <div class="stat-icon bg-danger">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Search & Filter -->
-            <div class="header" style="margin-top:20px; margin-bottom:10px;">
-                <div class="search-bar" style="width: 300px;">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari feedback...">
-                </div>
-                <select style="padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-dark);">
-                    <option>Semua Status</option>
-                    <option>Dipublikasikan</option>
-                    <option>Draft</option>
-                </select>
-                <button class="btn btn-primary" style="padding:8px 15px;">
-                    <i class="fas fa-download"></i> Ekspor
-                </button>
-            </div>
-
-            <!-- Daftar Feedback -->
-            <div class="table-container">
-                <div class="section-header">
-                    <div class="section-title">Daftar Feedback</div>
-                </div>
-                <table class="data-table">
+        <!-- Table -->
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>ID Feedback</th>
@@ -879,169 +1010,182 @@
                         <tr>
                             <td>FB{{ str_pad($item->id_feedback, 3, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $item->peminjaman->nama ?? '-' }}</td>
-                            <td>{{ $item->komentar ?? '-' }}</td> <!-- ambil atribut komentar -->
+                            <td title="{{ $item->komentar ?? '-' }}">
+                                {{ \Illuminate\Support\Str::limit($item->komentar ?? '-', 50) }}
+                            </td>
                             <td>{{ $item->peminjaman->barang->nama_barang ?? '-' }}</td>
-                            <td>⭐ {{ $item->rating }}</td>
-                          
+                            <td>
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $item->rating)
+                                        <i class="fas fa-star text-warning"></i>
+                                    @else
+                                        <i class="far fa-star text-warning"></i>
+                                    @endif
+                                @endfor
+                                <small class="text-muted">({{ $item->rating }})</small>
+                            </td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_feedback)->format('d M Y') }}</td>
                             <td>
-                                <span class="status {{ $item->status == 'Dipublikasikan' ? 'status-available' : 'status-pending' }}">
-                                    {{ $item->status }}
-                                </span>
+                                @if($item->status == 'Dipublikasikan')
+                                    <span class="badge status-disetujui">Dipublikasikan</span>
+                                @else
+                                    <span class="badge status-menunggu">Draft</span>
+                                @endif
                             </td>
                             <td>
-                                <!-- Tombol Edit -->
-                                <a href="javascript:void(0)" 
-                                   onclick="openEditModal('{{ $item->id_feedback }}', `{{ addslashes($item->komentar) }}`, '{{ $item->rating }}', '{{ $item->status }}')">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-
-                                <!-- Tombol Hapus -->
-                                <form action="{{ route('feedback.destroy', $item->id_feedback) }}" method="POST" style="display:inline;">
-                                    @csrf 
-                                    @method('DELETE')
-                                    <button type="submit" style="border:none;background:none;color:red;" onclick="return confirm('Yakin mau hapus feedback ini?')">
-                                        <i class="fas fa-trash"></i>
+                                <div class="d-flex gap-2 action-buttons">
+                                    <!-- Tombol Edit -->
+                                    <button class="btn btn-warning-custom btn-sm" onclick="openEditModal('{{ $item->id_feedback }}', `{{ addslashes($item->komentar) }}`, '{{ $item->rating }}', '{{ $item->status }}')">
+                                        <i class="fas fa-edit"></i>
                                     </button>
-                                </form>
+
+                                    <!-- Tombol Hapus -->
+                                    <form action="{{ route('feedback.destroy', $item->id_feedback) }}" method="POST" class="d-inline">
+                                        @csrf 
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger-custom btn-sm" onclick="return confirm('Yakin mau hapus feedback ini?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <!-- Modal Edit Feedback -->
-            <div id="editModal" class="modal" style="display:none;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Edit Feedback</h2>
-                        <span class="close-btn" onclick="closeEditModal()">&times;</span>
+        <!-- Modal Edit Feedback -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Feedback</h2>
+                    <span class="close-btn" onclick="closeEditModal()">&times;</span>
+                </div>
+
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label>Komentar *</label>
+                        <textarea name="komentar" id="editKomentar" class="form-control" maxlength="500" required></textarea>
+                        <div class="char-count">
+                            <span id="editCharCount">0</span>/500 karakter
+                        </div>
                     </div>
 
-                    <form id="editForm" method="POST">
-                        @csrf
-                        @method('PUT')
+                    <div class="form-group">
+                        <label>Rating *</label>
+                        <select name="rating" id="editRating" class="form-control" required>
+                            <option value="1">1 ★</option>
+                            <option value="2">2 ★★</option>
+                            <option value="3">3 ★★★</option>
+                            <option value="4">4 ★★★★</option>
+                            <option value="5">5 ★★★★★</option>
+                        </select>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Komentar *</label>
-                            <textarea name="komentar" id="editKomentar" class="form-control" maxlength="500" required></textarea>
-                            <div class="char-count">
-                                <span id="editCharCount">0</span>/500 karakter
-                            </div>
+                    <div class="form-group">
+                        <label>Status Publikasi</label>
+                        <div class="status-radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="status" value="Dipublikasikan" id="statusPublished">
+                                <span class="radio-custom"></span>
+                                Dipublikasikan
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="status" value="Draft" id="statusDraft">
+                                <span class="radio-custom"></span>
+                                Draft
+                            </label>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Rating *</label>
-                            <select name="rating" id="editRating" class="form-control" required>
-                                <option value="1">1 ★</option>
-                                <option value="2">2 ★★</option>
-                                <option value="3">3 ★★★</option>
-                                <option value="4">4 ★★★★</option>
-                                <option value="5">5 ★★★★★</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Status Publikasi</label>
-                            <div class="status-radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="status" value="Dipublikasikan" id="statusPublished">
-                                    <span class="radio-custom"></span>
-                                    Dipublikasikan
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="status" value="Draft" id="statusDraft">
-                                    <span class="radio-custom"></span>
-                                    Draft
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-cancel" onclick="closeEditModal()">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-cancel" onclick="closeEditModal()">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
             </div>
         </div>
+
+        <div class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <script>
+            // Theme Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+
+            // Toggle sidebar on mobile
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+
+            // Modal Functions
+            function openEditModal(id, komentar, rating, status) {
+                console.log('Data received:', {id, komentar, rating, status});
+                
+                // Set form action dengan URL yang benar
+                document.getElementById('editForm').action = "/admin/feedback/" + id;
+                
+                // Isi form fields
+                document.getElementById('editKomentar').value = komentar;
+                document.getElementById('editRating').value = rating;
+                document.getElementById('editCharCount').textContent = komentar.length;
+
+                // Set status radio button
+                document.getElementById('statusPublished').checked = false;
+                document.getElementById('statusDraft').checked = false;
+                
+                if (status === "Dipublikasikan") {
+                    document.getElementById('statusPublished').checked = true;
+                } else {
+                    document.getElementById('statusDraft').checked = true;
+                }
+
+                // Tampilkan modal
+                document.getElementById('editModal').style.display = "flex";
+            }
+
+            function closeEditModal() {
+                document.getElementById('editModal').style.display = "none";
+            }
+
+            // Character count for modal
+            document.addEventListener('DOMContentLoaded', function() {
+                const editKomentar = document.getElementById('editKomentar');
+                const editCharCount = document.getElementById('editCharCount');
+                
+                if (editKomentar && editCharCount) {
+                    editKomentar.addEventListener('input', function() {
+                        editCharCount.textContent = this.value.length;
+                    });
+                }
+
+                // Terapkan dark mode jika sebelumnya diaktifkan
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            });
+        </script>
     </div>
-
-    <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-    </div>
-
-    <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
-
-        // Toggle sidebar on mobile
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        // Modal Functions
-        function openEditModal(id, komentar, rating, status) {
-            console.log('Data received:', {id, komentar, rating, status});
-            
-            // Set form action dengan URL yang benar
-            document.getElementById('editForm').action = "/admin/feedback/" + id;
-            
-            // Isi form fields
-            document.getElementById('editKomentar').value = komentar;
-            document.getElementById('editRating').value = rating;
-            document.getElementById('editCharCount').textContent = komentar.length;
-
-            // Set status radio button
-            document.getElementById('statusPublished').checked = false;
-            document.getElementById('statusDraft').checked = false;
-            
-            if (status === "Dipublikasikan") {
-                document.getElementById('statusPublished').checked = true;
-            } else {
-                document.getElementById('statusDraft').checked = true;
-            }
-
-            // Tampilkan modal
-            document.getElementById('editModal').style.display = "flex";
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = "none";
-        }
-
-        // Character count for modal
-        document.addEventListener('DOMContentLoaded', function() {
-            const editKomentar = document.getElementById('editKomentar');
-            const editCharCount = document.getElementById('editCharCount');
-            
-            if (editKomentar && editCharCount) {
-                editKomentar.addEventListener('input', function() {
-                    editCharCount.textContent = this.value.length;
-                });
-            }
-
-            // Terapkan dark mode jika sebelumnya diaktifkan
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        });
-    </script>
 </body>
 </html>
