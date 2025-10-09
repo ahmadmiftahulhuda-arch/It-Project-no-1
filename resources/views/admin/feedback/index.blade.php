@@ -51,17 +51,17 @@
             min-height: 100vh;
         }
 
-        /* Sidebar Styles - Warna diubah seperti kode pertama */
+       /* Sidebar Styles */
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: var(--sidebar-width);
+            height: 100%;
             background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            transition: all 0.3s ease;
-            overflow-y: auto;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
+            transition: all 0.3s;
+            z-index: 1000;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
@@ -86,7 +86,6 @@
             padding: 20px 0;
         }
 
-        /* Scrollbar styling untuk sidebar */
         .sidebar-menu::-webkit-scrollbar {
             width: 6px;
         }
@@ -126,12 +125,11 @@
         }
 
         .menu-item i {
-            margin-right: 12px;
+            margin-right: 10px;
             width: 20px;
             text-align: center;
             opacity: 0.8;
             flex-shrink: 0;
-            font-size: 18px;
         }
 
         .menu-item span {
@@ -686,74 +684,74 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar - Warna diubah seperti kode pertama -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <i class="fas fa-laptop-code"></i>
-                </div>
-                <h2>Admin TI</h2>
+        <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-laptop-code"></i>
             </div>
-            
-            <div class="sidebar-menu">
-                <a href="/admin/dashboard" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/admin/peminjaman" class="menu-item">
-                    <i class="fas fa-hand-holding"></i>
-                    <span>Peminjaman</span>
-                </a>
-                <a href="/admin/pengembalian" class="menu-item">
-                    <i class="fas fa-undo"></i>
-                    <span>Pengembalian</span>
-                </a>
-                <a href="/admin/riwayat" class="menu-item">
-                    <i class="fas fa-history"></i>
-                    <span>Riwayat Peminjaman</span>
-                </a>
-                <a href="/admin/feedback" class="menu-item active">
-                    <i class="fas fa-comment"></i>
-                    <span>Feedback</span>
-                </a>
-                <a href="/admin/proyektor" class="menu-item">
-                    <i class="fas fa-projector"></i>
-                    <span>Proyektor</span>
-                </a>
-                <a href="/admin/jadwal-perkuliahan" class="menu-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Jadwal Perkuliahan</span>
-                </a>
-                <a href="/admin/ruangan" class="menu-item">
-                    <i class="fas fa-door-open"></i>
-                    <span>Ruangan</span>
-                </a>
-                <a href="/admin/slotwaktu" class="menu-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Slot Waktu</span>
-                </a>
-                <a href="/admin/mata_kuliah" class="menu-item">
-                    <i class="fas fa-book"></i>
-                    <span>Matakuliah</span>
-                </a>
-                <a href="/admin/kelas" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Kelas</span>
-                </a>
-                <a href="/admin/pengguna" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Pengguna</span>
-                </a>
-                <a href="/admin/laporan" class="menu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Statistik</span>
-                </a>
-                <a href="/admin/pengaturan" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
-            </div>
+            <h2>Admin TI</h2>
         </div>
+
+        <div class="sidebar-menu">
+            <a href="/admin/dashboard" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+           <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
+                <i class="fas fa-hand-holding"></i>
+                <span>Peminjaman</span>
+            </a>
+            <a href="/admin/pengembalian" class="menu-item">
+                <i class="fas fa-undo"></i>
+                <span>Pengembalian</span>
+            </a>
+            <a href="/admin/riwayat" class="menu-item">
+                <i class="fas fa-history"></i>
+                <span>Riwayat Peminjaman</span>
+            </a>
+            <a href="/admin/feedback" class="menu-item active">
+                <i class="fas fa-comment"></i>
+                <span>Feedback</span>
+            </a>
+            <a href="/admin/projectors" class="menu-item">
+                <i class="fas fa-video"></i>
+                <span>Proyektor</span>
+            </a>
+            <a href="/admin/jadwalperkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
+            </a>
+            <a href="/admin/ruangan" class="menu-item">
+                <i class="fas fa-door-open"></i>
+                <span>Ruangan</span>
+            </a>
+            <a href="/admin/slotwaktu" class="menu-item">
+                <i class="fas fa-clock"></i>
+                <span>Slot Waktu</span>
+            </a>
+            <a href="/admin/matakuliah" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Matakuliah</span>
+            </a>
+            <a href="/admin/kelas" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Kelas</span>
+            </a>
+            <a href="/admin/pengguna" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Pengguna</span>
+            </a>
+            <a href="/admin/laporan" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Statistik</span>
+            </a>
+            <a href="/admin/pengaturan" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
+        </div>
+    </div>
 
         <!-- Main Content -->
         <div class="main-content">

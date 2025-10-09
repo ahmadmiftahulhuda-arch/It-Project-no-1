@@ -740,7 +740,7 @@
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ route('admin.dashboard') }}" class="menu-item">
+           <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                 <i class="fas fa-hand-holding"></i>
                 <span>Peminjaman</span>
             </a>
@@ -756,7 +756,7 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/proyektor" class="menu-item">
+            <a href="/admin/projectors" class="menu-item">
                 <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
