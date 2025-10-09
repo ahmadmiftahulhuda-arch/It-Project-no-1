@@ -29,6 +29,10 @@ Route::view('/berita', 'berita');
 Route::view('/post', 'post');
 Route::view('/syaratdanketentuan', 'syaratdanketentuan');
 Route::view('/faq', 'faq');
+Route::get('/home', function () {
+    return view('home');
+});
+
 
 // ================================
 // AUTHENTIKASI DAN GOOGLE LOGIN
