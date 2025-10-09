@@ -433,6 +433,11 @@
             color: #c62828;
         }
 
+        .status-selesai {
+            background: #e9ecef;
+            color: #495057;
+        }
+
         .status-berlangsung {
             background: #e3f2fd;
             color: #1565c0;
@@ -905,7 +910,9 @@
                                     {{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 40) }}
                                 </td>
                                 <td>
-                                    @if ($peminjaman->status == 'disetujui')
+                                    @if ($peminjaman->status == 'selesai')
+                                        <span class="badge status-badge status-selesai">Selesai</span>
+                                    @elseif ($peminjaman->status == 'disetujui')
                                         <span class="badge status-badge status-disetujui">Disetujui</span>
                                     @elseif($peminjaman->status == 'ditolak')
                                         <span class="badge status-badge status-ditolak">Ditolak</span>

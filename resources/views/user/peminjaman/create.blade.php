@@ -148,6 +148,11 @@
                             <i class="fas fa-undo me-1"></i> Pengembalian
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('user.feedback.create') }}">
+                            <i class="fas fa-comment-dots me-1"></i> Beri Feedback
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

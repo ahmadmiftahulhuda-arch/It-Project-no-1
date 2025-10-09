@@ -6,22 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 
 class Feedback extends Model
 {
-    protected $table = 'feedback';
-    protected $primaryKey = 'id_feedback';
-    public $incrementing = true;
-    protected $keyType = 'int';
-
+    // Kolom yang boleh diisi (mass assignment)
     protected $fillable = [
-        'id_peminjaman',
+        'user_id',
+        'peminjaman_id',
         'komentar',
-        'tgl_feedback',
         'rating',
         'status',
     ];
 
-    // Relasi ke tabel peminjaman
+    /**
+     * Relasi ke Peminjaman
+     * Setiap feedback dimiliki oleh 1 peminjaman
+     */
     public function peminjaman()
     {
-        return $this->belongsTo(Peminjaman::class, 'id_peminjaman', 'id_peminjaman');
+        return $this->belongsTo(Peminjaman::class);
+    }
+
+    /**
+     * Relasi ke User
+     * Setiap feedback dimiliki oleh 1 user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

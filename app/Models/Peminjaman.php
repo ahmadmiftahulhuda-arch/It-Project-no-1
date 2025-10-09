@@ -21,7 +21,11 @@ class Peminjaman extends Model
         'keperluan',
         'status',
         'waktu_mulai',
-        'waktu_selesai'
+        'waktu_selesai',
+        'status_pengembalian', // <-- Ditambahkan
+        'tanggal_kembali',      // <-- Ditambahkan
+        'kondisi_kembali',      // <-- Ditambahkan
+        'keterangan_kembali'    // <-- Ditambahkan
     ];
 
     /**
@@ -60,5 +64,14 @@ class Peminjaman extends Model
     {
         return $query->where('status', 'disetujui')
                     ->whereDoesntHave('pengembalian');
+    }
+
+    /**
+     * Relasi ke Feedback
+     * Setiap peminjaman memiliki satu feedback.
+     */
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class, 'peminjaman_id');
     }
 }

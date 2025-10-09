@@ -794,7 +794,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <div>
-                            <div class="stat-value">5</div>
+                            <div class="stat-value">{{ $totalFeedback ?? 0 }}</div>
                             <div class="stat-label">Total Feedback</div>
                         </div>
                         <div class="stat-icon bg-primary">
@@ -806,7 +806,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <div>
-                            <div class="stat-value">4.2</div>
+                            <div class="stat-value">{{ number_format($averageRating ?? 0, 1) }}</div>
                             <div class="stat-label">Rating Rata-rata</div>
                         </div>
                         <div class="stat-icon bg-warning">
@@ -818,7 +818,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <div>
-                            <div class="stat-value">4</div>
+                            <div class="stat-value">{{ $published ?? 0 }}</div>
                             <div class="stat-label">Dipublikasikan</div>
                         </div>
                         <div class="stat-icon bg-success">
@@ -830,7 +830,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <div>
-                            <div class="stat-value">1</div>
+                            <div class="stat-value">{{ $draft ?? 0 }}</div>
                             <div class="stat-label">Draft</div>
                         </div>
                         <div class="stat-icon bg-danger">

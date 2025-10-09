@@ -76,11 +76,17 @@ Route::prefix('admin')->group(function () {
     Route::post('/jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])->name('jadwal-perkuliahan.delete-all');
 
     // Ruangan, Mata Kuliah, Slot Waktu
+    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('slotwaktu', App\Http\Controllers\SlotWaktuController::class);
+});
     Route::resource('ruangan', RuanganController::class);
     Route::resource('mata_kuliah', MataKuliahController::class);
     Route::resource('slotwaktu', SlotWaktuController::class);
 
     // Kelas & Mahasiswa
+    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('kelas', KelasController::class);
+});
     Route::resource('kelas', KelasController::class);
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
@@ -123,6 +129,7 @@ Route::prefix('admin')->group(function () {
 
 // Feedback Routes for User
 Route::prefix('user/feedback')->middleware('auth')->group(function () {
+    Route::get('/', [FeedbackController::class, 'indexForUser'])->name('user.feedback.index');
     Route::get('/create', [FeedbackController::class, 'createForUser'])->name('user.feedback.create');
     Route::post('/', [FeedbackController::class, 'storeForUser'])->name('user.feedback.store');
 });

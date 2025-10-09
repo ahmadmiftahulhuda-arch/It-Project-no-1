@@ -978,8 +978,10 @@
                                             {{ \Illuminate\Support\Str::limit($item->keperluan, 40) }}
                                         </td>
                                         <td>
-                                            @if ($item->status == 'disetujui')
+                                            @if ($item->status == 'selesai')
                                                 <span class="badge status-badge status-selesai">Selesai</span>
+                                            @elseif ($item->status == 'disetujui')
+                                                <span class="badge status-badge status-selesai">Disetujui</span>
                                             @elseif($item->status == 'ditolak')
                                                 <span class="badge status-badge status-ditolak">Ditolak</span>
                                             @else
@@ -987,7 +989,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if($item->tanggal_kembali)
+                                            @if($item->status_pengembalian == 'sudah dikembalikan')
                                                 <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
                                             @else
                                                 <span class="badge status-badge status-belum-dikembalikan">Belum Dikembalikan</span>

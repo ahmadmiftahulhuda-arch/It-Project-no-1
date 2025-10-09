@@ -12,7 +12,12 @@ class FeedbackController extends Controller
     public function index()
     {
         $feedback = Feedback::with('peminjaman')->get();
-        return view('admin.feedback.index', compact('feedback'));
+        $totalFeedback = $feedback->count();
+        $averageRating = $feedback->avg('rating');
+        $published = $feedback->where('status', 'Dipublikasikan')->count();
+        $draft = $feedback->where('status', 'Draft')->count();
+
+        return view('admin.feedback.index', compact('feedback', 'totalFeedback', 'averageRating', 'published', 'draft'));
     }
 
     public function create()
@@ -87,6 +92,19 @@ class FeedbackController extends Controller
     // ===============================================
     // USER FEEDBACK METHODS
     // ===============================================
+
+    /**
+     * Display a listing of the feedback for the logged-in user.
+     */
+    public function indexForUser(Request $request)
+    {
+        $feedbackItems = Feedback::where('user_id', Auth::id())
+                                 ->with('peminjaman') // Eager load peminjaman details
+                                 ->latest() // Order by newest first
+                                 ->paginate(10);
+
+        return view('user.feedback.index', compact('feedbackItems'));
+    }
 
     /**
      * Show the form for creating a new feedback for the logged-in user.

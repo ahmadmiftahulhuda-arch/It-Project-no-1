@@ -76,8 +76,7 @@ class AdminController extends Controller
     public function pengembalian(Request $request)
     {
         $query = Peminjaman::where('status', 'disetujui')
-                          ->whereDoesntHave('pengembalian') // Hanya tampilkan yg belum dikembalikan
-                          ->whereDate('tanggal', '<=', Carbon::now());
+                          ->whereDoesntHave('pengembalian'); // Hanya tampilkan yg belum dikembalikan
 
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
@@ -291,7 +290,8 @@ class AdminController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->update([
             'status' => 'selesai',
-            'tanggal_kembali' => Carbon::now()
+            'tanggal_kembali' => Carbon::now(),
+            'status_pengembalian' => 'sudah dikembalikan'
         ]);
 
         return redirect()->route('admin.pengembalian')

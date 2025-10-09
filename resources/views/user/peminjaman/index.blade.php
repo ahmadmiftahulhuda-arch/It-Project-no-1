@@ -197,6 +197,12 @@
             animation: pulse 2s infinite;
         }
 
+        .status-selesai {
+            background-color: #e9ecef;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+
         @keyframes pulse {
             0% {
                 opacity: 1;
@@ -626,8 +632,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.pengembalian.index') }}">
-                            <i class="fas fa-undo me-1"></i> Feedback
+                        <a class="nav-link" href="{{ route('user.feedback.create') }}">
+                            <i class="fas fa-comment-dots me-1"></i> Feedback
                         </a>
                     </li>
                 </ul>
@@ -790,6 +796,10 @@
                                     @if ($isOngoing)
                                         <span class="badge status-badge status-berlangsung">
                                             <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                        </span>
+                                    @elseif ($peminjaman->status == 'selesai')
+                                        <span class="badge status-badge status-selesai">
+                                            <i class="fas fa-check-double me-1"></i> Selesai
                                         </span>
                                     @elseif($peminjaman->status == 'disetujui')
                                         <span class="badge status-badge status-disetujui">
@@ -1157,7 +1167,3 @@
 </body>
 
 </html>
-                                button.classList.add('fade-out');
-            });
-        }, 5000);
-    });                         
