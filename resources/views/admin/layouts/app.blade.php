@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <title>@yield('title', 'Admin Dashboard')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
     <style>
         :root {
             --primary: #3b5998;
@@ -32,8 +30,8 @@
             --secondary: #5d7ba6;
             --light: #1a1d23;
             --dark: #f0f0f0;
-            --bg-light: #121212;
-            --bg-card: #1e1e1e;
+            --bg-light: #121212; /* Latar belakang body/main content */
+            --bg-card: #1e1e1e; /* Latar belakang CARD (kontras) */
             --text-dark: #e0e0e0;
             --text-light: #a0a0a0;
             --border-light: #333;
@@ -47,10 +45,11 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            display: flex; /* Added for main layout */
+            display: flex; 
+            transition: all 0.3s ease;
         }
 
-        /* Sidebar Styles (Copied from index.blade.php) */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -147,16 +146,16 @@
             text-overflow: ellipsis;
         }
 
-        /* Main Content (Copied from index.blade.php) */
+        /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 20px;
             transition: all 0.3s;
             min-height: 100vh;
-            width: calc(100% - var(--sidebar-width)); /* Added to control width */
+            width: calc(100% - var(--sidebar-width)); 
         }
 
-        /* Header Styles (Copied from index.blade.php) */
+        /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
@@ -167,6 +166,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             margin-bottom: 25px;
             border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
         }
 
         .dark-mode .header {
@@ -174,7 +174,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
-        /* Search Bar (Copied from index.blade.php) */
+        /* Search Bar */
         .search-bar {
             position: relative;
             width: 300px;
@@ -209,9 +209,10 @@
         .dark-mode .search-bar input {
             background-color: #2a2a2a;
             border-color: var(--border-light);
+            color: var(--text-dark);
         }
 
-        /* User Actions (Copied from index.blade.php) */
+        /* User Actions */
         .user-actions {
             display: flex;
             align-items: center;
@@ -270,14 +271,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Dark Mode Transition */
-        body,
-        .header,
-        .search-bar input {
-            transition: all 0.3s ease;
-        }
-        
-        /* Responsive (Copied from index.blade.php) */
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -313,6 +307,130 @@
                 width: 100%;
             }
         }
+
+        /* === Gaya Khusus Halaman Konten (Untuk Detail Kelas) === */
+
+        /* Card Styling Modern & Dark Mode Fix */
+        .card {
+            border-radius: 12px !important; 
+            transition: all 0.3s ease;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-light);
+        }
+
+        .dark-mode .card {
+            background-color: #1e1e1e !important; /* Latar belakang card: #1e1e1e */
+            border: 1px solid #2a2a2a !important; /* Border card: lebih terang dari latar body */
+        }
+        
+        .dark-mode .card-header {
+            background-color: var(--bg-card) !important;
+            border-color: #2a2a2a !important; /* Border di header card */
+        }
+
+        /* Page Title & Button Styling */
+        .page-title i {
+            opacity: 0.9;
+        }
+
+        .btn {
+            border-radius: 8px !important; 
+        }
+        
+        /* Tombol Kembali (btn-outline-secondary) Dark Mode Fix */
+        .dark-mode .btn-outline-secondary {
+            color: var(--text-dark);
+            border-color: var(--text-light);
+        }
+
+        .dark-mode .btn-outline-secondary:hover {
+            background-color: #2a2a2a;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Badge for Student Count */
+        .bg-success-soft {
+            background-color: rgba(76, 175, 80, 0.1) !important;
+        }
+
+        .dark-mode .bg-success-soft {
+            background-color: rgba(76, 175, 80, 0.2) !important;
+        }
+
+        /* Table Enhancements */
+        .table thead th {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .table tbody td {
+            font-size: 0.95rem;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .table-head-modern {
+            background-color: var(--bg-light) !important; 
+        }
+
+        /* PERBAIKAN DARK MODE UTAMA UNTUK TEKS DAN GARIS TABEL */
+        
+        /* Memastikan teks di sel tabel selalu terang di Dark Mode */
+        .dark-mode table tbody tr td {
+            color: var(--text-dark) !important; 
+        }
+
+        .dark-mode .table thead th {
+            color: var(--text-light) !important; 
+            border-bottom: 2px solid #2a2a2a !important; /* Garis header */
+        }
+        .dark-mode .table-head-modern {
+            background-color: #1a1a1a !important; /* Header tabel agar kontras dengan body */
+        }
+        
+        /* Garis pemisah antar baris */
+        .dark-mode .table-hover > tbody > tr {
+             border-bottom: 1px solid #2a2a2a !important; 
+        }
+        .dark-mode .table-hover > tbody > tr:hover > * {
+            --bs-table-accent-bg: rgba(255, 255, 255, 0.05);
+            color: var(--text-dark) !important;
+        }
+
+        /* DARK MODE - ELEMEN UMUM */
+        .dark-mode .modal-content {
+            background-color: var(--bg-card);
+            color: var(--text-dark);
+        }
+        .dark-mode .btn-close {
+            filter: invert(1); 
+        }
+        .text-dark-mode-aware {
+            color: var(--text-dark) !important;
+        }
+        .dark-mode .text-secondary {
+            color: var(--text-light) !important; 
+        }
+        
+        /* Badge Program Studi Styling */
+        .program-studi-badge {
+            font-size: 0.85rem;
+            padding: 0.5em 0.75em;
+            border-radius: 50px;
+            background-color: var(--primary); 
+            color: white;
+            display: inline-block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        .dark-mode .program-studi-badge {
+            background-color: #3f5d91 !important; 
+            color: #e0e0e0 !important;
+        }
     </style>
 </head>
 <body>
@@ -321,7 +439,7 @@
             <div class="sidebar-logo">
                 <i class="fas fa-laptop-code"></i>
             </div>
-            <h2>Sarpras Politala</h2>
+            <h2>Admin TI</h2>
         </div>
 
         <div class="sidebar-menu">
@@ -389,8 +507,6 @@
     <div class="main-content">
         <div class="header">
             <div class="search-bar">
-                {{-- Form action disesuaikan dengan kebutuhan app.blade.php, mungkin tidak ada pencarian global di layout utama --}}
-                {{-- Ini hanya placeholder untuk tampilan header yang sama --}}
                 <i class="fas fa-search"></i>
                 <input type="text" placeholder="Cari..." id="globalSearchHeader">
             </div>
@@ -414,14 +530,14 @@
             </div>
         </div>
         
-        <div class="container">
+        <div class="container-fluid">
             @yield('content')
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle Dark Mode (Copied from index.blade.php)
+        // Toggle Dark Mode
         const themeToggle = document.getElementById('theme-toggle');
         
         function toggleDarkMode() {
@@ -442,8 +558,6 @@
             const darkMode = localStorage.getItem('darkMode');
             if (darkMode === 'enabled') {
                 document.body.classList.add('dark-mode');
-                // The correct icon will be set by toggleDarkMode logic if it's called on load, 
-                // but for a clean load, we set it here directly
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
         });
@@ -454,21 +568,16 @@
             const menuItems = document.querySelectorAll('.menu-item');
             
             menuItems.forEach(item => {
-                // Hapus trailing slash dari path URL untuk perbandingan
                 const itemHref = item.getAttribute('href').replace(/\/$/, "");
                 const pathToCheck = currentPath.replace(/\/$/, "");
 
-                // Periksa apakah item href cocok dengan path saat ini
                 if (itemHref === pathToCheck) {
                     item.classList.add('active');
-                } else if (pathToCheck.startsWith(itemHref) && itemHref !== '/admin/dashboard') {
-                    // Logika untuk menyorot menu induk (misalnya /admin/kelas cocok dengan /admin/kelas)
-                    // Pengecualian untuk dashboard agar tidak terlalu agresif
+                } else if (pathToCheck.startsWith(itemHref) && itemHref !== '/admin/dashboard' && itemHref !== '/') {
                     item.classList.add('active');
                 }
             });
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html>     

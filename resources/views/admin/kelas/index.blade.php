@@ -558,7 +558,7 @@
             <div class="sidebar-logo">
                 <i class="fas fa-laptop-code"></i>
             </div>
-            <h2>Sarpras Politala</h2>
+            <h2>Admin TI</h2>
         </div>
 
         <div class="sidebar-menu">
