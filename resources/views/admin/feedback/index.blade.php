@@ -995,10 +995,11 @@
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>ID Feedback</th>
+                            <th>ID</th>
                             <th>Peminjam</th>
-                            <th>Komentar</th>
-                            <th>Barang</th>
+                            <th>Judul</th>
+                            <th>Kategori</th>
+                            <th>Detail Feedback</th>
                             <th>Rating</th>
                             <th>Tanggal</th>
                             <th>Status</th>
@@ -1008,12 +1009,13 @@
                     <tbody>
                         @foreach($feedback as $item)
                         <tr>
-                            <td>FB{{ str_pad($item->id_feedback, 3, '0', STR_PAD_LEFT) }}</td>
-                            <td>{{ $item->peminjaman->nama ?? '-' }}</td>
-                            <td title="{{ $item->komentar ?? '-' }}">
-                                {{ \Illuminate\Support\Str::limit($item->komentar ?? '-', 50) }}
+                            <td>FB{{ str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
+                            <td>{{ $item->peminjaman->user->name ?? '-' }}</td>
+                            <td>{{ $item->judul }}</td>
+                            <td>{{ $item->kategori }}</td>
+                            <td title="Saran: {{ $item->saran_perbaikan ?? '-' }}">
+                                {{ \Illuminate\Support\Str::limit($item->detail_feedback ?? '-', 50) }}
                             </td>
-                            <td>{{ $item->peminjaman->barang->nama_barang ?? '-' }}</td>
                             <td>
                                 @for($i = 1; $i <= 5; $i++)
                                     @if($i <= $item->rating)
@@ -1024,7 +1026,7 @@
                                 @endfor
                                 <small class="text-muted">({{ $item->rating }})</small>
                             </td>
-                            <td>{{ \Carbon\Carbon::parse($item->tgl_feedback)->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>
                             <td>
                                 @if($item->status == 'Dipublikasikan')
                                     <span class="badge status-disetujui">Dipublikasikan</span>
@@ -1035,12 +1037,12 @@
                             <td>
                                 <div class="d-flex gap-2 action-buttons">
                                     <!-- Tombol Edit -->
-                                    <button class="btn btn-warning-custom btn-sm" onclick="openEditModal('{{ $item->id_feedback }}', `{{ addslashes($item->komentar) }}`, '{{ $item->rating }}', '{{ $item->status }}')">
+                                    <button class="btn btn-warning-custom btn-sm" onclick="openEditModal('{{ $item->id }}', '{{ $item->judul }}', '{{ $item->kategori }}', `{{ addslashes($item->detail_feedback) }}`, `{{ addslashes($item->saran_perbaikan) }}`, '{{ $item->rating }}', '{{ $item->status }}')">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
                                     <!-- Tombol Hapus -->
-                                    <form action="{{ route('feedback.destroy', $item->id_feedback) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('feedback.destroy', ['feedback' => $item->id]) }}" method="POST" class="d-inline">
                                         @csrf 
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger-custom btn-sm" onclick="return confirm('Yakin mau hapus feedback ini?')">
@@ -1069,15 +1071,32 @@
                     @method('PUT')
 
                     <div class="form-group">
-                        <label>Komentar *</label>
-                        <textarea name="komentar" id="editKomentar" class="form-control" maxlength="500" required></textarea>
-                        <div class="char-count">
-                            <span id="editCharCount">0</span>/500 karakter
-                        </div>
+                        <label>Judul</label>
+                        <input type="text" name="judul" id="editJudul" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Rating *</label>
+                        <label>Kategori</label>
+                        <select name="kategori" id="editKategori" class="form-control" required>
+                            <option value="Fasilitas Ruangan">Fasilitas Ruangan</option>
+                            <option value="Kebersihan">Kebersihan</option>
+                            <option value="Layanan Staff">Layanan Staff</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Detail Feedback</label>
+                        <textarea name="detail_feedback" id="editDetailFeedback" class="form-control" maxlength="1000" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Saran Perbaikan</label>
+                        <textarea name="saran_perbaikan" id="editSaranPerbaikan" class="form-control" maxlength="1000"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rating</label>
                         <select name="rating" id="editRating" class="form-control" required>
                             <option value="1">1 ★</option>
                             <option value="2">2 ★★</option>
@@ -1139,21 +1158,18 @@
             });
 
             // Modal Functions
-            function openEditModal(id, komentar, rating, status) {
-                console.log('Data received:', {id, komentar, rating, status});
-                
+            function openEditModal(id, judul, kategori, detail_feedback, saran_perbaikan, rating, status) {
                 // Set form action dengan URL yang benar
                 document.getElementById('editForm').action = "/admin/feedback/" + id;
                 
                 // Isi form fields
-                document.getElementById('editKomentar').value = komentar;
+                document.getElementById('editJudul').value = judul;
+                document.getElementById('editKategori').value = kategori;
+                document.getElementById('editDetailFeedback').value = detail_feedback;
+                document.getElementById('editSaranPerbaikan').value = saran_perbaikan;
                 document.getElementById('editRating').value = rating;
-                document.getElementById('editCharCount').textContent = komentar.length;
 
                 // Set status radio button
-                document.getElementById('statusPublished').checked = false;
-                document.getElementById('statusDraft').checked = false;
-                
                 if (status === "Dipublikasikan") {
                     document.getElementById('statusPublished').checked = true;
                 } else {
@@ -1170,15 +1186,6 @@
 
             // Character count for modal
             document.addEventListener('DOMContentLoaded', function() {
-                const editKomentar = document.getElementById('editKomentar');
-                const editCharCount = document.getElementById('editCharCount');
-                
-                if (editKomentar && editCharCount) {
-                    editKomentar.addEventListener('input', function() {
-                        editCharCount.textContent = this.value.length;
-                    });
-                }
-
                 // Terapkan dark mode jika sebelumnya diaktifkan
                 if (localStorage.getItem('darkMode') === 'enabled') {
                     document.body.classList.add('dark-mode');

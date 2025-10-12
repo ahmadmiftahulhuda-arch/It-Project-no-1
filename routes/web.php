@@ -58,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
+
+    // User Feedback CRUD
+    Route::resource('user/feedback', App\Http\Controllers\User\FeedbackController::class)->names('user.feedback');
 });
 
 // ================================
@@ -137,6 +140,11 @@ Route::prefix('user/feedback')->middleware('auth')->group(function () {
     Route::get('/create', [FeedbackController::class, 'createForUser'])->name('user.feedback.create');
     Route::post('/', [FeedbackController::class, 'storeForUser'])->name('user.feedback.store');
 });
+// Rute untuk menampilkan form feedback untuk peminjaman tertentu
+Route::get('/peminjaman/{peminjaman}/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+
+// Rute untuk menyimpan data feedback
+Route::post('/peminjaman/{peminjaman}/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 Route::prefix('peminjaman')->group(function () {
     Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');

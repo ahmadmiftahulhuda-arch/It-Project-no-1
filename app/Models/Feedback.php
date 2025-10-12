@@ -8,13 +8,14 @@ class Feedback extends Model
 {
     // Kolom yang boleh diisi (mass assignment)
     protected $fillable = [
-        'user_id',
         'peminjaman_id',
-        'komentar',
+        'kategori',
         'rating',
+        'judul',
+        'detail_feedback',
+        'saran_perbaikan',
         'status',
     ];
-
     /**
      * Relasi ke Peminjaman
      * Setiap feedback dimiliki oleh 1 peminjaman
@@ -22,14 +23,5 @@ class Feedback extends Model
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class);
-    }
-
-    /**
-     * Relasi ke User
-     * Setiap feedback dimiliki oleh 1 user
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

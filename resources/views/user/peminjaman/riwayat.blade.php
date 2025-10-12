@@ -731,6 +731,22 @@
                                            title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        @if ($peminjaman->status == 'selesai')
+                                            @if ($peminjaman->feedback)
+                                                <a href="#" 
+                                                   class="btn btn-secondary btn-action disabled" 
+                                                   title="Feedback sudah dikirim"
+                                                   aria-disabled="true">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('feedback.create', $peminjaman->id) }}" 
+                                                   class="btn btn-success btn-action" 
+                                                   title="Beri Feedback">
+                                                    <i class="fas fa-comment-dots"></i>
+                                                </a>
+                                            @endif
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

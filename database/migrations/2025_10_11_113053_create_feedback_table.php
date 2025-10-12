@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('feedback'); // Tambahkan baris ini
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('peminjaman_id')->constrained('peminjamans')->onDelete('cascade');
-            $table->text('komentar')->nullable();
+            $table->string('kategori');
             $table->unsignedTinyInteger('rating');
-            $table->string('status')->default('Dipublikasikan');
+            $table->string('judul');
+            $table->text('detail_feedback');
+            $table->text('saran_perbaikan')->nullable();
+            $table->string('status')->default('baru');
             $table->timestamps();
         });
     }

@@ -52,6 +52,24 @@ class Peminjaman extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Relasi ke Ruangan
+     * Setiap peminjaman terhubung ke 1 ruangan
+     */
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class, 'ruang');
+    }
+
+    /**
+     * Relasi ke Projector
+     * Setiap peminjaman terhubung ke 1 proyektor
+     */
+    public function projector()
+    {
+        return $this->belongsTo(Projector::class, 'proyektor');
+    }
+
     // Scope untuk riwayat
     public function scopeRiwayat($query)
     {

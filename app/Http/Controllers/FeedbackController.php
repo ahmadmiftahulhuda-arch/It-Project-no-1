@@ -20,10 +20,9 @@ class FeedbackController extends Controller
         return view('admin.feedback.index', compact('feedback', 'totalFeedback', 'averageRating', 'published', 'draft'));
     }
 
-    public function create()
+    public function create(Peminjaman $peminjaman)
     {
-        $peminjaman = Peminjaman::with('barang')->get();
-        return view('admin.feedback.create', compact('peminjaman'));
+        return view('user.feedback.create', compact('peminjaman'));
     }
 
     public function store(Request $request)
@@ -50,14 +49,20 @@ class FeedbackController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'komentar' => 'required|string|max:500',
+            'judul' => 'required|string|max:255',
+            'kategori' => 'required|string',
+            'detail_feedback' => 'required|string|max:1000',
+            'saran_perbaikan' => 'nullable|string|max:1000',
             'rating' => 'required|integer|min:1|max:5',
             'status' => 'required|in:Dipublikasikan,Draft',
         ]);
 
         $feedback = Feedback::findOrFail($id);
         $feedback->update([
-            'komentar' => $request->komentar,
+            'judul' => $request->judul,
+            'kategori' => $request->kategori,
+            'detail_feedback' => $request->detail_feedback,
+            'saran_perbaikan' => $request->saran_perbaikan,
             'rating' => $request->rating,
             'status' => $request->status,
         ]);
@@ -129,25 +134,36 @@ class FeedbackController extends Controller
     public function storeForUser(Request $request)
     {
         $request->validate([
-            'id_peminjaman' => 'required|exists:peminjamans,id',
+            'peminjaman_id' => 'required|exists:peminjamans,id',
             'rating' => 'required|integer|min:1|max:5',
-            'komentar' => 'nullable|string|max:1000',
+            'kategori' => 'required|string',
+            'judul' => 'required|string|max:255',
+            'detail_feedback' => 'required|string|max:1000',
+            'saran_perbaikan' => 'nullable|string|max:1000',
         ]);
 
+        // Check if feedback for this loan already exists
+        $existingFeedback = Feedback::where('peminjaman_id', $request->peminjaman_id)->first();
+        if ($existingFeedback) {
+            return redirect()->back()->with('error', 'Anda sudah pernah memberikan feedback untuk peminjaman ini.');
+        }
+
         // Additional check to ensure the user owns the peminjaman
-        $peminjaman = Peminjaman::where('id', $request->id_peminjaman)
+        $peminjaman = Peminjaman::where('id', $request->peminjaman_id)
                                 ->where('user_id', Auth::id())
                                 ->firstOrFail(); // Fails if not found or not owned by user
 
         Feedback::create([
-            'id_peminjaman' => $peminjaman->id,
+            'peminjaman_id' => $peminjaman->id,
+            'kategori' => $request->kategori,
+            'judul' => $request->judul,
             'rating' => $request->rating,
-            'komentar' => $request->komentar,
-            'tgl_feedback' => now(),
-            'status' => 'Dipublikasikan',
+            'detail_feedback' => $request->detail_feedback,
+            'saran_perbaikan' => $request->saran_perbaikan,
+            'status' => 'Draft',
         ]);
 
-        return redirect()->route('user.feedback.create')
+        return redirect()->route('user.peminjaman.riwayat')
                          ->with('success', 'Terima kasih! Feedback Anda telah berhasil dikirim.');
     }
 }

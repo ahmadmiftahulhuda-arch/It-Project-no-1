@@ -34,6 +34,16 @@ class PeminjamanController extends Controller
 
     public function create()
     {
+        $pendingFeedbackCount = Peminjaman::where('user_id', auth()->id())
+            ->where('status', 'selesai')
+            ->whereDoesntHave('feedback')
+            ->count();
+
+        if ($pendingFeedbackCount > 0) {
+            return redirect()->route('user.peminjaman.riwayat')
+                ->with('error', 'Anda harus mengisi semua feedback dari peminjaman sebelumnya untuk dapat meminjam lagi.');
+        }
+
         return view('user.peminjaman.create');
     }
 
@@ -106,7 +116,7 @@ class PeminjamanController extends Controller
     public function riwayat(Request $request)
     {
         $userId = auth()->id() ?? 1;
-        $query = Peminjaman::where('user_id', $userId);
+        $query = Peminjaman::with('feedback')->where('user_id', $userId);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
