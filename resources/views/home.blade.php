@@ -931,11 +931,58 @@
             <li><a href="/kalender">Kalender Perkuliahan</a></li>
             <li><a href="/peminjaman">Daftar Peminjaman</a></li>
             <li><a href="/about">Tentang</a></li>
+            
+            @auth
+            <li x-data="{ open: false }" class="relative">
+                <!-- Tombol Utama Dropdown -->
+                <a @click="open = !open" href="#" class="flex items-center gap-2 py-2 px-1" style="color: white; cursor: pointer;" aria-expanded="false" aria-haspopup="true">
+                    <i class="fas fa-user" style="color: #87CEEB;"></i> <!-- Ikon orang biru muda -->
+                    <span>{{ Auth::user()->name }}</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </a>
+
+                <!-- Isi Menu Dropdown -->
+                <div x-show="open" 
+                     @click.away="open = false" 
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="absolute right-0 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10"
+                     style="display: none;">
+                    <div class="py-1 text-gray-700">
+                        <div class="px-4 py-3 border-b border-gray-200">
+                            <p class="text-sm leading-5">Masuk sebagai</p>
+                            <p class="text-sm font-medium truncate">{{ Auth::user()->name }}</p>
+                        </div>
+                        <a href="#" class="flex items-center w-full px-4 py-2 text-sm leading-5 text-left hover:bg-gray-100">
+                            <i class="fas fa-user fa-fw mr-2 text-gray-500"></i> Pengaturan Profil
+                        </a>
+                        <a href="#" class="flex items-center w-full px-4 py-2 text-sm leading-5 text-left hover:bg-gray-100">
+                            <i class="fas fa-history fa-fw mr-2 text-gray-500"></i> Riwayat Peminjaman
+                        </a>
+                        <a href="#" class="flex items-center w-full px-4 py-2 text-sm leading-5 text-left hover:bg-gray-100">
+                            <i class="fas fa-cog fa-fw mr-2 text-gray-500"></i> Pengaturan
+                        </a>
+                        <div class="border-t border-gray-100"></div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="flex items-center w-full px-4 py-2 text-sm leading-5 text-left text-red-700 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt fa-fw mr-2" style="color: red;"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+            @else
             <li>
-                <a href="/login" class="btn-warning">
+                <a href="{{ route('login') }}" class="btn-warning">
                     <i class="fa-solid fa-right-to-bracket"></i> Login
                 </a>
             </li>
+            @endauth
         </ul>
     </nav>
 
