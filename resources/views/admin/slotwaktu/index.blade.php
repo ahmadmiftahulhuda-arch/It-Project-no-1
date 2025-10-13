@@ -791,13 +791,6 @@
                         <label for="search">Cari Berdasarkan Jam</label>
                         <input type="text" id="search" name="cari" placeholder="Contoh: 8:00" value="{{ request('cari') }}">
                     </div>
-                    <div class="filter-group">
-                        <label for="search_type">Jenis Pencarian</label>
-                        <select id="search_type" name="search_type">
-                            <option value="jam" {{ request('search_type') == 'jam' ? 'selected' : '' }}>Pencarian berdasarkan jam</option>
-                            <option value="id" {{ request('search_type') == 'id' ? 'selected' : '' }}>Pencarian berdasarkan ID</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
                     <button type="submit" class="btn btn-primary btn-sm">
