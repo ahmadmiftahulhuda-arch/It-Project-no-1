@@ -6,6 +6,7 @@
     <title>Pengembalian - Sistem Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
             --primary: #4361ee;
@@ -73,6 +74,12 @@
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
         }
 
         .condition-baik {
@@ -209,7 +216,7 @@
                 <p class="text-muted">Ajukan pengembalian ruangan dan proyektor yang telah digunakan</p>
             </div>
             <div class="col-md-6 text-md-end">
-                <a href="#" class="btn btn-primary-custom">
+                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-primary-custom">
                     <i class="fas fa-arrow-left me-2"></i> Kembali ke Daftar
                 </a>
             </div>
@@ -296,31 +303,31 @@
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
-                                            {{ \Carbon\Carbon::parse($peminjaman->tanggal ?? now())->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}
                                         </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $peminjaman->ruang ?? 'Ruang A' }}
+                                            {{ $peminjaman->ruang }}
                                         </td>
                                         <td>
                                             <i class="fas fa-clock me-1 text-success"></i>
                                             {{ $peminjaman->waktu_mulai ?? '08:00' }} - {{ $peminjaman->waktu_selesai ?? '17:00' }}
                                         </td>
                                         <td class="text-center">
-                                            @if($peminjaman->proyektor ?? false)
+                                            @if($peminjaman->proyektor)
                                                 <span class="badge bg-success">Ya</span>
                                             @else
                                                 <span class="badge bg-secondary">Tidak</span>
                                             @endif
                                         </td>
-                                        <td>{{ \Illuminate\Support\Str::limit($peminjaman->keperluan ?? 'Keperluan rapat', 50) }}</td>
+                                        <td>{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 50) }}</td>
                                         <td class="text-center">
                                             <button type="button" 
                                                     class="btn btn-success btn-sm ajukan-pengembalian"
-                                                    data-peminjaman-id="{{ $peminjaman->id ?? $loop->iteration }}"
-                                                    data-ruang="{{ $peminjaman->ruang ?? 'Ruang A' }}"
-                                                    data-tanggal="{{ \Carbon\Carbon::parse($peminjaman->tanggal ?? now())->format('d M Y') }}"
-                                                    data-proyektor="{{ $peminjaman->proyektor ?? false ? 'Ya' : 'Tidak' }}">
+                                                    data-peminjaman-id="{{ $peminjaman->id }}"
+                                                    data-ruang="{{ $peminjaman->ruang }}"
+                                                    data-tanggal="{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}"
+                                                    data-proyektor="{{ $peminjaman->proyektor ? 'Ya' : 'Tidak' }}">
                                                 <i class="fas fa-undo me-1"></i> Ajukan
                                             </button>
                                         </td>
@@ -355,6 +362,7 @@
                                     <th>Ruang</th>
                                     <th>Tanggal Kembali</th>
                                     <th width="100" class="text-center">Proyektor</th>
+                                    <th width="120" class="text-center">Kondisi Ruang</th>
                                     <th width="120" class="text-center">Status</th>
                                     <th>Catatan</th>
                                 </tr>
@@ -364,33 +372,48 @@
                                     <tr>
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
-                                            {{ \Carbon\Carbon::parse($pengembalian->tanggal ?? now())->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') }}
                                         </td>
-                                        <td>{{ $pengembalian->ruang ?? 'Ruang A' }}</td>
+                                        <td>{{ $pengembalian->peminjaman->ruang }}</td>
                                         <td>
-                                            @if($pengembalian->tanggal_kembali ?? false)
-                                                {{ \Carbon\Carbon::parse($pengembalian->tanggal_kembali)->format('d M Y') }}
+                                            @if($pengembalian->tanggal_pengembalian)
+                                                {{ \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('d M Y') }}
                                             @else
                                                 <span class="text-muted">-</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($pengembalian->proyektor ?? false)
+                                            @if($pengembalian->peminjaman->proyektor)
                                                 <span class="badge bg-success">Ya</span>
                                             @else
                                                 <span class="badge bg-secondary">Tidak</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if(($pengembalian->status ?? '') == 'selesai')
+                                            @if($pengembalian->kondisi_ruang)
+                                                @if($pengembalian->kondisi_ruang == 'baik')
+                                                    <span class="badge condition-baik">Baik</span>
+                                                @elseif($pengembalian->kondisi_ruang == 'rusak_ringan')
+                                                    <span class="badge condition-rusak-ringan">Rusak Ringan</span>
+                                                @else
+                                                    <span class="badge condition-rusak-berat">Rusak Berat</span>
+                                                @endif
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            @if($pengembalian->status == 'dikembalikan' || $pengembalian->status == 'selesai')
                                                 <span class="badge status-dikembalikan">Dikembalikan</span>
-                                            @elseif(($pengembalian->status ?? '') == 'terlambat')
+                                            @elseif($pengembalian->status == 'terlambat')
                                                 <span class="badge status-terlambat">Terlambat</span>
+                                            @elseif($pengembalian->status == 'pending')
+                                                <span class="badge status-pending">Menunggu Verifikasi</span>
                                             @else
                                                 <span class="badge status-belum_dikembalikan">Belum Dikembalikan</span>
                                             @endif
                                         </td>
-                                        <td>{{ ($pengembalian->keterangan ?? '') ? \Illuminate\Support\Str::limit($pengembalian->keterangan, 30) : '-' }}</td>
+                                        <td>{{ $pengembalian->catatan ? \Illuminate\Support\Str::limit($pengembalian->catatan, 30) : '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -440,6 +463,7 @@
                     </div>
                     
                     <form id="form-pengembalian">
+                        @csrf
                         <input type="hidden" id="peminjaman_id" name="peminjaman_id">
                         
                         <div class="mb-3">
@@ -486,13 +510,40 @@
             const proyektorSection = document.getElementById('proyektor-section');
             const submitButton = document.getElementById('submit-pengembalian');
             
-            // Cache DOM elements untuk performa lebih baik
+            // Cache DOM elements
             const modalRuang = document.getElementById('modal-ruang');
             const modalTanggal = document.getElementById('modal-tanggal');
             const modalProyektor = document.getElementById('modal-proyektor');
             const peminjamanIdInput = document.getElementById('peminjaman_id');
             const kondisiProyektorSelect = document.getElementById('kondisi_proyektor');
             const form = document.getElementById('form-pengembalian');
+            
+            // Fungsi untuk mengajukan pengembalian
+            async function ajukanPengembalian(formData) {
+                const peminjamanId = peminjamanIdInput.value;
+                
+                try {
+                    const response = await fetch(`/user/pengembalian/ajukan/${peminjamanId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(Object.fromEntries(formData))
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error('Error:', error);
+                    throw error;
+                }
+            }
             
             ajukanButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -514,6 +565,7 @@
                     } else {
                         proyektorSection.style.display = 'none';
                         kondisiProyektorSelect.removeAttribute('required');
+                        kondisiProyektorSelect.value = ''; // Reset value
                     }
                     
                     // Reset form
@@ -525,24 +577,42 @@
             });
             
             // Handle submit pengembalian
-            submitButton.addEventListener('click', function() {
+            submitButton.addEventListener('click', async function() {
                 if (form.checkValidity()) {
                     // Tampilkan loading state
                     this.classList.add('btn-loading');
                     this.disabled = true;
                     
-                    // Simulasi proses AJAX yang lebih cepat (500ms)
-                    setTimeout(() => {
-                        // Success message
-                        showAlert('success', `Pengembalian untuk ruang ${modalRuang.textContent} berhasil diajukan!`);
+                    try {
+                        // Kirim data via AJAX
+                        const formData = new FormData(form);
                         
-                        // Tutup modal
-                        modal.hide();
+                        // Timeout untuk request (5 detik maksimal)
+                        const timeoutPromise = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Request timeout')), 5000)
+                        );
                         
-                        // Reset button state
+                        const ajukanPromise = ajukanPengembalian(formData);
+                        
+                        // Race antara request dan timeout
+                        const data = await Promise.race([ajukanPromise, timeoutPromise]);
+                        
+                        if (data.success) {
+                            showAlert('success', data.message || 'Pengembalian berhasil diajukan!');
+                            modal.hide();
+                            
+                            // Redirect setelah 1.5 detik (lebih cepat)
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            throw new Error(data.message || 'Terjadi kesalahan');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showAlert('danger', error.message || 'Terjadi kesalahan saat mengajukan pengembalian');
                         resetSubmitButton();
-                        
-                    }, 500); // Dikurangi dari 1500ms menjadi 500ms
+                    }
                     
                 } else {
                     form.reportValidity();
@@ -557,6 +627,10 @@
 
             // Fungsi untuk menampilkan alert
             function showAlert(type, message) {
+                // Hapus alert sebelumnya
+                const existingAlerts = document.querySelectorAll('.alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
                 const alertDiv = document.createElement('div');
                 alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
                 alertDiv.innerHTML = `

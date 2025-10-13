@@ -434,6 +434,16 @@
             color: #1565c0;
         }
 
+        .status-menunggu {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-disetujui {
+            background: #d1edff;
+            color: #0c5460;
+        }
+
         .status-dikembalikan {
             background: #e8f5e9;
             color: #2e7d32;
@@ -893,9 +903,10 @@
                         <label for="status_filter">Status Peminjaman</label>
                         <select id="status_filter" name="status">
                             <option value="">Semua Status</option>
-                            <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Selesai</option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                            <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
                             <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Berlangsung</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -947,14 +958,20 @@
                                     <th>Ruang</th>
                                     <th>Proyektor</th>
                                     <th>Keperluan</th>
-                                    <th>Status</th>
+                                    <th>Status Peminjaman</th>
                                     <th>Status Pengembalian</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="riwayat-table-body">
                                 @forelse($riwayat as $item)
-                                    <tr data-status="{{ $item->status }}" data-id="{{ $item->id }}">
+                                    @php
+                                        // Tentukan apakah peminjaman sedang berlangsung
+                                        $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
+                                        $isOngoing = $isToday && $item->status == 'disetujui';
+                                    @endphp
+
+                                    <tr data-status="{{ $item->status }}" data-id="{{ $item->id }}" class="{{ $isOngoing ? 'today-indicator' : '' }}">
                                         <td>{{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -978,18 +995,30 @@
                                             {{ \Illuminate\Support\Str::limit($item->keperluan, 40) }}
                                         </td>
                                         <td>
-                                            @if ($item->status == 'selesai')
-                                                <span class="badge status-badge status-selesai">Selesai</span>
-                                            @elseif ($item->status == 'disetujui')
-                                                <span class="badge status-badge status-selesai">Disetujui</span>
+                                            @if ($isOngoing)
+                                                <span class="badge status-badge status-berlangsung">
+                                                    <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                                </span>
+                                            @elseif($item->status == 'selesai')
+                                                <span class="badge status-badge status-selesai">
+                                                    <i class="fas fa-check-double me-1"></i> Selesai
+                                                </span>
+                                            @elseif($item->status == 'disetujui')
+                                                <span class="badge status-badge status-disetujui">
+                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
+                                                </span>
                                             @elseif($item->status == 'ditolak')
-                                                <span class="badge status-badge status-ditolak">Ditolak</span>
+                                                <span class="badge status-badge status-ditolak">
+                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
+                                                </span>
                                             @else
-                                                <span class="badge status-badge status-berlangsung">Berlangsung</span>
+                                                <span class="badge status-badge status-menunggu">
+                                                    <i class="fas fa-clock me-1"></i> Menunggu
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if($item->status_pengembalian == 'sudah dikembalikan')
+                                            @if($item->status_pengembalian == 'sudah dikembalikan' || $item->tanggal_kembali)
                                                 <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
                                             @else
                                                 <span class="badge status-badge status-belum-dikembalikan">Belum Dikembalikan</span>
@@ -1007,7 +1036,7 @@
                                                     data-proyektor="{{ $item->proyektor ? 'Ya' : 'Tidak' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
-                                                    data-status-pengembalian="{{ $item->tanggal_kembali ? 'Dikembalikan' : 'Belum Dikembalikan' }}"
+                                                    data-status-pengembalian="{{ $item->status_pengembalian }}"
                                                     data-keterangan="{{ $item->catatan ?? '-' }}">
                                                     <i class="fas fa-eye me-1"></i> Detail
                                                 </button>
@@ -1022,7 +1051,7 @@
                                                     data-proyektor="{{ $item->proyektor ? '1' : '0' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
-                                                    data-status-pengembalian="{{ $item->tanggal_kembali ? '1' : '0' }}"
+                                                    data-status-pengembalian="{{ $item->status_pengembalian ?? 'belum dikembalikan' }}"
                                                     data-keterangan="{{ $item->catatan ?? '' }}">
                                                     <i class="fas fa-edit me-1"></i> Edit
                                                 </button>
@@ -1108,6 +1137,11 @@
             <div class="tab-pane fade" id="timeline-view" role="tabpanel">
                 <div class="table-container p-4">
                     @forelse($riwayat as $item)
+                        @php
+                            $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
+                            $isOngoing = $isToday && $item->status == 'disetujui';
+                        @endphp
+
                         <div class="timeline-item">
                             <div class="timeline-date">
                                 {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
@@ -1125,12 +1159,34 @@
                                     </div>
                                     <div class="col-md-6">
                                         <strong>Status:</strong> 
-                                        @if ($item->status == 'disetujui')
-                                            <span class="badge status-badge status-selesai">Selesai</span>
+                                        @if ($isOngoing)
+                                            <span class="badge status-badge status-berlangsung">
+                                                <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                            </span>
+                                        @elseif($item->status == 'selesai')
+                                            <span class="badge status-badge status-selesai">
+                                                <i class="fas fa-check-double me-1"></i> Selesai
+                                            </span>
+                                        @elseif($item->status == 'disetujui')
+                                            <span class="badge status-badge status-disetujui">
+                                                <i class="fas fa-check-circle me-1"></i> Disetujui
+                                            </span>
                                         @elseif($item->status == 'ditolak')
-                                            <span class="badge status-badge status-ditolak">Ditolak</span>
+                                            <span class="badge status-badge status-ditolak">
+                                                <i class="fas fa-times-circle me-1"></i> Ditolak
+                                            </span>
                                         @else
-                                            <span class="badge status-badge status-berlangsung">Berlangsung</span>
+                                            <span class="badge status-badge status-menunggu">
+                                                <i class="fas fa-clock me-1"></i> Menunggu
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Status Pengembalian:</strong> 
+                                        @if($item->status_pengembalian == 'sudah dikembalikan' || $item->tanggal_kembali)
+                                            <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                        @else
+                                            <span class="badge status-badge status-belum-dikembalikan">Belum Dikembalikan</span>
                                         @endif
                                     </div>
                                     <div class="col-12 mt-2">
@@ -1147,7 +1203,7 @@
                                                 data-proyektor="{{ $item->proyektor ? 'Ya' : 'Tidak' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
-                                                data-status-pengembalian="{{ $item->tanggal_kembali ? 'Dikembalikan' : 'Belum Dikembalikan' }}"
+                                                data-status-pengembalian="{{ $item->status_pengembalian }}"
                                                 data-keterangan="{{ $item->catatan ?? '-' }}">
                                                 <i class="fas fa-eye me-1"></i> Detail
                                             </button>
@@ -1160,7 +1216,7 @@
                                                 data-proyektor="{{ $item->proyektor ? '1' : '0' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
-                                                data-status-pengembalian="{{ $item->tanggal_kembali ? '1' : '0' }}"
+                                                data-status-pengembalian="{{ $item->status_pengembalian ?? 'belum dikembalikan' }}"
                                                 data-keterangan="{{ $item->catatan ?? '' }}">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </button>
@@ -1284,16 +1340,18 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Status Peminjaman</label>
                                     <select class="form-control" id="edit_status" name="status" required>
-                                        <option value="pending">Berlangsung</option>
-                                        <option value="disetujui">Selesai</option>
+                                        <option value="pending">Menunggu</option>
+                                        <option value="disetujui">Disetujui</option>
+                                        <option value="berlangsung">Berlangsung</option>
                                         <option value="ditolak">Ditolak</option>
+                                        <option value="selesai">Selesai</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Status Pengembalian</label>
-                                    <select class="form-control" id="edit_status_pengembalian" name="tanggal_kembali">
-                                        <option value="0">Belum Dikembalikan</option>
-                                        <option value="1">Dikembalikan</option>
+                                    <select class="form-control" id="edit_status_pengembalian" name="status_pengembalian" required>
+                                        <option value="belum dikembalikan">Belum Dikembalikan</option>
+                                        <option value="sudah dikembalikan">Sudah Dikembalikan</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-3">
@@ -1420,20 +1478,24 @@
                     document.getElementById('detail_proyektor').textContent = proyektor;
                     document.getElementById('detail_keperluan').textContent = keperluan;
                     
-                    // Format status
+                    // Format status peminjaman
                     let statusText = '';
-                    if (status === 'disetujui') {
-                        statusText = '<span class="badge status-selesai">Selesai</span>';
+                    if (status === 'selesai') {
+                        statusText = '<span class="badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
+                    } else if (status === 'disetujui') {
+                        statusText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                    } else if (status === 'berlangsung') {
+                        statusText = '<span class="badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
                     } else if (status === 'ditolak') {
-                        statusText = '<span class="badge status-ditolak">Ditolak</span>';
+                        statusText = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
                     } else {
-                        statusText = '<span class="badge status-berlangsung">Berlangsung</span>';
+                        statusText = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
                     }
                     document.getElementById('detail_status').innerHTML = statusText;
 
                     // Format status pengembalian
                     let statusPengembalianText = '';
-                    if (statusPengembalian === 'Dikembalikan') {
+                    if (statusPengembalian === 'sudah dikembalikan') {
                         statusPengembalianText = '<span class="badge status-dikembalikan">Dikembalikan</span>';
                     } else {
                         statusPengembalianText = '<span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>';
@@ -1469,9 +1531,28 @@
                     document.getElementById('edit_ruang').value = ruang;
                     document.getElementById('edit_proyektor').value = proyektor;
                     document.getElementById('edit_keperluan').value = keperluan;
-                    document.getElementById('edit_status').value = status;
-                    document.getElementById('edit_status_pengembalian').value = statusPengembalian;
                     document.getElementById('edit_keterangan').value = keterangan || '';
+                    
+                    // Handle status peminjaman - konversi dari status database ke nilai dropdown
+                    let statusValue = status;
+                    const today = new Date().toISOString().split('T')[0];
+                    
+                    // Jika status adalah disetujui dan tanggal hari ini, tampilkan sebagai berlangsung
+                    if (status === 'disetujui' && tanggal === today) {
+                        statusValue = 'berlangsung';
+                    }
+                    document.getElementById('edit_status').value = statusValue;
+                    
+                    // Handle status pengembalian
+                    let statusPengembalianValue = statusPengembalian || 'belum dikembalikan';
+                    document.getElementById('edit_status_pengembalian').value = statusPengembalianValue;
+
+                    // Debug log
+                    console.log('Data yang akan diisi:', {
+                        id, peminjam, tanggal, ruang, proyektor, 
+                        keperluan, status, statusPengembalian, keterangan,
+                        selectedStatus: statusValue
+                    });
                 });
             }
 
@@ -1528,9 +1609,11 @@
                 }
                 if (urlParams.get('status')) {
                     const statusText = {
-                        'disetujui': 'Selesai',
+                        'disetujui': 'Disetujui',
                         'ditolak': 'Ditolak',
-                        'pending': 'Berlangsung'
+                        'pending': 'Menunggu',
+                        'selesai': 'Selesai',
+                        'berlangsung': 'Berlangsung'
                     }[urlParams.get('status')] || urlParams.get('status');
                     activeFilters.push(`Status: ${statusText}`);
                 }
