@@ -139,11 +139,13 @@ class PeminjamanController extends Controller
     {
         $userId = auth()->id() ?? 1;
         
-        // Peminjaman aktif yang bisa dikembalikan (status disetujui dan belum ada record pengembalian)
+        // Peminjaman aktif yang bisa dikembalikan (status disetujui dan belum dikembalikan)
         $activeQuery = Peminjaman::where('user_id', $userId)
                           ->where('status', 'disetujui')
-                          ->whereDoesntHave('pengembalian') // Cek relasi, bukan kolom
-                          ->whereDate('tanggal', '<=', Carbon::now());
+                          ->whereDoesntHave('pengembalian')
+                          ->where(function($query) {
+                              $query->whereDate('tanggal', '<=', Carbon::now());
+                          });
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -170,7 +172,7 @@ class PeminjamanController extends Controller
         
         $overdueCount = Peminjaman::where('user_id', $userId)
                           ->where('status', 'disetujui')
-                          ->whereDoesntHave('pengembalian') // Cek relasi
+                          ->whereDoesntHave('pengembalian')
                           ->whereDate('tanggal', '<', Carbon::now())
                           ->count();
 
@@ -183,40 +185,58 @@ class PeminjamanController extends Controller
         ));
     }
 
-    public function ajukanPengembalian($id)
+    public function ajukanPengembalian(Request $request, $id)
     {
         try {
             $userId = auth()->id() ?? 1;
+            
+            // Validasi input
+            $request->validate([
+                'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
+                'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
+                'catatan' => 'nullable|string|max:500',
+            ]);
+
             $peminjaman = Peminjaman::where('user_id', $userId)
                                    ->where('status', 'disetujui')
-                                   ->whereDoesntHave('pengembalian') // Pastikan belum pernah diajukan
+                                   ->whereDoesntHave('pengembalian')
                                    ->findOrFail($id);
             
-            // Update status peminjaman
-            $peminjaman->update([
-                'status' => 'proses-pengembalian',
-            ]);
-
-            // Buat record pengembalian untuk diverifikasi admin
-            Pengembalian::create([
+            // Buat record pengembalian
+            $pengembalian = Pengembalian::create([
                 'peminjaman_id' => $peminjaman->id,
                 'tanggal_pengembalian' => Carbon::now(),
-                'status' => 'pending', // Status awal saat diajukan user
-                'keterangan' => 'Diajukan oleh user',
+                'kondisi_ruang' => $request->kondisi_ruang,
+                'kondisi_proyektor' => $request->kondisi_proyektor,
+                'catatan' => $request->catatan,
+                'status' => 'pending', // Menunggu verifikasi admin
             ]);
 
-            return redirect()->route('user.pengembalian.index')->with('success', 'Pengajuan pengembalian berhasil. Menunggu verifikasi admin.');
+            // Update status peminjaman menjadi "proses pengembalian"
+            $peminjaman->update([
+                'status' => 'proses_pengembalian',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan pengembalian berhasil diajukan. Menunggu verifikasi admin.'
+            ]);
                 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
     }
 
     public function showPengembalian($id)
     {
         $userId = auth()->id() ?? 1;
-        $peminjaman = Peminjaman::where('user_id', $userId)->findOrFail($id);
+        $pengembalian = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->with('peminjaman')->findOrFail($id);
         
-        return view('user.pengembalian.show', compact('peminjaman'));
+        return view('user.pengembalian.show', compact('pengembalian'));
     }
 }

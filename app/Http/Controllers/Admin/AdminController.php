@@ -27,12 +27,12 @@ class AdminController extends Controller
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->whereHas('user', function($userQuery) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
                     $userQuery->where('name', 'like', "%{$search}%");
                 })
-                ->orWhere('keperluan', 'like', "%{$search}%")
-                ->orWhere('ruang', 'like', "%{$search}%");
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    ->orWhere('ruang', 'like', "%{$search}%");
             });
         }
 
@@ -76,17 +76,17 @@ class AdminController extends Controller
     public function pengembalian(Request $request)
     {
         $query = Peminjaman::where('status', 'disetujui')
-                          ->whereDoesntHave('pengembalian'); // Hanya tampilkan yg belum dikembalikan
+            ->whereDoesntHave('pengembalian'); // Hanya tampilkan yg belum dikembalikan
 
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->whereHas('user', function($userQuery) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
                     $userQuery->where('name', 'like', "%{$search}%");
                 })
-                ->orWhere('keperluan', 'like', "%{$search}%")
-                ->orWhere('ruang', 'like', "%{$search}%");
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    ->orWhere('ruang', 'like', "%{$search}%");
             });
         }
 
@@ -105,12 +105,12 @@ class AdminController extends Controller
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->whereHas('user', function($userQuery) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
                     $userQuery->where('name', 'like', "%{$search}%");
                 })
-                ->orWhere('keperluan', 'like', "%{$search}%")
-                ->orWhere('ruang', 'like', "%{$search}%");
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    ->orWhere('ruang', 'like', "%{$search}%");
             });
         }
 
@@ -169,7 +169,7 @@ class AdminController extends Controller
 
         // Cari user berdasarkan nama atau buat guest user
         $user = User::where('name', $request->peminjam)->first();
-        
+
         if (!$user) {
             // Jika user tidak ditemukan, buat guest user atau gunakan user default
             $user = User::first(); // atau handle sesuai kebutuhan
@@ -185,7 +185,7 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.peminjaman.index')
-                        ->with('success', 'Peminjaman berhasil ditambahkan.');
+            ->with('success', 'Peminjaman berhasil ditambahkan.');
     }
 
     /**
@@ -197,7 +197,7 @@ class AdminController extends Controller
         $peminjaman->update(['status' => 'disetujui']);
 
         return redirect()->route('admin.peminjaman.index')
-                        ->with('success', 'Peminjaman berhasil disetujui.');
+            ->with('success', 'Peminjaman berhasil disetujui.');
     }
 
     /**
@@ -209,7 +209,7 @@ class AdminController extends Controller
         $peminjaman->update(['status' => 'ditolak']);
 
         return redirect()->route('admin.peminjaman.index')
-                        ->with('success', 'Peminjaman berhasil ditolak.');
+            ->with('success', 'Peminjaman berhasil ditolak.');
     }
 
     /**
@@ -224,7 +224,7 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.pengembalian')
-                        ->with('success', 'Peminjaman berhasil diselesaikan.');
+            ->with('success', 'Peminjaman berhasil diselesaikan.');
     }
 
     /**
@@ -244,7 +244,7 @@ class AdminController extends Controller
         $peminjaman->update($request->only(['tanggal', 'ruang', 'proyektor', 'keperluan', 'status']));
 
         return redirect()->route('admin.peminjaman.index')
-                        ->with('success', 'Peminjaman berhasil diperbarui.');
+            ->with('success', 'Peminjaman berhasil diperbarui.');
     }
 
     /**
@@ -256,7 +256,7 @@ class AdminController extends Controller
         $peminjaman->delete();
 
         return redirect()->route('admin.peminjaman.index')
-                        ->with('success', 'Peminjaman berhasil dihapus.');
+            ->with('success', 'Peminjaman berhasil dihapus.');
     }
 
     /**
@@ -279,7 +279,7 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.pengembalian')
-                        ->with('success', 'Pengembalian berhasil dicatat.');
+            ->with('success', 'Pengembalian berhasil dicatat.');
     }
 
     /**
@@ -295,7 +295,7 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.pengembalian')
-                        ->with('success', 'Pengembalian berhasil diproses.');
+            ->with('success', 'Pengembalian berhasil diproses.');
     }
 
     /**
@@ -307,7 +307,7 @@ class AdminController extends Controller
         $peminjaman->delete();
 
         return redirect()->route('admin.pengembalian')
-                        ->with('success', 'Data pengembalian berhasil dihapus.');
+            ->with('success', 'Data pengembalian berhasil dihapus.');
     }
 
     /**
@@ -320,14 +320,36 @@ class AdminController extends Controller
             'ruang' => 'required|string|max:100',
             'proyektor' => 'required|boolean',
             'keperluan' => 'required|string|max:500',
-            'status' => 'required|in:pending,disetujui,ditolak,selesai',
+            'status' => 'required|in:pending,disetujui,berlangsung,ditolak,selesai',
+            'status_pengembalian' => 'required|in:belum dikembalikan,sudah dikembalikan',
+            'catatan' => 'nullable|string|max:500',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->update($request->only(['tanggal', 'ruang', 'proyektor', 'keperluan', 'status']));
+
+        $data = $request->only(['tanggal', 'ruang', 'proyektor', 'keperluan', 'catatan']);
+
+        // Handle status peminjaman
+        // Jika status adalah "berlangsung", simpan sebagai "disetujui"
+        if ($request->status == 'berlangsung') {
+            $data['status'] = 'disetujui';
+        } else {
+            $data['status'] = $request->status;
+        }
+
+        // Handle status pengembalian
+        if ($request->status_pengembalian == 'sudah dikembalikan') {
+            $data['tanggal_kembali'] = Carbon::now();
+            $data['status_pengembalian'] = 'sudah dikembalikan';
+        } else {
+            $data['tanggal_kembali'] = null;
+            $data['status_pengembalian'] = 'belum dikembalikan';
+        }
+
+        $peminjaman->update($data);
 
         return redirect()->route('admin.riwayat')
-                        ->with('success', 'Riwayat peminjaman berhasil diperbarui.');
+            ->with('success', 'Riwayat peminjaman berhasil diperbarui.');
     }
 
     /**
