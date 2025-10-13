@@ -409,7 +409,7 @@
                 </div>
 
                 <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-warning">
                         <i class="fas fa-save"></i> Perbarui Proyektor
                     </button>
                     <a href="{{ route('projectors.index') }}" class="btn btn-outline">

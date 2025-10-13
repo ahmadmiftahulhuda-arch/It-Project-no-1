@@ -154,7 +154,7 @@
                             <a href="{{ route('pengguna.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-times me-1"></i>Batal
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-warning">
                                 <i class="fas fa-save me-1"></i>Perbarui
                             </button>
                         </div>

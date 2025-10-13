@@ -465,9 +465,62 @@
         </div>
 
         <div class="sidebar-menu">
-            <a href="/admin/dashboard" class="menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
-            <a href="{{ route('admin.ruangan.index') }}" class="menu-item"><i class="fas fa-door-open"></i><span>Ruangan</span></a>
-            <a href="{{ route('admin.slotwaktu.index') }}" class="menu-item active"><i class="fas fa-clock"></i><span>Slot Waktu</span></a>
+            <a href="/admin/dashboard" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ route('admin.dashboard') }}" class="menu-item">
+                <i class="fas fa-hand-holding"></i>
+                <span>Peminjaman</span>
+            </a>
+            <a href="/admin/pengembalian" class="menu-item">
+                <i class="fas fa-undo"></i>
+                <span>Pengembalian</span>
+            </a>
+            <a href="/admin/riwayat" class="menu-item">
+                <i class="fas fa-history"></i>
+                <span>Riwayat Peminjaman</span>
+            </a>
+            <a href="/admin/feedback" class="menu-item">
+                <i class="fas fa-comment"></i>
+                <span>Feedback</span>
+            </a>
+            <a href="/admin/proyektor" class="menu-item">
+                <i class="fas fa-video"></i>
+                <span>Proyektor</span>
+            </a>
+            <a href="/admin/jadwalperkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
+            </a>
+            <a href="{{ route('admin.ruangan.index') }}" class="menu-item">
+                <i class="fas fa-door-open"></i>
+                <span>Ruangan</span>
+            </a>
+            <a href="/admin/slotwaktu" class="menu-item">
+                <i class="fas fa-clock"></i>
+                <span>Slot Waktu</span>
+            </a>
+            <a href="/admin/matakuliah" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Matakuliah</span>
+            </a>
+            <a href="/admin/kelas" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Kelas</span>
+            </a>
+            <a href="/admin/pengguna" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Pengguna</span>
+            </a>
+            <a href="/admin/laporan" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Statistik</span>
+            </a>
+            <a href="/admin/pengaturan" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
         </div>
     </div>
 
