@@ -929,7 +929,7 @@
         <ul>
             <li><a href="/home" class="active">Beranda</a></li>
             <li><a href="/kalender">Kalender Perkuliahan</a></li>
-            <li><a href="/peminjaman">Daftar Peminjaman</a></li>
+            <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
             <li><a href="/about">Tentang</a></li>
             
             @auth

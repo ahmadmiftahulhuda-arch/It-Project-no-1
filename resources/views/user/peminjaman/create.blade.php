@@ -6,126 +6,511 @@
     <title>Tambah Peminjaman - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
+        /* ===== VARIABEL CSS SESUAI FREE USER ===== */
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --primary-color: #3b5998;
+            --secondary-color: #6d84b4;
+            --accent-color: #4c6baf;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
         }
-        
+
+        /* ===== STYLING UMUM ===== */
         body {
-            background-color: #f5f7fb;
+            background-color: #f5f8fa;
             color: #333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-bottom: 2rem;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
         }
-        
+
+        /* ===== NAVBAR ===== */
         .navbar-custom {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
+            background-color: var(--primary-color);
+            padding: 0.8rem 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-radius: 0;
         }
-        
+
+        .navbar-custom.scrolled {
+            padding: 0.5rem 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover i {
+            transform: rotate(-10deg);
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .navbar-nav .nav-link:hover::after, 
+        .navbar-nav .nav-link.active::after {
+            width: 70%;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== SUB NAVIGASI ===== */
+        .sub-nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 70px;
+            z-index: 999;
+        }
+
+        .sub-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .sub-nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .sub-nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid transparent;
+        }
+
+        .sub-nav-link:hover,
+        .sub-nav-link.active {
+            background-color: rgba(59, 89, 152, 0.1);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .sub-nav-link i {
+            font-size: 0.9rem;
+        }
+
+        /* ===== KONTEN UTAMA ===== */
+        .main-content {
+            flex: 1;
+        }
+
+        /* ===== KARTU ===== */
         .card-custom {
             border-radius: var(--border-radius);
             border: none;
             box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+            background-color: white;
         }
-        
+
+        .card-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ===== TOMBOL ===== */
         .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-primary-custom:hover::before {
+            left: 100%;
+        }
+
         .btn-primary-custom:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: white;
         }
-        
+
         .btn-secondary-custom {
-            background: #6c757d;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
         }
-        
+
         .btn-secondary-custom:hover {
-            background: #5a6268;
+            background-color: #5a6268;
+            border-color: #545b62;
             transform: translateY(-2px);
+            color: white;
         }
-        
+
+        /* ===== FORM ===== */
         .form-label {
             font-weight: 600;
             color: #495057;
             margin-bottom: 0.5rem;
         }
-        
+
         .form-control, .form-select {
             border-radius: 8px;
-            padding: 12px 16px;
             border: 1px solid #e2e8f0;
+            padding: 10px 15px;
             transition: all 0.3s ease;
         }
-        
+
         .form-control:focus, .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.15);
         }
-        
+
         .input-icon {
             position: relative;
         }
-        
+
         .input-icon i {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #6c757d;
+            z-index: 10;
         }
-        
+
         .input-icon .form-control, .input-icon .form-select {
             padding-left: 45px;
         }
-        
-        .header-section {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+
+        /* ===== HEADER ===== */
+        .page-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        
+
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-description {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        /* ===== ALERT ===== */
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: #2d3748;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            min-width: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .opening-hours {
+            margin-bottom: 15px;
+        }
+
+        .opening-hours div {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+
+        /* ===== RESPONSIVITAS ===== */
         @media (max-width: 768px) {
-            .card-custom {
-                margin: 0 10px;
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
             }
-            
-            .header-section {
-                border-radius: 0;
-                margin: 0 -12px 2rem;
+
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .page-header .col-md-6 {
+                margin-bottom: 15px;
+            }
+
+            .page-header .text-md-end {
+                text-align: left !important;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .footer-section h3 {
+                font-size: 1.3rem;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+
+            /* Responsivitas untuk sub-navigasi */
+            .sub-nav {
+                top: 56px; /* Sesuaikan dengan tinggi navbar mobile */
+            }
+
+            .sub-nav-links {
+                gap: 0.5rem;
+            }
+
+            .sub-nav-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .btn-primary-custom {
+                width: 100%;
+                padding: 12px;
+            }
+
+            /* Responsivitas untuk sub-navigasi */
+            .sub-nav-links {
+                justify-content: center;
+            }
+
+            .sub-nav-link {
+                flex: 1;
+                min-width: 140px;
+                justify-content: center;
+                text-align: center;
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- ===== NAVBAR ===== -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <!-- ===== NAVBAR UTAMA ===== -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('user.peminjaman.index') }}">
-                <i class="fas fa-calendar-check me-2"></i>
-                <strong>Sistem Peminjaman</strong>
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-building"></i>SarPras TI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -133,24 +518,23 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.peminjaman.index') }}"><i class="fas fa-list me-1"></i> Daftar Peminjaman</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('user.peminjaman.create') }}"><i class="fas fa-plus-circle me-1"></i> Tambah Peminjaman</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.peminjaman.riwayat') }}">
-                            <i class="fas fa-history me-1"></i> Riwayat
+                        <a class="nav-link" href="#">
+                            Beranda
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.pengembalian.index') }}">
-                            <i class="fas fa-undo me-1"></i> Pengembalian
+                        <a class="nav-link" href="#">
+                            Kalender Perkuliahan
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.feedback.create') }}">
-                            <i class="fas fa-comment-dots me-1"></i> Beri Feedback
+                        <a class="nav-link active" href="{{ route('user.peminjaman.index') }}">
+                            Daftar Peminjaman
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Tentang
                         </a>
                     </li>
                 </ul>
@@ -158,20 +542,41 @@
         </div>
     </nav>
 
-    <div class="container">
-        <!-- Header -->
-        <div class="header-section">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h2 class="mb-0"><i class="fas fa-plus-circle me-2"></i> Tambah Data Peminjaman</h2>
-                    <p class="mb-0">Isi form berikut untuk menambahkan data peminjaman baru</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="{{ route('user.peminjaman.index') }}" class="btn btn-light">
-                        <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
-                    </a>
-                </div>
+    <!-- ===== SUB NAVIGASI ===== -->
+    <div class="sub-nav">
+        <div class="sub-nav-container">
+            <div class="sub-nav-links">
+                <a href="{{ route('user.peminjaman.create') }}" class="sub-nav-link active">
+                    <i class="fas fa-plus-circle"></i>
+                    Tambah Peminjaman
+                </a>
+                <a href="{{ route('user.pengembalian.index') }}" class="sub-nav-link">
+                    <i class="fas fa-undo"></i>
+                    Pengembalian
+                </a>
+                <a href="{{ route('user.peminjaman.riwayat') }}" class="sub-nav-link">
+                    <i class="fas fa-history"></i>
+                    Riwayat
+                </a>
+                <a href="{{ route('user.feedback.create') }}" class="sub-nav-link">
+                    <i class="fas fa-comment-dots"></i>
+                    Feedback
+                </a>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== KONTEN UTAMA ===== -->
+    <div class="container main-content mt-4">
+        <!-- Header dan Kembali ke Daftar -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title"><i class="fa-solid fa-plus-circle"></i> Tambah Peminjaman</h1>
+                <p class="page-description">Isi form berikut untuk menambahkan data peminjaman baru</p>
+            </div>
+            <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary-custom">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+            </a>
         </div>
 
         <!-- Alert Notifikasi -->
@@ -287,10 +692,108 @@
         </div>
     </div>
 
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Tentang Kami</h3>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <ul class="footer-links">
+                    <li><a href="/home">Beranda</a></li>
+                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                    <li><a href="/about">Tentang</a></li>
+                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>(0512) 2021065</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>peminjaman@example.ac.id</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <div class="opening-hours">
+                    <div>
+                        <span>Senin - Kamis:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Jumat:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Sabtu & Minggu:</span>
+                        <span>Tutup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Set tanggal minimum ke hari ini
+        // ===== NAVBAR SCROLL EFFECT =====
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== SET TANGGAL MINIMUM DAN VALIDASI FORM =====
         document.addEventListener('DOMContentLoaded', function() {
+            // Set tanggal minimum ke hari ini
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.querySelector('input[type="date"]');
             

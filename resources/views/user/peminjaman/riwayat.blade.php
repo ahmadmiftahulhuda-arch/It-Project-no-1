@@ -1,40 +1,155 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Peminjaman - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        /* ===== VARIABEL CSS ===== */
+        /* ===== VARIABEL CSS SESUAI FREE USER ===== */
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --primary-color: #3b5998;
+            --secondary-color: #6d84b4;
+            --accent-color: #4c6baf;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
 
         /* ===== STYLING UMUM ===== */
         body {
-            background-color: #f5f7fb;
+            background-color: #f5f8fa;
             color: #333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            padding-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
         }
 
         /* ===== NAVBAR ===== */
         .navbar-custom {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
+            background-color: var(--primary-color);
+            padding: 0.8rem 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+
+        .navbar-custom.scrolled {
+            padding: 0.5rem 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover i {
+            transform: rotate(-10deg);
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .navbar-nav .nav-link:hover::after, 
+        .navbar-nav .nav-link.active::after {
+            width: 70%;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== SUB NAVIGASI ===== */
+        .sub-nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 70px;
+            z-index: 999;
+        }
+
+        .sub-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .sub-nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .sub-nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid transparent;
+        }
+
+        .sub-nav-link:hover,
+        .sub-nav-link.active {
+            background-color: rgba(59, 89, 152, 0.1);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .sub-nav-link i {
+            font-size: 0.9rem;
+        }
+
+        /* ===== KONTEN UTAMA ===== */
+        .main-content {
+            flex: 1;
         }
 
         /* ===== KARTU ===== */
@@ -42,27 +157,75 @@
             border-radius: var(--border-radius);
             border: none;
             box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 1.5rem;
+            background-color: white;
         }
 
         .card-custom:hover {
             transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
         /* ===== TOMBOL ===== */
         .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: var(--transition);
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-primary-custom:hover::before {
+            left: 100%;
         }
 
         .btn-primary-custom:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .btn-success-custom {
+            background-color: #198754;
+            border-color: #198754;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-success-custom:hover {
+            background-color: #157347;
+            border-color: #146c43;
+            transform: translateY(-2px);
+            color: white;
         }
 
         .btn-action {
@@ -70,94 +233,145 @@
             border-radius: 6px;
             margin: 0 2px;
             font-size: 0.85rem;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
         }
 
         /* ===== TABEL ===== */
         .table-container {
             background-color: white;
             border-radius: var(--border-radius);
-            overflow: hidden;
             box-shadow: var(--box-shadow);
-            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .table-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
         .table thead {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background-color: #f8f9fa;
         }
 
         .table th {
             border: none;
-            padding: 16px 12px;
+            padding: 1rem;
+            text-align: left;
             font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
         }
 
         .table td {
-            padding: 14px 12px;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
             vertical-align: middle;
-            font-size: 0.9rem;
+        }
+
+        .table-hover tbody tr {
+            transition: background-color 0.3s;
         }
 
         .table-hover tbody tr:hover {
-            background-color: rgba(67, 97, 238, 0.05);
-            transition: background-color 0.2s ease;
+            background-color: #f8f9fa;
         }
 
         /* ===== STATUS BADGE ===== */
         .status-badge {
-            padding: 6px 12px;
-            border-radius: 50px;
+            padding: 0.5em 1em;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            display: inline-block;
-            min-width: 100px;
-            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
         }
 
         .status-menunggu {
             background-color: #fff3cd;
             color: #856404;
-            border: 1px solid #ffeaa7;
+            border-color: #ffeaa7;
         }
 
         .status-disetujui {
-            background-color: #d1edff;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
 
         .status-ditolak {
             background-color: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border-color: #f5c6cb;
         }
 
         .status-selesai {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: #e2e3e5;
+            color: #383d41;
+            border-color: #d6d8db;
         }
 
+        /* ===== STATUS BERLANGSUNG YANG DIPERBAIKI ===== */
         .status-berlangsung {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            animation: pulse 2s infinite;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #0d4521;
+            border: 1px solid #28a745;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(40, 167, 69, 0.2);
+        }
+
+        .status-berlangsung::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .status-berlangsung .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #28a745;
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
             0% {
+                transform: scale(0.8);
                 opacity: 1;
             }
-
             50% {
-                opacity: 0.8;
+                transform: scale(1.2);
+                opacity: 0.7;
             }
-
             100% {
+                transform: scale(0.8);
                 opacity: 1;
             }
         }
@@ -173,6 +387,7 @@
             box-shadow: var(--box-shadow);
             justify-content: space-between;
             flex-wrap: wrap;
+            overflow-x: auto;
         }
 
         .filter-tab {
@@ -187,16 +402,17 @@
             text-align: center;
             min-width: 120px;
             margin-bottom: 5px;
+            color: var(--primary-color);
         }
 
         .filter-tab.active {
-            border-bottom-color: var(--primary);
-            color: var(--primary);
-            background-color: rgba(67, 97, 238, 0.1);
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(59, 89, 152, 0.1);
         }
 
         .filter-tab:hover {
-            background-color: rgba(67, 97, 238, 0.05);
+            background-color: rgba(59, 89, 152, 0.05);
         }
 
         /* ===== PENCARIAN ===== */
@@ -221,12 +437,12 @@
 
         /* ===== PAGINATION ===== */
         .pagination-custom .page-item.active .page-link {
-            background-color: var(--primary);
-            border-color: var(--primary);
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .pagination-custom .page-link {
-            color: var(--primary);
+            color: var(--primary-color);
             border-radius: 8px;
             margin: 0 2px;
             border: 1px solid #e2e8f0;
@@ -309,6 +525,26 @@
         /* ===== PERBAIKAN VISUAL ===== */
         .page-header {
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-description {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            width: 100%;
         }
 
         .form-select,
@@ -343,6 +579,164 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             display: inline-block;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: #2d3748;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            min-width: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .opening-hours {
+            margin-bottom: 15px;
+        }
+
+        .opening-hours div {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+
+        /* ===== STYLING UNTUK WAKTU PENGIRIMAN ===== */
+        .time-indicator {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .time-indicator i {
+            margin-right: 5px;
+        }
+
+        .time-indicator.recent {
+            color: #198754;
+            font-weight: 500;
+        }
+
+        .time-indicator.old {
+            color: #6c757d;
         }
 
         /* ===== RESPONSIVITAS ===== */
@@ -381,9 +775,13 @@
             }
 
             .status-badge {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
                 padding: 4px 8px;
                 min-width: 80px;
+            }
+
+            .card-body {
+                padding: 15px;
             }
 
             .filter-tabs {
@@ -401,12 +799,77 @@
                 white-space: nowrap;
             }
 
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
             .page-header .col-md-6 {
                 margin-bottom: 15px;
             }
 
             .page-header .text-md-end {
                 text-align: left !important;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .footer-section h3 {
+                font-size: 1.3rem;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+
+            /* Responsivitas untuk sub-navigasi */
+            .sub-nav {
+                top: 56px; /* Sesuaikan dengan tinggi navbar mobile */
+            }
+
+            .sub-nav-links {
+                gap: 0.5rem;
+            }
+
+            .sub-nav-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filter-tab {
+                min-width: 90px;
+                font-size: 0.8rem;
+                padding: 6px 8px;
+            }
+
+            .btn-primary-custom, .btn-success-custom {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .search-container,
+            #ruang-filter,
+            #tanggal-filter {
+                margin-bottom: 15px;
+            }
+
+            /* Responsivitas untuk sub-navigasi */
+            .sub-nav-links {
+                justify-content: center;
+            }
+
+            .sub-nav-link {
+                flex: 1;
+                min-width: 140px;
+                justify-content: center;
+                text-align: center;
             }
         }
 
@@ -416,7 +879,7 @@
         }
 
         .table-row-highlight:hover {
-            background-color: rgba(67, 97, 238, 0.05);
+            background-color: rgba(59, 89, 152, 0.05);
         }
 
         .action-buttons {
@@ -449,36 +912,15 @@
             flex: 1;
             min-width: 200px;
         }
-
-        /* ===== STYLING UNTUK WAKTU PENGIRIMAN ===== */
-        .time-indicator {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-
-        .time-indicator i {
-            margin-right: 5px;
-        }
-
-        .time-indicator.recent {
-            color: #198754;
-            font-weight: 500;
-        }
-
-        .time-indicator.old {
-            color: #6c757d;
-        }
     </style>
 </head>
 
 <body>
-    <!-- ===== NAVBAR ===== -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <!-- ===== NAVBAR UTAMA ===== -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('user.peminjaman.index') }}">
-                <i class="fas fa-calendar-check me-2"></i>
-                <strong>Sistem Peminjaman</strong>
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-building"></i>SarPras TI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -486,26 +928,23 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.peminjaman.index') }}"><i
-                                class="fas fa-list me-1"></i> Daftar Peminjaman</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.peminjaman.create') }}"><i
-                                class="fas fa-plus-circle me-1"></i> Tambah Peminjaman</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('user.peminjaman.riwayat') }}">
-                            <i class="fas fa-history me-1"></i> Riwayat
+                        <a class="nav-link" href="#">
+                            Beranda
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.pengembalian.index') }}">
-                            <i class="fas fa-undo me-1"></i> Pengembalian
+                        <a class="nav-link" href="#">
+                            Kalender Perkuliahan
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.feedback.create') }}">
-                            <i class="fas fa-comment-dots me-1"></i> Beri Feedback
+                        <a class="nav-link" href="{{ route('user.peminjaman.index') }}">
+                            Daftar Peminjaman
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Tentang
                         </a>
                     </li>
                 </ul>
@@ -513,20 +952,44 @@
         </div>
     </nav>
 
-    <!-- ===== KONTEN UTAMA ===== -->
-    <div class="container mb-5">
-        <!-- Header dan Tambah Peminjaman -->
-        <div class="row mb-4 page-header">
-            <div class="col-md-6">
-                <h2 class="mb-1"><i class="fas fa-history text-primary me-2"></i> Riwayat Peminjaman</h2>
-                <p class="text-muted mb-0">Lihat riwayat semua peminjaman yang telah Anda ajukan</p>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-primary-custom me-2">
-                    <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
+    <!-- ===== SUB NAVIGASI ===== -->
+    <div class="sub-nav">
+        <div class="sub-nav-container">
+            <div class="sub-nav-links">
+                <a href="{{ route('user.peminjaman.create') }}" class="sub-nav-link">
+                    <i class="fas fa-plus-circle"></i>
+                    Tambah Peminjaman
                 </a>
-                <a href="{{ route('user.peminjaman.create') }}" class="btn btn-success">
-                    <i class="fas fa-plus-circle me-2"></i>Tambah Peminjaman
+                <a href="{{ route('user.pengembalian.index') }}" class="sub-nav-link">
+                    <i class="fas fa-undo"></i>
+                    Pengembalian
+                </a>
+                <a href="{{ route('user.peminjaman.riwayat') }}" class="sub-nav-link active">
+                    <i class="fas fa-history"></i>
+                    Riwayat
+                </a>
+                <a href="{{ route('user.feedback.create') }}" class="sub-nav-link">
+                    <i class="fas fa-comment-dots"></i>
+                    Feedback
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== KONTEN UTAMA ===== -->
+    <div class="container main-content mt-4">
+        <!-- Header dan Tambah Peminjaman -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title"><i class="fa-solid fa-history"></i> Riwayat Peminjaman</h1>
+                <p class="page-description">Lihat riwayat semua peminjaman yang telah Anda ajukan</p>
+            </div>
+            <div>
+                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-primary-custom me-2">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+                </a>
+                <a href="{{ route('user.peminjaman.create') }}" class="btn btn-success-custom">
+                    <i class="fa-solid fa-plus"></i> Tambah Peminjaman
                 </a>
             </div>
         </div>
@@ -615,9 +1078,11 @@
                     <div>
                         <select class="form-select" id="ruang-filter">
                             <option value="semua">Semua Ruang</option>
-                            <option value="Ruang A">Ruang A</option>
-                            <option value="Ruang B">Ruang B</option>
-                            <option value="Ruang C">Ruang C</option>
+                            <option value="Lab A">Lab A</option>
+                            <option value="Lab B">Lab B</option>
+                            <option value="Lab C">Lab C</option>
+                            <option value="Ruang Meeting">Ruang Meeting</option>
+                            <option value="Ruang Seminar">Ruang Seminar</option>
                         </select>
                     </div>
                     <div>
@@ -704,6 +1169,7 @@
                                 <td class="text-center">
                                     @if ($isOngoing)
                                         <span class="badge status-badge status-berlangsung">
+                                            <span class="pulse-dot"></span>
                                             <i class="fas fa-play-circle me-1"></i> Berlangsung
                                         </span>
                                     @elseif($peminjaman->status == 'disetujui')
@@ -814,8 +1280,105 @@
         @endif
     </div>
 
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Tentang Kami</h3>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <ul class="footer-links">
+                    <li><a href="/home">Beranda</a></li>
+                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                    <li><a href="/about">Tentang</a></li>
+                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>(0512) 2021065</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>peminjaman@example.ac.id</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <div class="opening-hours">
+                    <div>
+                        <span>Senin - Kamis:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Jumat:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Sabtu & Minggu:</span>
+                        <span>Tutup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ===== NAVBAR SCROLL EFFECT =====
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
         // ===== FILTER TABEL =====
         function filterTable() {
             const searchText = document.querySelector('.search-input').value.toLowerCase();
@@ -928,5 +1491,4 @@
         });
     </script>
 </body>
-
 </html>

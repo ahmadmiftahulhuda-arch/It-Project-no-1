@@ -24,7 +24,7 @@ use App\Http\Controllers\PenggunaController;
 Route::get('/', fn() => view('home'))->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/kalender', 'kalender');
-Route::view('/peminjaman', 'peminjaman');
+Route::view('/peminjaman1', 'peminjaman1');
 Route::view('/berita', 'berita');
 Route::view('/post', 'post');
 Route::view('/syaratdanketentuan', 'syaratdanketentuan');
