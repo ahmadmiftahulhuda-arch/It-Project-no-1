@@ -5,146 +5,196 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\JadwalPerkuliahan;
 use App\Imports\JadwalPerkuliahanImport;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class JadwalPerkuliahanController extends Controller
 {
+    /**
+     * Tampilkan daftar jadwal perkuliahan dengan filter dan pagination
+     */
     public function index(Request $request)
     {
-        // Ambil filter dari request
+        // Filter input
         $filters = [
             'search' => $request->search,
             'hari' => $request->hari,
             'ruangan' => $request->ruangan,
-            'semester' => $request->semester,
-            'sort' => $request->sort ?? 'hari'
+            'sistem_kuliah' => $request->sistem_kuliah,
+            'sort' => $request->sort ?? 'hari',
         ];
 
-        // Query dengan filter
-        $jadwal = JadwalPerkuliahan::filter($filters);
+        // Query dasar dengan filter dinamis
+        $jadwal = JadwalPerkuliahan::query();
 
-        // Sorting
-        if ($request->sort == 'waktu') {
-            $jadwal->orderBy('waktu');
-        } elseif ($request->sort == 'matakuliah') {
-            $jadwal->orderBy('nama_matkul');
-        } else {
-            $jadwal->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')")
-                   ->orderBy('waktu');
+        // Pencarian umum
+        if ($filters['search']) {
+            $jadwal->where(function ($q) use ($filters) {
+                $q->where('kode_matkul', 'like', "%{$filters['search']}%")
+                  ->orWhere('nama_kelas', 'like', "%{$filters['search']}%")
+                  ->orWhere('ruangan', 'like', "%{$filters['search']}%")
+                  ->orWhere('hari', 'like', "%{$filters['search']}%");
+            });
         }
 
+        // Filter spesifik
+        if ($filters['hari']) {
+            $jadwal->where('hari', $filters['hari']);
+        }
+
+        if ($filters['ruangan']) {
+            $jadwal->where('ruangan', $filters['ruangan']);
+        }
+
+        if ($filters['sistem_kuliah']) {
+            $jadwal->where('sistem_kuliah', $filters['sistem_kuliah']);
+        }
+
+        // Sorting data
+        switch ($filters['sort']) {
+            case 'matkul':
+                $jadwal->orderBy('kode_matkul');
+                break;
+            case 'kelas':
+                $jadwal->orderBy('nama_kelas');
+                break;
+            default:
+                $jadwal->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')")
+                       ->orderBy('jam_mulai');
+                break;
+        }
+
+        // Pagination
         $jadwal = $jadwal->paginate(10);
 
-        // Data untuk filter
+        // Data dropdown filter
         $hariList = JadwalPerkuliahan::distinct()->pluck('hari');
         $ruanganList = JadwalPerkuliahan::distinct()->pluck('ruangan');
-        $semesterList = JadwalPerkuliahan::distinct()->pluck('semester');
+        $sistemKuliahList = JadwalPerkuliahan::distinct()->pluck('sistem_kuliah');
 
-        // Hitung statistik
+        // Statistik
         $totalCount = JadwalPerkuliahan::count();
-        $seninCount = JadwalPerkuliahan::where('hari', 'Senin')->count();
-        $selasaCount = JadwalPerkuliahan::where('hari', 'Selasa')->count();
-        $rabuCount = JadwalPerkuliahan::where('hari', 'Rabu')->count();
-        $kamisCount = JadwalPerkuliahan::where('hari', 'Kamis')->count();
-        $jumatCount = JadwalPerkuliahan::where('hari', 'Jumat')->count();
+        $hariCounts = JadwalPerkuliahan::select('hari', DB::raw('COUNT(*) as total'))
+            ->groupBy('hari')
+            ->pluck('total', 'hari');
 
         return view('admin.jadwal-perkuliahan.index', compact(
-            'jadwal', 
-            'hariList', 
-            'ruanganList', 
-            'semesterList',
+            'jadwal',
+            'hariList',
+            'ruanganList',
+            'sistemKuliahList',
             'totalCount',
-            'seninCount',
-            'selasaCount',
-            'rabuCount',
-            'kamisCount',
-            'jumatCount',
+            'hariCounts',
             'filters'
         ));
     }
 
+    /**
+     * Tampilkan form tambah jadwal baru
+     */
     public function create()
     {
         return view('admin.jadwal-perkuliahan.create');
     }
 
+    /**
+     * Simpan data baru ke database
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'hari' => 'required|string',
-            'waktu' => 'required|string',
+        $validated = $request->validate([
             'kode_matkul' => 'required|string',
-            'nama_matkul' => 'required|string',
-            'dosen' => 'required|string',
-            'kelas' => 'required|string',
+            'sistem_kuliah' => 'nullable|string',
+            'nama_kelas' => 'required|string',
+            'kelas_mahasiswa' => 'nullable|string',
+            'sebaran_mahasiswa' => 'nullable|string',
+            'hari' => 'required|string',
+            'jam_mulai' => 'required|string',
+            'jam_selesai' => 'required|string',
             'ruangan' => 'required|string',
-            'semester' => 'required|string',
+            'daya_tampung' => 'nullable|integer',
         ]);
 
-        JadwalPerkuliahan::create($request->all());
+        JadwalPerkuliahan::create($validated);
 
         return redirect()->route('jadwal-perkuliahan.index')
-                         ->with('success', 'Jadwal perkuliahan berhasil ditambahkan.');
+            ->with('success', 'Jadwal perkuliahan berhasil ditambahkan.');
     }
 
-    public function show(JadwalPerkuliahan $jadwalPerkuliahan)
-    {
-        return view('admin.jadwal-perkuliahan.show', compact('jadwalPerkuliahan'));
-    }
-
+    /**
+     * Tampilkan form edit
+     */
     public function edit(JadwalPerkuliahan $jadwalPerkuliahan)
     {
         return view('admin.jadwal-perkuliahan.edit', compact('jadwalPerkuliahan'));
     }
 
+    /**
+     * Update data jadwal yang sudah ada
+     */
     public function update(Request $request, JadwalPerkuliahan $jadwalPerkuliahan)
     {
-        $request->validate([
-            'hari' => 'required|string',
-            'waktu' => 'required|string',
+        $validated = $request->validate([
             'kode_matkul' => 'required|string',
-            'nama_matkul' => 'required|string',
-            'dosen' => 'required|string',
-            'kelas' => 'required|string',
+            'sistem_kuliah' => 'nullable|string',
+            'nama_kelas' => 'required|string',
+            'kelas_mahasiswa' => 'nullable|string',
+            'sebaran_mahasiswa' => 'nullable|string',
+            'hari' => 'required|string',
+            'jam_mulai' => 'required|string',
+            'jam_selesai' => 'required|string',
             'ruangan' => 'required|string',
-            'semester' => 'required|string',
+            'daya_tampung' => 'nullable|integer',
         ]);
 
-        $jadwalPerkuliahan->update($request->all());
+        $jadwalPerkuliahan->update($validated);
 
         return redirect()->route('jadwal-perkuliahan.index')
-                         ->with('success', 'Jadwal perkuliahan berhasil diperbarui.');
+            ->with('success', 'Jadwal perkuliahan berhasil diperbarui.');
     }
 
+    /**
+     * Hapus satu jadwal
+     */
     public function destroy(JadwalPerkuliahan $jadwalPerkuliahan)
     {
         $jadwalPerkuliahan->delete();
 
         return redirect()->route('jadwal-perkuliahan.index')
-                         ->with('success', 'Jadwal perkuliahan berhasil dihapus.');
+            ->with('success', 'Jadwal perkuliahan berhasil dihapus.');
     }
+
+    /**
+     * Import data dari file Excel
+     */
     public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls'
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:2048',
+        ]);
 
-    Excel::import(new JadwalPerkuliahanImport, $request->file('file'));
-
-    return redirect()->route('jadwal-perkuliahan.index')
-        ->with('success', 'Data jadwal perkuliahan berhasil diimport dari Excel.');
-}
-public function deleteAll(Request $request)
-{
-    try {
-        \App\Models\JadwalPerkuliahan::truncate();
-        
-        return redirect()->route('jadwal-perkuliahan.index')
-            ->with('success', 'Semua data berhasil dihapus!');
-    } catch (\Exception $e) {
-        return redirect()->route('jadwal-perkuliahan.index')
-            ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        try {
+            Excel::import(new JadwalPerkuliahanImport, $request->file('file'));
+            return redirect()->route('jadwal-perkuliahan.index')
+                ->with('success', 'Data jadwal perkuliahan berhasil diimpor dari Excel.');
+        } catch (\Exception $e) {
+            return redirect()->route('jadwal-perkuliahan.index')
+                ->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
+        }
     }
-}
+
+    /**
+     * Hapus semua data jadwal
+     */
+    public function deleteAll()
+    {
+        try {
+            JadwalPerkuliahan::truncate();
+            return redirect()->route('jadwal-perkuliahan.index')
+                ->with('success', 'Semua data jadwal berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('jadwal-perkuliahan.index')
+                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
 }

@@ -11,15 +11,16 @@ return new class extends Migration
     {
         Schema::create('jadwal_perkuliahan', function (Blueprint $table) {
             $table->id();
-            $table->string('hari'); // Senin, Selasa, Rabu, Kamis, Jumat
-            $table->string('waktu'); // 07:00-08:40, 08:40-10:20, dll
-            $table->string('kode_matkul');
-            $table->string('nama_matkul');
-            $table->string('dosen');
-            $table->string('kelas');
-            $table->string('ruangan');
-            $table->string('semester');
-            $table->text('keterangan')->nullable();
+            $table->string('kode_matkul');                 // Required
+            $table->string('sistem_kuliah')->nullable();   // Optional (Online / Offline)
+            $table->string('nama_kelas');                  // Required
+            $table->string('kelas_mahasiswa')->nullable(); // Optional
+            $table->string('sebaran_mahasiswa')->nullable(); // Optional
+            $table->string('hari');                        // Required (Senin, Selasa, dst)
+            $table->string('jam_mulai');                   // Required (07:00)
+            $table->string('jam_selesai');                 // Required (08:40)
+            $table->string('ruangan');                     // Required
+            $table->integer('daya_tampung')->nullable();   // Optional
             $table->timestamps();
         });
     }

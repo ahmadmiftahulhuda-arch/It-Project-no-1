@@ -1418,70 +1418,77 @@
                 </form>
             </div>
 
-            <!-- Table -->
-            <div style="overflow-x: auto;">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th width="50">No</th>
-                            <th width="120">Hari</th>
-                            <th width="150">Waktu</th>
-                            <th width="100">Kode</th>
-                            <th width="200">Mata Kuliah</th>
-                            <th width="150">Dosen</th>
-                            <th width="120">Kelas</th>
-                            <th width="120">Ruangan</th>
-                            <th width="100">Semester</th>
-                            <th width="150">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($jadwal as $item)
-                            <tr>
-                                <td>{{ ($jadwal->currentPage() - 1) * $jadwal->perPage() + $loop->iteration }}</td>
-                                <td>
-                                    <span class="badge status-{{ strtolower($item->hari) }}">
-                                        {{ $item->hari }}
-                                    </span>
-                                </td>
-                                <td>{{ $item->waktu }}</td>
-                                <td><strong>{{ $item->kode_matkul }}</strong></td>
-                                <td>{{ $item->nama_matkul }}</td>
-                                <td>{{ $item->dosen }}</td>
-                                <td>{{ $item->kelas }}</td>
-                                <td>{{ $item->ruangan }}</td>
-                                <td>{{ $item->semester }}</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="{{ route('jadwal-perkuliahan.edit', $item->id) }}" class="btn-warning-custom">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <form action="{{ route('jadwal-perkuliahan.destroy', $item->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-danger-custom" onclick="return confirm('Hapus jadwal {{ $item->nama_matkul }}?')">
-                                                <i class="fas fa-trash"></i> Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="10" class="empty-state">
-                                    <i class="fas fa-calendar-times"></i><br>
-                                    @if(request()->anyFilled(['search', 'hari', 'ruangan', 'semester']))
-                                        Tidak ada data jadwal yang sesuai dengan filter
-                                    @else
-                                        Belum ada data jadwal perkuliahan
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- Table -->
+<div style="overflow-x: auto;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="50">No</th>
+                <th width="120">Kode Matkul</th>
+                <th width="150">Sistem Kuliah</th>
+                <th width="120">Nama Kelas</th>
+                <th width="180">Kelas Mahasiswa</th>
+                <th width="180">Sebaran Mahasiswa</th>
+                <th width="100">Hari</th>
+                <th width="120">Jam Mulai</th>
+                <th width="120">Jam Selesai</th>
+                <th width="100">Ruangan</th>
+                <th width="120">Daya Tampung</th>
+                <th width="150">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @forelse($jadwal as $item)
+                <tr>
+                    <td>{{ ($jadwal->currentPage() - 1) * $jadwal->perPage() + $loop->iteration }}</td>
+                    <td><strong>{{ $item->kode_matkul ?? '-' }}</strong></td>
+                    <td>{{ $item->sistem_kuliah ?? '-' }}</td>
+                    <td>{{ $item->nama_kelas ?? '-' }}</td>
+                    <td>{{ $item->kelas_mahasiswa ?? '-' }}</td>
+                    <td>{{ $item->sebaran_mahasiswa ?? '-' }}</td>
+                    <td>
+                        @if($item->hari)
+                            <span class="badge status-{{ strtolower($item->hari) }}">{{ $item->hari }}</span>
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>{{ $item->jam_mulai ?? '-' }}</td>
+                    <td>{{ $item->jam_selesai ?? '-' }}</td>
+                    <td>{{ $item->ruangan ?? '-' }}</td>
+                    <td>{{ $item->daya_tampung ?? '-' }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ route('jadwal-perkuliahan.edit', $item->id) }}" class="btn-warning-custom">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form action="{{ route('jadwal-perkuliahan.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-danger-custom" onclick="return confirm('Hapus jadwal {{ $item->kode_matkul }}?')">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="12" class="empty-state">
+                        <i class="fas fa-calendar-times"></i><br>
+                        @if(request()->anyFilled(['search', 'hari', 'ruangan', 'semester']))
+                            Tidak ada data jadwal yang sesuai dengan filter
+                        @else
+                            Belum ada data jadwal perkuliahan
+                        @endif
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
 
         <!-- Pagination -->
         @if($jadwal->hasPages())
