@@ -418,24 +418,63 @@
             background-color: rgba(59, 89, 152, 0.05);
         }
 
-        /* ===== PENCARIAN ===== */
+        /* ====== SEARCH CONTAINER ====== */
         .search-container {
             position: relative;
-            margin-bottom: 0;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
+        /* ====== ICON ====== */
         .search-container i {
             position: absolute;
-            left: 15px;
-            top: 12px;
-            color: #6c757d;
-            z-index: 10;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.95rem;
+            pointer-events: none;
         }
 
+        /* ====== INPUT ====== */
         .search-input {
-            padding-left: 40px;
+            width: 100%;
+            padding: 10px 14px 10px 40px;
+            /* atas-kanan-bawah-kiri */
             border-radius: 8px;
             border: 1px solid #e2e8f0;
+            background-color: #fff;
+            color: #374151;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            height: 42px;
+            transition: all 0.25s ease;
+            display: block;
+        }
+
+        /* ====== FOCUS ====== */
+        .search-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+
+        /* ====== HOVER ====== */
+        .search-input:hover {
+            border-color: #cbd5e1;
+        }
+
+        /* ====== PLACEHOLDER ====== */
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 576px) {
+            .search-container {
+                max-width: 100%;
+            }
         }
 
         /* ===== PAGINATION ===== */
@@ -1077,9 +1116,10 @@
                 <div class="filter-controls">
                     <div class="search-container">
                         <i class="fas fa-search"></i>
-                        <input type="text" class="form-control search-input"
-                            placeholder="Cari berdasarkan ruang, keperluan, atau tanggal...">
+                        <input type="text" class="search-input"
+                            placeholder="Cari berdasarkan ruang, keperluan, atau peminjam...">
                     </div>
+
                     <div>
                         <select class="form-select" id="ruang-filter">
                             <option value="semua">Semua Ruang</option>
