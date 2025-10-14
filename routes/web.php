@@ -160,8 +160,8 @@ Route::prefix('peminjaman')->group(function () {
 Route::prefix('pengembalian')->group(function () {
     Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
     Route::get('/{id}', [PeminjamanController::class, 'showPengembalian'])->name('user.pengembalian.show');
-    Route::post('/pengembalian/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])
-    ->name('user.pengembalian.ajukan');
+    Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])
+        ->name('pengembalian.ajukan');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
