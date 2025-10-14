@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,7 +90,7 @@
             transform: translateX(-50%);
         }
 
-        .navbar-nav .nav-link:hover::after, 
+        .navbar-nav .nav-link:hover::after,
         .navbar-nav .nav-link.active::after {
             width: 70%;
         }
@@ -329,6 +330,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(40, 167, 69, 0.2);
+            font-weight: 600;
         }
 
         .status-berlangsung::before {
@@ -339,42 +341,43 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shimmer 2.5s infinite;
+            animation: shimmer 2.5s infinite linear;
         }
 
         @keyframes shimmer {
             0% {
                 left: -100%;
             }
+
             100% {
                 left: 100%;
             }
         }
 
-        .status-berlangsung .pulse-dot {
+        .pulse-dot {
             display: inline-block;
             width: 8px;
             height: 8px;
             background-color: #28a745;
             border-radius: 50%;
-            margin-right: 4px;
-            animation: pulse 1.5s infinite;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite ease-in-out;
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(0.8);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.7;
-            }
+
+            0%,
             100% {
                 transform: scale(0.8);
                 opacity: 1;
             }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 0.6;
+            }
         }
+
 
         /* ===== FILTER TABS ===== */
         .filter-tabs {
@@ -829,7 +832,8 @@
 
             /* Responsivitas untuk sub-navigasi */
             .sub-nav {
-                top: 56px; /* Sesuaikan dengan tinggi navbar mobile */
+                top: 56px;
+                /* Sesuaikan dengan tinggi navbar mobile */
             }
 
             .sub-nav-links {
@@ -849,7 +853,8 @@
                 padding: 6px 8px;
             }
 
-            .btn-primary-custom, .btn-success-custom {
+            .btn-primary-custom,
+            .btn-success-custom {
                 width: 100%;
                 padding: 12px;
             }
@@ -1107,29 +1112,33 @@
                             <th width="100" class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tableBody">
                         @forelse($riwayat as $peminjaman)
                             @php
-                                // Tentukan apakah peminjaman sedang berlangsung
-                                $isToday = \Carbon\Carbon::parse($peminjaman->tanggal)->isToday();
-                                $isOngoing = $isToday && $peminjaman->status == 'disetujui';
+                                $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
+                                $isToday = $tanggal->isToday();
+                                $now = \Carbon\Carbon::now();
+
+                                // Cek apakah sedang berlangsung (hari ini, disetujui, dan dalam rentang waktu)
+                                $isOngoing =
+                                    $isToday &&
+                                    $peminjaman->status === 'disetujui' &&
+                                    $now->format('H:i:s') >= ($peminjaman->waktu_mulai ?? '00:00:00') &&
+                                    $now->format('H:i:s') <= ($peminjaman->waktu_selesai ?? '23:59:59');
 
                                 // Hitung waktu pengajuan relatif
                                 $waktuPengajuan = \Carbon\Carbon::parse($peminjaman->created_at);
-                                $sekarang = \Carbon\Carbon::now();
-                                $selisih = $waktuPengajuan->diffForHumans($sekarang, true);
+                                $selisih = $waktuPengajuan->diffForHumans($now, true);
                             @endphp
 
-                            <tr data-status="{{ $peminjaman->status }}"
-                                class="{{ $isOngoing ? 'today-indicator' : '' }} table-row-highlight"
-                                data-ruang="{{ $peminjaman->ruang }}" data-id="{{ $peminjaman->id }}"
-                                data-tanggal="{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('Y-m-d') }}"
-                                data-waktu-pengajuan="{{ $waktuPengajuan->format('Y-m-d H:i:s') }}">
-                                <td class="fw-bold text-center">{{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}</td>
+                            <tr class="{{ $isOngoing ? 'table-success' : '' }}">
+                                <td class="fw-bold text-center">
+                                    {{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
+                                </td>
                                 <td>
                                     <div>
                                         <i class="fas fa-calendar-day text-primary me-1"></i>
-                                        {{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}
+                                        {{ $tanggal->format('d M Y') }}
                                     </div>
                                     <div>
                                         <span class="time-badge">
@@ -1138,16 +1147,13 @@
                                             {{ $peminjaman->waktu_selesai ?? '17:00' }}
                                         </span>
                                     </div>
-                                    <div
-                                        class="time-indicator {{ $waktuPengajuan->diffInHours($sekarang) < 24 ? 'recent' : 'old' }}">
-                                        <i class="fas fa-paper-plane me-1"></i>
-                                        Diajukan {{ $selisih }} yang lalu
+                                    <div class="text-muted small mt-1">
+                                        <i class="fas fa-paper-plane me-1"></i> Diajukan {{ $selisih }} yang lalu
                                     </div>
                                 </td>
-                                <td>
-                                    <i class="fas fa-door-open text-info me-1"></i>
-                                    {{ $peminjaman->ruang }}
-                                </td>
+
+                                <td><i class="fas fa-door-open text-info me-1"></i> {{ $peminjaman->ruang }}</td>
+
                                 <td class="text-center">
                                     @if ($peminjaman->proyektor)
                                         <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i>
@@ -1157,58 +1163,68 @@
                                                 class="fas fa-times me-1"></i> Tidak</span>
                                     @endif
                                 </td>
+
                                 <td>
                                     <div class="info-tooltip">
-                                        <span
-                                            class="text-truncate-custom">{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 40) }}</span>
+                                        <span class="text-truncate-custom">
+                                            {{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 40) }}
+                                        </span>
                                         @if (strlen($peminjaman->keperluan) > 40)
                                             <span class="tooltip-text">{{ $peminjaman->keperluan }}</span>
                                         @endif
                                     </div>
                                 </td>
+
                                 <td class="text-center">
-                                    @if ($isOngoing)
-                                        <span class="badge status-badge status-berlangsung">
-                                            <span class="pulse-dot"></span>
-                                            <i class="fas fa-play-circle me-1"></i> Berlangsung
-                                        </span>
-                                    @elseif($peminjaman->status == 'disetujui')
-                                        <span class="badge status-badge status-disetujui">
-                                            <i class="fas fa-check-circle me-1"></i> Disetujui
-                                        </span>
-                                    @elseif($peminjaman->status == 'ditolak')
-                                        <span class="badge status-badge status-ditolak">
-                                            <i class="fas fa-times-circle me-1"></i> Ditolak
-                                        </span>
-                                    @elseif($peminjaman->status == 'selesai')
-                                        <span class="badge status-badge status-selesai">
-                                            <i class="fas fa-check-double me-1"></i> Selesai
-                                        </span>
-                                    @else
-                                        <span class="badge status-badge status-menunggu">
-                                            <i class="fas fa-clock me-1"></i> Menunggu
-                                        </span>
-                                    @endif
+                                    @switch(true)
+                                        @case($isOngoing)
+                                            <span class="badge status-badge status-berlangsung">
+                                                <span class="pulse-dot"></span>
+                                                <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                            </span>
+                                        @break
+
+                                        @case($peminjaman->status === 'disetujui')
+                                            <span class="badge status-badge status-disetujui">
+                                                <i class="fas fa-check-circle me-1"></i> Disetujui
+                                            </span>
+                                        @break
+
+                                        @case($peminjaman->status === 'selesai')
+                                            <span class="badge status-badge status-selesai">
+                                                <i class="fas fa-check-double me-1"></i> Selesai
+                                            </span>
+                                        @break
+
+                                        @case($peminjaman->status === 'ditolak')
+                                            <span class="badge status-badge status-ditolak">
+                                                <i class="fas fa-times-circle me-1"></i> Ditolak
+                                            </span>
+                                        @break
+
+                                        @default
+                                            <span class="badge status-badge status-menunggu">
+                                                <i class="fas fa-clock me-1"></i> Menunggu
+                                            </span>
+                                    @endswitch
                                 </td>
+
                                 <td class="text-center">
-                                    <div class="action-buttons">
-                                        <a href="{{ route('user.peminjaman.show', $peminjaman->id) }}" 
-                                           class="btn btn-info btn-action" 
-                                           title="Lihat Detail">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a href="{{ route('user.peminjaman.show', $peminjaman->id) }}"
+                                            class="btn btn-info btn-action" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        @if ($peminjaman->status == 'selesai')
+
+                                        @if ($peminjaman->status === 'selesai')
                                             @if ($peminjaman->feedback)
-                                                <a href="#" 
-                                                   class="btn btn-secondary btn-action disabled" 
-                                                   title="Feedback sudah dikirim"
-                                                   aria-disabled="true">
+                                                <button class="btn btn-secondary btn-action"
+                                                    title="Feedback sudah dikirim" disabled>
                                                     <i class="fas fa-check"></i>
-                                                </a>
+                                                </button>
                                             @else
-                                                <a href="{{ route('feedback.create', $peminjaman->id) }}" 
-                                                   class="btn btn-success btn-action" 
-                                                   title="Beri Feedback">
+                                                <a href="{{ route('feedback.create', $peminjaman->id) }}"
+                                                    class="btn btn-success btn-action" title="Beri Feedback">
                                                     <i class="fas fa-comment-dots"></i>
                                                 </a>
                                             @endif
@@ -1216,279 +1232,286 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="no-data-row">
-                                    <div class="empty-state">
-                                        <i class="fas fa-inbox"></i>
-                                        <h4 class="mt-3">Belum ada riwayat peminjaman</h4>
-                                        <p class="text-muted">Silahkan tambah data peminjaman baru dengan menekan
-                                            tombol "Tambah Peminjaman"</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <i class="fas fa-inbox fa-2x text-muted"></i>
+                                        <h5 class="mt-2">Belum ada riwayat peminjaman</h5>
+                                        <p class="text-muted">Silakan ajukan peminjaman baru untuk melihat riwayat di sini.
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+
+                    </table>
+                </div>
             </div>
+
+            <!-- Pagination -->
+            @if ($riwayat->hasPages())
+                <div class="d-flex justify-content-center mt-4">
+                    <nav>
+                        <ul class="pagination pagination-custom">
+                            {{-- Previous Page Link --}}
+                            @if ($riwayat->onFirstPage())
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $riwayat->previousPageUrl() }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            @endif
+
+                            {{-- Pagination Elements --}}
+                            @foreach ($riwayat->getUrlRange(1, $riwayat->lastPage()) as $page => $url)
+                                <li class="page-item {{ $page == $riwayat->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                </li>
+                            @endforeach
+
+                            {{-- Next Page Link --}}
+                            @if ($riwayat->hasMorePages())
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $riwayat->nextPageUrl() }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </nav>
+                </div>
+            @endif
         </div>
 
-        <!-- Pagination -->
-        @if ($riwayat->hasPages())
-            <div class="d-flex justify-content-center mt-4">
-                <nav>
-                    <ul class="pagination pagination-custom">
-                        {{-- Previous Page Link --}}
-                        @if ($riwayat->onFirstPage())
-                            <li class="page-item disabled">
-                                <span class="page-link">
-                                    <i class="fas fa-chevron-left"></i>
-                                </span>
-                            </li>
-                        @else
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $riwayat->previousPageUrl() }}">
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
-                            </li>
-                        @endif
+        <!-- Back to top button -->
+        <a href="#" class="back-to-top" id="backToTop">
+            <i class="fas fa-arrow-up"></i>
+        </a>
 
-                        {{-- Pagination Elements --}}
-                        @foreach ($riwayat->getUrlRange(1, $riwayat->lastPage()) as $page => $url)
-                            <li class="page-item {{ $page == $riwayat->currentPage() ? 'active' : '' }}">
-                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                            </li>
-                        @endforeach
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>Tentang Kami</h3>
+                    <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine
+                        di Program Studi Teknologi Informasi.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                                class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
 
-                        {{-- Next Page Link --}}
-                        @if ($riwayat->hasMorePages())
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $riwayat->nextPageUrl() }}">
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                            </li>
-                        @else
-                            <li class="page-item disabled">
-                                <span class="page-link">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                            </li>
-                        @endif
+                <div class="footer-section">
+                    <h3>Link Cepat</h3>
+                    <ul class="footer-links">
+                        <li><a href="/home">Beranda</a></li>
+                        <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                        <li><a href="/about">Tentang</a></li>
+                        <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
+                        <li><a href="/faq">FAQ</a></li>
                     </ul>
-                </nav>
-            </div>
-        @endif
-    </div>
+                </div>
 
-    <!-- Back to top button -->
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="fas fa-arrow-up"></i>
-    </a>
+                <div class="footer-section">
+                    <h3>Kontak Kami</h3>
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <span>(0512) 2021065</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>peminjaman@example.ac.id</span>
+                    </div>
+                </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Link Cepat</h3>
-                <ul class="footer-links">
-                    <li><a href="/home">Beranda</a></li>
-                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
-                    <li><a href="/about">Tentang</a></li>
-                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
-                    <li><a href="/faq">FAQ</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Kontak Kami</h3>
-                <div class="contact-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
-                </div>
-                <div class="contact-info">
-                    <i class="fas fa-phone"></i>
-                    <span>(0512) 2021065</span>
-                </div>
-                <div class="contact-info">
-                    <i class="fas fa-envelope"></i>
-                    <span>peminjaman@example.ac.id</span>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Jam Operasional</h3>
-                <div class="opening-hours">
-                    <div>
-                        <span>Senin - Kamis:</span>
-                        <span>08:00 - 16:00</span>
-                    </div>
-                    <div>
-                        <span>Jumat:</span>
-                        <span>08:00 - 16:00</span>
-                    </div>
-                    <div>
-                        <span>Sabtu & Minggu:</span>
-                        <span>Tutup</span>
+                <div class="footer-section">
+                    <h3>Jam Operasional</h3>
+                    <div class="opening-hours">
+                        <div>
+                            <span>Senin - Kamis:</span>
+                            <span>08:00 - 16:00</span>
+                        </div>
+                        <div>
+                            <span>Jumat:</span>
+                            <span>08:00 - 16:00</span>
+                        </div>
+                        <div>
+                            <span>Sabtu & Minggu:</span>
+                            <span>Tutup</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
-        </div>
-    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // ===== NAVBAR SCROLL EFFECT =====
-        const navbar = document.getElementById('navbar');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+            <div class="footer-bottom">
+                <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                    Tanah Laut. All Rights Reserved.</p>
+            </div>
+        </footer>
 
-        // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
-        const backToTopButton = document.getElementById('backToTop');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-        
-        backToTopButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // ===== NAVBAR SCROLL EFFECT =====
+            const navbar = document.getElementById('navbar');
 
-        // ===== FILTER TABEL =====
-        function filterTable() {
-            const searchText = document.querySelector('.search-input').value.toLowerCase();
-            const activeTab = document.querySelector('.filter-tab.active');
-            const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
-            const ruangFilter = document.getElementById('ruang-filter').value;
-            const tanggalFilter = document.getElementById('tanggal-filter').value;
-
-            const rows = document.querySelectorAll('tbody tr');
-
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const rowStatus = row.getAttribute('data-status');
-                const rowRuang = row.getAttribute('data-ruang');
-                const rowTanggal = row.getAttribute('data-tanggal');
-
-                // Filter berdasarkan pencarian, status, ruang, dan tanggal
-                const textMatch = text.includes(searchText);
-                const statusMatch = statusFilter === 'semua' ||
-                    (statusFilter === 'berlangsung' ? row.classList.contains('today-indicator') : rowStatus ===
-                        statusFilter);
-                const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
-                const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
-
-                if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
-                    row.style.display = '';
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 50) {
+                    navbar.classList.add('scrolled');
                 } else {
-                    row.style.display = 'none';
+                    navbar.classList.remove('scrolled');
                 }
             });
-        }
 
-        // ===== FUNGSI UNTUK MEMPERBARUI WAKTU RELATIF =====
-        function updateRelativeTimes() {
-            const timeIndicators = document.querySelectorAll('.time-indicator');
-            const now = new Date();
+            // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
+            const backToTopButton = document.getElementById('backToTop');
 
-            timeIndicators.forEach(indicator => {
-                const row = indicator.closest('tr');
-                const waktuPengajuan = row.getAttribute('data-waktu-pengajuan');
-                const waktuPengajuanObj = new Date(waktuPengajuan);
-
-                // Hitung selisih waktu
-                const diffMs = now - waktuPengajuanObj;
-                const diffSec = Math.floor(diffMs / 1000);
-                const diffMin = Math.floor(diffSec / 60);
-                const diffHour = Math.floor(diffMin / 60);
-                const diffDay = Math.floor(diffHour / 24);
-
-                let relativeTime;
-
-                if (diffSec < 60) {
-                    relativeTime = `${diffSec} detik`;
-                } else if (diffMin < 60) {
-                    relativeTime = `${diffMin} menit`;
-                } else if (diffHour < 24) {
-                    relativeTime = `${diffHour} jam`;
-                } else if (diffDay < 7) {
-                    relativeTime = `${diffDay} hari`;
-                } else if (diffDay < 30) {
-                    const weeks = Math.floor(diffDay / 7);
-                    relativeTime = `${weeks} minggu`;
-                } else if (diffDay < 365) {
-                    const months = Math.floor(diffDay / 30);
-                    relativeTime = `${months} bulan`;
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
                 } else {
-                    const years = Math.floor(diffDay / 365);
-                    relativeTime = `${years} tahun`;
+                    backToTopButton.classList.remove('visible');
                 }
-
-                // Update teks dan kelas
-                indicator.textContent = `Diajukan ${relativeTime} yang lalu`;
-                indicator.className = `time-indicator ${diffDay < 1 ? 'recent' : 'old'}`;
             });
-        }
 
-        // ===== INISIALISASI EVENT LISTENER =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event listener untuk pencarian
-            const searchInput = document.querySelector('.search-input');
-            searchInput.addEventListener('keyup', filterTable);
-
-            // Event listener untuk filter tab
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Hapus kelas active dari semua tab
-                    document.querySelectorAll('.filter-tab').forEach(t => {
-                        t.classList.remove('active');
-                    });
-
-                    // Tambah kelas active ke tab yang diklik
-                    this.classList.add('active');
-
-                    filterTable();
+            backToTopButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
                 });
             });
 
-            // Event listener untuk filter ruang
-            document.getElementById('ruang-filter').addEventListener('change', filterTable);
+            // ===== FILTER TABEL =====
+            function filterTable() {
+                const searchText = document.querySelector('.search-input').value.toLowerCase();
+                const activeTab = document.querySelector('.filter-tab.active');
+                const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
+                const ruangFilter = document.getElementById('ruang-filter').value;
+                const tanggalFilter = document.getElementById('tanggal-filter').value;
 
-            // Event listener untuk filter tanggal
-            document.getElementById('tanggal-filter').addEventListener('change', filterTable);
+                const rows = document.querySelectorAll('tbody tr');
 
-            // Perbarui waktu relatif setiap menit
-            updateRelativeTimes();
-            setInterval(updateRelativeTimes, 60000); // Update setiap 1 menit
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    const rowStatus = row.getAttribute('data-status');
+                    const rowRuang = row.getAttribute('data-ruang');
+                    const rowTanggal = row.getAttribute('data-tanggal');
 
-            // Inisialisasi filter saat halaman dimuat
-            filterTable();
-        });
-    </script>
-</body>
-</html>
+                    // Filter berdasarkan pencarian, status, ruang, dan tanggal
+                    const textMatch = text.includes(searchText);
+                    const statusMatch = statusFilter === 'semua' ||
+                        (statusFilter === 'berlangsung' ? row.classList.contains('today-indicator') : rowStatus ===
+                            statusFilter);
+                    const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
+                    const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
+
+                    if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            // ===== FUNGSI UNTUK MEMPERBARUI WAKTU RELATIF =====
+            function updateRelativeTimes() {
+                const timeIndicators = document.querySelectorAll('.time-indicator');
+                const now = new Date();
+
+                timeIndicators.forEach(indicator => {
+                    const row = indicator.closest('tr');
+                    const waktuPengajuan = row.getAttribute('data-waktu-pengajuan');
+                    const waktuPengajuanObj = new Date(waktuPengajuan);
+
+                    // Hitung selisih waktu
+                    const diffMs = now - waktuPengajuanObj;
+                    const diffSec = Math.floor(diffMs / 1000);
+                    const diffMin = Math.floor(diffSec / 60);
+                    const diffHour = Math.floor(diffMin / 60);
+                    const diffDay = Math.floor(diffHour / 24);
+
+                    let relativeTime;
+
+                    if (diffSec < 60) {
+                        relativeTime = `${diffSec} detik`;
+                    } else if (diffMin < 60) {
+                        relativeTime = `${diffMin} menit`;
+                    } else if (diffHour < 24) {
+                        relativeTime = `${diffHour} jam`;
+                    } else if (diffDay < 7) {
+                        relativeTime = `${diffDay} hari`;
+                    } else if (diffDay < 30) {
+                        const weeks = Math.floor(diffDay / 7);
+                        relativeTime = `${weeks} minggu`;
+                    } else if (diffDay < 365) {
+                        const months = Math.floor(diffDay / 30);
+                        relativeTime = `${months} bulan`;
+                    } else {
+                        const years = Math.floor(diffDay / 365);
+                        relativeTime = `${years} tahun`;
+                    }
+
+                    // Update teks dan kelas
+                    indicator.textContent = `Diajukan ${relativeTime} yang lalu`;
+                    indicator.className = `time-indicator ${diffDay < 1 ? 'recent' : 'old'}`;
+                });
+            }
+
+            // ===== INISIALISASI EVENT LISTENER =====
+            document.addEventListener('DOMContentLoaded', function() {
+                // Event listener untuk pencarian
+                const searchInput = document.querySelector('.search-input');
+                searchInput.addEventListener('keyup', filterTable);
+
+                // Event listener untuk filter tab
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Hapus kelas active dari semua tab
+                        document.querySelectorAll('.filter-tab').forEach(t => {
+                            t.classList.remove('active');
+                        });
+
+                        // Tambah kelas active ke tab yang diklik
+                        this.classList.add('active');
+
+                        filterTable();
+                    });
+                });
+
+                // Event listener untuk filter ruang
+                document.getElementById('ruang-filter').addEventListener('change', filterTable);
+
+                // Event listener untuk filter tanggal
+                document.getElementById('tanggal-filter').addEventListener('change', filterTable);
+
+                // Perbarui waktu relatif setiap menit
+                updateRelativeTimes();
+                setInterval(updateRelativeTimes, 60000); // Update setiap 1 menit
+
+                // Inisialisasi filter saat halaman dimuat
+                filterTable();
+            });
+        </script>
+    </body>
+
+    </html>
