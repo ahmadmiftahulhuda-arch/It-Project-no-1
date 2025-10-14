@@ -185,50 +185,45 @@ class PeminjamanController extends Controller
         ));
     }
 
-    public function ajukanPengembalian(Request $request, $id)
-    {
-        try {
-            $userId = auth()->id() ?? 1;
-            
-            // Validasi input
-            $request->validate([
-                'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
-                'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
-                'catatan' => 'nullable|string|max:500',
-            ]);
+   public function ajukanPengembalian(Request $request, $id)
+{
+    try {
+        $userId = auth()->id() ?? 1;
 
-            $peminjaman = Peminjaman::where('user_id', $userId)
-                                   ->where('status', 'disetujui')
-                                   ->whereDoesntHave('pengembalian')
-                                   ->findOrFail($id);
-            
-            // Buat record pengembalian
-            $pengembalian = Pengembalian::create([
-                'peminjaman_id' => $peminjaman->id,
-                'tanggal_pengembalian' => Carbon::now(),
-                'kondisi_ruang' => $request->kondisi_ruang,
-                'kondisi_proyektor' => $request->kondisi_proyektor,
-                'catatan' => $request->catatan,
-                'status' => 'pending', // Menunggu verifikasi admin
-            ]);
+        $request->validate([
+            'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
+            'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
+            'catatan' => 'nullable|string|max:500',
+        ]);
 
-            // Update status peminjaman menjadi "proses pengembalian"
-            $peminjaman->update([
-                'status' => 'proses_pengembalian',
-            ]);
+        $peminjaman = Peminjaman::where('user_id', $userId)
+            ->where('status', 'disetujui')
+            ->whereDoesntHave('pengembalian')
+            ->findOrFail($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Pengajuan pengembalian berhasil diajukan. Menunggu verifikasi admin.'
-            ]);
-                
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
-        }
+        Pengembalian::create([
+            'peminjaman_id' => $peminjaman->id,
+            'user_id' => $userId,
+            'tanggal_pengembalian' => now(),
+            'kondisi_ruang' => $request->kondisi_ruang,
+            'kondisi_proyektor' => $request->kondisi_proyektor,
+            'catatan' => $request->catatan,
+            'status' => 'pending',
+        ]);
+
+        $peminjaman->update(['status' => 'proses_pengembalian']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengajuan pengembalian berhasil diajukan. Menunggu verifikasi admin.',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+        ], 500);
     }
+}
 
     public function showPengembalian($id)
     {

@@ -12,27 +12,24 @@ class Pengembalian extends Model
     protected $fillable = [
         'peminjaman_id',
         'user_id',
-        'ruang',
-        'proyektor',
-        'tanggal_pinjam',
-        'tanggal_kembali',
+        'tanggal_pengembalian',
+        'kondisi_ruang',
+        'kondisi_proyektor',
+        'catatan',
         'status',
-        'catatan'
     ];
 
     protected $casts = [
-        'proyektor' => 'boolean',
-        'tanggal_pinjam' => 'date',
-        'tanggal_kembali' => 'datetime',
+        'tanggal_pengembalian' => 'datetime',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

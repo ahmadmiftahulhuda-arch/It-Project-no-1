@@ -305,6 +305,24 @@
             transition: all 0.3s ease;
         }
 
+        .status-menunggu {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .status-disetujui {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .status-ditolak {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
         .status-belum_dikembalikan {
             background-color: #fff3cd;
             color: #856404;
@@ -383,10 +401,6 @@
         }
 
         /* ===== LOADING STATE ===== */
-        .loading-spinner {
-            display: none;
-        }
-
         .btn-loading {
             position: relative;
             color: transparent !important;
@@ -877,7 +891,7 @@
                 <h5 class="mb-0"><i class="fas fa-list me-2"></i> Peminjaman Aktif yang Dapat Dikembalikan</h5>
             </div>
             <div class="card-body">
-                @if(isset($peminjamans) && $peminjamans->count() > 0)
+                @if($peminjamans->count() > 0)
                     <div class="table-responsive table-responsive-custom">
                         <table class="table table-hover">
                             <thead>
@@ -892,23 +906,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($peminjamans as $peminjaman)
+                                @foreach($peminjamans as $p)
                                     <tr class="table-row-highlight">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
-                                            {{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}
                                         </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $peminjaman->ruang }}
+                                            {{ $p->ruang }}
                                         </td>
                                         <td>
                                             <i class="fas fa-clock me-1 text-success"></i>
-                                            {{ $peminjaman->waktu_mulai ?? '08:00' }} - {{ $peminjaman->waktu_selesai ?? '17:00' }}
+                                            {{ $p->waktu_mulai ?? '08:00' }} - {{ $p->waktu_selesai ?? '17:00' }}
                                         </td>
                                         <td class="text-center">
-                                            @if($peminjaman->proyektor)
+                                            @if($p->proyektor)
                                                 <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i> Ya</span>
                                             @else
                                                 <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
@@ -916,17 +930,16 @@
                                         </td>
                                         <td>
                                             <div class="text-truncate-custom">
-                                                {{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 50) }}
+                                                {{ $p->keperluan }}
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" 
-                                                    class="btn btn-success btn-sm ajukan-pengembalian"
-                                                    data-peminjaman-id="{{ $peminjaman->id }}"
-                                                    data-ruang="{{ $peminjaman->ruang }}"
-                                                    data-tanggal="{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}"
-                                                    data-proyektor="{{ $peminjaman->proyektor ? 'Ya' : 'Tidak' }}">
-                                                <i class="fas fa-undo me-1"></i> Ajukan
+                                            <button class="btn btn-success btn-sm ajukan-pengembalian"
+                                                data-id="{{ $p->id }}"
+                                                data-ruang="{{ $p->ruang }}"
+                                                data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                data-proyektor="{{ $p->proyektor ? 'Ya' : 'Tidak' }}">
+                                                <i class="fas fa-paper-plane me-1"></i> Ajukan
                                             </button>
                                         </td>
                                     </tr>
@@ -938,7 +951,7 @@
                     <div class="empty-state">
                         <i class="fas fa-check-circle"></i>
                         <h5 class="mt-3">Tidak ada peminjaman aktif</h5>
-                        <p class="text-muted">Semua peminjaman sudah dikembalikan atau belum ada yang disetujui</p>
+                        <p class="text-muted">Semua peminjaman sudah dikembalikan atau belum disetujui.</p>
                     </div>
                 @endif
             </div>
@@ -950,7 +963,7 @@
                 <h5 class="mb-0"><i class="fas fa-history me-2"></i> Riwayat Pengembalian</h5>
             </div>
             <div class="card-body">
-                @if(isset($pengembalians) && $pengembalians->count() > 0)
+                @if($pengembalians->count() > 0)
                     <div class="table-responsive table-responsive-custom">
                         <table class="table table-hover">
                             <thead>
@@ -966,67 +979,58 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($pengembalians as $pengembalian)
+                                @foreach($pengembalians as $k)
                                     <tr class="table-row-highlight">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
-                                            {{ \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($k->peminjaman->tanggal)->format('d M Y') }}
                                         </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $pengembalian->peminjaman->ruang }}
+                                            {{ $k->peminjaman->ruang }}
                                         </td>
                                         <td>
-                                            @if($pengembalian->tanggal_pengembalian)
+                                            @if($k->tanggal_pengembalian)
                                                 <i class="fas fa-calendar-check me-1 text-success"></i>
-                                                {{ \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('d M Y') }}
+                                                {{ \Carbon\Carbon::parse($k->tanggal_pengembalian)->format('d M Y') }}
                                             @else
                                                 <span class="text-muted">-</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($pengembalian->peminjaman->proyektor)
+                                            @if($k->peminjaman->proyektor)
                                                 <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i> Ya</span>
                                             @else
                                                 <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($pengembalian->kondisi_ruang)
-                                                @if($pengembalian->kondisi_ruang == 'baik')
-                                                    <span class="badge condition-baik status-badge">Baik</span>
-                                                @elseif($pengembalian->kondisi_ruang == 'rusak_ringan')
-                                                    <span class="badge condition-rusak-ringan status-badge">Rusak Ringan</span>
-                                                @else
-                                                    <span class="badge condition-rusak-berat status-badge">Rusak Berat</span>
-                                                @endif
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
+                                            <span class="badge status-badge 
+                                                @if($k->kondisi_ruang == 'baik') condition-baik 
+                                                @elseif($k->kondisi_ruang == 'rusak_ringan') condition-rusak-ringan 
+                                                @else condition-rusak-berat @endif">
+                                                {{ ucfirst(str_replace('_', ' ', $k->kondisi_ruang)) }}
+                                            </span>
                                         </td>
                                         <td class="text-center">
-                                            @if($pengembalian->status == 'dikembalikan' || $pengembalian->status == 'selesai')
-                                                <span class="badge status-dikembalikan">
-                                                    <i class="fas fa-check-circle me-1"></i> Dikembalikan
-                                                </span>
-                                            @elseif($pengembalian->status == 'terlambat')
-                                                <span class="badge status-terlambat">
-                                                    <i class="fas fa-exclamation-triangle me-1"></i> Terlambat
-                                                </span>
-                                            @elseif($pengembalian->status == 'pending')
+                                            @if($k->status == 'pending')
                                                 <span class="badge status-pending">
                                                     <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
                                                 </span>
+                                            @elseif($k->status == 'verified')
+                                                <span class="badge status-disetujui">
+                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
+                                                </span>
                                             @else
-                                                <span class="badge status-belum_dikembalikan">
-                                                    <i class="fas fa-times-circle me-1"></i> Belum Dikembalikan
+                                                <span class="badge status-ditolak">
+                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
                                                 </span>
                                             @endif
                                         </td>
                                         <td>
                                             <div class="text-truncate-custom">
-                                                {{ $pengembalian->catatan ? \Illuminate\Support\Str::limit($pengembalian->catatan, 30) : '-' }}
+                                                {{ $k->catatan ?: '-' }}
                                             </div>
                                         </td>
                                     </tr>
@@ -1052,7 +1056,7 @@
 
     <!-- Modal Pengajuan Pengembalian -->
     <div class="modal fade" id="pengembalianModal" tabindex="-1" aria-labelledby="pengembalianModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content modal-custom">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title" id="pengembalianModalLabel">
@@ -1060,64 +1064,44 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Ruang:</strong>
-                            <p id="modal-ruang" class="text-primary">-</p>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Tanggal Pinjam:</strong>
-                            <p id="modal-tanggal" class="text-primary">-</p>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Proyektor:</strong>
-                            <p id="modal-proyektor" class="text-primary">-</p>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Tanggal Kembali:</strong>
-                            <p class="text-success">{{ \Carbon\Carbon::now()->format('d M Y') }}</p>
-                        </div>
-                    </div>
-                    
-                    <form id="form-pengembalian">
+                <form id="formPengembalian">
+                    <div class="modal-body">
                         @csrf
-                        <input type="hidden" id="peminjaman_id" name="peminjaman_id">
-                        
+                        <input type="hidden" id="peminjaman_id">
                         <div class="mb-3">
-                            <label for="kondisi_ruang" class="form-label">Kondisi Ruang setelah digunakan:</label>
-                            <select class="form-select" id="kondisi_ruang" name="kondisi_ruang" required>
-                                <option value="">Pilih Kondisi Ruang</option>
-                                <option value="baik">Baik - Bersih dan rapi</option>
-                                <option value="rusak_ringan">Rusak Ringan - Ada sedikit kotoran/berantakan</option>
-                                <option value="rusak_berat">Rusak Berat - Ada kerusakan atau sangat kotor</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3" id="proyektor-section" style="display: none;">
-                            <label for="kondisi_proyektor" class="form-label">Kondisi Proyektor:</label>
-                            <select class="form-select" id="kondisi_proyektor" name="kondisi_proyektor">
-                                <option value="">Pilih Kondisi Proyektor</option>
-                                <option value="baik">Baik - Berfungsi normal</option>
-                                <option value="rusak_ringan">Rusak Ringan - Ada masalah kecil</option>
-                                <option value="rusak_berat">Rusak Berat - Tidak berfungsi/rusak</option>
-                            </select>
+                            <p><strong>Ruang:</strong> <span id="modal-ruang" class="text-primary">-</span></p>
+                            <p><strong>Tanggal:</strong> <span id="modal-tanggal" class="text-primary">-</span></p>
+                            <p><strong>Proyektor:</strong> <span id="modal-proyektor" class="text-primary">-</span></p>
                         </div>
 
                         <div class="mb-3">
-                            <label for="catatan" class="form-label">Catatan Tambahan (opsional):</label>
-                            <textarea class="form-control" id="catatan" name="catatan" rows="3" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
+                            <label for="kondisi_ruang" class="form-label">Kondisi Ruang</label>
+                            <select class="form-select" id="kondisi_ruang" required>
+                                <option value="">Pilih</option>
+                                <option value="baik">Baik</option>
+                                <option value="rusak_ringan">Rusak Ringan</option>
+                                <option value="rusak_berat">Rusak Berat</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-success" id="submit-pengembalian">
-                        <i class="fas fa-paper-plane me-1"></i> Ajukan Pengembalian
-                    </button>
-                </div>
+                        <div class="mb-3" id="proyektor-section" style="display:none;">
+                            <label for="kondisi_proyektor" class="form-label">Kondisi Proyektor</label>
+                            <select class="form-select" id="kondisi_proyektor">
+                                <option value="">Pilih</option>
+                                <option value="baik">Baik</option>
+                                <option value="rusak_ringan">Rusak Ringan</option>
+                                <option value="rusak_berat">Rusak Berat</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="catatan" class="form-label">Catatan (opsional)</label>
+                            <textarea id="catatan" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-success" id="submitPengembalian">Kirim</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1216,160 +1200,68 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+        // ===== MODAL FUNCTIONALITY =====
+        document.addEventListener('DOMContentLoaded', () => {
             const modal = new bootstrap.Modal(document.getElementById('pengembalianModal'));
-            const ajukanButtons = document.querySelectorAll('.ajukan-pengembalian');
-            const proyektorSection = document.getElementById('proyektor-section');
-            const submitButton = document.getElementById('submit-pengembalian');
-            
-            // Cache DOM elements
-            const modalRuang = document.getElementById('modal-ruang');
-            const modalTanggal = document.getElementById('modal-tanggal');
-            const modalProyektor = document.getElementById('modal-proyektor');
-            const peminjamanIdInput = document.getElementById('peminjaman_id');
-            const kondisiProyektorSelect = document.getElementById('kondisi_proyektor');
-            const form = document.getElementById('form-pengembalian');
-            
-            // Fungsi untuk mengajukan pengembalian
-            async function ajukanPengembalian(formData) {
-                const peminjamanId = peminjamanIdInput.value;
-                
-                try {
-                    const response = await fetch(`/user/pengembalian/ajukan/${peminjamanId}`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(Object.fromEntries(formData))
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    
-                    const data = await response.json();
-                    return data;
-                } catch (error) {
-                    console.error('Error:', error);
-                    throw error;
-                }
-            }
-            
-            ajukanButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const peminjamanId = this.getAttribute('data-peminjaman-id');
-                    const ruang = this.getAttribute('data-ruang');
-                    const tanggal = this.getAttribute('data-tanggal');
-                    const proyektor = this.getAttribute('data-proyektor');
-                    
-                    // Set data ke modal
-                    modalRuang.textContent = ruang;
-                    modalTanggal.textContent = tanggal;
-                    modalProyektor.textContent = proyektor;
-                    peminjamanIdInput.value = peminjamanId;
-                    
-                    // Tampilkan/sembunyikan section proyektor
-                    if (proyektor === 'Ya') {
-                        proyektorSection.style.display = 'block';
-                        kondisiProyektorSelect.setAttribute('required', 'required');
+            const buttons = document.querySelectorAll('.ajukan-pengembalian');
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('peminjaman_id').value = btn.dataset.id;
+                    document.getElementById('modal-ruang').textContent = btn.dataset.ruang;
+                    document.getElementById('modal-tanggal').textContent = btn.dataset.tanggal;
+                    document.getElementById('modal-proyektor').textContent = btn.dataset.proyektor;
+                    if (btn.dataset.proyektor === 'Ya') {
+                        document.getElementById('proyektor-section').style.display = 'block';
                     } else {
-                        proyektorSection.style.display = 'none';
-                        kondisiProyektorSelect.removeAttribute('required');
-                        kondisiProyektorSelect.value = ''; // Reset value
+                        document.getElementById('proyektor-section').style.display = 'none';
                     }
-                    
-                    // Reset form
-                    form.reset();
-                    
-                    // Tampilkan modal
                     modal.show();
                 });
             });
-            
-            // Handle submit pengembalian
-            submitButton.addEventListener('click', async function() {
-                if (form.checkValidity()) {
-                    // Tampilkan loading state
-                    this.classList.add('btn-loading');
-                    this.disabled = true;
-                    
-                    try {
-                        // Kirim data via AJAX
-                        const formData = new FormData(form);
-                        
-                        // Timeout untuk request (5 detik maksimal)
-                        const timeoutPromise = new Promise((_, reject) => 
-                            setTimeout(() => reject(new Error('Request timeout')), 5000)
-                        );
-                        
-                        const ajukanPromise = ajukanPengembalian(formData);
-                        
-                        // Race antara request dan timeout
-                        const data = await Promise.race([ajukanPromise, timeoutPromise]);
-                        
-                        if (data.success) {
-                            showAlert('success', data.message || 'Pengembalian berhasil diajukan!');
-                            modal.hide();
-                            
-                            // Redirect setelah 1.5 detik (lebih cepat)
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1500);
-                        } else {
-                            throw new Error(data.message || 'Terjadi kesalahan');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showAlert('danger', error.message || 'Terjadi kesalahan saat mengajukan pengembalian');
-                        resetSubmitButton();
+
+            document.getElementById('submitPengembalian').addEventListener('click', async function() {
+                const btn = this;
+                const id = document.getElementById('peminjaman_id').value;
+                const kondisi_ruang = document.getElementById('kondisi_ruang').value;
+                const kondisi_proyektor = document.getElementById('kondisi_proyektor').value;
+                const catatan = document.getElementById('catatan').value;
+
+                if (!kondisi_ruang) {
+                    alert('Pilih kondisi ruang!');
+                    return;
+                }
+
+                btn.classList.add('btn-loading');
+                btn.disabled = true;
+
+                try {
+                    const res = await fetch(`/user/pengembalian/ajukan/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrf
+                        },
+                        body: JSON.stringify({ kondisi_ruang, kondisi_proyektor, catatan })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        alert(data.message);
+                        modal.hide();
+                        setTimeout(() => location.reload(), 1200);
+                    } else {
+                        alert(data.message || 'Terjadi kesalahan');
                     }
-                    
-                } else {
-                    form.reportValidity();
+                } catch (err) {
+                    alert('Gagal mengirim pengembalian.');
+                } finally {
+                    btn.classList.remove('btn-loading');
+                    btn.disabled = false;
                 }
             });
-
-            // Reset modal ketika ditutup
-            document.getElementById('pengembalianModal').addEventListener('hidden.bs.modal', function () {
-                resetSubmitButton();
-                form.reset();
-            });
-
-            // Fungsi untuk menampilkan alert
-            function showAlert(type, message) {
-                // Hapus alert sebelumnya
-                const existingAlerts = document.querySelectorAll('.alert');
-                existingAlerts.forEach(alert => alert.remove());
-                
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-                alertDiv.innerHTML = `
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i> 
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
-                
-                // Tambahkan alert di bagian atas container
-                const container = document.querySelector('.container');
-                const firstCard = document.querySelector('.card-custom');
-                container.insertBefore(alertDiv, firstCard);
-                
-                // Auto remove alert setelah 5 detik
-                setTimeout(() => {
-                    if (alertDiv.parentElement) {
-                        alertDiv.remove();
-                    }
-                }, 5000);
-            }
-
-            // Fungsi untuk reset button submit
-            function resetSubmitButton() {
-                submitButton.classList.remove('btn-loading');
-                submitButton.disabled = false;
-                submitButton.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Ajukan Pengembalian';
-            }
         });
     </script>
 </body>
