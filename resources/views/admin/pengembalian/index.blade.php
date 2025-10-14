@@ -702,7 +702,7 @@
                 <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
-            <a href="/admin/jadwalperkuliahan" class="menu-item">
+            <a href="/admin/jadwal-perkuliahan" class="menu-item">
                 <i class="fas fa-calendar-alt"></i>
                 <span>Jadwal Perkuliahan</span>
             </a>
