@@ -623,6 +623,130 @@
             display: inline-block;
         }
 
+        /* ===== MODAL DETAIL ===== */
+        .modal-detail {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-detail.active {
+            display: flex;
+        }
+
+        .modal-content-custom {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header-custom {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-header-custom h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body-custom {
+            padding: 1.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: #495057;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #6c757d;
+        }
+
+        .detail-value.status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .detail-footer {
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
         /* ===== FOOTER ===== */
         .footer {
             background-color: #2d3748;
@@ -882,6 +1006,21 @@
             .sub-nav-link {
                 padding: 0.4rem 0.8rem;
                 font-size: 0.85rem;
+            }
+
+            /* Responsivitas untuk modal */
+            .modal-content-custom {
+                width: 95%;
+                margin: 10px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                min-width: 100%;
+                margin-bottom: 5px;
             }
         }
 
@@ -1171,7 +1310,11 @@
                                 $selisih = $waktuPengajuan->diffForHumans($now, true);
                             @endphp
 
-                            <tr class="{{ $isOngoing ? 'table-success' : '' }}">
+                            <tr class="{{ $isOngoing ? 'table-success' : '' }}" 
+                                data-status="{{ $peminjaman->status }}" 
+                                data-ruang="{{ $peminjaman->ruang }}" 
+                                data-tanggal="{{ $peminjaman->tanggal }}"
+                                data-waktu-pengajuan="{{ $peminjaman->created_at }}">
                                 <td class="fw-bold text-center">
                                     {{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                 </td>
@@ -1251,10 +1394,25 @@
 
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-1">
-                                        <a href="{{ route('user.peminjaman.show', $peminjaman->id) }}"
-                                            class="btn btn-info btn-action" title="Lihat Detail">
+                                        <button class="btn btn-info btn-action view-detail" 
+                                                title="Lihat Detail"
+                                                data-id="{{ $peminjaman->id }}"
+                                                data-tanggal="{{ $tanggal->format('d M Y') }}"
+                                                data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
+                                                data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
+                                                data-ruang="{{ $peminjaman->ruang }}"
+                                                data-proyektor="{{ $peminjaman->proyektor ? 'Ya' : 'Tidak' }}"
+                                                data-keperluan="{{ $peminjaman->keperluan }}"
+                                                data-status="{{ $peminjaman->status }}"
+                                                data-nama-peminjam="{{ $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
+                                                data-nim="{{ $peminjaman->nim ?? 'Tidak tersedia' }}"
+                                                data-prodi="{{ $peminjaman->prodi ?? 'Tidak tersedia' }}"
+                                                data-no-hp="{{ $peminjaman->no_hp ?? 'Tidak tersedia' }}"
+                                                data-email="{{ $peminjaman->email ?? 'Tidak tersedia' }}"
+                                                data-diajukan="{{ $waktuPengajuan->format('d M Y H:i') }}"
+                                                data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
                                             <i class="fas fa-eye"></i>
-                                        </a>
+                                        </button>
 
                                         @if ($peminjaman->status === 'selesai')
                                             @if ($peminjaman->feedback)
@@ -1333,6 +1491,86 @@
                     </nav>
                 </div>
             @endif
+        </div>
+
+        <!-- Modal Detail Peminjaman -->
+        <div class="modal-detail" id="detailModal">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h3><i class="fas fa-info-circle"></i> Detail Peminjaman</h3>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body-custom">
+                    <div class="detail-section">
+                        <h4><i class="fas fa-calendar-alt"></i> Informasi Peminjaman</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Tanggal</div>
+                            <div class="detail-value" id="detail-tanggal"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Waktu</div>
+                            <div class="detail-value" id="detail-waktu"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Ruang</div>
+                            <div class="detail-value" id="detail-ruang"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Proyektor</div>
+                            <div class="detail-value" id="detail-proyektor"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">
+                                <span class="status-badge" id="detail-status"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-user"></i> Informasi Peminjam</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Nama Peminjam</div>
+                            <div class="detail-value" id="detail-nama-peminjam"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">NIM</div>
+                            <div class="detail-value" id="detail-nim"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Program Studi</div>
+                            <div class="detail-value" id="detail-prodi"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">No. HP</div>
+                            <div class="detail-value" id="detail-no-hp"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value" id="detail-email"></div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-clipboard-list"></i> Keperluan</h4>
+                        <div class="detail-row">
+                            <div class="detail-value" id="detail-keperluan"></div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-history"></i> Informasi Pengajuan</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Diajukan pada</div>
+                            <div class="detail-value" id="detail-diajukan"></div>
+                        </div>
+                    </div>
+
+                    <div class="detail-footer">
+                        <button class="btn btn-secondary" id="closeModalBtn">Tutup</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Back to top button -->
@@ -1441,6 +1679,99 @@
                 });
             });
 
+            // ===== MODAL DETAIL FUNCTIONALITY =====
+            const detailModal = document.getElementById('detailModal');
+            const closeModal = document.getElementById('closeModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const viewDetailButtons = document.querySelectorAll('.view-detail');
+
+            // Fungsi untuk menampilkan modal detail
+            function showDetailModal(event) {
+                const button = event.currentTarget;
+                
+                // Ambil data dari atribut data-*
+                const tanggal = button.getAttribute('data-tanggal');
+                const waktuMulai = button.getAttribute('data-waktu-mulai');
+                const waktuSelesai = button.getAttribute('data-waktu-selesai');
+                const ruang = button.getAttribute('data-ruang');
+                const proyektor = button.getAttribute('data-proyektor');
+                const keperluan = button.getAttribute('data-keperluan');
+                const status = button.getAttribute('data-status');
+                const namaPeminjam = button.getAttribute('data-nama-peminjam');
+                const nim = button.getAttribute('data-nim');
+                const prodi = button.getAttribute('data-prodi');
+                const noHp = button.getAttribute('data-no-hp');
+                const email = button.getAttribute('data-email');
+                const diajukan = button.getAttribute('data-diajukan');
+                const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
+
+                // Set nilai ke modal
+                document.getElementById('detail-tanggal').textContent = tanggal;
+                document.getElementById('detail-waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
+                document.getElementById('detail-ruang').textContent = ruang;
+                document.getElementById('detail-proyektor').textContent = proyektor;
+                document.getElementById('detail-keperluan').textContent = keperluan;
+                document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
+                document.getElementById('detail-nim').textContent = nim;
+                document.getElementById('detail-prodi').textContent = prodi;
+                document.getElementById('detail-no-hp').textContent = noHp;
+                document.getElementById('detail-email').textContent = email;
+                document.getElementById('detail-diajukan').textContent = diajukan;
+
+                // Set status dengan badge yang sesuai
+                const statusBadge = document.getElementById('detail-status');
+                statusBadge.className = 'status-badge';
+                
+                if (isOngoing) {
+                    statusBadge.classList.add('status-berlangsung');
+                    statusBadge.innerHTML = '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
+                } else {
+                    switch(status) {
+                        case 'disetujui':
+                            statusBadge.classList.add('status-disetujui');
+                            statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
+                            break;
+                        case 'selesai':
+                            statusBadge.classList.add('status-selesai');
+                            statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
+                            break;
+                        case 'ditolak':
+                            statusBadge.classList.add('status-ditolak');
+                            statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
+                            break;
+                        default:
+                            statusBadge.classList.add('status-menunggu');
+                            statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
+                    }
+                }
+
+                // Tampilkan modal
+                detailModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Mencegah scroll di background
+            }
+
+            // Fungsi untuk menutup modal
+            function closeDetailModal() {
+                detailModal.classList.remove('active');
+                document.body.style.overflow = ''; // Kembalikan scroll
+            }
+
+            // Event listener untuk tombol lihat detail
+            viewDetailButtons.forEach(button => {
+                button.addEventListener('click', showDetailModal);
+            });
+
+            // Event listener untuk tombol tutup modal
+            closeModal.addEventListener('click', closeDetailModal);
+            closeModalBtn.addEventListener('click', closeDetailModal);
+
+            // Tutup modal saat klik di luar konten modal
+            detailModal.addEventListener('click', (event) => {
+                if (event.target === detailModal) {
+                    closeDetailModal();
+                }
+            });
+
             // ===== FILTER TABEL =====
             function filterTable() {
                 const searchText = document.querySelector('.search-input').value.toLowerCase();
@@ -1459,9 +1790,7 @@
 
                     // Filter berdasarkan pencarian, status, ruang, dan tanggal
                     const textMatch = text.includes(searchText);
-                    const statusMatch = statusFilter === 'semua' ||
-                        (statusFilter === 'berlangsung' ? row.classList.contains('today-indicator') : rowStatus ===
-                            statusFilter);
+                    const statusMatch = statusFilter === 'semua' || rowStatus === statusFilter;
                     const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
                     const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
 
