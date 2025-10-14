@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\FonnteService; // <-- Ditambahkan
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log; // <-- Ditambahkan
 
 class AdminController extends Controller
 {
@@ -193,8 +195,21 @@ class AdminController extends Controller
      */
     public function approve($id)
     {
-        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman = Peminjaman::with('user')->findOrFail($id);
         $peminjaman->update(['status' => 'disetujui']);
+
+        // Kirim notifikasi WhatsApp
+        if ($peminjaman->user && $peminjaman->user->no_hp) {
+            $message = "Peminjaman Anda untuk ruang {$peminjaman->ruang} pada tanggal {$peminjaman->tanggal} telah DISETUJUI.";
+            try {
+                $fonnteService = resolve(FonnteService::class);
+                $fonnteService->sendMessage($peminjaman->user->no_hp, $message);
+            } catch (\Exception $e) {
+                Log::error('Gagal mengirim notifikasi WhatsApp untuk peminjaman ID ' . $id . ': ' . $e->getMessage());
+            }
+        } else {
+            Log::warning('Tidak dapat mengirim notifikasi WhatsApp: Nomor HP tidak ditemukan untuk peminjaman ID ' . $id);
+        }
 
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil disetujui.');
@@ -205,8 +220,21 @@ class AdminController extends Controller
      */
     public function reject($id)
     {
-        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman = Peminjaman::with('user')->findOrFail($id);
         $peminjaman->update(['status' => 'ditolak']);
+
+        // Kirim notifikasi WhatsApp
+        if ($peminjaman->user && $peminjaman->user->no_hp) {
+            $message = "Mohon maaf, peminjaman Anda untuk ruang {$peminjaman->ruang} pada tanggal {$peminjaman->tanggal} telah DITOLAK.";
+            try {
+                $fonnteService = resolve(FonnteService::class);
+                $fonnteService->sendMessage($peminjaman->user->no_hp, $message);
+            } catch (\Exception $e) {
+                Log::error('Gagal mengirim notifikasi WhatsApp untuk peminjaman ID ' . $id . ': ' . $e->getMessage());
+            }
+        } else {
+            Log::warning('Tidak dapat mengirim notifikasi WhatsApp: Nomor HP tidak ditemukan untuk peminjaman ID ' . $id);
+        }
 
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil ditolak.');

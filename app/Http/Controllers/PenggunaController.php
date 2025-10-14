@@ -15,8 +15,8 @@ class PenggunaController extends Controller
      */
     public function index()
     {
-        // Ambil data dari database menggunakan model Pengguna
-        $users = Pengguna::latest()->get();
+        // Ambil data dari database, muat relasi 'user' untuk efisiensi
+        $users = Pengguna::with('user')->latest()->get();
         
         return view('admin.pengguna.index', compact('users'));
     }
@@ -47,6 +47,7 @@ class PenggunaController extends Controller
             'nama' => 'required|string|max:255',
             'nim' => 'nullable|string|max:20|unique:penggunas,nim',
             'email' => 'required|email|unique:penggunas,email|unique:users,email',
+            'no_hp' => 'nullable|string|max:20', // Validasi untuk no_hp
             'password' => 'required|string|min:6|confirmed',
             'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
             'jurusan' => 'nullable|string|max:255',
@@ -61,13 +62,16 @@ class PenggunaController extends Controller
         }
 
         try {
+            $validatedData = $validator->validated();
+
             // 1. Simpan data ke tabel 'penggunas'
-            $pengguna = Pengguna::create($validator->validated());
+            $pengguna = Pengguna::create($validatedData);
             
             // 2. Buat data login di tabel 'users'
             User::create([
                 'name' => $pengguna->nama,
                 'email' => $pengguna->email,
+                'no_hp' => $validatedData['no_hp'], // Simpan no_hp
                 'password' => Hash::make($request->password),
             ]);
 
@@ -95,7 +99,9 @@ class PenggunaController extends Controller
      */
     public function edit($id)
     {
-        $user = Pengguna::findOrFail($id);
+        $pengguna = Pengguna::findOrFail($id);
+        // Ambil data user login yang berelasi
+        $user = User::where('email', $pengguna->email)->first();
         
         $jurusanList = [
             'Teknik Informatika',
@@ -105,7 +111,7 @@ class PenggunaController extends Controller
             'Manajemen Informatika'
         ];
 
-        return view('admin.pengguna.edit', compact('user', 'jurusanList'));
+        return view('admin.pengguna.edit', compact('pengguna', 'user', 'jurusanList'));
     }
 
     /**
@@ -119,7 +125,8 @@ class PenggunaController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nim' => 'nullable|string|max:20|unique:penggunas,nim,' . $id,
-            'email' => 'required|email|unique:penggunas,email,' . $id,
+            'email' => 'required|email|unique:penggunas,email,' . $id . '|unique:users,email,' . optional(User::where('email', $pengguna->email)->first())->id,
+            'no_hp' => 'nullable|string|max:20', // Validasi untuk no_hp
             'password' => 'nullable|string|min:6|confirmed',
             'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
             'jurusan' => 'nullable|string|max:255',
@@ -146,6 +153,7 @@ class PenggunaController extends Controller
             if ($user) {
                 $user->name = $validatedData['nama'];
                 $user->email = $validatedData['email'];
+                $user->no_hp = $validatedData['no_hp']; // Update no_hp
                 
                 // Jika admin mengisi password baru
                 if (!empty($validatedData['password'])) {
@@ -170,9 +178,12 @@ class PenggunaController extends Controller
     public function destroy($id)
     {
         try {
-            $user = Pengguna::findOrFail($id);
-            $userName = $user->nama;
-            $user->delete();
+            $pengguna = Pengguna::findOrFail($id);
+            $userName = $pengguna->nama;
+
+            // Hapus juga data login di tabel users
+            User::where('email', $pengguna->email)->delete();
+            $pengguna->delete();
             
             return redirect()->route('pengguna.index')
                 ->with('success', "Pengguna '{$userName}' berhasil dihapus");

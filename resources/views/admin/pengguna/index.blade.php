@@ -43,6 +43,7 @@
                             <p class="text-muted small mb-2">{{ $user->nim }}</p>
                             @endif
                             <p class="text-muted small mb-0">{{ $user->email }}</p>
+                            <p class="text-primary small mb-0"><i class="fab fa-whatsapp me-1"></i>{{ $user->user->no_hp ?? '-' }}</p>
                         </div>
                         <div class="dropdown">
                             <button class="btn btn-sm btn-outline-secondary border-0" type="button" 

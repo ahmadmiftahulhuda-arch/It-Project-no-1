@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('pengguna.update', $user->id) }}" method="POST">
+                    <form action="{{ route('pengguna.update', $pengguna->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         
@@ -27,7 +27,7 @@
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('nama') is-invalid @enderror" 
-                                           id="nama" name="nama" value="{{ old('nama', $user->nama) }}" 
+                                           id="nama" name="nama" value="{{ old('nama', $pengguna->nama) }}" 
                                            placeholder="Masukkan nama lengkap" required>
                                     @error('nama')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -39,7 +39,7 @@
                                 <div class="mb-3">
                                     <label for="nim" class="form-label">NIM</label>
                                     <input type="text" class="form-control @error('nim') is-invalid @enderror" 
-                                           id="nim" name="nim" value="{{ old('nim', $user->nim) }}" 
+                                           id="nim" name="nim" value="{{ old('nim', $pengguna->nim) }}" 
                                            placeholder="Masukkan NIM">
                                     @error('nim')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -53,25 +53,21 @@
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                           id="email" name="email" value="{{ old('email', $user->email) }}" 
+                                           id="email" name="email" value="{{ old('email', $pengguna->email) }}" 
                                            placeholder="Masukkan email" required>
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="peran" class="form-label">Peran <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('peran') is-invalid @enderror" 
-                                            id="peran" name="peran" required>
-                                        <option value="">Pilih Peran</option>
-                                        <option value="Admin Lab" {{ old('peran', $user->peran) == 'Admin Lab' ? 'selected' : '' }}>Admin Lab</option>
-                                        <option value="Asisten" {{ old('peran', $user->peran) == 'Asisten' ? 'selected' : '' }}>Asisten</option>
-                                        <option value="Mahasiswa" {{ old('peran', $user->peran) == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                                    </select>
-                                    @error('peran')
+                                    <label for="no_hp" class="form-label">Nomor HP (WhatsApp)</label>
+                                    <input type="text" class="form-control @error('no_hp') is-invalid @enderror" 
+                                           id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp ?? '') }}" 
+                                           placeholder="Contoh: 6281234567890">
+                                    @error('no_hp')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -81,12 +77,28 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="peran" class="form-label">Peran <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('peran') is-invalid @enderror" 
+                                            id="peran" name="peran" required>
+                                        <option value="">Pilih Peran</option>
+                                        <option value="Admin Lab" {{ old('peran', $pengguna->peran) == 'Admin Lab' ? 'selected' : '' }}>Admin Lab</option>
+                                        <option value="Asisten" {{ old('peran', $pengguna->peran) == 'Asisten' ? 'selected' : '' }}>Asisten</option>
+                                        <option value="Mahasiswa" {{ old('peran', $pengguna->peran) == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                                    </select>
+                                    @error('peran')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="jurusan" class="form-label">Jurusan</label>
                                     <select class="form-select @error('jurusan') is-invalid @enderror" 
                                             id="jurusan" name="jurusan">
                                         <option value="">Pilih Jurusan</option>
                                         @foreach($jurusanList as $jurusan)
-                                            <option value="{{ $jurusan }}" {{ old('jurusan', $user->jurusan) == $jurusan ? 'selected' : '' }}>
+                                            <option value="{{ $jurusan }}" {{ old('jurusan', $pengguna->jurusan) == $jurusan ? 'selected' : '' }}>
                                                 {{ $jurusan }}
                                             </option>
                                         @endforeach
@@ -96,30 +108,30 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                     <select class="form-select @error('status') is-invalid @enderror" 
                                             id="status" name="status" required>
                                         <option value="">Pilih Status</option>
-                                        <option value="Aktif" {{ old('status', $user->status) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                                        <option value="Non-Aktif" {{ old('status', $user->status) == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
+                                        <option value="Aktif" {{ old('status', $pengguna->status) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                        <option value="Non-Aktif" {{ old('status', $pengguna->status) == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
                                     </select>
                                     @error('status')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="tanggal_bergabung" class="form-label">Tanggal Bergabung</label>
                                     <input type="date" class="form-control @error('tanggal_bergabung') is-invalid @enderror" 
                                            id="tanggal_bergabung" name="tanggal_bergabung" 
-                                           value="{{ old('tanggal_bergabung', $user->tanggal_bergabung ? $user->tanggal_bergabung->format('Y-m-d') : '') }}">
+                                           value="{{ old('tanggal_bergabung', $pengguna->tanggal_bergabung ? $pengguna->tanggal_bergabung->format('Y-m-d') : '') }}">
                                     @error('tanggal_bergabung')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

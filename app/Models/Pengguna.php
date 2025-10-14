@@ -71,4 +71,12 @@ class Pengguna extends Model
     {
         return $query->where('jurusan', $jurusan);
     }
+
+    /**
+     * Mendefinisikan relasi ke model User (untuk data login).
+     */
+    public function user()
+    {
+        return $this->hasOne(User::class, 'email', 'email');
+    }
 }

@@ -64,33 +64,39 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                   id="password" name="password" placeholder="Masukkan password baru" required>
-                            @error('password')
+                            <label for="nim" class="form-label">NIM</label>
+                            <input type="text" class="form-control @error('nim') is-invalid @enderror" 
+                                   id="nim" name="nim" value="{{ old('nim') }}" 
+                                   placeholder="Masukkan NIM (opsional)">
+                            @error('nim')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="password_confirmation" 
-                                   name="password_confirmation" placeholder="Ketik ulang password" required>
+                            <label for="no_hp" class="form-label">Nomor HP (WhatsApp)</label>
+                            <input type="text" class="form-control @error('no_hp') is-invalid @enderror" 
+                                   id="no_hp" name="no_hp" value="{{ old('no_hp') }}" 
+                                   placeholder="Contoh: 6281234567890">
+                            @error('no_hp')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
-
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="nim" class="form-label">NIM</label>
-                            <input type="text" class="form-control @error('nim') is-invalid @enderror" 
-                                   id="nim" name="nim" value="{{ old('nim') }}" 
-                                   placeholder="Masukkan NIM (opsional)">
-                            @error('nim')
+                            <label for="jurusan" class="form-label">Jurusan <span class="text-danger">*</span></label>
+                            <select class="form-select @error('jurusan') is-invalid @enderror" id="jurusan" name="jurusan" required>
+                                <option value="">Pilih Jurusan</option>
+                                @foreach($jurusanList as $jurusan)
+                                    <option value="{{ $jurusan }}" {{ old('jurusan') == $jurusan ? 'selected' : '' }}>{{ $jurusan }}</option>
+                                @endforeach
+                            </select>
+                            @error('jurusan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -114,29 +120,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="jurusan" class="form-label">Jurusan <span class="text-danger">*</span></label>
-                            <select class="form-select @error('jurusan') is-invalid @enderror" id="jurusan" name="jurusan" required>
-                                <option value="">Pilih Jurusan</option>
-                                <option value="Teknik Informatika" {{ old('jurusan') == 'Teknik Informatika' ? 'selected' : '' }}>Teknik Informatika</option>
-                                <option value="Sistem Informasi" {{ old('jurusan') == 'Sistem Informasi' ? 'selected' : '' }}>Sistem Informasi</option>
-                                <option value="Teknik Komputer" {{ old('jurusan') == 'Teknik Komputer' ? 'selected' : '' }}>Teknik Komputer</option>
-                            </select>
-                            @error('jurusan')
+                            <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                   id="password" name="password" placeholder="Masukkan password baru" required>
+                            @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                                <option value="">Pilih Status</option>
-                                <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                                <option value="Non-Aktif" {{ old('status') == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label for="password_confirmation" class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="password_confirmation" 
+                                   name="password_confirmation" placeholder="Ketik ulang password" required>
                         </div>
                     </div>
                 </div>
@@ -144,10 +140,22 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
+                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                                <option value="">Pilih Status</option>
+                                <option value="Aktif" {{ old('status', 'Aktif') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="Non-Aktif" {{ old('status') == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
+                            </select>
+                            @error('status')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
                             <label for="tanggal_bergabung" class="form-label">Tanggal Bergabung <span class="text-danger">*</span></label>
                             <input type="date" class="form-control @error('tanggal_bergabung') is-invalid @enderror" 
                                    id="tanggal_bergabung" name="tanggal_bergabung" value="{{ old('tanggal_bergabung') }}" required>
-                            <div class="form-text">Pilih tanggal ketika pengguna bergabung dengan sistem</div>
                             @error('tanggal_bergabung')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
