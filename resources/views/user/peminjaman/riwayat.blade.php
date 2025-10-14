@@ -1232,11 +1232,14 @@
             </div>
         </div>
 
-        <!-- Tabs Filter -->
+                <!-- Tabs Filter -->
         <div class="filter-tabs">
             <div class="filter-tab active" data-status="semua">Semua</div>
             <div class="filter-tab" data-status="pending">
                 <i class="fas fa-clock me-1"></i> Menunggu
+            </div>
+            <div class="filter-tab" data-status="berlangsung">
+                <i class="fas fa-check-circle me-1"></i> Berlangsung
             </div>
             <div class="filter-tab" data-status="disetujui">
                 <i class="fas fa-check-circle me-1"></i> Disetujui
