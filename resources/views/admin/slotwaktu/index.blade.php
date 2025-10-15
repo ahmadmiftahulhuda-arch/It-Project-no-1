@@ -683,7 +683,7 @@
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ route('admin.dashboard') }}" class="menu-item">
+            <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                 <i class="fas fa-hand-holding"></i>
                 <span>Peminjaman</span>
             </a>
