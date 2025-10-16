@@ -1442,7 +1442,8 @@
 
                                             <button type="button" class="btn btn-danger btn-action btn-delete"
                                                 data-id="{{ $peminjaman->id }}"
-                                                data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}">
+                                                data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}"
+                                                data-url="{{ route('user.peminjaman.destroy', $peminjaman->id) }}">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         @else
@@ -1601,7 +1602,8 @@
 
     <!-- Form Hapus Tersembunyi -->
     <form id="deleteForm" method="POST" style="display: none;">
-        @csrf @method('DELETE')
+        @csrf 
+        @method('DELETE')
     </form>
 
     <!-- Back to top button -->
@@ -1804,17 +1806,18 @@
             }
         });
 
-        // ===== KONFIRMASI HAPUS =====
+        // ===== KONFIRMASI HAPUS YANG DIPERBAIKI =====
         function confirmDelete(event) {
             event.preventDefault();
             const button = event.currentTarget;
             const keperluan = button.getAttribute('data-keperluan');
             const id = button.getAttribute('data-id');
+            const deleteUrl = button.getAttribute('data-url');
 
             if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
                 // Set action form dan submit
                 const form = document.getElementById('deleteForm');
-                form.action = `/user/peminjaman/${id}`;
+                form.action = deleteUrl;
                 form.submit();
             }
         }
