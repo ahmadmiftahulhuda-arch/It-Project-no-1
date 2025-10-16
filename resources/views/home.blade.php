@@ -929,7 +929,11 @@
         <ul>
             <li><a href="/home" class="active">Beranda</a></li>
             <li><a href="/kalender">Kalender Perkuliahan</a></li>
+            @auth
+            <li><a href="{{ route('user.peminjaman.index') }}">Daftar Peminjaman</a></li>
+            @else
             <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
+            @endauth
             <li><a href="/about">Tentang</a></li>
             
             @auth
