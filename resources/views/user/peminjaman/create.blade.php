@@ -121,6 +121,7 @@
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            justify-content: center; /* Perbaikan: Rata tengah */
         }
 
         .sub-nav-link {
@@ -134,6 +135,7 @@
             align-items: center;
             gap: 0.5rem;
             border: 1px solid transparent;
+            flex: 0 0 auto; /* Perbaikan: Agar tidak melebar */
         }
 
         .sub-nav-link:hover,

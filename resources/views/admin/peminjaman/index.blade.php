@@ -35,7 +35,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
+      /* Sidebar Styles - DIPERBAIKI agar konsisten */
         .sidebar {
             position: fixed;
             top: 0;
@@ -49,6 +49,10 @@
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .sidebar-header {
@@ -88,6 +92,17 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+        }
+
         .menu-item {
             display: flex;
             align-items: center;
@@ -121,6 +136,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
 
         /* Main Content */
         .main-content {
@@ -666,7 +682,7 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
+      <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -675,71 +691,88 @@
             <h2>Admin TI</h2>
         </div>
 
-        <div class="sidebar-menu">
-            <a href="/admin/dashboard" class="menu-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="{{ route('admin.peminjaman.index') }}" class="menu-item active">
-                <i class="fas fa-hand-holding"></i>
-                <span>Peminjaman</span>
-            </a>
-            <a href="/admin/pengembalian" class="menu-item">
-                <i class="fas fa-undo"></i>
-                <span>Pengembalian</span>
-            </a>
-            <a href="/admin/riwayat" class="menu-item">
-                <i class="fas fa-history"></i>
-                <span>Riwayat Peminjaman</span>
-            </a>
-            <a href="/admin/feedback" class="menu-item">
-                <i class="fas fa-comment"></i>
-                <span>Feedback</span>
-            </a>
-            <a href="/admin/projectors" class="menu-item">
-                <i class="fas fa-video"></i>
-                <span>Proyektor</span>
-            </a>
-            <a href="/admin/jadwal-perkuliahan" class="menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Jadwal Perkuliahan</span>
-            </a>
-            <a href="/admin/ruangan" class="menu-item">
-                <i class="fas fa-door-open"></i>
-                <span>Ruangan</span>
-            </a>
-            <a href="/admin/slotwaktu" class="menu-item">
-                <i class="fas fa-clock"></i>
-                <span>Slot Waktu</span>
-            </a>
-            <a href="/admin/matakuliah" class="menu-item">
-                <i class="fas fa-book"></i>
-                <span>Matakuliah</span>
-            </a>
-            <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Kelas</span>
-            </a>
-            <a href="/admin/pengguna" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Pengguna</span>
-            </a>
-            <a href="/admin/laporan" class="menu-item">
-                <i class="fas fa-chart-bar"></i>
-                <span>Statistik</span>
-            </a>
-            <a href="/admin/pengaturan" class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span>Pengaturan</span>
-            </a>
+            <div class="sidebar-menu">
+                <!-- Menu Utama -->
+                <div class="menu-section">Menu Utama</div>
+                <a href="/admin/dashboard" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <!-- Manajemen Peminjaman -->
+                <div class="menu-section">Manajemen Peminjaman</div>
+                <a href="{{ route('admin.peminjaman.index') }}" class="menu-item active">
+                    <i class="fas fa-hand-holding"></i>
+                    <span>Peminjaman</span>
+                </a>
+                <a href="/admin/pengembalian" class="menu-item">
+                    <i class="fas fa-undo"></i>
+                    <span>Pengembalian</span>
+                </a>
+                <a href="/admin/riwayat" class="menu-item">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat Peminjaman</span>
+                </a>
+                <a href="/admin/feedback" class="menu-item">
+                    <i class="fas fa-comment"></i>
+                    <span>Feedback</span>
+                </a>
+                
+                <!-- Manajemen Aset -->
+                <div class="menu-section">Manajemen Aset</div>
+                <a href="{{ route('projectors.index') }}" class="menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Proyektor</span>
+                </a>
+                <a href="/admin/ruangan" class="menu-item">
+                    <i class="fas fa-door-open"></i>
+                    <span>Ruangan</span>
+                </a>
+                
+                <!-- Manajemen Akademik -->
+                <div class="menu-section">Manajemen Akademik</div>
+                <a href="/admin/jadwal-perkuliahan" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Jadwal Perkuliahan</span>
+                </a>
+                <a href="/admin/slotwaktu" class="menu-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Slot Waktu</span>
+                </a>
+                <a href="/admin/mata_kuliah" class="menu-item">
+                    <i class="fas fa-book"></i>
+                    <span>Matakuliah</span>
+                </a>
+                <a href="/admin/kelas" class="menu-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Kelas</span>
+                </a>
+                
+                <!-- Manajemen Pengguna -->
+                <div class="menu-section">Manajemen Pengguna</div>
+                <a href="/admin/pengguna" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Pengguna</span>
+                </a>
+                
+                <!-- Laporan & Pengaturan -->
+                <div class="menu-section">Laporan & Pengaturan</div>
+                <a href="/admin/laporan" class="menu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Statistik</span>
+                </a>
+                <a href="/admin/pengaturan" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+            </div>
         </div>
-    </div>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
         <div class="header">
-            <form id="searchForm" method="GET" action="{{ route('admin.dashboard') }}" class="search-bar">
+            <form id="searchForm" method="GET" action="{{ route('admin.peminjaman.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" name="search" placeholder="Cari peminjaman..." value="{{ request('search') }}">
                 <button type="submit" style="display: none;"></button>
@@ -822,7 +855,7 @@
 
         <!-- Filter Section -->
         <div class="filter-section">
-            <form id="filterForm" method="GET" action="{{ route('admin.dashboard') }}">
+            <form id="filterForm" method="GET" action="{{ route('admin.peminjaman.index') }}">
                 <div class="filter-grid">
                     <div class="filter-group">
                         <label for="search">Cari Peminjam/Keperluan/Ruang</label>
@@ -839,6 +872,8 @@
                                 Disetujui</option>
                             <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak
                             </option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
+                            </option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -846,14 +881,14 @@
                         <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
                     </div>
                     <div class="filter-group">
-                        <label for="sort_filter">Urutkan</label>
-                        <select id="sort_filter" name="sort">
-                            <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>
-                                Terbaru</option>
-                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama
-                            </option>
-                            <option value="return" {{ request('sort') == 'return' ? 'selected' : '' }}>Tanggal
-                                Pengembalian</option>
+                        <label for="ruang_filter">Ruang</label>
+                        <select id="ruang_filter" name="ruang">
+                            <option value="">Semua Ruang</option>
+                            <option value="Lab A" {{ request('ruang') == 'Lab A' ? 'selected' : '' }}>Lab A</option>
+                            <option value="Lab B" {{ request('ruang') == 'Lab B' ? 'selected' : '' }}>Lab B</option>
+                            <option value="Lab C" {{ request('ruang') == 'Lab C' ? 'selected' : '' }}>Lab C</option>
+                            <option value="Ruang Meeting" {{ request('ruang') == 'Ruang Meeting' ? 'selected' : '' }}>Ruang Meeting</option>
+                            <option value="Ruang Seminar" {{ request('ruang') == 'Ruang Seminar' ? 'selected' : '' }}>Ruang Seminar</option>
                         </select>
                     </div>
                 </div>
@@ -861,7 +896,7 @@
                     <button type="submit" class="btn btn-primary btn-sm">
                         <i class="fas fa-filter me-1"></i> Terapkan Filter
                     </button>
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline btn-sm">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline btn-sm">
                         <i class="fas fa-refresh me-1"></i> Reset
                     </a>
                 </div>
@@ -876,7 +911,7 @@
                         <tr>
                             <th>No</th>
                             <th>Peminjam</th>
-                            <th>Tanggal</th>
+                            <th>Tanggal & Waktu</th>
                             <th>Ruang</th>
                             <th>Proyektor</th>
                             <th>Keperluan</th>
@@ -886,8 +921,21 @@
                     </thead>
                     <tbody id="peminjaman-table-body">
                         @forelse($peminjamans as $peminjaman)
+                            @php
+                                $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
+                                $isToday = $tanggal->isToday();
+                                $now = \Carbon\Carbon::now();
+                                
+                                // Cek apakah sedang berlangsung (hari ini, disetujui, dan dalam rentang waktu)
+                                $isOngoing = $isToday && 
+                                            $peminjaman->status === 'disetujui' && 
+                                            $now->format('H:i:s') >= ($peminjaman->waktu_mulai ?? '00:00:00') && 
+                                            $now->format('H:i:s') <= ($peminjaman->waktu_selesai ?? '23:59:59');
+                            @endphp
+
                             <tr data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
-                                data-tanggal="{{ $peminjaman->tanggal }}" data-id="{{ $peminjaman->id }}">
+                                data-tanggal="{{ $peminjaman->tanggal }}" data-id="{{ $peminjaman->id }}"
+                                class="{{ $isOngoing ? 'table-success' : '' }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -895,11 +943,28 @@
                                             style="width: 30px; height: 30px; font-size: 0.8rem;">
                                             {{ substr($peminjaman->user->name ?? 'G', 0, 1) }}
                                         </div>
-                                        {{ $peminjaman->user->name ?? 'Guest' }}
+                                        <div>
+                                            <div class="fw-bold">{{ $peminjaman->user->name ?? 'Guest' }}</div>
+                                            <small class="text-muted">{{ $peminjaman->user->nim ?? '-' }}</small>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}</td>
-                                <td>{{ $peminjaman->ruang }}</td>
+                                <td>
+                                    <div>
+                                        <i class="fas fa-calendar-day text-primary me-1"></i>
+                                        {{ $tanggal->format('d M Y') }}
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ $peminjaman->waktu_mulai ?? '08:00' }} - {{ $peminjaman->waktu_selesai ?? '17:00' }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-door-open text-info me-1"></i>
+                                    {{ $peminjaman->ruang }}
+                                </td>
                                 <td>
                                     @if ($peminjaman->proyektor)
                                         <span class="badge bg-success">Ya</span>
@@ -911,14 +976,26 @@
                                     {{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 40) }}
                                 </td>
                                 <td>
-                                    @if ($peminjaman->status == 'selesai')
-                                        <span class="badge status-badge status-selesai">Selesai</span>
+                                    @if ($isOngoing)
+                                        <span class="badge status-badge status-berlangsung">
+                                            <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                        </span>
+                                    @elseif ($peminjaman->status == 'selesai')
+                                        <span class="badge status-badge status-selesai">
+                                            <i class="fas fa-check-double me-1"></i> Selesai
+                                        </span>
                                     @elseif ($peminjaman->status == 'disetujui')
-                                        <span class="badge status-badge status-disetujui">Disetujui</span>
+                                        <span class="badge status-badge status-disetujui">
+                                            <i class="fas fa-check-circle me-1"></i> Disetujui
+                                        </span>
                                     @elseif($peminjaman->status == 'ditolak')
-                                        <span class="badge status-badge status-ditolak">Ditolak</span>
+                                        <span class="badge status-badge status-ditolak">
+                                            <i class="fas fa-times-circle me-1"></i> Ditolak
+                                        </span>
                                     @else
-                                        <span class="badge status-badge status-menunggu">Menunggu</span>
+                                        <span class="badge status-badge status-menunggu">
+                                            <i class="fas fa-clock me-1"></i> Menunggu
+                                        </span>
                                     @endif
                                 </td>
                                 <td>
@@ -940,11 +1017,36 @@
                                             </form>
                                         @endif
 
+                                        <!-- Tombol Detail -->
+                                        <button class="btn btn-info-custom btn-sm view-detail" 
+                                                data-id="{{ $peminjaman->id }}"
+                                                data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
+                                                data-nim="{{ $peminjaman->user->nim ?? '-' }}"
+                                                data-prodi="{{ $peminjaman->user->prodi ?? '-' }}"
+                                                data-email="{{ $peminjaman->user->email ?? '-' }}"
+                                                data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"
+                                                data-tanggal="{{ $tanggal->format('d M Y') }}"
+                                                data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
+                                                data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
+                                                data-ruang="{{ $peminjaman->ruang }}"
+                                                data-proyektor="{{ $peminjaman->proyektor ? 'Ya' : 'Tidak' }}"
+                                                data-keperluan="{{ $peminjaman->keperluan }}"
+                                                data-status="{{ $peminjaman->status }}"
+                                                data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
+                                            <i class="fas fa-eye me-1"></i> Detail
+                                        </button>
+
                                         <!-- Tombol Edit -->
                                         <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#editModal" data-id="{{ $peminjaman->id }}"
                                             data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
+                                            data-nim="{{ $peminjaman->user->nim ?? '' }}"
+                                            data-prodi="{{ $peminjaman->user->prodi ?? '' }}"
+                                            data-email="{{ $peminjaman->user->email ?? '' }}"
+                                            data-no-hp="{{ $peminjaman->user->no_hp ?? '' }}"
                                             data-tanggal="{{ $peminjaman->tanggal }}"
+                                            data-waktu-mulai="{{ $peminjaman->waktu_mulai }}"
+                                            data-waktu-selesai="{{ $peminjaman->waktu_selesai }}"
                                             data-ruang="{{ $peminjaman->ruang }}"
                                             data-proyektor="{{ $peminjaman->proyektor ? '1' : '0' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
@@ -1024,6 +1126,24 @@
             </div>
         @endif
 
+        <!-- Modal Detail Peminjaman -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-info-circle me-2"></i> Detail Peminjaman</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        <!-- Konten akan diisi oleh JavaScript -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal Edit Peminjaman -->
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1040,22 +1160,41 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="peminjam" class="form-label">Peminjam</label>
-                                    <input type="text" class="form-control" id="peminjam" name="peminjam"
-                                        readonly>
+                                    <label for="peminjam" class="form-label">Nama Peminjam</label>
+                                    <input type="text" class="form-control" id="peminjam" name="peminjam" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="nim" class="form-label">NIM</label>
+                                    <input type="text" class="form-control" id="nim" name="nim" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="prodi" class="form-label">Program Studi</label>
+                                    <input type="text" class="form-control" id="prodi" name="prodi" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="tanggal" class="form-label">Tanggal</label>
-                                    <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                        required>
+                                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="waktu_mulai" class="form-label">Waktu Mulai</label>
+                                    <input type="time" class="form-control" id="waktu_mulai" name="waktu_mulai" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="waktu_selesai" class="form-label">Waktu Selesai</label>
+                                    <input type="time" class="form-control" id="waktu_selesai" name="waktu_selesai" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="ruang" class="form-label">Ruang</label>
                                     <select class="form-select" id="ruang" name="ruang" required>
-                                        <option value="Ruang A">Ruang A</option>
-                                        <option value="Ruang B">Ruang B</option>
-                                        <option value="Ruang C">Ruang C</option>
-                                        <option value="Ruang D">Ruang D</option>
+                                        <option value="Lab A">Lab A</option>
+                                        <option value="Lab B">Lab B</option>
+                                        <option value="Lab C">Lab C</option>
+                                        <option value="Ruang Meeting">Ruang Meeting</option>
+                                        <option value="Ruang Seminar">Ruang Seminar</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -1068,7 +1207,7 @@
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="proyektor"
-                                                id="proyektor_tidak" value="0" checked>
+                                                id="proyektor_tidak" value="0">
                                             <label class="form-check-label" for="proyektor_tidak">Tidak</label>
                                         </div>
                                     </div>
@@ -1083,6 +1222,7 @@
                                         <option value="pending">Menunggu</option>
                                         <option value="disetujui">Disetujui</option>
                                         <option value="ditolak">Ditolak</option>
+                                        <option value="selesai">Selesai</option>
                                     </select>
                                 </div>
                             </div>
@@ -1090,69 +1230,6 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Tambah Peminjaman -->
-        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addModalLabel"><i class="fas fa-plus me-2"></i> Tambah Peminjaman
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <form action="" method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="add_peminjam" class="form-label">Peminjam</label>
-                                    <input type="text" class="form-control" id="add_peminjam" name="peminjam"
-                                        required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="add_tanggal" class="form-label">Tanggal</label>
-                                    <input type="date" class="form-control" id="add_tanggal" name="tanggal"
-                                        required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="add_ruang" class="form-label">Ruang</label>
-                                    <select class="form-select" id="add_ruang" name="ruang" required>
-                                        <option value="Ruang A">Ruang A</option>
-                                        <option value="Ruang B">Ruang B</option>
-                                        <option value="Ruang C">Ruang C</option>
-                                        <option value="Ruang D">Ruang D</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Proyektor</label>
-                                    <div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="proyektor"
-                                                id="add_proyektor_ya" value="1">
-                                            <label class="form-check-label" for="add_proyektor_ya">Ya</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="proyektor"
-                                                id="add_proyektor_tidak" value="0" checked>
-                                            <label class="form-check-label" for="add_proyektor_tidak">Tidak</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="add_keperluan" class="form-label">Keperluan</label>
-                                    <textarea class="form-control" id="add_keperluan" name="keperluan" rows="3" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan Peminjaman</button>
                         </div>
                     </form>
                 </div>
@@ -1223,6 +1300,75 @@
                 });
             }
 
+            // Handler untuk modal detail
+            const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+            const viewDetailButtons = document.querySelectorAll('.view-detail');
+
+            viewDetailButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const peminjam = this.getAttribute('data-peminjam');
+                    const nim = this.getAttribute('data-nim');
+                    const prodi = this.getAttribute('data-prodi');
+                    const email = this.getAttribute('data-email');
+                    const noHp = this.getAttribute('data-no-hp');
+                    const tanggal = this.getAttribute('data-tanggal');
+                    const waktuMulai = this.getAttribute('data-waktu-mulai');
+                    const waktuSelesai = this.getAttribute('data-waktu-selesai');
+                    const ruang = this.getAttribute('data-ruang');
+                    const proyektor = this.getAttribute('data-proyektor');
+                    const keperluan = this.getAttribute('data-keperluan');
+                    const status = this.getAttribute('data-status');
+                    const isOngoing = this.getAttribute('data-is-ongoing') === 'true';
+
+                    let statusBadge = '';
+                    if (isOngoing) {
+                        statusBadge = '<span class="badge status-badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
+                    } else {
+                        switch(status) {
+                            case 'disetujui':
+                                statusBadge = '<span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                                break;
+                            case 'selesai':
+                                statusBadge = '<span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
+                                break;
+                            case 'ditolak':
+                                statusBadge = '<span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
+                                break;
+                            default:
+                                statusBadge = '<span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
+                        }
+                    }
+
+                    const modalContent = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-user me-2"></i>Informasi Peminjam</h6>
+                                <p><strong>Nama:</strong> ${peminjam}</p>
+                                <p><strong>NIM:</strong> ${nim || '-'}</p>
+                                <p><strong>Program Studi:</strong> ${prodi || '-'}</p>
+                                <p><strong>Email:</strong> ${email || '-'}</p>
+                                <p><strong>No. HP:</strong> ${noHp || '-'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-calendar me-2"></i>Informasi Peminjaman</h6>
+                                <p><strong>Tanggal:</strong> ${tanggal}</p>
+                                <p><strong>Waktu:</strong> ${waktuMulai} - ${waktuSelesai}</p>
+                                <p><strong>Ruang:</strong> ${ruang}</p>
+                                <p><strong>Proyektor:</strong> ${proyektor}</p>
+                                <p><strong>Status:</strong> ${statusBadge}</p>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <h6><i class="fas fa-clipboard-list me-2"></i>Keperluan</h6>
+                                <p>${keperluan}</p>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('modalBody').innerHTML = modalContent;
+                    detailModal.show();
+                });
+            });
+
             // Handler untuk modal edit
             const editModal = document.getElementById('editModal');
             if (editModal) {
@@ -1230,7 +1376,13 @@
                     const button = event.relatedTarget;
                     const id = button.getAttribute('data-id');
                     const peminjam = button.getAttribute('data-peminjam');
+                    const nim = button.getAttribute('data-nim');
+                    const prodi = button.getAttribute('data-prodi');
+                    const email = button.getAttribute('data-email');
+                    const noHp = button.getAttribute('data-no-hp');
                     const tanggal = button.getAttribute('data-tanggal');
+                    const waktuMulai = button.getAttribute('data-waktu-mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
                     const ruang = button.getAttribute('data-ruang');
                     const proyektor = button.getAttribute('data-proyektor');
                     const keperluan = button.getAttribute('data-keperluan');
@@ -1242,7 +1394,12 @@
 
                     // Isi form dengan data yang ada
                     document.getElementById('peminjam').value = peminjam;
+                    document.getElementById('nim').value = nim;
+                    document.getElementById('prodi').value = prodi;
+                    document.getElementById('email').value = email;
                     document.getElementById('tanggal').value = tanggal;
+                    document.getElementById('waktu_mulai').value = waktuMulai;
+                    document.getElementById('waktu_selesai').value = waktuSelesai;
                     document.getElementById('ruang').value = ruang;
                     document.getElementById('keperluan').value = keperluan;
                     document.getElementById('status').value = status;
@@ -1288,20 +1445,16 @@
                     const statusText = {
                         'pending': 'Menunggu',
                         'disetujui': 'Disetujui',
-                        'ditolak': 'Ditolak'
+                        'ditolak': 'Ditolak',
+                        'selesai': 'Selesai'
                     } [urlParams.get('status')] || urlParams.get('status');
                     activeFilters.push(`Status: ${statusText}`);
                 }
                 if (urlParams.get('date')) {
                     activeFilters.push(`Tanggal: ${urlParams.get('date')}`);
                 }
-                if (urlParams.get('sort')) {
-                    const sortText = {
-                        'newest': 'Terbaru',
-                        'oldest': 'Terlama',
-                        'return': 'Tanggal Pengembalian'
-                    } [urlParams.get('sort')] || urlParams.get('sort');
-                    activeFilters.push(`Urutan: ${sortText}`);
+                if (urlParams.get('ruang')) {
+                    activeFilters.push(`Ruang: ${urlParams.get('ruang')}`);
                 }
 
                 if (activeFilters.length > 0) {

@@ -362,6 +362,96 @@
             color: #721c24;
         }
 
+        /* ===== FILTER TABS ===== */
+        .filter-tabs {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            box-shadow: var(--box-shadow);
+            justify-content: space-between;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .filter-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            font-weight: 500;
+            border-radius: 6px;
+            margin-right: 5px;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .filter-tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(59, 89, 152, 0.1);
+        }
+
+        .filter-tab:hover {
+            background-color: rgba(59, 89, 152, 0.05);
+        }
+
+        /* ====== SEARCH CONTAINER ====== */
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ====== ICON ====== */
+        .search-container i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        /* ====== INPUT ====== */
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 40px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background-color: #fff;
+            color: #374151;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            height: 42px;
+            transition: all 0.25s ease;
+            display: block;
+        }
+
+        /* ====== FOCUS ====== */
+        .search-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+
+        /* ====== HOVER ====== */
+        .search-input:hover {
+            border-color: #cbd5e1;
+        }
+
+        /* ====== PLACEHOLDER ====== */
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
         /* ===== STATE KOSONG ===== */
         .empty-state {
             padding: 40px 20px;
@@ -659,6 +749,21 @@
                 padding: 15px;
             }
 
+            .filter-tabs {
+                flex-wrap: wrap;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+
+            .filter-tab {
+                flex: 1 0 auto;
+                min-width: 120px;
+                text-align: center;
+                padding: 8px 10px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+
             .navbar-brand {
                 font-size: 1rem;
             }
@@ -708,6 +813,12 @@
                 padding: 12px;
             }
 
+            .search-container,
+            #ruang-filter,
+            #tanggal-filter {
+                margin-bottom: 15px;
+            }
+
             /* Responsivitas untuk sub-navigasi */
             .sub-nav-links {
                 justify-content: center;
@@ -752,6 +863,17 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             display: inline-block;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls>div {
+            flex: 1;
+            min-width: 200px;
         }
     </style>
 </head>
@@ -850,9 +972,9 @@
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card card-custom text-center">
                     <div class="card-body">
-                        <i class="fas fa-clock fa-2x text-warning mb-2"></i>
-                        <h4 class="mb-1">{{ $peminjamans->count() ?? 0 }}</h4>
-                        <p class="text-muted mb-0">Peminjaman Aktif</p>
+                        <i class="fas fa-list-alt fa-2x text-primary mb-2"></i>
+                        <h4 class="mb-1">3</h4>
+                        <p class="text-muted mb-0">Total Pengembalian</p>
                     </div>
                 </div>
             </div>
@@ -860,26 +982,67 @@
                 <div class="card card-custom text-center">
                     <div class="card-body">
                         <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                        <h4 class="mb-1">{{ $pendingReturns ?? 0 }}</h4>
-                        <p class="text-muted mb-0">Menunggu Pengembalian</p>
+                        <h4 class="mb-1">0</h4>
+                        <p class="text-muted mb-0">Disetujui</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card card-custom text-center">
                     <div class="card-body">
-                        <i class="fas fa-undo fa-2x text-info mb-2"></i>
-                        <h4 class="mb-1">{{ $returnedCount ?? 0 }}</h4>
-                        <p class="text-muted mb-0">Telah Dikembalikan</p>
+                        <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                        <h4 class="mb-1">2</h4>
+                        <p class="text-muted mb-0">Menunggu</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card card-custom text-center">
                     <div class="card-body">
-                        <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
-                        <h4 class="mb-1">{{ $overdueCount ?? 0 }}</h4>
-                        <p class="text-muted mb-0">Terlambat</p>
+                        <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                        <h4 class="mb-1">1</h4>
+                        <p class="text-muted mb-0">Ditolak</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Filter -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-status="semua">Semua</div>
+            <div class="filter-tab" data-status="pending">
+                <i class="fas fa-clock me-1"></i> Menunggu
+            </div>
+            <div class="filter-tab" data-status="verified">
+                <i class="fas fa-check-circle me-1"></i> Disetujui
+            </div>
+            <div class="filter-tab" data-status="rejected">
+                <i class="fas fa-times-circle me-1"></i> Ditolak
+            </div>
+        </div>
+
+        <!-- Card Filter dan Pencarian -->
+        <div class="card card-custom">
+            <div class="card-body py-3">
+                <div class="filter-controls">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input"
+                            placeholder="Cari berdasarkan ruang, keperluan, atau peminjam...">
+                    </div>
+
+                    <div>
+                        <select class="form-select" id="ruang-filter">
+                            <option value="semua">Semua Ruang</option>
+                            <option value="Lab A">Lab A</option>
+                            <option value="Lab B">Lab B</option>
+                            <option value="Lab C">Lab C</option>
+                            <option value="Ruang Meeting">Ruang Meeting</option>
+                            <option value="Ruang Seminar">Ruang Seminar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="date" class="form-control" id="tanggal-filter" placeholder="mm/dd/yyyy">
                     </div>
                 </div>
             </div>
@@ -907,7 +1070,9 @@
                             </thead>
                             <tbody>
                                 @foreach($peminjamans as $p)
-                                    <tr class="table-row-highlight">
+                                    <tr class="table-row-highlight" 
+                                        data-ruang="{{ $p->ruang }}" 
+                                        data-tanggal="{{ $p->tanggal }}">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
@@ -980,7 +1145,10 @@
                             </thead>
                             <tbody>
                                 @foreach($pengembalians as $k)
-                                    <tr class="table-row-highlight">
+                                    <tr class="table-row-highlight" 
+                                        data-status="{{ $k->status }}" 
+                                        data-ruang="{{ $k->peminjaman->ruang }}" 
+                                        data-tanggal="{{ $k->peminjaman->tanggal }}">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
@@ -1262,6 +1430,84 @@
                     btn.disabled = false;
                 }
             });
+        });
+
+        // ===== FILTER TABEL =====
+        function filterTable() {
+            const searchText = document.querySelector('.search-input').value.toLowerCase();
+            const activeTab = document.querySelector('.filter-tab.active');
+            const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
+            const ruangFilter = document.getElementById('ruang-filter').value;
+            const tanggalFilter = document.getElementById('tanggal-filter').value;
+
+            // Filter untuk tabel peminjaman aktif
+            const activeRows = document.querySelectorAll('.card-custom:first-child tbody tr');
+            activeRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const rowRuang = row.getAttribute('data-ruang');
+                const rowTanggal = row.getAttribute('data-tanggal');
+
+                const textMatch = text.includes(searchText);
+                const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
+                const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
+
+                if (textMatch && ruangMatch && tanggalMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filter untuk tabel riwayat pengembalian
+            const historyRows = document.querySelectorAll('.card-custom:last-child tbody tr');
+            historyRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const rowStatus = row.getAttribute('data-status');
+                const rowRuang = row.getAttribute('data-ruang');
+                const rowTanggal = row.getAttribute('data-tanggal');
+
+                const textMatch = text.includes(searchText);
+                const statusMatch = statusFilter === 'semua' || rowStatus === statusFilter;
+                const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
+                const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
+
+                if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // ===== INISIALISASI EVENT LISTENER =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listener untuk pencarian
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('keyup', filterTable);
+
+            // Event listener untuk filter tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Hapus kelas active dari semua tab
+                    document.querySelectorAll('.filter-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+
+                    // Tambah kelas active ke tab yang diklik
+                    this.classList.add('active');
+
+                    filterTable();
+                });
+            });
+
+            // Event listener untuk filter ruang
+            document.getElementById('ruang-filter').addEventListener('change', filterTable);
+
+            // Event listener untuk filter tanggal
+            document.getElementById('tanggal-filter').addEventListener('change', filterTable);
+
+            // Inisialisasi filter saat halaman dimuat
+            filterTable();
         });
     </script>
 </body>

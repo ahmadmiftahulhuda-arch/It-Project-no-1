@@ -544,14 +544,14 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar - DIPERBAIKI agar konsisten -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <i class="fas fa-laptop-code"></i>
-                </div>
-                <h2>Lab TIK</h2>
+       <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-laptop-code"></i>
             </div>
+            <h2>Admin TI</h2>
+        </div>
 
             <div class="sidebar-menu">
                 <!-- Menu Utama -->
