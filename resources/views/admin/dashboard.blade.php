@@ -7,10 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3498db;
-            --primary-dark: #2980b9;
-            --secondary: #2c3e50;
-            --accent: #e74c3c;
+            --primary: #3b5998;
+            --secondary: #6d84b4;
             --success: #2ecc71;
             --warning: #f39c12;
             --info: #3498db;
@@ -22,9 +20,12 @@
             --text: #333333;
             --text-light: #777777;
             --border: #dddddd;
+            --sidebar-width: 260px;
         }
 
         .dark-mode {
+            --primary: #4a6fa5;
+            --secondary: #5d7ba6;
             --background: #1e272e;
             --sidebar: #1a2530;
             --card: #2d3436;
@@ -51,72 +52,115 @@
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - DIPERBAIKI agar konsisten */
         .sidebar {
-            width: 260px;
-            background-color: var(--sidebar);
-            color: white;
-            transition: all 0.3s ease;
-            overflow-y: auto;
-            height: 100vh;
             position: fixed;
-            left: 0;
             top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .sidebar-header {
             padding: 20px;
-            display: flex;
-            align-items: center;
+            text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h2 {
-            margin-left: 10px;
-            font-size: 1.5rem;
-            font-weight: 600;
+            flex-shrink: 0;
         }
 
         .sidebar-logo {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(45deg, var(--primary), var(--info));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
         }
 
         .sidebar-menu {
-            padding: 15px 0;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
         }
 
         .menu-item {
-            padding: 12px 20px;
             display: flex;
             align-items: center;
-            color: var(--text-light);
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item:hover,
+        .menu-item.active {
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid white;
         }
 
         .menu-item i {
-            margin-right: 12px;
-            font-size: 18px;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            opacity: 0.8;
+            flex-shrink: 0;
+        }
+
+        .menu-item span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Main Content Styles */
         .main-content {
             flex: 1;
-            margin-left: 260px;
+            margin-left: var(--sidebar-width);
             padding: 20px;
             transition: all 0.3s ease;
+            min-height: 100vh;
         }
 
         /* Header Styles */
@@ -174,7 +218,7 @@
             right: -5px;
             width: 18px;
             height: 18px;
-            background-color: var(--accent);
+            background-color: #e74c3c;
             color: white;
             border-radius: 50%;
             font-size: 10px;
@@ -252,9 +296,9 @@
         }
 
         .bg-primary { background-color: rgba(52, 152, 219, 0.15); color: var(--primary); }
-        .bg-success { background-color: rgba(46, 204, 113, 0.15); color: var(--success); }
-        .bg-warning { background-color: rgba(241, 196, 15, 0.15); color: var(--warning); }
-        .bg-danger { background-color: rgba(231, 76, 60, 0.15); color: var(--accent); }
+        .bg-success { background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .bg-warning { background-color: rgba(241, 196, 15, 0.15); color: #f39c12; }
+        .bg-danger { background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; }
 
         .stat-value {
             font-size: 1.8rem;
@@ -274,8 +318,8 @@
             font-size: 0.85rem;
         }
 
-        .positive { color: var(--success); }
-        .negative { color: var(--accent); }
+        .positive { color: #2ecc71; }
+        .negative { color: #e74c3c; }
 
         /* Charts and Tables */
         .charts-tables {
@@ -351,8 +395,8 @@
             font-weight: 500;
         }
 
-        .status-available { background-color: rgba(46, 204, 113, 0.15); color: var(--success); }
-        .status-pending { background-color: rgba(241, 196, 15, 0.15); color: var(--warning); }
+        .status-available { background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .status-pending { background-color: rgba(241, 196, 15, 0.15); color: #f39c12; }
         .status-borrowed { background-color: rgba(52, 152, 219, 0.15); color: var(--primary); }
 
         /* Recent Activity */
@@ -411,7 +455,7 @@
                 width: 80px;
             }
             
-            .sidebar-header h2, .menu-item span {
+            .sidebar-header h2, .menu-item span, .menu-section {
                 display: none;
             }
             
@@ -445,6 +489,7 @@
             
             .main-content {
                 margin-left: 0;
+                padding: 15px;
             }
             
             .header {
@@ -484,11 +529,22 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
         }
+
+        /* Dark Mode Transition */
+        body,
+        .header,
+        .chart-container,
+        .table-container,
+        .activity-container,
+        .stat-card,
+        .search-bar input {
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
+        <!-- Sidebar - DIPERBAIKI agar konsisten -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -496,17 +552,18 @@
                 </div>
                 <h2>Lab TIK</h2>
             </div>
-            
+
             <div class="sidebar-menu">
+                <!-- Menu Utama -->
+                <div class="menu-section">Menu Utama</div>
                 <a href="/admin/dashboard" class="menu-item active">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="/admin/item" class="menu-item">
-                    <i class="fas fa-box"></i>
-                    <span>Inventaris Barang</span>
-                </a>
-                <a href="/admin/peminjaman" class="menu-item">
+                
+                <!-- Manajemen Peminjaman -->
+                <div class="menu-section">Manajemen Peminjaman</div>
+                <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                     <i class="fas fa-hand-holding"></i>
                     <span>Peminjaman</span>
                 </a>
@@ -514,25 +571,57 @@
                     <i class="fas fa-undo"></i>
                     <span>Pengembalian</span>
                 </a>
-                <a href="/admin/feedback/feedback" class="menu-item">
-                    <i class="fas fa-comment-dots"></i>
+                <a href="/admin/riwayat" class="menu-item">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat Peminjaman</span>
+                </a>
+                <a href="/admin/feedback" class="menu-item">
+                    <i class="fas fa-comment"></i>
                     <span>Feedback</span>
                 </a>
+                
+                <!-- Manajemen Aset -->
+                <div class="menu-section">Manajemen Aset</div>
+                <a href="{{ route('projectors.index') }}" class="menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Proyektor</span>
+                </a>
+                <a href="/admin/ruangan" class="menu-item">
+                    <i class="fas fa-door-open"></i>
+                    <span>Ruangan</span>
+                </a>
+                
+                <!-- Manajemen Akademik -->
+                <div class="menu-section">Manajemen Akademik</div>
+                <a href="/admin/jadwal-perkuliahan" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Jadwal Perkuliahan</span>
+                </a>
+                <a href="/admin/slotwaktu" class="menu-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Slot Waktu</span>
+                </a>
                 <a href="/admin/mata_kuliah" class="menu-item">
-                <i class="fas fa-book"></i>
-                <span>Matakuliah</span>
-            </a>
-            <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Kelas</span>
-            </a>
+                    <i class="fas fa-book"></i>
+                    <span>Matakuliah</span>
+                </a>
+                <a href="/admin/kelas" class="menu-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Kelas</span>
+                </a>
+                
+                <!-- Manajemen Pengguna -->
+                <div class="menu-section">Manajemen Pengguna</div>
                 <a href="/admin/pengguna" class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>Pengguna</span>
                 </a>
+                
+                <!-- Laporan & Pengaturan -->
+                <div class="menu-section">Laporan & Pengaturan</div>
                 <a href="/admin/laporan" class="menu-item">
                     <i class="fas fa-chart-bar"></i>
-                    <span>Laporan</span>
+                    <span>Statistik</span>
                 </a>
                 <a href="/admin/pengaturan" class="menu-item">
                     <i class="fas fa-cog"></i>

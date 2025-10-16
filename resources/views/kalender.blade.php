@@ -142,6 +142,46 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
+
+        /* CSS KHUSUS UNTUK DROPDOWN PROFIL */
+        .profile-dropdown .dropdown-toggle {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-dropdown .dropdown-toggle::after {
+            font-size: 0.7rem; /* Mengecilkan ikon panah */
+        }
+        .profile-dropdown .dropdown-menu {
+            padding: 0;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .profile-dropdown .dropdown-header {
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .profile-dropdown .dropdown-header .fw-bold {
+            color: var(--dark-color);
+        }
+        .profile-dropdown .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+        .profile-dropdown .dropdown-item .fa-fw {
+            color: #6c757d;
+        }
+        .profile-dropdown .dropdown-item.logout-item {
+            color: #dc3545;
+        }
+        .profile-dropdown .dropdown-item.logout-item .fa-fw {
+            color: #dc3545;
+        }
         
         /* ===== HERO SECTION ===== */
         .hero-section {
@@ -779,7 +819,6 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <a href="/home" class="logo">
             <i class="fas fa-building"></i>SarPras TI
@@ -789,15 +828,17 @@
             <li><a href="/kalender" class="active">Kalender Perkuliahan</a></li>
             <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
             <li><a href="/about">Tentang</a></li>
-            <li>
-                <a href="/login" class="btn-warning">
+            
+            <!-- Bagian login/logout yang diperbaiki -->
+            <li id="auth-section">
+                <!-- Default: tombol login -->
+                <a href="login.html" class="btn-warning">
                     <i class="fa-solid fa-right-to-bracket"></i> Login
                 </a>
             </li>
         </ul>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
             <div class="hero-content">
@@ -807,15 +848,12 @@
         </div>
     </section>
 
-    <!-- Main Content -->
     <div class="container main-content">
-        <!-- Page Header -->
         <div class="page-header">
             <h1 class="page-title"><i class="fa-solid fa-calendar-days"></i> Kalender Perkuliahan</h1>
             <p class="page-description">Lihat jadwal perkuliahan, ujian, dan kegiatan akademik lainnya</p>
         </div>
 
-        <!-- Filter Section -->
         <div class="filter-section">
             <h3 class="filter-title"><i class="fa-solid fa-filter"></i> Filter Jadwal</h3>
             <div class="row">
@@ -850,7 +888,6 @@
             </div>
         </div>
 
-        <!-- Calendar Section -->
         <div class="calendar-container">
             <div class="calendar-header">
                 <div class="month-navigation">
@@ -872,8 +909,8 @@
                 </div>
             </div>
             
-            <div class="calendar">
-                <table>
+            <div class="table-responsive">
+                <table class="calendar table table-bordered">
                     <thead>
                         <tr>
                             <th>Senin</th>
@@ -1040,7 +1077,6 @@
             </div>
         </div>
 
-        <!-- Schedule List -->
         <div class="schedule-list">
             <h3 class="mb-4"><i class="fa-solid fa-list"></i> Daftar Kegiatan Bulan September 2025</h3>
             
@@ -1111,12 +1147,11 @@
         </div>
     </div>
 
-    <!-- Back to top button -->
     <a href="#" class="back-to-top" id="backToTop">
         <i class="fas fa-arrow-up"></i>
     </a>
 
-       <footer class="footer">
+    <footer class="footer">
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
@@ -1180,6 +1215,8 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         // Back to top button functionality
         const backToTopButton = document.getElementById('backToTop');
@@ -1232,6 +1269,65 @@
         
         window.addEventListener('scroll', animateOnScroll);
         window.addEventListener('load', animateOnScroll);
+        
+        // Fungsi untuk memeriksa status login dan menampilkan/menyembunyikan dropdown profil
+        function checkLoginStatus() {
+            const authSection = document.getElementById('auth-section');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const userName = localStorage.getItem('userName') || 'Ahmad Miftahul Huda';
+            
+            if (isLoggedIn) {
+                // Jika sudah login, tampilkan dropdown profil
+                authSection.innerHTML = `
+                    <li class="nav-item dropdown profile-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user" style="color: #87CEEB;"></i>
+                            <span>${userName}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li class="dropdown-header">
+                                <small>Masuk sebagai</small><br>
+                                <strong class="fw-bold">${userName}</strong>
+                            </li>
+                            <li><hr class="dropdown-divider" style="margin: 0;"></li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-fw"></i> Pengaturan Profil
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-history fa-fw"></i> Riwayat Peminjaman
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <button type="button" class="dropdown-item logout-item" id="logout-btn">
+                                    <i class="fas fa-sign-out-alt fa-fw"></i> Logout
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                `;
+                
+                // Tambahkan event listener untuk tombol logout
+                document.getElementById('logout-btn').addEventListener('click', function() {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userName');
+                    location.reload();
+                });
+            } else {
+                // Jika belum login, tampilkan tombol login
+                authSection.innerHTML = `
+                    <a href="login.html" class="btn-warning">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                `;
+            }
+        }
+        
+        // Panggil fungsi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
     </script>
 </body>
 </html>
