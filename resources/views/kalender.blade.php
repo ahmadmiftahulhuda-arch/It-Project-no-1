@@ -6,6 +6,7 @@
     <title>Kalender Perkuliahan - Sistem Peminjaman Sarana Prasarana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         :root {
             --primary-color: #3b5998;
@@ -105,6 +106,7 @@
             width: 70%;
         }
         
+        /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -143,44 +145,44 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* CSS KHUSUS UNTUK DROPDOWN PROFIL */
-        .profile-dropdown .dropdown-toggle {
-            color: white;
+        /* ===== DROPDOWN MENU ===== */
+        .dropdown-menu-custom {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 200px;
+        }
+        
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
         }
-        .profile-dropdown .dropdown-toggle::after {
-            font-size: 0.7rem; /* Mengecilkan ikon panah */
-        }
-        .profile-dropdown .dropdown-menu {
-            padding: 0;
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .profile-dropdown .dropdown-header {
+        
+        .dropdown-item-custom:hover {
             background-color: #f8f9fa;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #dee2e6;
+            color: var(--primary-color);
         }
-        .profile-dropdown .dropdown-header .fw-bold {
-            color: var(--dark-color);
+        
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
         }
-        .profile-dropdown .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-        .profile-dropdown .dropdown-item .fa-fw {
+        
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
             color: #6c757d;
-        }
-        .profile-dropdown .dropdown-item.logout-item {
-            color: #dc3545;
-        }
-        .profile-dropdown .dropdown-item.logout-item .fa-fw {
-            color: #dc3545;
+            font-weight: 600;
         }
         
         /* ===== HERO SECTION ===== */
@@ -829,13 +831,50 @@
             <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
             <li><a href="/about">Tentang</a></li>
             
-            <!-- Bagian login/logout yang diperbaiki -->
-            <li id="auth-section">
-                <!-- Default: tombol login -->
-                <a href="login.html" class="btn-warning">
+            <!-- Bagian Login/Dropdown User -->
+            @auth
+            <li class="nav-item dropdown" x-data="{ open: false }">
+                <a class="nav-link dropdown-toggle" href="#" @click="open = !open" role="button" aria-expanded="false">
+                    <i class="fas fa-user me-1" style="color: #87CEEB;"></i>
+                    {{ Auth::user()->name }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-custom" x-show="open" @click.away="open = false">
+                    <li class="dropdown-header-custom">Masuk sebagai</li>
+                    <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                    <li><hr class="dropdown-divider-custom"></li>
+                    <li>
+                        <a class="dropdown-item-custom" href="#">
+                            <i class="fas fa-user fa-fw me-2 text-gray-500"></i> Pengaturan Profil
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item-custom" href="#">
+                            <i class="fas fa-history fa-fw me-2 text-gray-500"></i> Riwayat Peminjaman
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item-custom" href="#">
+                            <i class="fas fa-cog fa-fw me-2 text-gray-500"></i> Pengaturan
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider-custom"></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item-custom text-danger">
+                                <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+            @else
+            <li class="nav-item">
+                <a href="{{ route('login') }}" class="btn-warning">
                     <i class="fa-solid fa-right-to-bracket"></i> Login
                 </a>
             </li>
+            @endauth
         </ul>
     </nav>
 
@@ -1269,65 +1308,6 @@
         
         window.addEventListener('scroll', animateOnScroll);
         window.addEventListener('load', animateOnScroll);
-        
-        // Fungsi untuk memeriksa status login dan menampilkan/menyembunyikan dropdown profil
-        function checkLoginStatus() {
-            const authSection = document.getElementById('auth-section');
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const userName = localStorage.getItem('userName') || 'Ahmad Miftahul Huda';
-            
-            if (isLoggedIn) {
-                // Jika sudah login, tampilkan dropdown profil
-                authSection.innerHTML = `
-                    <li class="nav-item dropdown profile-dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user" style="color: #87CEEB;"></i>
-                            <span>${userName}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li class="dropdown-header">
-                                <small>Masuk sebagai</small><br>
-                                <strong class="fw-bold">${userName}</strong>
-                            </li>
-                            <li><hr class="dropdown-divider" style="margin: 0;"></li>
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-fw"></i> Pengaturan Profil
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-history fa-fw"></i> Riwayat Peminjaman
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <button type="button" class="dropdown-item logout-item" id="logout-btn">
-                                    <i class="fas fa-sign-out-alt fa-fw"></i> Logout
-                                </button>
-                            </li>
-                        </ul>
-                    </li>
-                `;
-                
-                // Tambahkan event listener untuk tombol logout
-                document.getElementById('logout-btn').addEventListener('click', function() {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userName');
-                    location.reload();
-                });
-            } else {
-                // Jika belum login, tampilkan tombol login
-                authSection.innerHTML = `
-                    <a href="login.html" class="btn-warning">
-                        <i class="fa-solid fa-right-to-bracket"></i> Login
-                    </a>
-                `;
-            }
-        }
-        
-        // Panggil fungsi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', checkLoginStatus);
     </script>
 </body>
 </html>

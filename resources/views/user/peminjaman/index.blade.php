@@ -7,6 +7,7 @@
     <title>Daftar Peminjaman - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /* ===== VARIABEL CSS SESUAI FREE USER ===== */
@@ -99,6 +100,86 @@
         .navbar-nav .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== TOMBOL LOGIN ===== */
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-warning:hover::before {
+            left: 100%;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== DROPDOWN MENU ===== */
+        .dropdown-menu-custom {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 200px;
+        }
+
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item-custom:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
         }
 
         /* ===== SUB NAVIGASI ===== */
@@ -1149,6 +1230,51 @@
                             Tentang
                         </a>
                     </li>
+                    
+                    <!-- Bagian Login/Dropdown User -->
+                    @auth
+                    <li class="nav-item dropdown" x-data="{ open: false }">
+                        <a class="nav-link dropdown-toggle" href="#" @click="open = !open" role="button" aria-expanded="false">
+                            <i class="fas fa-user me-1" style="color: #87CEEB;"></i>
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" x-show="open" @click.away="open = false">
+                            <li class="dropdown-header-custom">Masuk sebagai</li>
+                            <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                            <li><hr class="dropdown-divider-custom"></li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-user fa-fw me-2 text-gray-500"></i> Pengaturan Profil
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-history fa-fw me-2 text-gray-500"></i> Riwayat Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-cog fa-fw me-2 text-gray-500"></i> Pengaturan
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider-custom"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item-custom text-danger">
+                                        <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="btn-warning">
+                            <i class="fa-solid fa-right-to-bracket"></i> Login
+                        </a>
+                    </li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -1442,8 +1568,7 @@
 
                                             <button type="button" class="btn btn-danger btn-action btn-delete"
                                                 data-id="{{ $peminjaman->id }}"
-                                                data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}"
-                                                data-url="{{ route('user.peminjaman.destroy', $peminjaman->id) }}">
+                                                data-keperluan="{{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 30) }}">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         @else
@@ -1602,8 +1727,7 @@
 
     <!-- Form Hapus Tersembunyi -->
     <form id="deleteForm" method="POST" style="display: none;">
-        @csrf 
-        @method('DELETE')
+        @csrf @method('DELETE')
     </form>
 
     <!-- Back to top button -->
@@ -1806,18 +1930,17 @@
             }
         });
 
-        // ===== KONFIRMASI HAPUS YANG DIPERBAIKI =====
+        // ===== KONFIRMASI HAPUS =====
         function confirmDelete(event) {
             event.preventDefault();
             const button = event.currentTarget;
             const keperluan = button.getAttribute('data-keperluan');
             const id = button.getAttribute('data-id');
-            const deleteUrl = button.getAttribute('data-url');
 
             if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
                 // Set action form dan submit
                 const form = document.getElementById('deleteForm');
-                form.action = deleteUrl;
+                form.action = `/user/peminjaman/${id}`;
                 form.submit();
             }
         }
