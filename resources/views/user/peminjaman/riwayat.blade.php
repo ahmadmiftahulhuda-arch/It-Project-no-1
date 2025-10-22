@@ -21,18 +21,6 @@
             --transition: all 0.3s ease;
         }
 
-        /* ===== STYLING UMUM ===== */
-        body {
-            background-color: #f5f8fa;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-        }
-
         /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -75,27 +63,6 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: white;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .navbar-nav .nav-link:hover::after,
-        .navbar-nav .nav-link.active::after {
-            width: 70%;
         }
 
         .navbar-nav .nav-link:hover,
@@ -147,7 +114,7 @@
             font-weight: 600;
         }
 
-        /* ===== TOMBOL LOGIN ===== */
+         /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -162,6 +129,7 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            font-size: 0.9rem;
         }
 
         .btn-warning::before {
@@ -184,7 +152,6 @@
             border-color: #d39e00;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            color: #212529;
         }
 
         /* ===== KONTEN UTAMA ===== */
@@ -1112,21 +1079,53 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <!-- Menu sebelah kiri -->
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="fas fa-home me-1"></i> Beranda
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider-custom">
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-download me-2"></i> Download Kalender
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
                             <li>
@@ -1156,14 +1155,15 @@
                             </li>
                         </ul>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="fas fa-info-circle me-1"></i> Tentang
                         </a>
                     </li>
+                </ul>
 
-                    <!-- Bagian Login/Dropdown User -->
+                <!-- Menu sebelah kanan (login/user) -->
+                <ul class="navbar-nav ms-auto">
                     @auth
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

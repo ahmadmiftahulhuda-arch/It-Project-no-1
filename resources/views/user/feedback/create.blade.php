@@ -33,7 +33,7 @@
             scroll-behavior: smooth;
         }
 
-        /* ===== NAVBAR ===== */
+        /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
@@ -75,24 +75,6 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
-            position: relative;
-        }
-
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: white;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .navbar-nav .nav-link:hover::after, 
-        .navbar-nav .nav-link.active::after {
-            width: 70%;
         }
 
         .navbar-nav .nav-link:hover,
@@ -101,7 +83,50 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* ===== LOGIN BUTTON STYLES ===== */
+        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        .dropdown-menu-custom {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 220px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .dropdown-item-custom:hover {
+            background-color: rgba(59, 89, 152, 0.1);
+            color: var(--primary-color);
+        }
+
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+         /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -139,59 +164,6 @@
             border-color: #d39e00;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* ===== DROPDOWN MENU STYLES ===== */
-        .dropdown-menu-custom {
-            position: absolute;
-            right: 0;
-            width: 14rem;
-            margin-top: 0.5rem;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e2e8f0;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .dropdown-header {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            background-color: #f8f9fa;
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: none;
-            background: none;
-            text-align: left;
-            color: #4b5563;
-            transition: all 0.2s;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f1f5f9;
-            color: #1f2937;
-        }
-
-        .dropdown-divider {
-            height: 1px;
-            background-color: #e2e8f0;
-            margin: 0.25rem 0;
-        }
-
-        .logout-button {
-            color: #dc2626 !important;
-        }
-
-        .logout-button:hover {
-            background-color: #fef2f2 !important;
         }
 
         /* ===== SUB NAVIGASI ===== */
@@ -596,122 +568,155 @@
 </head>
 
 <body>
-    <!-- ===== NAVBAR UTAMA ===== -->
+    <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="/home">
+            <a class="navbar-brand" href="#">
                 <i class="fas fa-building"></i>SarPras TI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Menu sebelah kiri -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-home me-1"></i> Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider-custom">
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-download me-2"></i> Download Kalender
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+                                    <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+                                    <i class="fas fa-undo me-2"></i> Pengembalian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom active" href="{{ route('user.peminjaman.riwayat') }}">
+                                    <i class="fas fa-history me-2"></i> Riwayat
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
+                                    <i class="fas fa-comment-dots me-2"></i> Feedback
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-info-circle me-1"></i> Tentang
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Menu sebelah kanan (login/user) -->
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/home">
-                            Beranda
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/kalender">
-                            Kalender Perkuliahan
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        @auth
-                        <a class="nav-link" href="{{ route('user.peminjaman.index') }}">
-                            Daftar Peminjaman
-                        </a>
-                        @else
-                        <a class="nav-link" href="/peminjaman1">
-                            Daftar Peminjaman
-                        </a>
-                        @endauth
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">
-                            Tentang
-                        </a>
-                    </li>
-                    
-                    <!-- LOGIN LOGIC -->
                     @auth
-                    <li class="nav-item dropdown" x-data="{ open: false }">
-                        <a class="nav-link d-flex align-items-center" href="#" @click="open = !open" style="cursor: pointer;">
-                            <i class="fas fa-user me-1" style="color: #87CEEB;"></i>
-                            <span>{{ Auth::user()->name }}</span>
-                            <i class="fas fa-chevron-down ms-1" style="font-size: 0.8rem;"></i>
-                        </a>
-                        
-                        <div class="dropdown-menu-custom" x-show="open" @click.away="open = false" x-transition>
-                            <div class="dropdown-header">
-                                <p class="text-sm mb-0">Masuk sebagai</p>
-                                <p class="text-sm font-weight-bold mb-0">{{ Auth::user()->name }}</p>
-                            </div>
-                            
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-user fa-fw me-2 text-gray-500"></i> 
-                                Pengaturan Profil
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ Auth::user()->name }}
                             </a>
-                            <a href="{{ route('user.peminjaman.riwayat') }}" class="dropdown-item">
-                                <i class="fas fa-history fa-fw me-2 text-gray-500"></i> 
-                                Riwayat Peminjaman
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-cog fa-fw me-2 text-gray-500"></i> 
-                                Pengaturan
-                            </a>
-                            
-                            <div class="dropdown-divider"></div>
-                            
-                            <form method="POST" action="{{ route('logout') }}" class="mb-0">
-                                @csrf
-                                <button type="submit" class="dropdown-item logout-button">
-                                    <i class="fas fa-sign-out-alt fa-fw me-2"></i> 
-                                    Logout
-                                </button>
-                            </form>
-                        </div>
-                    </li>
+                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+                                <li class="dropdown-header-custom">Masuk sebagai</li>
+                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item-custom text-danger">
+                                            <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
                     @else
-                    <li class="nav-item">
-                        <a href="{{ route('login') }}" class="btn-warning">
-                            <i class="fa-solid fa-right-to-bracket"></i> Login
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn-warning">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </a>
+                        </li>
                     @endauth
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- ===== SUB NAVIGASI ===== -->
-    @auth
-    <div class="sub-nav">
-        <div class="sub-nav-container">
-            <div class="sub-nav-links">
-                <a href="{{ route('user.peminjaman.create') }}" class="sub-nav-link">
-                    <i class="fas fa-plus-circle"></i>
-                    Tambah Peminjaman
-                </a>
-                <a href="{{ route('user.pengembalian.index') }}" class="sub-nav-link">
-                    <i class="fas fa-undo"></i>
-                    Pengembalian
-                </a>
-                <a href="{{ route('user.peminjaman.riwayat') }}" class="sub-nav-link">
-                    <i class="fas fa-history"></i>
-                    Riwayat
-                </a>
-                <a href="{{ route('user.feedback.create') }}" class="sub-nav-link active">
-                    <i class="fas fa-comment-dots"></i>
-                    Feedback
-                </a>
-            </div>
-        </div>
-    </div>
-    @endauth
-
-    <!-- ===== KONTEN UTAMA ===== -->
+     <!-- ===== KONTEN UTAMA ===== -->
     <div class="container main-content mt-4">
         <!-- Header -->
         <div class="page-header mb-4">

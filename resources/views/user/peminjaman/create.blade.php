@@ -8,23 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        /* ===== VARIABEL CSS SESUAI FREE USER ===== */
+        /* ===== VARIABEL CSS YANG DIPERBAIKI ===== */
         :root {
             --primary-color: #3b5998;
             --secondary-color: #6d84b4;
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
-            --border-radius: 10px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
 
-        /* ===== STYLING UMUM ===== */
+        /* ===== STYLING UMUM YANG DIPERBAIKI ===== */
         body {
-            background-color: #f5f8fa;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #334155;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.6;
             display: flex;
             flex-direction: column;
@@ -32,7 +32,7 @@
             scroll-behavior: smooth;
         }
 
-        /* ===== NAVBAR ===== */
+        /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
@@ -74,24 +74,6 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
-            position: relative;
-        }
-
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: white;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .navbar-nav .nav-link:hover::after, 
-        .navbar-nav .nav-link.active::after {
-            width: 70%;
         }
 
         .navbar-nav .nav-link:hover,
@@ -100,61 +82,96 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* ===== SUB NAVIGASI ===== */
-        .sub-nav {
+        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        .dropdown-menu-custom {
             background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.8rem 0;
-            position: sticky;
-            top: 70px;
-            z-index: 999;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 220px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
         }
 
-        .sub-nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .sub-nav-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center; /* Perbaikan: Rata tengah */
-        }
-
-        .sub-nav-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s;
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            border: 1px solid transparent;
-            flex: 0 0 auto; /* Perbaikan: Agar tidak melebar */
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
         }
 
-        .sub-nav-link:hover,
-        .sub-nav-link.active {
+        .dropdown-item-custom:hover {
             background-color: rgba(59, 89, 152, 0.1);
             color: var(--primary-color);
-            border-color: var(--primary-color);
         }
 
-        .sub-nav-link i {
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+         /* ===== TOMBOL LOGIN ===== */
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
             font-size: 0.9rem;
         }
 
-        /* ===== KONTEN UTAMA ===== */
-        .main-content {
-            flex: 1;
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
         }
 
-        /* ===== KARTU ===== */
+        .btn-warning:hover::before {
+            left: 100%;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== KONTEN UTAMA YANG DIPERBAIKI ===== */
+        .main-content {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        /* ===== KARTU YANG DIPERBAIKI ===== */
         .card-custom {
             border-radius: var(--border-radius);
             border: none;
@@ -162,25 +179,26 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 1.5rem;
             background-color: white;
+            overflow: hidden;
         }
 
         .card-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
         }
 
-        /* ===== TOMBOL ===== */
+        /* ===== TOMBOL YANG DIPERBAIKI ===== */
         .btn-primary-custom {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             border-color: var(--primary-color);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
@@ -202,51 +220,58 @@
         }
 
         .btn-primary-custom:hover {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
             border-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(59, 89, 152, 0.3);
             color: white;
         }
 
         .btn-secondary-custom {
-            background-color: #6c757d;
+            background: linear-gradient(135deg, #6c757d, #5a6268);
             border-color: #6c757d;
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s;
         }
 
         .btn-secondary-custom:hover {
-            background-color: #5a6268;
+            background: linear-gradient(135deg, #5a6268, #545b62);
             border-color: #545b62;
             transform: translateY(-2px);
             color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* ===== FORM ===== */
+        /* ===== FORM YANG DIPERBAIKI ===== */
         .form-label {
             font-weight: 600;
-            color: #495057;
+            color: #475569;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .form-control, .form-select {
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #e2e8f0;
-            padding: 10px 15px;
+            padding: 12px 15px;
             transition: all 0.3s ease;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.15);
+            outline: none;
         }
 
         .input-icon {
@@ -260,15 +285,16 @@
             transform: translateY(-50%);
             color: #6c757d;
             z-index: 10;
+            font-size: 1rem;
         }
 
         .input-icon .form-control, .input-icon .form-select {
             padding-left: 45px;
         }
 
-        /* ===== HEADER ===== */
+        /* ===== HEADER YANG DIPERBAIKI ===== */
         .page-header {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -278,29 +304,68 @@
 
         .page-title {
             color: var(--primary-color);
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.8rem;
         }
 
         .page-description {
-            color: #6c757d;
+            color: #64748b;
             margin-bottom: 1.5rem;
             width: 100%;
+            font-size: 1.1rem;
         }
 
-        /* ===== ALERT ===== */
+        /* ===== ALERT YANG DIPERBAIKI ===== */
         .alert {
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            padding: 1rem 1.5rem;
         }
 
-        /* ===== FOOTER ===== */
+        .alert ul {
+            margin-bottom: 0;
+        }
+
+        .alert li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* ===== INFO BOX YANG DIPERBAIKI ===== */
+        .info-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .info-box h5 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box ul {
+            margin-bottom: 0;
+            padding-left: 1.5rem;
+        }
+
+        .info-box li {
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        /* ===== FOOTER YANG DIPERBAIKI ===== */
         .footer {
-            background-color: #2d3748;
+            background: linear-gradient(135deg, #1e293b, #334155);
             color: white;
             padding: 40px 0 20px;
             margin-top: auto;
@@ -320,6 +385,7 @@
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
+            font-weight: 700;
         }
 
         .footer-section h3::after {
@@ -334,6 +400,7 @@
 
         .footer-links {
             list-style: none;
+            padding: 0;
         }
 
         .footer-links li {
@@ -341,7 +408,7 @@
         }
 
         .footer-links a {
-            color: #e5e7eb;
+            color: #cbd5e1;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
@@ -403,23 +470,24 @@
             padding: 20px;
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
         }
 
-        /* Back to top button */
+        /* Back to top button yang diperbaiki */
         .back-to-top {
             position: fixed;
             bottom: 30px;
             right: 30px;
             width: 50px;
             height: 50px;
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -432,11 +500,11 @@
         }
 
         .back-to-top:hover {
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
             transform: translateY(-5px);
         }
 
-        /* ===== RESPONSIVITAS ===== */
+        /* ===== RESPONSIVITAS YANG DIPERBAIKI ===== */
         @media (max-width: 768px) {
             .container {
                 padding-left: 15px;
@@ -471,44 +539,68 @@
                 height: 40px;
             }
 
-            /* Responsivitas untuk sub-navigasi */
-            .sub-nav {
-                top: 56px; /* Sesuaikan dengan tinggi navbar mobile */
-            }
-
-            .sub-nav-links {
-                gap: 0.5rem;
-            }
-
-            .sub-nav-link {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
+            .page-title {
+                font-size: 1.5rem;
             }
         }
 
         @media (max-width: 576px) {
-            .btn-primary-custom {
+            .btn-primary-custom, .btn-secondary-custom {
                 width: 100%;
                 padding: 12px;
             }
 
-            /* Responsivitas untuk sub-navigasi */
-            .sub-nav-links {
-                justify-content: center;
+            .d-md-flex.justify-content-md-end {
+                flex-direction: column;
+                gap: 0.5rem;
             }
 
-            .sub-nav-link {
-                flex: 1;
-                min-width: 140px;
-                justify-content: center;
-                text-align: center;
+            .d-md-flex.justify-content-md-end .btn {
+                width: 100%;
             }
+        }
+
+        /* ===== ANIMASI TAMBAHAN ===== */
+        .form-group {
+            transition: all 0.3s ease;
+        }
+
+        .form-group:focus-within {
+            transform: translateX(5px);
+        }
+
+        /* ===== STYLING UNTUK VALIDASI FORM ===== */
+        .is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+        }
+
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== STYLING UNTUK TEXTAREA ===== */
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* ===== STYLING UNTUK CARD FORM ===== */
+        .card-form {
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .card-form .card-body {
+            padding: 2rem;
         }
     </style>
 </head>
 
 <body>
-    <!-- ===== NAVBAR UTAMA ===== -->
+    <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -518,58 +610,146 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Menu sebelah kiri -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-home me-1"></i> Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider-custom">
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-download me-2"></i> Download Kalender
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+                                    <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+                                    <i class="fas fa-undo me-2"></i> Pengembalian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom active" href="{{ route('user.peminjaman.riwayat') }}">
+                                    <i class="fas fa-history me-2"></i> Riwayat
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
+                                    <i class="fas fa-comment-dots me-2"></i> Feedback
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-info-circle me-1"></i> Tentang
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Menu sebelah kanan (login/user) -->
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Beranda
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Kalender Perkuliahan
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('user.peminjaman.index') }}">
-                            Daftar Peminjaman
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Tentang
-                        </a>
-                    </li>
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ Auth::user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+                                <li class="dropdown-header-custom">Masuk sebagai</li>
+                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item-custom text-danger">
+                                            <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn-warning">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- ===== SUB NAVIGASI ===== -->
-    <div class="sub-nav">
-        <div class="sub-nav-container">
-            <div class="sub-nav-links">
-                <a href="{{ route('user.peminjaman.create') }}" class="sub-nav-link active">
-                    <i class="fas fa-plus-circle"></i>
-                    Tambah Peminjaman
-                </a>
-                <a href="{{ route('user.pengembalian.index') }}" class="sub-nav-link">
-                    <i class="fas fa-undo"></i>
-                    Pengembalian
-                </a>
-                <a href="{{ route('user.peminjaman.riwayat') }}" class="sub-nav-link">
-                    <i class="fas fa-history"></i>
-                    Riwayat
-                </a>
-                <a href="{{ route('user.feedback.create') }}" class="sub-nav-link">
-                    <i class="fas fa-comment-dots"></i>
-                    Feedback
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== KONTEN UTAMA ===== -->
-    <div class="container main-content mt-4">
+    <!-- ===== KONTEN UTAMA YANG DIPERBAIKI ===== -->
+    <div class="container main-content">
         <!-- Header dan Kembali ke Daftar -->
         <div class="page-header">
             <div>
@@ -605,27 +785,34 @@
         <!-- Form Peminjaman -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="card card-custom">
-                    <div class="card-body p-4">
-                        <form action="{{ route('user.peminjaman.store') }}" method="POST">
+                <div class="card card-custom card-form">
+                    <div class="card-body">
+                        <form action="{{ route('user.peminjaman.store') }}" method="POST" id="peminjamanForm">
                             @csrf
                             
-                            <div class="mb-4">
-                                <label class="form-label">Tanggal Peminjaman</label>
+                            <div class="mb-4 form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar-day text-primary"></i>
+                                    Tanggal Peminjaman
+                                </label>
                                 <div class="input-icon">
                                     <i class="fas fa-calendar-day"></i>
-                                    <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal') }}" required>
+                                    <input type="date" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror" 
+                                           value="{{ old('tanggal') }}" required id="tanggalInput">
                                 </div>
                                 @error('tanggal')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Ruang</label>
+                            <div class="mb-4 form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-door-open text-primary"></i>
+                                    Ruang
+                                </label>
                                 <div class="input-icon">
                                     <i class="fas fa-door-open"></i>
-                                    <select name="ruang" class="form-select" required>
+                                    <select name="ruang" class="form-select @error('ruang') is-invalid @enderror" required>
                                         <option value="">-- Pilih Ruang --</option>
                                         <option value="Lab A" {{ old('ruang') == 'Lab A' ? 'selected' : '' }}>Lab A</option>
                                         <option value="Lab B" {{ old('ruang') == 'Lab B' ? 'selected' : '' }}>Lab B</option>
@@ -635,41 +822,48 @@
                                     </select>
                                 </div>
                                 @error('ruang')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Proyektor</label>
+                            <div class="mb-4 form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-video text-primary"></i>
+                                    Proyektor
+                                </label>
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
-                                    <select name="proyektor" class="form-select" required>
+                                    <select name="proyektor" class="form-select @error('proyektor') is-invalid @enderror" required>
                                         <option value="">-- Pilih Ketersediaan --</option>
                                         <option value="1" {{ old('proyektor') == '1' ? 'selected' : '' }}>Ya, butuh proyektor</option>
                                         <option value="0" {{ old('proyektor') == '0' ? 'selected' : '' }}>Tidak butuh proyektor</option>
                                     </select>
                                 </div>
                                 @error('proyektor')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Keperluan</label>
+                            <div class="mb-4 form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-clipboard-list text-primary"></i>
+                                    Keperluan
+                                </label>
                                 <div class="input-icon">
                                     <i class="fas fa-clipboard-list"></i>
-                                    <textarea name="keperluan" class="form-control" rows="4" placeholder="Jelaskan keperluan peminjaman" required>{{ old('keperluan') }}</textarea>
+                                    <textarea name="keperluan" class="form-control @error('keperluan') is-invalid @enderror" 
+                                              rows="4" placeholder="Jelaskan keperluan peminjaman secara detail..." required>{{ old('keperluan') }}</textarea>
                                 </div>
                                 @error('keperluan')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                                 <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary-custom me-md-2">
                                     <i class="fas fa-times me-2"></i>Batal
                                 </a>
-                                <button type="submit" class="btn btn-primary-custom">
+                                <button type="submit" class="btn btn-primary-custom" id="submitBtn">
                                     <i class="fas fa-save me-2"></i>Simpan Peminjaman
                                 </button>
                             </div>
@@ -677,18 +871,16 @@
                     </div>
                 </div>
                 
-                <!-- Info Box -->
-                <div class="card card-custom mt-4">
-                    <div class="card-body">
-                        <h5><i class="fas fa-info-circle text-primary me-2"></i> Informasi Penting</h5>
-                        <ul class="mb-0">
-                            <li>Pastikan untuk memeriksa ketersediaan ruangan sebelum melakukan peminjaman</li>
-                            <li>Peminjaman proyektor harus dilakukan minimal 1 hari sebelumnya</li>
-                            <li>Hubungi administrator untuk bantuan terkait peminjaman</li>
-                            <li>Status peminjaman akan ditinjau oleh administrator</li>
-                            <li>Waktu peminjaman default adalah 08:00 - 17:00</li>
-                        </ul>
-                    </div>
+                <!-- Info Box yang Diperbaiki -->
+                <div class="info-box mt-4">
+                    <h5><i class="fas fa-info-circle"></i> Informasi Penting</h5>
+                    <ul class="mb-0">
+                        <li>Pastikan untuk memeriksa ketersediaan ruangan sebelum melakukan peminjaman</li>
+                        <li>Peminjaman proyektor harus dilakukan minimal 1 hari sebelumnya</li>
+                        <li>Hubungi administrator untuk bantuan terkait peminjaman</li>
+                        <li>Status peminjaman akan ditinjau oleh administrator</li>
+                        <li>Waktu peminjaman default adalah 08:00 - 17:00</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -704,7 +896,7 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
@@ -797,7 +989,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Set tanggal minimum ke hari ini
             const today = new Date().toISOString().split('T')[0];
-            const dateInput = document.querySelector('input[type="date"]');
+            const dateInput = document.getElementById('tanggalInput');
             
             if (dateInput) {
                 dateInput.setAttribute('min', today);
@@ -808,33 +1000,85 @@
                 }
             }
             
-            // Validasi form
-            const form = document.querySelector('form');
+            // Validasi form yang lebih baik
+            const form = document.getElementById('peminjamanForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
             if (form) {
                 form.addEventListener('submit', function(e) {
                     const ruang = document.querySelector('select[name="ruang"]').value;
                     const keperluan = document.querySelector('textarea[name="keperluan"]').value;
                     const proyektor = document.querySelector('select[name="proyektor"]').value;
                     
+                    let isValid = true;
+                    
                     if (ruang === '') {
-                        e.preventDefault();
-                        alert('Pilih ruang terlebih dahulu');
-                        return false;
+                        isValid = false;
+                        showToast('Pilih ruang terlebih dahulu', 'error');
                     }
                     
                     if (keperluan.trim() === '') {
-                        e.preventDefault();
-                        alert('Keperluan tidak boleh kosong');
-                        return false;
+                        isValid = false;
+                        showToast('Keperluan tidak boleh kosong', 'error');
                     }
                     
                     if (proyektor === '') {
+                        isValid = false;
+                        showToast('Pilih ketersediaan proyektor', 'error');
+                    }
+                    
+                    if (!isValid) {
                         e.preventDefault();
-                        alert('Pilih ketersediaan proyektor');
                         return false;
+                    }
+                    
+                    // Tampilkan loading state
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+                        submitBtn.disabled = true;
                     }
                 });
             }
+            
+            // Fungsi untuk menampilkan toast notification
+            function showToast(message, type = 'info') {
+                // Buat elemen toast
+                const toast = document.createElement('div');
+                toast.className = `alert alert-${type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
+                toast.style.top = '20px';
+                toast.style.right = '20px';
+                toast.style.zIndex = '1060';
+                toast.style.minWidth = '300px';
+                toast.innerHTML = `
+                    <i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // Hapus toast setelah 5 detik
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 5000);
+            }
+            
+            // Animasi untuk form groups
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach(group => {
+                const input = group.querySelector('input, select, textarea');
+                if (input) {
+                    input.addEventListener('focus', function() {
+                        group.style.transform = 'translateX(5px)';
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        group.style.transform = 'translateX(0)';
+                    });
+                }
+            });
         });
     </script>
 </body>

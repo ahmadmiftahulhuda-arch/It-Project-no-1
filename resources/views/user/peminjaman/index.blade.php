@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,24 +75,6 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
-            position: relative;
-        }
-
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: white;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .navbar-nav .nav-link:hover::after,
-        .navbar-nav .nav-link.active::after {
-            width: 70%;
         }
 
         .navbar-nav .nav-link:hover,
@@ -145,7 +126,7 @@
             font-weight: 600;
         }
 
-        /* ===== TOMBOL LOGIN ===== */
+         /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -394,7 +375,6 @@
             0% {
                 left: -100%;
             }
-
             100% {
                 left: 100%;
             }
@@ -411,13 +391,10 @@
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: scale(0.8);
                 opacity: 1;
             }
-
             50% {
                 transform: scale(1.3);
                 opacity: 0.6;
@@ -642,7 +619,6 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1137,21 +1113,53 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <!-- Menu sebelah kiri -->
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="fas fa-home me-1"></i> Beranda
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider-custom">
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-download me-2"></i> Download Kalender
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
                             <li>
@@ -1181,14 +1189,15 @@
                             </li>
                         </ul>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="fas fa-info-circle me-1"></i> Tentang
                         </a>
                     </li>
+                </ul>
 
-                    <!-- Bagian Login/Dropdown User -->
+                <!-- Menu sebelah kanan (login/user) -->
+                <ul class="navbar-nav ms-auto">
                     @auth
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -1521,66 +1530,65 @@
                                     </div>
                                 </td>
                             </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-5">
-                                        <i class="fas fa-inbox fa-2x text-muted"></i>
-                                        <h5 class="mt-2">Belum ada data peminjaman</h5>
-                                        <p class="text-muted">Silakan ajukan peminjaman baru</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <i class="fas fa-inbox fa-2x text-muted"></i>
+                                    <h5 class="mt-2">Belum ada data peminjaman</h5>
+                                    <p class="text-muted">Silakan ajukan peminjaman baru</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-
-            <!-- Pagination -->
-            @if ($peminjamans->hasPages())
-                <div class="d-flex justify-content-center mt-4">
-                    <nav>
-                        <ul class="pagination pagination-custom">
-                            {{-- Previous Page Link --}}
-                            @if ($peminjamans->onFirstPage())
-                                <li class="page-item disabled">
-                                    <span class="page-link">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                </li>
-                            @else
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $peminjamans->previousPageUrl() }}">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                </li>
-                            @endif
-
-                            {{-- Pagination Elements --}}
-                            @foreach ($peminjamans->getUrlRange(1, $peminjamans->lastPage()) as $page => $url)
-                                <li class="page-item {{ $page == $peminjamans->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                </li>
-                            @endforeach
-
-                            {{-- Next Page Link --}}
-                            @if ($peminjamans->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $peminjamans->nextPageUrl() }}">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </li>
-                            @else
-                                <li class="page-item disabled">
-                                    <span class="page-link">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </span>
-                                </li>
-                            @endif
-                        </ul>
-                    </nav>
-                </div>
-            @endif
         </div>
+
+        <!-- Pagination -->
+        @if ($peminjamans->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                <nav>
+                    <ul class="pagination pagination-custom">
+                        {{-- Previous Page Link --}}
+                        @if ($peminjamans->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $peminjamans->previousPageUrl() }}">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($peminjamans->getUrlRange(1, $peminjamans->lastPage()) as $page => $url)
+                            <li class="page-item {{ $page == $peminjamans->currentPage() ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                            </li>
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($peminjamans->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $peminjamans->nextPageUrl() }}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
+            </div>
+        @endif
 
         <!-- Modal Detail Peminjaman -->
         <div class="modal-detail" id="detailModal">
@@ -1666,362 +1674,383 @@
         <form id="deleteForm" method="POST" style="display: none;">
             @csrf @method('DELETE')
         </form>
+    </div>
 
-        <!-- Back to top button -->
-        <a href="#" class="back-to-top" id="backToTop">
-            <i class="fas fa-arrow-up"></i>
-        </a>
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-container">
-                <div class="footer-section">
-                    <h3>Tentang Kami</h3>
-                    <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine
-                        di Program Studi Teknologi Informasi.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
-                                class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Link Cepat</h3>
-                    <ul class="footer-links">
-                        <li><a href="/home">Beranda</a></li>
-                        <li><a href="/kalender">Kalender Perkuliahan</a></li>
-                        <li><a href="/about">Tentang</a></li>
-                        <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
-                        <li><a href="/faq">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Kontak Kami</h3>
-                    <div class="contact-info">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
-                    </div>
-                    <div class="contact-info">
-                        <i class="fas fa-phone"></i>
-                        <span>(0512) 2021065</span>
-                    </div>
-                    <div class="contact-info">
-                        <i class="fas fa-envelope"></i>
-                        <span>peminjaman@example.ac.id</span>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Jam Operasional</h3>
-                    <div class="opening-hours">
-                        <div>
-                            <span>Senin - Kamis:</span>
-                            <span>08:00 - 16:00</span>
-                        </div>
-                        <div>
-                            <span>Jumat:</span>
-                            <span>08:00 - 16:00</span>
-                        </div>
-                        <div>
-                            <span>Sabtu & Minggu:</span>
-                            <span>Tutup</span>
-                        </div>
-                    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Tentang Kami</h3>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine
+                    di Program Studi Teknologi Informasi.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
-                    Tanah Laut. All Rights Reserved.</p>
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <ul class="footer-links">
+                    <li><a href="/home">Beranda</a></li>
+                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
+                    <li><a href="/about">Tentang</a></li>
+                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                </ul>
             </div>
-        </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // ===== NAVBAR SCROLL EFFECT =====
-            const navbar = document.getElementById('navbar');
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>(0512) 2021065</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>peminjaman@example.ac.id</span>
+                </div>
+            </div>
 
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <div class="opening-hours">
+                    <div>
+                        <span>Senin - Kamis:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Jumat:</span>
+                        <span>08:00 - 16:00</span>
+                    </div>
+                    <div>
+                        <span>Sabtu & Minggu:</span>
+                        <span>Tutup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
-            const backToTopButton = document.getElementById('backToTop');
+        <div class="footer-bottom">
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
+        </div>
+    </footer>
 
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopButton.classList.add('visible');
-                } else {
-                    backToTopButton.classList.remove('visible');
-                }
-            });
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ===== NAVBAR SCROLL EFFECT =====
+        const navbar = document.getElementById('navbar');
 
-            backToTopButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-
-            // ===== MODAL DETAIL FUNCTIONALITY =====
-            const detailModal = document.getElementById('detailModal');
-            const closeModal = document.getElementById('closeModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const viewDetailButtons = document.querySelectorAll('.view-detail');
-
-            // Fungsi untuk menampilkan modal detail
-            function showDetailModal(event) {
-                const button = event.currentTarget;
-
-                // Ambil data dari atribut data-*
-                const tanggal = button.getAttribute('data-tanggal');
-                const waktuMulai = button.getAttribute('data-waktu-mulai');
-                const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                const ruang = button.getAttribute('data-ruang');
-                const proyektor = button.getAttribute('data-proyektor');
-                const keperluan = button.getAttribute('data-keperluan');
-                const status = button.getAttribute('data-status');
-                const namaPeminjam = button.getAttribute('data-nama-peminjam');
-                const nim = button.getAttribute('data-nim');
-                const prodi = button.getAttribute('data-prodi');
-                const noHp = button.getAttribute('data-no-hp');
-                const email = button.getAttribute('data-email');
-                const diajukan = button.getAttribute('data-diajukan');
-                const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
-
-                // Set nilai ke modal
-                document.getElementById('detail-tanggal').textContent = tanggal;
-                document.getElementById('detail-waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
-                document.getElementById('detail-ruang').textContent = ruang;
-                document.getElementById('detail-proyektor').textContent = proyektor;
-                document.getElementById('detail-keperluan').textContent = keperluan;
-                document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
-                document.getElementById('detail-nim').textContent = nim;
-                document.getElementById('detail-prodi').textContent = prodi;
-                document.getElementById('detail-no-hp').textContent = noHp;
-                document.getElementById('detail-email').textContent = email;
-                document.getElementById('detail-diajukan').textContent = diajukan;
-
-                // Set status dengan badge yang sesuai
-                const statusBadge = document.getElementById('detail-status');
-                statusBadge.className = 'status-badge';
-
-                if (isOngoing) {
-                    statusBadge.classList.add('status-berlangsung');
-                    statusBadge.innerHTML =
-                        '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
-                } else {
-                    switch (status) {
-                        case 'disetujui':
-                            statusBadge.classList.add('status-disetujui');
-                            statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
-                            break;
-                        case 'selesai':
-                            statusBadge.classList.add('status-selesai');
-                            statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
-                            break;
-                        case 'ditolak':
-                            statusBadge.classList.add('status-ditolak');
-                            statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
-                            break;
-                        default:
-                            statusBadge.classList.add('status-menunggu');
-                            statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
-                    }
-                }
-
-                // Tampilkan modal
-                detailModal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Mencegah scroll di background
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
+        });
 
-            // Fungsi untuk menutup modal
-            function closeDetailModal() {
-                detailModal.classList.remove('active');
-                document.body.style.overflow = ''; // Kembalikan scroll
-            }
-
-            // Event listener untuk tombol lihat detail
-            viewDetailButtons.forEach(button => {
-                button.addEventListener('click', showDetailModal);
-            });
-
-            // Event listener untuk tombol tutup modal
-            closeModal.addEventListener('click', closeDetailModal);
-            closeModalBtn.addEventListener('click', closeDetailModal);
-
-            // Tutup modal saat klik di luar konten modal
-            detailModal.addEventListener('click', (event) => {
-                if (event.target === detailModal) {
-                    closeDetailModal();
-                }
-            });
-
-            // ===== KONFIRMASI HAPUS =====
-            function confirmDelete(event) {
-                event.preventDefault();
-                const button = event.currentTarget;
-                const keperluan = button.getAttribute('data-keperluan');
-                const id = button.getAttribute('data-id');
-
-                if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
-                    // Set action form dan submit
-                    const form = document.getElementById('deleteForm');
-                    form.action = `/user/peminjaman/${id}`;
-                    form.submit();
-                }
-            }
-
-            // ===== FILTER TABEL =====
-            function filterTable() {
-                const searchText = document.querySelector('.search-input').value.toLowerCase();
-                const activeTab = document.querySelector('.filter-tab.active');
-                const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
-                const ruangFilter = document.getElementById('ruang-filter').value;
-                const tanggalFilter = document.getElementById('tanggal-filter').value;
-
-                const rows = document.querySelectorAll('tbody tr');
-
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    const rowStatus = row.getAttribute('data-status');
-                    const rowRuang = row.getAttribute('data-ruang');
-                    const rowTanggal = row.getAttribute('data-tanggal');
-
-                    // Filter berdasarkan pencarian, status, ruang, dan tanggal
-                    const textMatch = text.includes(searchText);
-                    const statusMatch = statusFilter === 'semua' ||
-                        (statusFilter === 'berlangsung' ? row.classList.contains('table-success') : rowStatus ===
-                            statusFilter);
-                    const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
-                    const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
-
-                    if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+        // ===== DROPDOWN ARROW ANIMATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('show.bs.dropdown', function() {
+                    const arrow = this.querySelector('.custom-dropdown-arrow');
+                    if (arrow) {
+                        arrow.style.transform = 'rotate(90deg)';
                     }
                 });
-            }
-
-            // ===== FUNGSI UNTUK MEMPERBARUI WAKTU RELATIF =====
-            function updateRelativeTimes() {
-                const timeIndicators = document.querySelectorAll('.time-indicator');
-                const now = new Date();
-
-                timeIndicators.forEach(indicator => {
-                    const row = indicator.closest('tr');
-                    const waktuPengajuan = row.getAttribute('data-waktu-pengajuan');
-                    const waktuPengajuanObj = new Date(waktuPengajuan);
-
-                    // Hitung selisih waktu
-                    const diffMs = now - waktuPengajuanObj;
-                    const diffSec = Math.floor(diffMs / 1000);
-                    const diffMin = Math.floor(diffSec / 60);
-                    const diffHour = Math.floor(diffMin / 60);
-                    const diffDay = Math.floor(diffHour / 24);
-
-                    let relativeTime;
-
-                    if (diffSec < 60) {
-                        relativeTime = `${diffSec} detik`;
-                    } else if (diffMin < 60) {
-                        relativeTime = `${diffMin} menit`;
-                    } else if (diffHour < 24) {
-                        relativeTime = `${diffHour} jam`;
-                    } else if (diffDay < 7) {
-                        relativeTime = `${diffDay} hari`;
-                    } else if (diffDay < 30) {
-                        const weeks = Math.floor(diffDay / 7);
-                        relativeTime = `${weeks} minggu`;
-                    } else if (diffDay < 365) {
-                        const months = Math.floor(diffDay / 30);
-                        relativeTime = `${months} bulan`;
-                    } else {
-                        const years = Math.floor(diffDay / 365);
-                        relativeTime = `${years} tahun`;
+                
+                toggle.addEventListener('hide.bs.dropdown', function() {
+                    const arrow = this.querySelector('.custom-dropdown-arrow');
+                    if (arrow) {
+                        arrow.style.transform = 'rotate(0deg)';
                     }
-
-                    // Update teks dan kelas
-                    indicator.textContent = `Diajukan ${relativeTime} yang lalu`;
-                    indicator.className = `time-indicator ${diffDay < 1 ? 'recent' : 'old'}`;
                 });
+            });
+        });
+
+        // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
+        const backToTopButton = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== MODAL DETAIL FUNCTIONALITY =====
+        const detailModal = document.getElementById('detailModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const viewDetailButtons = document.querySelectorAll('.view-detail');
+
+        // Fungsi untuk menampilkan modal detail
+        function showDetailModal(event) {
+            const button = event.currentTarget;
+
+            // Ambil data dari atribut data-*
+            const tanggal = button.getAttribute('data-tanggal');
+            const waktuMulai = button.getAttribute('data-waktu-mulai');
+            const waktuSelesai = button.getAttribute('data-waktu-selesai');
+            const ruang = button.getAttribute('data-ruang');
+            const proyektor = button.getAttribute('data-proyektor');
+            const keperluan = button.getAttribute('data-keperluan');
+            const status = button.getAttribute('data-status');
+            const namaPeminjam = button.getAttribute('data-nama-peminjam');
+            const nim = button.getAttribute('data-nim');
+            const prodi = button.getAttribute('data-prodi');
+            const noHp = button.getAttribute('data-no-hp');
+            const email = button.getAttribute('data-email');
+            const diajukan = button.getAttribute('data-diajukan');
+            const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
+
+            // Set nilai ke modal
+            document.getElementById('detail-tanggal').textContent = tanggal;
+            document.getElementById('detail-waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
+            document.getElementById('detail-ruang').textContent = ruang;
+            document.getElementById('detail-proyektor').textContent = proyektor;
+            document.getElementById('detail-keperluan').textContent = keperluan;
+            document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
+            document.getElementById('detail-nim').textContent = nim;
+            document.getElementById('detail-prodi').textContent = prodi;
+            document.getElementById('detail-no-hp').textContent = noHp;
+            document.getElementById('detail-email').textContent = email;
+            document.getElementById('detail-diajukan').textContent = diajukan;
+
+            // Set status dengan badge yang sesuai
+            const statusBadge = document.getElementById('detail-status');
+            statusBadge.className = 'status-badge';
+
+            if (isOngoing) {
+                statusBadge.classList.add('status-berlangsung');
+                statusBadge.innerHTML =
+                    '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
+            } else {
+                switch (status) {
+                    case 'disetujui':
+                        statusBadge.classList.add('status-disetujui');
+                        statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
+                        break;
+                    case 'selesai':
+                        statusBadge.classList.add('status-selesai');
+                        statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
+                        break;
+                    case 'ditolak':
+                        statusBadge.classList.add('status-ditolak');
+                        statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
+                        break;
+                    default:
+                        statusBadge.classList.add('status-menunggu');
+                        statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
+                }
             }
 
-            // ===== LOADING STATE =====
-            function showLoading() {
-                document.getElementById('loadingSpinner').style.display = 'block';
-                document.querySelector('.table-container').style.opacity = '0.5';
+            // Tampilkan modal
+            detailModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Mencegah scroll di background
+        }
+
+        // Fungsi untuk menutup modal
+        function closeDetailModal() {
+            detailModal.classList.remove('active');
+            document.body.style.overflow = ''; // Kembalikan scroll
+        }
+
+        // Event listener untuk tombol lihat detail
+        viewDetailButtons.forEach(button => {
+            button.addEventListener('click', showDetailModal);
+        });
+
+        // Event listener untuk tombol tutup modal
+        closeModal.addEventListener('click', closeDetailModal);
+        closeModalBtn.addEventListener('click', closeDetailModal);
+
+        // Tutup modal saat klik di luar konten modal
+        detailModal.addEventListener('click', (event) => {
+            if (event.target === detailModal) {
+                closeDetailModal();
             }
+        });
 
-            function hideLoading() {
-                document.getElementById('loadingSpinner').style.display = 'none';
-                document.querySelector('.table-container').style.opacity = '1';
+        // ===== KONFIRMASI HAPUS =====
+        function confirmDelete(event) {
+            event.preventDefault();
+            const button = event.currentTarget;
+            const keperluan = button.getAttribute('data-keperluan');
+            const id = button.getAttribute('data-id');
+
+            if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
+                // Set action form dan submit
+                const form = document.getElementById('deleteForm');
+                form.action = `/user/peminjaman/${id}`;
+                form.submit();
             }
+        }
 
-            // ===== INISIALISASI EVENT LISTENER =====
-            document.addEventListener('DOMContentLoaded', function() {
-                // Event listener untuk tombol hapus
-                document.querySelectorAll('.btn-delete').forEach(button => {
-                    button.addEventListener('click', confirmDelete);
-                });
+        // ===== FILTER TABEL =====
+        function filterTable() {
+            const searchText = document.querySelector('.search-input').value.toLowerCase();
+            const activeTab = document.querySelector('.filter-tab.active');
+            const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
+            const ruangFilter = document.getElementById('ruang-filter').value;
+            const tanggalFilter = document.getElementById('tanggal-filter').value;
 
-                // Event listener untuk pencarian
-                const searchInput = document.querySelector('.search-input');
-                searchInput.addEventListener('keyup', filterTable);
+            const rows = document.querySelectorAll('tbody tr');
 
-                // Event listener untuk filter tab
-                document.querySelectorAll('.filter-tab').forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Hapus kelas active dari semua tab
-                        document.querySelectorAll('.filter-tab').forEach(t => {
-                            t.classList.remove('active');
-                        });
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const rowStatus = row.getAttribute('data-status');
+                const rowRuang = row.getAttribute('data-ruang');
+                const rowTanggal = row.getAttribute('data-tanggal');
 
-                        // Tambah kelas active ke tab yang diklik
-                        this.classList.add('active');
+                // Filter berdasarkan pencarian, status, ruang, dan tanggal
+                const textMatch = text.includes(searchText);
+                const statusMatch = statusFilter === 'semua' ||
+                    (statusFilter === 'berlangsung' ? row.classList.contains('table-success') : rowStatus ===
+                        statusFilter);
+                const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
+                const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
 
-                        filterTable();
+                if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // ===== FUNGSI UNTUK MEMPERBARUI WAKTU RELATIF =====
+        function updateRelativeTimes() {
+            const timeIndicators = document.querySelectorAll('.time-indicator');
+            const now = new Date();
+
+            timeIndicators.forEach(indicator => {
+                const row = indicator.closest('tr');
+                const waktuPengajuan = row.getAttribute('data-waktu-pengajuan');
+                const waktuPengajuanObj = new Date(waktuPengajuan);
+
+                // Hitung selisih waktu
+                const diffMs = now - waktuPengajuanObj;
+                const diffSec = Math.floor(diffMs / 1000);
+                const diffMin = Math.floor(diffSec / 60);
+                const diffHour = Math.floor(diffMin / 60);
+                const diffDay = Math.floor(diffHour / 24);
+
+                let relativeTime;
+
+                if (diffSec < 60) {
+                    relativeTime = `${diffSec} detik`;
+                } else if (diffMin < 60) {
+                    relativeTime = `${diffMin} menit`;
+                } else if (diffHour < 24) {
+                    relativeTime = `${diffHour} jam`;
+                } else if (diffDay < 7) {
+                    relativeTime = `${diffDay} hari`;
+                } else if (diffDay < 30) {
+                    const weeks = Math.floor(diffDay / 7);
+                    relativeTime = `${weeks} minggu`;
+                } else if (diffDay < 365) {
+                    const months = Math.floor(diffDay / 30);
+                    relativeTime = `${months} bulan`;
+                } else {
+                    const years = Math.floor(diffDay / 365);
+                    relativeTime = `${years} tahun`;
+                }
+
+                // Update teks dan kelas
+                indicator.textContent = `Diajukan ${relativeTime} yang lalu`;
+                indicator.className = `time-indicator ${diffDay < 1 ? 'recent' : 'old'}`;
+            });
+        }
+
+        // ===== LOADING STATE =====
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.querySelector('.table-container').style.opacity = '0.5';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.querySelector('.table-container').style.opacity = '1';
+        }
+
+        // ===== INISIALISASI EVENT LISTENER =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listener untuk tombol hapus
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', confirmDelete);
+            });
+
+            // Event listener untuk pencarian
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('keyup', filterTable);
+
+            // Event listener untuk filter tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Hapus kelas active dari semua tab
+                    document.querySelectorAll('.filter-tab').forEach(t => {
+                        t.classList.remove('active');
                     });
+
+                    // Tambah kelas active ke tab yang diklik
+                    this.classList.add('active');
+
+                    filterTable();
                 });
-
-                // Event listener untuk filter ruang
-                document.getElementById('ruang-filter').addEventListener('change', filterTable);
-
-                // Event listener untuk filter tanggal
-                document.getElementById('tanggal-filter').addEventListener('change', filterTable);
-
-                // Perbarui waktu relatif setiap menit
-                updateRelativeTimes();
-                setInterval(updateRelativeTimes, 60000); // Update setiap 1 menit
-
-                // Inisialisasi filter saat halaman dimuat
-                filterTable();
-
-                // Sembunyikan loading setelah halaman dimuat
-                setTimeout(() => {
-                    hideLoading();
-                }, 500);
             });
 
-            // Handle page transitions
-            document.addEventListener('click', function(e) {
-                if (e.target.matches('a') && e.target.getAttribute('href') &&
-                    !e.target.getAttribute('href').startsWith('#')) {
-                    showLoading();
-                }
-            });
-        </script>
-    </body>
+            // Event listener untuk filter ruang
+            document.getElementById('ruang-filter').addEventListener('change', filterTable);
 
-    </html>
+            // Event listener untuk filter tanggal
+            document.getElementById('tanggal-filter').addEventListener('change', filterTable);
+
+            // Perbarui waktu relatif setiap menit
+            updateRelativeTimes();
+            setInterval(updateRelativeTimes, 60000); // Update setiap 1 menit
+
+            // Inisialisasi filter saat halaman dimuat
+            filterTable();
+
+            // Sembunyikan loading setelah halaman dimuat
+            setTimeout(() => {
+                hideLoading();
+            }, 500);
+        });
+
+        // Handle page transitions
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('a') && e.target.getAttribute('href') &&
+                !e.target.getAttribute('href').startsWith('#')) {
+                showLoading();
+            }
+        });
+    </script>
+</body>
+</html>
