@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
-        /* ===== VARIABEL CSS SESUAI FREE USER ===== */
+        /* ===== VARIABEL CSS ===== */
         :root {
             --primary-color: #3b5998;
             --secondary-color: #6d84b4;
@@ -33,7 +33,7 @@
             scroll-behavior: smooth;
         }
 
-        /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
+        /* ===== NAVBAR ===== */
         .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
@@ -83,7 +83,7 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        /* ===== DROPDOWN MENU ===== */
         .dropdown-menu-custom {
             background-color: white;
             border: none;
@@ -126,7 +126,7 @@
             font-weight: 600;
         }
 
-         /* ===== TOMBOL LOGIN ===== */
+        /* ===== TOMBOL ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -166,27 +166,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* ===== KONTEN UTAMA ===== */
-        .main-content {
-            flex: 1;
-        }
-
-        /* ===== KARTU ===== */
-        .card-custom {
-            border-radius: var(--border-radius);
-            border: none;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 1.5rem;
-            background-color: white;
-        }
-
-        .card-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        /* ===== TOMBOL ===== */
         .btn-primary-custom {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
@@ -261,18 +240,27 @@
         }
 
         /* ===== TOMBOL DISABLED ===== */
-        .btn-action-disabled {
+        .btn-action-disabled,
+        .btn-action:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             pointer-events: none;
             filter: grayscale(0.7);
         }
 
-        .btn-action:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            pointer-events: none;
-            filter: grayscale(0.7);
+        /* ===== KARTU ===== */
+        .card-custom {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+            background-color: white;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
         /* ===== TABEL ===== */
@@ -349,7 +337,6 @@
             border-color: #f5c6cb;
         }
 
-        /* ===== STATUS BERLANGSUNG YANG DIPERBAIKI ===== */
         .status-berlangsung {
             background: linear-gradient(135deg, #d4edda, #c3e6cb);
             color: #0d4521;
@@ -372,12 +359,8 @@
         }
 
         @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 100%;
-            }
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .pulse-dot {
@@ -446,7 +429,7 @@
             background-color: rgba(59, 89, 152, 0.05);
         }
 
-        /* ====== SEARCH CONTAINER ====== */
+        /* ===== SEARCH CONTAINER ===== */
         .search-container {
             position: relative;
             width: 100%;
@@ -454,7 +437,6 @@
             margin: 0 auto;
         }
 
-        /* ====== ICON ====== */
         .search-container i {
             position: absolute;
             left: 14px;
@@ -465,7 +447,6 @@
             pointer-events: none;
         }
 
-        /* ====== INPUT ====== */
         .search-input {
             width: 100%;
             padding: 10px 14px 10px 40px;
@@ -480,19 +461,16 @@
             display: block;
         }
 
-        /* ====== FOCUS ====== */
         .search-input:focus {
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
             outline: none;
         }
 
-        /* ====== HOVER ====== */
         .search-input:hover {
             border-color: #cbd5e1;
         }
 
-        /* ====== PLACEHOLDER ====== */
         .search-input::placeholder {
             color: #9ca3af;
         }
@@ -523,23 +501,6 @@
             font-size: 60px;
             margin-bottom: 15px;
             color: #dee2e6;
-        }
-
-        /* ===== INDIKATOR VISUAL ===== */
-        .today-indicator {
-            position: relative;
-            background-color: rgba(25, 135, 84, 0.05);
-        }
-
-        .today-indicator::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background-color: #198754;
-            border-radius: 2px;
         }
 
         /* ===== TOOLTIP ===== */
@@ -1103,7 +1064,7 @@
 </head>
 
 <body>
-    <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
+    <!-- ===== NAVBAR UTAMA ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -1116,7 +1077,7 @@
                 <!-- Menu sebelah kiri -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/home">
                             <i class="fas fa-home me-1"></i> Beranda
                         </a>
                     </li>
@@ -1127,7 +1088,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
                             <li>
-                                <a class="dropdown-item-custom" href="#">
+                                <a class="dropdown-item-custom" href="/kalender">
                                     <i class="fas fa-calendar me-2"></i> Kalender Akademik
                                 </a>
                             </li>
@@ -1190,7 +1151,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/about">
                             <i class="fas fa-info-circle me-1"></i> Tentang
                         </a>
                     </li>
@@ -1763,27 +1724,6 @@
             }
         });
 
-        // ===== DROPDOWN ARROW ANIMATION =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
-            dropdownToggles.forEach(toggle => {
-                toggle.addEventListener('show.bs.dropdown', function() {
-                    const arrow = this.querySelector('.custom-dropdown-arrow');
-                    if (arrow) {
-                        arrow.style.transform = 'rotate(90deg)';
-                    }
-                });
-                
-                toggle.addEventListener('hide.bs.dropdown', function() {
-                    const arrow = this.querySelector('.custom-dropdown-arrow');
-                    if (arrow) {
-                        arrow.style.transform = 'rotate(0deg)';
-                    }
-                });
-            });
-        });
-
         // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
         const backToTopButton = document.getElementById('backToTop');
 
@@ -1944,50 +1884,6 @@
             });
         }
 
-        // ===== FUNGSI UNTUK MEMPERBARUI WAKTU RELATIF =====
-        function updateRelativeTimes() {
-            const timeIndicators = document.querySelectorAll('.time-indicator');
-            const now = new Date();
-
-            timeIndicators.forEach(indicator => {
-                const row = indicator.closest('tr');
-                const waktuPengajuan = row.getAttribute('data-waktu-pengajuan');
-                const waktuPengajuanObj = new Date(waktuPengajuan);
-
-                // Hitung selisih waktu
-                const diffMs = now - waktuPengajuanObj;
-                const diffSec = Math.floor(diffMs / 1000);
-                const diffMin = Math.floor(diffSec / 60);
-                const diffHour = Math.floor(diffMin / 60);
-                const diffDay = Math.floor(diffHour / 24);
-
-                let relativeTime;
-
-                if (diffSec < 60) {
-                    relativeTime = `${diffSec} detik`;
-                } else if (diffMin < 60) {
-                    relativeTime = `${diffMin} menit`;
-                } else if (diffHour < 24) {
-                    relativeTime = `${diffHour} jam`;
-                } else if (diffDay < 7) {
-                    relativeTime = `${diffDay} hari`;
-                } else if (diffDay < 30) {
-                    const weeks = Math.floor(diffDay / 7);
-                    relativeTime = `${weeks} minggu`;
-                } else if (diffDay < 365) {
-                    const months = Math.floor(diffDay / 30);
-                    relativeTime = `${months} bulan`;
-                } else {
-                    const years = Math.floor(diffDay / 365);
-                    relativeTime = `${years} tahun`;
-                }
-
-                // Update teks dan kelas
-                indicator.textContent = `Diajukan ${relativeTime} yang lalu`;
-                indicator.className = `time-indicator ${diffDay < 1 ? 'recent' : 'old'}`;
-            });
-        }
-
         // ===== LOADING STATE =====
         function showLoading() {
             document.getElementById('loadingSpinner').style.display = 'block';
@@ -2030,10 +1926,6 @@
 
             // Event listener untuk filter tanggal
             document.getElementById('tanggal-filter').addEventListener('change', filterTable);
-
-            // Perbarui waktu relatif setiap menit
-            updateRelativeTimes();
-            setInterval(updateRelativeTimes, 60000); // Update setiap 1 menit
 
             // Inisialisasi filter saat halaman dimuat
             filterTable();

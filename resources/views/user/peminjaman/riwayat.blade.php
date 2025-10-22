@@ -1082,7 +1082,7 @@
                 <!-- Menu sebelah kiri -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/home">
                             <i class="fas fa-home me-1"></i> Beranda
                         </a>
                     </li>
@@ -1093,7 +1093,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
                             <li>
-                                <a class="dropdown-item-custom" href="#">
+                                <a class="dropdown-item-custom" href="/kalender">
                                     <i class="fas fa-calendar me-2"></i> Kalender Akademik
                                 </a>
                             </li>
@@ -1156,7 +1156,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/about">
                             <i class="fas fa-info-circle me-1"></i> Tentang
                         </a>
                     </li>

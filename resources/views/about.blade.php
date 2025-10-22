@@ -6,6 +6,7 @@
     <title>Tentang - Sistem Peminjaman Sarana Prasarana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         :root {
             --primary-color: #3b5998;
@@ -29,26 +30,24 @@
             scroll-behavior: smooth;
         }
         
-        /* ===== NAVBAR STYLES ===== */
-        .navbar {
+        /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
+        .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
             transition: all 0.3s ease;
+            border-radius: 0;
         }
-        
-        .navbar.scrolled {
+
+        .navbar-custom.scrolled {
             padding: 0.5rem 1rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
-        
-        .logo {
+
+        .navbar-brand {
             color: white;
             font-size: 1.5rem;
             font-weight: bold;
@@ -56,71 +55,92 @@
             align-items: center;
             text-decoration: none;
         }
-        
-        .logo i {
+
+        .navbar-brand i {
             margin-right: 10px;
             transition: transform 0.3s;
         }
-        
-        .logo:hover i {
+
+        .navbar-brand:hover i {
             transform: rotate(-10deg);
         }
-        
-        .navbar ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-        
-        .navbar ul li {
-            margin-left: 1.2rem;
-        }
-        
-        .navbar ul li a {
+
+        .navbar-nav .nav-link {
             color: white;
             text-decoration: none;
             padding: 0.5rem 0.8rem;
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
-            position: relative;
         }
-        
-        .navbar ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        .dropdown-menu-custom {
             background-color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 220px;
+            margin-top: 8px;
             transition: all 0.3s ease;
-            transform: translateX(-50%);
         }
-        
-        .navbar ul li a:hover::after, 
-        .navbar ul li a.active::after {
-            width: 70%;
+
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
         }
-        
+
+        .dropdown-item-custom:hover {
+            background-color: rgba(59, 89, 152, 0.1);
+            color: var(--primary-color);
+        }
+
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
             color: #212529;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             font-weight: 500;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            font-size: 0.9rem;
         }
-        
+
         .btn-warning::before {
             content: '';
             position: absolute;
@@ -131,18 +151,18 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: all 0.5s ease;
         }
-        
+
         .btn-warning:hover::before {
             left: 100%;
         }
-        
+
         .btn-warning:hover {
             background-color: #e0a800;
             border-color: #d39e00;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* ===== HERO SECTION ===== */
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -549,15 +569,6 @@
         }
         
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            
-            .logo {
-                margin-bottom: 1rem;
-            }
-            
             .hero-section {
                 padding: 2.5rem 0;
             }
@@ -593,22 +604,152 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <a href="/home" class="logo">
-            <i class="fas fa-building"></i>SarPras TI
-        </a>
-        <ul>
-            <li><a href="/home">Beranda</a></li>
-            <li><a href="/kalender">Kalender Perkuliahan</a></li>
-            <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
-            <li><a href="/about" class="active">Tentang</a></li>
-            <li>
-                <a href="/login" class="btn-warning">
-                    <i class="fa-solid fa-right-to-bracket"></i> Login
-                </a>
-            </li>
-        </ul>
+    <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/home">
+                <i class="fas fa-building"></i>SarPras TI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Menu sebelah kiri -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">
+                            <i class="fas fa-home me-1"></i> Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="/kalender">
+                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider-custom">
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-download me-2"></i> Download Kalender
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+                                    <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+                                    <i class="fas fa-undo me-2"></i> Pengembalian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
+                                    <i class="fas fa-history me-2"></i> Riwayat
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
+                                    <i class="fas fa-comment-dots me-2"></i> Feedback
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about">
+                            <i class="fas fa-info-circle me-1"></i> Tentang
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Menu sebelah kanan (login/user) -->
+                <ul class="navbar-nav ms-auto">
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ Auth::user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+                                <li class="dropdown-header-custom">Masuk sebagai</li>
+                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item-custom text-danger">
+                                            <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn-warning">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </a>
+                        </li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -879,6 +1020,8 @@
             <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Back to top button functionality
