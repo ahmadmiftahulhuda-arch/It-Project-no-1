@@ -6,9 +6,7 @@
     <title>Tambah Slot Waktu - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Gunakan semua CSS yang sama dari file create ruangan */
         :root {
             --primary: #3b5998;
             --secondary: #6d84b4;
@@ -31,9 +29,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-light);
             color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
-        .sidebar { 
+        /* Sidebar Styles - KONSISTEN dengan halaman lain */
+        .sidebar {
             position: fixed;
             top: 0;
             left: 0;
@@ -46,6 +48,10 @@
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .sidebar-header {
@@ -67,7 +73,6 @@
             padding: 20px 0;
         }
 
-        /* Scrollbar styling untuk sidebar */
         .sidebar-menu::-webkit-scrollbar {
             width: 6px;
         }
@@ -84,6 +89,17 @@
 
         .sidebar-menu::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.5);
+        }
+
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
         }
 
         .menu-item {
@@ -128,7 +144,7 @@
             min-height: 100vh;
         }
 
-        /* Header */
+        /* Header - KONSISTEN dengan halaman lain */
         .header {
             display: flex;
             justify-content: space-between;
@@ -397,38 +413,40 @@
             }
         }
 
-        .form-container {
-            background: var(--bg-card);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-light);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
+        /* Error Messages */
         .error-message {
             color: #dc3545;
             font-size: 0.875rem;
             margin-top: 0.25rem;
         }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar - KONSISTEN dengan halaman lain -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo"><i class="fas fa-clock"></i></div>
+            <div class="sidebar-logo">
+                <i class="fas fa-laptop-code"></i>
+            </div>
             <h2>Admin TI</h2>
         </div>
 
         <div class="sidebar-menu">
+            <!-- Menu Utama -->
+            <div class="menu-section">Menu Utama</div>
             <a href="/admin/dashboard" class="menu-item">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ route('admin.dashboard') }}" class="menu-item">
+            
+            <!-- Manajemen Peminjaman -->
+            <div class="menu-section">Manajemen Peminjaman</div>
+            <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                 <i class="fas fa-hand-holding"></i>
                 <span>Peminjaman</span>
             </a>
@@ -444,34 +462,46 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/proyektor" class="menu-item">
+            
+            <!-- Manajemen Aset -->
+            <div class="menu-section">Manajemen Aset</div>
+            <a href="{{ route('projectors.index') }}" class="menu-item">
                 <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
-            <a href="/admin/jadwalperkuliahan" class="menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Jadwal Perkuliahan</span>
-            </a>
-            <a href="{{ route('admin.ruangan.index') }}" class="menu-item">
+            <a href="/admin/ruangan" class="menu-item">
                 <i class="fas fa-door-open"></i>
                 <span>Ruangan</span>
             </a>
-            <a href="/admin/slotwaktu" class="menu-item">
+            
+            <!-- Manajemen Akademik -->
+            <div class="menu-section">Manajemen Akademik</div>
+            <a href="/admin/jadwal-perkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
+            </a>
+            <a href="/admin/slotwaktu" class="menu-item active">
                 <i class="fas fa-clock"></i>
                 <span>Slot Waktu</span>
             </a>
-            <a href="/admin/matakuliah" class="menu-item">
+            <a href="/admin/mata_kuliah" class="menu-item">
                 <i class="fas fa-book"></i>
                 <span>Matakuliah</span>
             </a>
             <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-chalkboard-teacher"></i>
                 <span>Kelas</span>
             </a>
+            
+            <!-- Manajemen Pengguna -->
+            <div class="menu-section">Manajemen Pengguna</div>
             <a href="/admin/pengguna" class="menu-item">
                 <i class="fas fa-users"></i>
                 <span>Pengguna</span>
             </a>
+            
+            <!-- Laporan & Pengaturan -->
+            <div class="menu-section">Laporan & Pengaturan</div>
             <a href="/admin/laporan" class="menu-item">
                 <i class="fas fa-chart-bar"></i>
                 <span>Statistik</span>
@@ -485,10 +515,19 @@
 
     <!-- Main Content -->
     <div class="main-content">
+        <!-- Header - KONSISTEN dengan halaman lain -->
         <div class="header">
-            <div></div>
+            <div></div> <!-- Empty div untuk penyeimbang -->
+
             <div class="user-actions">
-                <div class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></div>
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                </div>
+
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+
                 <div class="user-profile">
                     <div class="user-avatar">A</div>
                     <div>
@@ -533,10 +572,11 @@
                         <div class="form-group">
                             <label for="waktu">Waktu <span class="text-danger">*</span></label>
                             <input type="text" id="waktu" name="waktu" class="form-control @error('waktu') is-invalid @enderror"
-                                   value="{{ old('waktu') }}" required placeholder="Contoh: 7:30">
+                                   value="{{ old('waktu') }}" required placeholder="Contoh: 07:30">
                             @error('waktu')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
+                            <small class="text-muted">Format: HH:MM (24 jam)</small>
                         </div>
                     </div>
                 </div>
@@ -551,17 +591,54 @@
                 </div>
             </form>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            themeToggle.innerHTML = document.body.classList.contains('dark-mode')
-                ? '<i class="fas fa-sun"></i>'
-                : '<i class="fas fa-moon"></i>';
-        });
-    </script>
+        <div class="menu-toggle" id="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Toggle theme
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+
+            // Toggle sidebar on mobile
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+
+            // Terapkan dark mode jika sebelumnya diaktifkan
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+
+            // Validasi format waktu
+            const waktuInput = document.getElementById('waktu');
+            waktuInput.addEventListener('blur', function() {
+                const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                if (this.value && !timePattern.test(this.value)) {
+                    this.style.borderColor = '#dc3545';
+                    this.title = 'Format waktu harus HH:MM (contoh: 07:30)';
+                } else {
+                    this.style.borderColor = '';
+                    this.title = '';
+                }
+            });
+        </script>
+    </div>
 </body>
 </html>

@@ -6,7 +6,6 @@
     <title>Edit Ruangan - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary: #3b5998;
@@ -35,7 +34,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - KONSISTEN dengan halaman lain */
         .sidebar {
             position: fixed;
             top: 0;
@@ -49,6 +48,10 @@
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .sidebar-header {
@@ -70,7 +73,6 @@
             padding: 20px 0;
         }
 
-        /* Scrollbar styling untuk sidebar */
         .sidebar-menu::-webkit-scrollbar {
             width: 6px;
         }
@@ -87,6 +89,17 @@
 
         .sidebar-menu::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.5);
+        }
+
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
         }
 
         .menu-item {
@@ -131,7 +144,7 @@
             min-height: 100vh;
         }
 
-        /* Header */
+        /* Header - KONSISTEN dengan halaman lain */
         .header {
             display: flex;
             justify-content: space-between;
@@ -468,7 +481,7 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar - KONSISTEN dengan halaman lain -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -478,11 +491,16 @@
         </div>
 
         <div class="sidebar-menu">
+            <!-- Menu Utama -->
+            <div class="menu-section">Menu Utama</div>
             <a href="/admin/dashboard" class="menu-item">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ route('admin.dashboard') }}" class="menu-item">
+            
+            <!-- Manajemen Peminjaman -->
+            <div class="menu-section">Manajemen Peminjaman</div>
+            <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                 <i class="fas fa-hand-holding"></i>
                 <span>Peminjaman</span>
             </a>
@@ -498,34 +516,46 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/proyektor" class="menu-item">
+            
+            <!-- Manajemen Aset -->
+            <div class="menu-section">Manajemen Aset</div>
+            <a href="{{ route('projectors.index') }}" class="menu-item">
                 <i class="fas fa-video"></i>
                 <span>Proyektor</span>
             </a>
-            <a href="/admin/jadwalperkuliahan" class="menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Jadwal Perkuliahan</span>
-            </a>
-            <a href="{{ route('admin.ruangan.index') }}" class="menu-item">
+            <a href="{{ route('admin.ruangan.index') }}" class="menu-item active">
                 <i class="fas fa-door-open"></i>
                 <span>Ruangan</span>
+            </a>
+            
+            <!-- Manajemen Akademik -->
+            <div class="menu-section">Manajemen Akademik</div>
+            <a href="/admin/jadwal-perkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
             </a>
             <a href="/admin/slotwaktu" class="menu-item">
                 <i class="fas fa-clock"></i>
                 <span>Slot Waktu</span>
             </a>
-            <a href="/admin/matakuliah" class="menu-item">
+            <a href="/admin/mata_kuliah" class="menu-item">
                 <i class="fas fa-book"></i>
                 <span>Matakuliah</span>
             </a>
             <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-chalkboard-teacher"></i>
                 <span>Kelas</span>
             </a>
+            
+            <!-- Manajemen Pengguna -->
+            <div class="menu-section">Manajemen Pengguna</div>
             <a href="/admin/pengguna" class="menu-item">
                 <i class="fas fa-users"></i>
                 <span>Pengguna</span>
             </a>
+            
+            <!-- Laporan & Pengaturan -->
+            <div class="menu-section">Laporan & Pengaturan</div>
             <a href="/admin/laporan" class="menu-item">
                 <i class="fas fa-chart-bar"></i>
                 <span>Statistik</span>
@@ -539,7 +569,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
+        <!-- Header - KONSISTEN dengan halaman lain -->
         <div class="header">
             <div></div> <!-- Empty div untuk penyeimbang -->
 
