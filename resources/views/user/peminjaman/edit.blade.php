@@ -34,7 +34,7 @@
             scroll-behavior: smooth;
         }
 
-        /* ===== NAVBAR ===== */
+        /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
@@ -77,6 +77,9 @@
             transition: all 0.3s;
             font-weight: 500;
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .navbar-nav .nav-link::after {
@@ -102,53 +105,87 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* ===== SUB NAVIGASI ===== */
-        .sub-nav {
+        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        .dropdown-menu-custom {
             background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.8rem 0;
-            position: sticky;
-            top: 70px;
-            z-index: 999;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 220px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
         }
 
-        .sub-nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .sub-nav-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center; /* Perbaikan: Rata tengah */
-        }
-
-        .sub-nav-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s;
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            border: 1px solid transparent;
-            flex: 0 0 auto; /* Perbaikan: Agar tidak melebar */
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
         }
 
-        .sub-nav-link:hover,
-        .sub-nav-link.active {
+        .dropdown-item-custom:hover {
             background-color: rgba(59, 89, 152, 0.1);
             color: var(--primary-color);
-            border-color: var(--primary-color);
         }
 
-        .sub-nav-link i {
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        /* ===== TOMBOL LOGIN ===== */
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
             font-size: 0.9rem;
+        }
+
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-warning:hover::before {
+            left: 100%;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         /* ===== KONTEN UTAMA ===== */
@@ -503,20 +540,6 @@
                 width: 40px;
                 height: 40px;
             }
-
-            /* Responsivitas untuk sub-navigasi */
-            .sub-nav {
-                top: 56px; /* Sesuaikan dengan tinggi navbar mobile */
-            }
-
-            .sub-nav-links {
-                gap: 0.5rem;
-            }
-
-            .sub-nav-link {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
-            }
         }
 
         @media (max-width: 576px) {
@@ -524,24 +547,12 @@
                 width: 100%;
                 padding: 12px;
             }
-
-            /* Responsivitas untuk sub-navigasi */
-            .sub-nav-links {
-                justify-content: center;
-            }
-
-            .sub-nav-link {
-                flex: 1;
-                min-width: 140px;
-                justify-content: center;
-                text-align: center;
-            }
         }
     </style>
 </head>
 
 <body>
-    <!-- ===== NAVBAR UTAMA ===== -->
+    <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -554,52 +565,103 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            Beranda
+                            <i class="fas fa-home me-1"></i> Beranda
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            Kalender Perkuliahan
+                            <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('user.peminjaman.index') }}">
-                            Daftar Peminjaman
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="peminjamanDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+                                    <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+                                    <i class="fas fa-undo me-2"></i> Pengembalian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
+                                    <i class="fas fa-history me-2"></i> Riwayat
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
+                                    <i class="fas fa-comment-dots me-2"></i> Feedback
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            Tentang
+                            <i class="fas fa-info-circle me-1"></i> Tentang
                         </a>
                     </li>
+
+                    <!-- Bagian Login/Dropdown User -->
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ Auth::user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+                                <li class="dropdown-header-custom">Masuk sebagai</li>
+                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                                <li><hr class="dropdown-divider-custom"></li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider-custom"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item-custom text-danger">
+                                            <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="btn-warning">
+                            <i class="fa-solid fa-right-to-bracket"></i> Login
+                        </a>
+                    </li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- ===== SUB NAVIGASI ===== -->
-    <div class="sub-nav">
-        <div class="sub-nav-container">
-            <div class="sub-nav-links">
-                <a href="{{ route('user.peminjaman.create') }}" class="sub-nav-link">
-                    <i class="fas fa-plus-circle"></i>
-                    Tambah Peminjaman
-                </a>
-                <a href="{{ route('user.pengembalian.index') }}" class="sub-nav-link">
-                    <i class="fas fa-undo"></i>
-                    Pengembalian
-                </a>
-                <a href="{{ route('user.peminjaman.riwayat') }}" class="sub-nav-link">
-                    <i class="fas fa-history"></i>
-                    Riwayat
-                </a>
-                <a href="{{ route('user.feedback.create') }}" class="sub-nav-link">
-                    <i class="fas fa-comment-dots"></i>
-                    Feedback
-                </a>
-            </div>
-        </div>
-    </div>
 
     <!-- ===== KONTEN UTAMA ===== -->
     <div class="container main-content mt-4">
@@ -846,7 +908,6 @@
             <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ===== NAVBAR SCROLL EFFECT =====
