@@ -6,6 +6,7 @@
     <title>Form Feedback - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /* ===== VARIABEL CSS SESUAI FREE USER ===== */
@@ -98,6 +99,99 @@
         .navbar-nav .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== LOGIN BUTTON STYLES ===== */
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .btn-warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-warning:hover::before {
+            left: 100%;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== DROPDOWN MENU STYLES ===== */
+        .dropdown-menu-custom {
+            position: absolute;
+            right: 0;
+            width: 14rem;
+            margin-top: 0.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            text-align: left;
+            color: #4b5563;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f1f5f9;
+            color: #1f2937;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 0.25rem 0;
+        }
+
+        .logout-button {
+            color: #dc2626 !important;
+        }
+
+        .logout-button:hover {
+            background-color: #fef2f2 !important;
         }
 
         /* ===== SUB NAVIGASI ===== */
@@ -468,6 +562,11 @@
             .rating-stars .star {
                 font-size: 1.7rem;
             }
+
+            .dropdown-menu-custom {
+                width: 12rem;
+                right: -1rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -486,6 +585,12 @@
                 width: 100%;
                 padding: 12px;
             }
+
+            .btn-warning {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -494,7 +599,7 @@
     <!-- ===== NAVBAR UTAMA ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/home">
                 <i class="fas fa-building"></i>SarPras TI
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -503,31 +608,85 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/home">
                             Beranda
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/kalender">
                             Kalender Perkuliahan
                         </a>
                     </li>
                     <li class="nav-item">
+                        @auth
                         <a class="nav-link" href="{{ route('user.peminjaman.index') }}">
                             Daftar Peminjaman
                         </a>
+                        @else
+                        <a class="nav-link" href="/peminjaman1">
+                            Daftar Peminjaman
+                        </a>
+                        @endauth
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/about">
                             Tentang
                         </a>
                     </li>
+                    
+                    <!-- LOGIN LOGIC -->
+                    @auth
+                    <li class="nav-item dropdown" x-data="{ open: false }">
+                        <a class="nav-link d-flex align-items-center" href="#" @click="open = !open" style="cursor: pointer;">
+                            <i class="fas fa-user me-1" style="color: #87CEEB;"></i>
+                            <span>{{ Auth::user()->name }}</span>
+                            <i class="fas fa-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                        </a>
+                        
+                        <div class="dropdown-menu-custom" x-show="open" @click.away="open = false" x-transition>
+                            <div class="dropdown-header">
+                                <p class="text-sm mb-0">Masuk sebagai</p>
+                                <p class="text-sm font-weight-bold mb-0">{{ Auth::user()->name }}</p>
+                            </div>
+                            
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user fa-fw me-2 text-gray-500"></i> 
+                                Pengaturan Profil
+                            </a>
+                            <a href="{{ route('user.peminjaman.riwayat') }}" class="dropdown-item">
+                                <i class="fas fa-history fa-fw me-2 text-gray-500"></i> 
+                                Riwayat Peminjaman
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog fa-fw me-2 text-gray-500"></i> 
+                                Pengaturan
+                            </a>
+                            
+                            <div class="dropdown-divider"></div>
+                            
+                            <form method="POST" action="{{ route('logout') }}" class="mb-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item logout-button">
+                                    <i class="fas fa-sign-out-alt fa-fw me-2"></i> 
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="btn-warning">
+                            <i class="fa-solid fa-right-to-bracket"></i> Login
+                        </a>
+                    </li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- ===== SUB NAVIGASI ===== -->
+    @auth
     <div class="sub-nav">
         <div class="sub-nav-container">
             <div class="sub-nav-links">
@@ -550,6 +709,7 @@
             </div>
         </div>
     </div>
+    @endauth
 
     <!-- ===== KONTEN UTAMA ===== -->
     <div class="container main-content mt-4">
@@ -588,6 +748,7 @@
                     </div>
                 @endif
 
+                @auth
                 <form action="{{ route('user.feedback.store') }}" method="POST" id="feedbackForm">
                     @csrf
 
@@ -649,7 +810,7 @@
                         <input type="text" class="form-control @error('judul') is-invalid @enderror" id="judul" name="judul" placeholder="Ringkasan singkat feedback Anda" value="{{ old('judul') }}" required>
                         @error('judul') 
                             <div class="invalid-feedback">{{ $message }}</div> 
-                        @enderror
+                            @enderror
                     </div>
 
                     <div class="mb-4">
@@ -657,7 +818,7 @@
                         <textarea class="form-control @error('detail_feedback') is-invalid @enderror" id="detail_feedback" name="detail_feedback" rows="4" placeholder="Jelaskan detail masalah atau feedback yang ingin Anda sampaikan..." required>{{ old('detail_feedback') }}</textarea>
                         @error('detail_feedback') 
                             <div class="invalid-feedback">{{ $message }}</div> 
-                        @enderror
+                            @enderror
                     </div>
 
                     <div class="mb-4">
@@ -671,6 +832,16 @@
                         </button>
                     </div>
                 </form>
+                @else
+                <div class="text-center py-5">
+                    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <h4 class="mb-3">Anda perlu login untuk mengirim feedback</h4>
+                    <p class="mb-4">Silakan login terlebih dahulu untuk memberikan masukan tentang fasilitas kami.</p>
+                    <a href="{{ route('login') }}" class="btn btn-primary-custom">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Login Sekarang
+                    </a>
+                </div>
+                @endauth
             </div>
         </div>
     </div>

@@ -147,44 +147,57 @@
 
         /* ===== DROPDOWN MENU ===== */
         .dropdown-menu-custom {
+            position: absolute;
+            right: 0;
+            width: 14rem;
+            margin-top: 0.5rem;
             background-color: white;
-            border: none;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            padding: 0.5rem 0;
-            min-width: 200px;
+            border: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow: hidden;
         }
         
-        .dropdown-item-custom {
-            padding: 0.7rem 1rem;
-            color: #333;
+        .dropdown-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
+            width: 100%;
+            padding: 0.75rem 1rem;
             border: none;
             background: none;
-            width: 100%;
             text-align: left;
+            color: #4b5563;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
         }
         
-        .dropdown-item-custom:hover {
-            background-color: #f8f9fa;
-            color: var(--primary-color);
+        .dropdown-item:hover {
+            background-color: #f1f5f9;
+            color: #1f2937;
         }
         
-        .dropdown-divider-custom {
-            margin: 0.5rem 0;
-            border-top: 1px solid #e9ecef;
+        .dropdown-divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 0.25rem 0;
         }
         
-        .dropdown-header-custom {
-            padding: 0.7rem 1rem;
-            font-size: 0.85rem;
-            color: #6c757d;
-            font-weight: 600;
+        .logout-button {
+            color: #dc2626 !important;
         }
         
+        .logout-button:hover {
+            background-color: #fef2f2 !important;
+        }
+
         /* ===== HERO SECTION ===== */
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -797,6 +810,11 @@
                 width: 40px;
                 height: 40px;
             }
+
+            .dropdown-menu-custom {
+                width: 12rem;
+                right: -1rem;
+            }
         }
         
         @media (max-width: 576px) {
@@ -817,6 +835,12 @@
             .hero-section {
                 padding: 2.5rem 0;
             }
+
+            .btn-warning {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -828,48 +852,58 @@
         <ul>
             <li><a href="/home">Beranda</a></li>
             <li><a href="/kalender" class="active">Kalender Perkuliahan</a></li>
+            @auth
+            <li><a href="{{ route('user.peminjaman.index') }}">Daftar Peminjaman</a></li>
+            @else
             <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
+            @endauth
             <li><a href="/about">Tentang</a></li>
             
             <!-- Bagian Login/Dropdown User -->
             @auth
-            <li class="nav-item dropdown" x-data="{ open: false }">
-                <a class="nav-link dropdown-toggle" href="#" @click="open = !open" role="button" aria-expanded="false">
-                    <i class="fas fa-user me-1" style="color: #87CEEB;"></i>
-                    {{ Auth::user()->name }}
+            <li x-data="{ open: false }" class="relative">
+                <a @click="open = !open" href="#" class="flex items-center gap-2 py-2 px-1" style="color: white; cursor: pointer;" aria-expanded="false" aria-haspopup="true">
+                    <i class="fas fa-user" style="color: #87CEEB;"></i>
+                    <span>{{ Auth::user()->name }}</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-custom" x-show="open" @click.away="open = false">
-                    <li class="dropdown-header-custom">Masuk sebagai</li>
-                    <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
-                    <li><hr class="dropdown-divider-custom"></li>
-                    <li>
-                        <a class="dropdown-item-custom" href="#">
-                            <i class="fas fa-user fa-fw me-2 text-gray-500"></i> Pengaturan Profil
+
+                <div x-show="open" 
+                     @click.away="open = false" 
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="dropdown-menu-custom"
+                     style="display: none;">
+                    <div class="py-1 text-gray-700">
+                        <div class="dropdown-header">
+                            <p class="text-sm leading-5">Masuk sebagai</p>
+                            <p class="text-sm font-medium truncate">{{ Auth::user()->name }}</p>
+                        </div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user fa-fw mr-2 text-gray-500"></i> Pengaturan Profil
                         </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item-custom" href="#">
-                            <i class="fas fa-history fa-fw me-2 text-gray-500"></i> Riwayat Peminjaman
+                        <a href="{{ route('user.peminjaman.riwayat') }}" class="dropdown-item">
+                            <i class="fas fa-history fa-fw mr-2 text-gray-500"></i> Riwayat Peminjaman
                         </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item-custom" href="#">
-                            <i class="fas fa-cog fa-fw me-2 text-gray-500"></i> Pengaturan
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog fa-fw mr-2 text-gray-500"></i> Pengaturan
                         </a>
-                    </li>
-                    <li><hr class="dropdown-divider-custom"></li>
-                    <li>
+                        <div class="dropdown-divider"></div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="dropdown-item-custom text-danger">
-                                <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                            <button type="submit" class="dropdown-item logout-button">
+                                <i class="fas fa-sign-out-alt fa-fw mr-2"></i> Logout
                             </button>
                         </form>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </li>
             @else
-            <li class="nav-item">
+            <li>
                 <a href="{{ route('login') }}" class="btn-warning">
                     <i class="fa-solid fa-right-to-bracket"></i> Login
                 </a>
