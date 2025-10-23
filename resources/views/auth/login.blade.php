@@ -13,8 +13,9 @@
     
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --primary-hover: #0b5ed7;
+            --primary-color: #3b5998;
+            --primary-hover: #344e86;
+            --accent-color: #4c70ba;
             --google-blue: #4285F4;
             --google-red: #EA4335;
             --google-yellow: #FBBC05;
@@ -35,23 +36,23 @@
             justify-content: center;
             padding: 15px;
             margin: 0;
+            overflow: hidden; /* Menghilangkan scroll */
         }
         
         .login-container {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
             animation: fadeIn 0.5s ease-in-out;
         }
         
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 6px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            padding: 25px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(59, 89, 152, 0.3);
+            padding: 30px;
             overflow: hidden;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: none;
         }
         
         .login-card::before {
@@ -60,28 +61,29 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color) 0%, #2e8de6 100%);
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border-radius: 12px 12px 0 0;
         }
         
         .header-container {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
         
         .header-title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
+            color: #1f2937;
+            margin-bottom: 8px;
             line-height: 1.2;
         }
         
         .header-subtitle {
-            font-size: 0.85rem;
-            color: #6c757d;
+            font-size: 0.9rem;
+            color: #6b7280;
             margin-bottom: 0;
-            line-height: 1.3;
+            line-height: 1.4;
         }
         
         .login-form-container {
@@ -90,27 +92,27 @@
         
         .btn-google {
             background-color: white;
-            color: #757575;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            font-weight: 500;
+            color: #4b5563;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.3s;
             width: 100%;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            font-size: 0.85rem;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
         }
         
         .btn-google:hover {
-            background-color: #f8f9fa;
-            border-color: #ccc;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9fafb;
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .google-icon {
@@ -119,53 +121,54 @@
         }
         
         .google-icon-circle {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
         }
         
         .divider {
             display: flex;
             align-items: center;
-            margin: 15px 0;
-            color: #6c757d;
-            font-size: 0.8rem;
+            margin: 20px 0;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
         
         .divider::before,
         .divider::after {
             content: "";
             flex: 1;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #e5e7eb;
         }
         
         .divider::before {
-            margin-right: 10px;
+            margin-right: 12px;
         }
         
         .divider::after {
-            margin-left: 10px;
+            margin-left: 12px;
         }
         
         .form-label {
             font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
         
         .form-control {
-            padding: 10px 12px;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            border: 1px solid #ced4da;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
             transition: all 0.3s;
-            font-size: 0.85rem;
-            background: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            background: white;
         }
         
         .form-control:focus {
-            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
-            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.15);
+            border-color: var(--accent-color);
             background: white;
         }
         
@@ -176,33 +179,33 @@
         
         .toggle-password {
             position: absolute;
-            right: 12px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #6c757d;
+            color: #6b7280;
             cursor: pointer;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 3px;
+            border-radius: 4px;
             transition: all 0.2s;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         
         .toggle-password:hover {
-            background-color: #f8f9fa;
-            color: #495057;
+            background-color: #f3f4f6;
+            color: #4b5563;
         }
         
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 10px 0 15px;
+            margin: 15px 0 20px;
         }
         
         .form-check {
@@ -210,9 +213,9 @@
         }
         
         .form-check-input {
-            width: 14px;
-            height: 14px;
-            margin-right: 6px;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
             margin-top: 0.1em;
         }
         
@@ -221,18 +224,22 @@
             border-color: var(--primary-color);
         }
         
+        .form-check-input:focus {
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.25);
+        }
+        
         .form-check-label {
-            font-size: 0.8rem;
-            color: #495057;
+            font-size: 0.85rem;
+            color: #4b5563;
             user-select: none;
         }
         
         .forgot-link {
             color: var(--primary-color);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             transition: all 0.2s;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .forgot-link:hover {
@@ -241,35 +248,38 @@
         }
         
         .btn-login {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
             border: none;
-            padding: 10px;
-            font-weight: 600;
-            border-radius: 4px;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 8px;
             color: white;
             width: 100%;
             transition: all 0.3s;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
         }
         
         .btn-login:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(13, 110, 253, 0.3);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #3a5ca0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 89, 152, 0.3);
         }
         
         .signup-link {
             text-align: center;
-            margin-top: 10px;
-            color: #6c757d;
-            font-size: 0.8rem;
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            padding-top: 15px;
+            border-top: 1px solid #f3f4f6;
         }
         
         .signup-link a {
             color: var(--primary-color);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.2s;
         }
         
@@ -292,19 +302,20 @@
         /* Responsive adjustments */
         @media (max-width: 576px) {
             .login-card {
-                padding: 20px 15px;
+                padding: 25px 20px;
             }
             
             .header-title {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
             }
             
             .header-subtitle {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
             
             body {
                 padding: 10px;
+                overflow: auto; /* Mengizinkan scroll hanya di mobile jika diperlukan */
             }
         }
     </style>
@@ -330,11 +341,11 @@
                             <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                         </svg>
                     </span>
-                    Google
+                    Masuk dengan Google
                 </a>
 
                 <!-- Divider -->
-                <div class="divider">atau lanjutkan dengan -</div>
+                <div class="divider">atau lanjutkan dengan email</div>
 
                 <!-- Form Login -->
                 <form method="POST" action="/login">
@@ -342,7 +353,7 @@
 
                     {{-- Display Validation Errors --}}
                     @error('email')
-                        <div class="alert alert-danger mb-2 p-2" style="font-size: 0.8rem;" role="alert">
+                        <div class="alert alert-danger mb-2 p-2" style="font-size: 0.8rem; border-radius: 6px;" role="alert">
                             {{ $message }}
                         </div>
                     @enderror
@@ -423,6 +434,15 @@
             img.onload = function() {
                 console.log('Background image loaded successfully');
             };
+
+            // Mencegah scroll dengan wheel/touch
+            document.body.addEventListener('wheel', preventScroll, { passive: false });
+            document.body.addEventListener('touchmove', preventScroll, { passive: false });
+            
+            function preventScroll(e) {
+                e.preventDefault();
+                return false;
+            }
         });
     </script>
 </body>

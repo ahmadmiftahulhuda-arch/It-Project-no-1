@@ -20,18 +20,6 @@
             --transition: all 0.3s ease;
         }
 
-        /* ===== STYLING UMUM ===== */
-        body {
-            background-color: #f5f8fa;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-        }
-
         /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -58,12 +46,14 @@
             text-decoration: none;
         }
 
-        .navbar-brand i {
-            margin-right: 10px;
+        /* Logo TI yang diperbesar */
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 12px;
             transition: transform 0.3s;
         }
 
-        .navbar-brand:hover i {
+        .navbar-brand:hover img {
             transform: rotate(-10deg);
         }
 
@@ -80,6 +70,18 @@
         .navbar-nav .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== NAVBAR CENTER ALIGNMENT ===== */
+        .navbar-nav-center {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 auto;
+        }
+
+        .navbar-nav-center .nav-item {
+            margin: 0 0.5rem;
         }
 
         /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
@@ -163,6 +165,18 @@
             border-color: #d39e00;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== STYLING UMUM ===== */
+        body {
+            background-color: #f5f8fa;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
         }
 
         /* ===== KONTEN UTAMA ===== */
@@ -809,6 +823,12 @@
                 width: 40px;
                 height: 40px;
             }
+
+            /* Responsivitas untuk navbar center */
+            .navbar-nav-center {
+                justify-content: flex-start;
+                margin: 0;
+            }
         }
 
         @media (max-width: 576px) {
@@ -874,15 +894,17 @@
     <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-building"></i>SarPras TI
+            <a class="navbar-brand" href="/home">
+                <!-- Logo TI yang ditambahkan -->
+                <img src="/img/Logo_TI.png" alt="Logo TI">
+                PINTER
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menu sebelah kiri -->
-                <ul class="navbar-nav me-auto">
+                <!-- Menu tengah -->
+                <ul class="navbar-nav navbar-nav-center">
                     <li class="nav-item">
                         <a class="nav-link" href="/home">
                             <i class="fas fa-home me-1"></i> Beranda
@@ -925,7 +947,7 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
+                        <a class="nav-link dropdown-toggle active" href="#" id="peminjamanDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
                         </a>
@@ -946,7 +968,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item-custom active" href="{{ route('user.peminjaman.riwayat') }}">
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
                                     <i class="fas fa-history me-2"></i> Riwayat
                                 </a>
                             </li>
