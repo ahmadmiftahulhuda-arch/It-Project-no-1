@@ -25,7 +25,7 @@
             --border-light: #e9ecef;
         }
 
-        /* Dark Mode Variables - KONSISTEN dengan template asli */
+        /* Dark Mode Variables */
         .dark-mode {
             --primary: #4a6fa5;
             --secondary: #5d7ba6;
@@ -48,7 +48,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles - KONSISTEN */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -105,6 +105,17 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+        }
+
         .menu-item {
             display: flex;
             align-items: center;
@@ -147,22 +158,58 @@
             min-height: 100vh;
         }
 
-        /* Header - KONSISTEN */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--bg-card);
-            padding: 15px 20px;
-            border-radius: 8px;
+            padding: 15px 25px;
+            border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border: 1px solid var(--border-light);
         }
 
         .dark-mode .header {
             background: var(--bg-card);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 2;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+        }
+
+        .dark-mode .search-bar input {
+            background-color: #2a2a2a;
+            border-color: var(--border-light);
         }
 
         .user-actions {
@@ -223,12 +270,13 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Page Title - KONSISTEN */
+        /* Page Title */
         .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding: 0 5px;
         }
 
         .page-title h1 {
@@ -247,7 +295,7 @@
             background: var(--primary);
             border: none;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 500;
             transition: all 0.3s;
             box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
@@ -256,12 +304,14 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-primary:hover {
             background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+            color: white;
         }
 
         .btn-outline {
@@ -269,13 +319,14 @@
             color: var(--primary);
             background: transparent;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 500;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-outline:hover {
@@ -283,10 +334,10 @@
             color: white;
         }
 
-        /* Form Container - KONSISTEN */
+        /* Form Container */
         .table-container {
             background: var(--bg-card);
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-light);
@@ -298,12 +349,11 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Table Header dengan Filter - KONSISTEN */
         .table-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 20px 25px;
             border-bottom: 1px solid var(--border-light);
             background: var(--bg-light);
         }
@@ -331,6 +381,9 @@
             background: var(--bg-card);
             color: var(--text-dark);
             transition: all 0.3s;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
         }
 
         .form-control:focus, .form-select:focus {
@@ -355,12 +408,12 @@
             color: #f56565 !important;
         }
 
-        /* Success Message dengan Auto-hide - KONSISTEN */
+        /* Success Message dengan Auto-hide */
         .alert-auto-hide {
             background: #d4edda;
             color: #155724;
             padding: 12px 15px;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-top: 20px;
             border: 1px solid #c3e6cb;
             position: relative;
@@ -399,26 +452,7 @@
             }
         }
 
-        /* Menu Toggle untuk Mobile - KONSISTEN */
-        .menu-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            display: none;
-        }
-
-        /* Responsive - KONSISTEN */
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -426,7 +460,8 @@
             }
 
             .sidebar-header h2,
-            .menu-item span {
+            .menu-item span,
+            .menu-section {
                 display: none;
             }
 
@@ -441,43 +476,36 @@
 
             .main-content {
                 margin-left: 70px;
+                padding: 15px;
             }
 
             .header {
                 flex-direction: column;
                 gap: 15px;
+                padding: 15px;
             }
 
-            .stats-container {
-                grid-template-columns: 1fr;
+            .search-bar {
+                width: 100%;
             }
 
-            .table-header {
+            .page-title {
                 flex-direction: column;
+                align-items: flex-start;
                 gap: 15px;
             }
-
-            .table-filters {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .filter-group {
-                min-width: 120px;
-            }
-
-            .menu-toggle {
-                display: flex;
+            
+            .page-title h1 {
+                font-size: 1.5rem;
             }
         }
 
-        /* Dark Mode Transition - SMOOTH */
+        /* Dark Mode Transition */
         body,
         .header,
         .table-container,
         .form-control,
-        .form-select,
-        .table {
+        .form-select {
             transition: all 0.3s ease;
         }
     </style>
@@ -489,15 +517,20 @@
             <div class="sidebar-logo">
                 <i class="fas fa-laptop-code"></i>
             </div>
-            <h2>Lab TIK</h2>
+            <h2>Admin TI</h2>
         </div>
 
         <div class="sidebar-menu">
+            <!-- Menu Utama -->
+            <div class="menu-section">Menu Utama</div>
             <a href="/admin/dashboard" class="menu-item">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="/admin/peminjaman" class="menu-item">
+            
+            <!-- Manajemen Peminjaman -->
+            <div class="menu-section">Manajemen Peminjaman</div>
+            <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                 <i class="fas fa-hand-holding"></i>
                 <span>Peminjaman</span>
             </a>
@@ -513,30 +546,46 @@
                 <i class="fas fa-comment"></i>
                 <span>Feedback</span>
             </a>
-            <a href="/admin/projectors" class="menu-item">
+            
+            <!-- Manajemen Aset -->
+            <div class="menu-section">Manajemen Aset</div>
+            <a href="{{ route('projectors.index') }}" class="menu-item">
                 <i class="fas fa-video"></i>
                 <span>Proyektor</span>
-            </a>
-            <a href="/admin/jadwal-perkuliahan" class="menu-item active">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Jadwal Perkuliahan</span>
             </a>
             <a href="/admin/ruangan" class="menu-item">
                 <i class="fas fa-door-open"></i>
                 <span>Ruangan</span>
             </a>
-            <a href="/admin/matakuliah" class="menu-item">
+            
+            <!-- Manajemen Akademik -->
+            <div class="menu-section">Manajemen Akademik</div>
+            <a href="/admin/jadwal-perkuliahan" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Jadwal Perkuliahan</span>
+            </a>
+            <a href="/admin/slotwaktu" class="menu-item">
+                <i class="fas fa-clock"></i>
+                <span>Slot Waktu</span>
+            </a>
+            <a href="/admin/mata_kuliah" class="menu-item">
                 <i class="fas fa-book"></i>
                 <span>Matakuliah</span>
             </a>
             <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-chalkboard-teacher"></i>
                 <span>Kelas</span>
             </a>
+            
+            <!-- Manajemen Pengguna -->
+            <div class="menu-section">Manajemen Pengguna</div>
             <a href="/admin/pengguna" class="menu-item">
                 <i class="fas fa-users"></i>
                 <span>Pengguna</span>
             </a>
+            
+            <!-- Laporan & Pengaturan -->
+            <div class="menu-section">Laporan & Pengaturan</div>
             <a href="/admin/laporan" class="menu-item">
                 <i class="fas fa-chart-bar"></i>
                 <span>Statistik</span>
@@ -552,7 +601,11 @@
     <div class="main-content">
         <!-- Header -->
         <div class="header">
-            <div></div> <!-- Spacer untuk alignment -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari mata kuliah/dosen/kelas...">
+            </div>
+
             <div class="user-actions">
                 <div class="notification-btn">
                     <i class="fas fa-bell"></i>
@@ -576,7 +629,7 @@
         <div class="page-title">
             <div>
                 <h1>Edit Jadwal Perkuliahan</h1>
-                <p>Edit jadwal perkuliahan {{ $jadwalPerkuliahan->nama_matkul }}</p>
+                <p>Edit jadwal perkuliahan {{ $jadwalPerkuliahan->kode_matkul ?? 'Tidak Diketahui' }}</p>
             </div>
             <div>
                 <a href="{{ route('jadwal-perkuliahan.index') }}" class="btn btn-outline">
@@ -614,17 +667,9 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="waktu" class="form-label">Waktu <span class="text-danger">*</span></label>
-                            <select class="form-select" id="waktu" name="waktu" required>
-                                <option value="">Pilih Waktu</option>
-                                <option value="07:00 - 08:40" {{ old('waktu', $jadwalPerkuliahan->waktu) == '07:00 - 08:40' ? 'selected' : '' }}>07:00 - 08:40</option>
-                                <option value="08:40 - 10:20" {{ old('waktu', $jadwalPerkuliahan->waktu) == '08:40 - 10:20' ? 'selected' : '' }}>08:40 - 10:20</option>
-                                <option value="10:20 - 12:00" {{ old('waktu', $jadwalPerkuliahan->waktu) == '10:20 - 12:00' ? 'selected' : '' }}>10:20 - 12:00</option>
-                                <option value="13:00 - 14:40" {{ old('waktu', $jadwalPerkuliahan->waktu) == '13:00 - 14:40' ? 'selected' : '' }}>13:00 - 14:40</option>
-                                <option value="14:40 - 16:20" {{ old('waktu', $jadwalPerkuliahan->waktu) == '14:40 - 16:20' ? 'selected' : '' }}>14:40 - 16:20</option>
-                                <option value="16:20 - 18:00" {{ old('waktu', $jadwalPerkuliahan->waktu) == '16:20 - 18:00' ? 'selected' : '' }}>16:20 - 18:00</option>
-                            </select>
-                            @error('waktu')
+                            <label for="jam_mulai" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai', $jadwalPerkuliahan->jam_mulai) }}" required>
+                            @error('jam_mulai')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
@@ -632,39 +677,12 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" value="{{ old('kode_matkul', $jadwalPerkuliahan->kode_matkul) }}" required>
-                            @error('kode_matkul')
+                            <label for="jam_selesai" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai', $jadwalPerkuliahan->jam_selesai) }}" required>
+                            @error('jam_selesai')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label for="nama_matkul" class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nama_matkul" name="nama_matkul" value="{{ old('nama_matkul', $jadwalPerkuliahan->nama_matkul) }}" required>
-                            @error('nama_matkul')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="dosen" class="form-label">Dosen Pengampu <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="dosen" name="dosen" value="{{ old('dosen', $jadwalPerkuliahan->dosen) }}" required>
-                            @error('dosen')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="kelas" class="form-label">Kelas <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="kelas" name="kelas" value="{{ old('kelas', $jadwalPerkuliahan->kelas) }}" required>
-                            @error('kelas')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="ruangan" class="form-label">Ruangan <span class="text-danger">*</span></label>
                             <select class="form-select" id="ruangan" name="ruangan" required>
@@ -680,25 +698,58 @@
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
-                            <select class="form-select" id="semester" name="semester" required>
-                                <option value="">Pilih Semester</option>
-                                @for($i = 1; $i <= 8; $i++)
-                                    <option value="{{ $i }}" {{ old('semester', $jadwalPerkuliahan->semester) == $i ? 'selected' : '' }}>Semester {{ $i }}</option>
-                                @endfor
+                            <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" value="{{ old('kode_matkul', $jadwalPerkuliahan->kode_matkul) }}" required>
+                            @error('kode_matkul')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
+                            <select class="form-select" id="sistem_kuliah" name="sistem_kuliah" required>
+                                <option value="">Pilih Sistem Kuliah</option>
+                                <option value="Teori" {{ old('sistem_kuliah', $jadwalPerkuliahan->sistem_kuliah) == 'Teori' ? 'selected' : '' }}>Teori</option>
+                                <option value="Praktikum" {{ old('sistem_kuliah', $jadwalPerkuliahan->sistem_kuliah) == 'Praktikum' ? 'selected' : '' }}>Praktikum</option>
                             </select>
-                            @error('semester')
+                            @error('sistem_kuliah')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-12">
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $jadwalPerkuliahan->keterangan) }}</textarea>
-                            @error('keterangan')
+                        <div class="col-md-6">
+                            <label for="nama_kelas" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nama_kelas" name="nama_kelas" value="{{ old('nama_kelas', $jadwalPerkuliahan->nama_kelas) }}" required>
+                            @error('nama_kelas')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="kelas_mahasiswa" name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa', $jadwalPerkuliahan->kelas_mahasiswa) }}" required>
+                            @error('kelas_mahasiswa')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="sebaran_mahasiswa" class="form-label">Sebaran Mahasiswa</label>
+                            <input type="text" class="form-control" id="sebaran_mahasiswa" name="sebaran_mahasiswa" value="{{ old('sebaran_mahasiswa', $jadwalPerkuliahan->sebaran_mahasiswa) }}">
+                            @error('sebaran_mahasiswa')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="daya_tampung" class="form-label">Daya Tampung <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="daya_tampung" name="daya_tampung" value="{{ old('daya_tampung', $jadwalPerkuliahan->daya_tampung) }}" required>
+                            @error('daya_tampung')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
@@ -716,7 +767,7 @@
             </div>
         </div>
 
-        <!-- Success Message -->
+        <!-- Success Message dengan Auto-hide -->
         @if(session('success'))
             <div class="alert-auto-hide" id="successAlert">
                 <i class="fas fa-check-circle"></i> {{ session('success') }}
