@@ -924,7 +924,7 @@
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <a href="/home" class="logo">
-            <i class="fas fa-building"></i>SarPras TI
+            <i class="fas fa-building"></i>PINTER
         </a>
         <ul>
             <li><a href="/home" class="active">Beranda</a></li>

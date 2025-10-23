@@ -56,12 +56,14 @@
             text-decoration: none;
         }
 
-        .navbar-brand i {
-            margin-right: 10px;
+        /* Logo TI yang diperbesar */
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 12px;
             transition: transform 0.3s;
         }
 
-        .navbar-brand:hover i {
+        .navbar-brand:hover img {
             transform: rotate(-10deg);
         }
 
@@ -608,7 +610,9 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="/home">
-                <i class="fas fa-building"></i>SarPras TI
+                <!-- Logo TI yang ditambahkan -->
+                <img src="/img/Logo_TI.png" alt="Logo TI">
+                PINTER
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>

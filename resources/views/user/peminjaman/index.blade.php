@@ -1068,7 +1068,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-building"></i>SarPras TI
+                <i class="fas fa-building"></i>PINTER
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
