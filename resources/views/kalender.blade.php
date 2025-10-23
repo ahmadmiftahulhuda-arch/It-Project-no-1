@@ -58,8 +58,8 @@
 
         /* Logo TI yang diperbesar */
         .navbar-brand img {
-            height: 45px; /* Diperbesar dari 40px */
-            margin-right: 12px; /* Sedikit diperbesar jaraknya */
+            height: 45px;
+            margin-right: 12px;
             transition: transform 0.3s;
         }
 
@@ -123,6 +123,18 @@
             font-size: 0.85rem;
             color: #6c757d;
             font-weight: 600;
+        }
+
+        /* ===== NAVBAR CENTER ALIGNMENT ===== */
+        .navbar-nav-center {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 auto;
+        }
+
+        .navbar-nav-center .nav-item {
+            margin: 0 0.5rem;
         }
 
         /* ===== TOMBOL LOGIN ===== */
@@ -825,7 +837,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Menu sebelah kiri -->
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav navbar-nav-center">
                     <li class="nav-item">
                         <a class="nav-link" href="/home">
                             <i class="fas fa-home me-1"></i> Beranda

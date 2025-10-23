@@ -59,12 +59,14 @@
             text-decoration: none;
         }
 
-        .navbar-brand i {
-            margin-right: 10px;
+        /* Logo TI yang diperbesar */
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 12px;
             transition: transform 0.3s;
         }
 
-        .navbar-brand:hover i {
+        .navbar-brand:hover img {
             transform: rotate(-10deg);
         }
 
@@ -81,6 +83,18 @@
         .navbar-nav .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== NAVBAR CENTER ALIGNMENT ===== */
+        .navbar-nav-center {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 auto;
+        }
+
+        .navbar-nav-center .nav-item {
+            margin: 0 0.5rem;
         }
 
         /* ===== DROPDOWN MENU ===== */
@@ -1067,15 +1081,17 @@
     <!-- ===== NAVBAR UTAMA ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-building"></i>PINTER
+            <a class="navbar-brand" href="/home">
+                <!-- Logo TI yang ditambahkan -->
+                <img src="/img/Logo_TI.png" alt="Logo TI">
+                PINTER
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menu sebelah kiri -->
-                <ul class="navbar-nav me-auto">
+                <!-- Menu tengah -->
+                <ul class="navbar-nav navbar-nav-center">
                     <li class="nav-item">
                         <a class="nav-link" href="/home">
                             <i class="fas fa-home me-1"></i> Beranda

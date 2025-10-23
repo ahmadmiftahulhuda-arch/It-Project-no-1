@@ -125,6 +125,18 @@
             font-weight: 600;
         }
 
+        /* ===== NAVBAR CENTER ALIGNMENT ===== */
+        .navbar-nav-center {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 auto;
+        }
+
+        .navbar-nav-center .nav-item {
+            margin: 0 0.5rem;
+        }
+
         /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
@@ -618,8 +630,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menu sebelah kiri -->
-                <ul class="navbar-nav me-auto">
+                <!-- Menu tengah -->
+                <ul class="navbar-nav navbar-nav-center">
                     <li class="nav-item">
                         <a class="nav-link" href="/home">
                             <i class="fas fa-home me-1"></i> Beranda
