@@ -707,7 +707,7 @@
                         <i class="fas fa-file-export"></i> Ekspor
                     </button>
                     <button class="btn btn-primary" id="btn-add-loan">
-                        <i class="fas fa-plus"></i> Tambah Peminjaman
+                        <i class="fas fa-plus"></i> Tambah Peminjaman 44
                     </button>
                 </div>
             </div>
