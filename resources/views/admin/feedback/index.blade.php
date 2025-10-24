@@ -824,7 +824,7 @@
 
             <div class="sidebar-menu">
                 <!-- Menu Utama -->
-                <div class="menu-section">Menu Utama</div>
+                <div class="menu-section">Tahu utama</div>
                 <a href="/admin/dashboard" class="menu-item">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
