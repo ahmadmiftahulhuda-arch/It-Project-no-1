@@ -634,7 +634,7 @@
         <!-- Page Title -->
         <div class="page-title">
             <div>
-                <h1>Manajemen Mata Kuliah</h1>
+                <h1>Manajemen Coba Coba</h1>
                 <p>Platform terpusat untuk mengelola data mata kuliah secara efisien.</p>
             </div>
             <div>
