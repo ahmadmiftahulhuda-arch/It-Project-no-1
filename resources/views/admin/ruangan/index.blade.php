@@ -697,7 +697,7 @@
             </a>
             <a href="/admin/ruangan" class="menu-item active">
                 <i class="fas fa-door-open"></i>
-                <span>Ruangan</span>
+                <span>M. DIMAS APRIANTO</span>
             </a>
             
             <!-- Manajemen Akademik -->
