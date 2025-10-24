@@ -1216,10 +1216,10 @@
                 </a>
                 
                 <!-- Manajemen Pengguna -->
-                <div class="menu-section">Manajemen Pengguna</div>
+                <div class="menu-section">Manajemen user</div>
                 <a href="/admin/pengguna" class="menu-item">
                     <i class="fas fa-users"></i>
-                    <span>Pengguna</span>
+                    <span>User</span>
                 </a>
                 
                 <!-- Laporan & Pengaturan -->
