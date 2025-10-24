@@ -457,7 +457,7 @@
                 </a>
                 
                 <!-- Manajemen Peminjaman -->
-                <div class="menu-section">Manajemen Peminjaman</div>
+                <div class="menu-section">Manajemen Mantap</div>
                 <a href="{{ route('admin.peminjaman.index') }}" class="menu-item">
                     <i class="fas fa-hand-holding"></i>
                     <span>Peminjaman</span>
