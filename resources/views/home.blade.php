@@ -982,20 +982,7 @@
                                     <i class="fas fa-clock me-2"></i> Jadwal Kuliah
                                 </a>
                             </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider-custom">
-                            </li>
-                            <li>
+                             <li>
                                 <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
                                 </a>
@@ -1347,7 +1334,7 @@
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <div class="action-title">Kalender</div>
-                    <p>Lihat jadwal peminjaman</p>
+                    <p>Lihat  peminjaman</p>
                 </a>
                 <a href="{{ route('user.feedback.create') }}" class="action-card">
                     <div class="action-icon">

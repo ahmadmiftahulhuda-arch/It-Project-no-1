@@ -928,19 +928,6 @@
                             </li>
                             <li>
                                 <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-book me-2"></i> Jadwal Ujian
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-graduation-cap me-2"></i> Jadwal Wisuda
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider-custom">
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
                                 </a>
                             </li>
