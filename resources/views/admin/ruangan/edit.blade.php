@@ -689,35 +689,6 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header - DIPERBAIKI agar konsisten -->
-        <div class="header">
-            <form id="searchForm" method="GET" action="{{ route('admin.ruangan.index') }}" class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" name="cari" placeholder="Cari ruang..." value="{{ request('cari') }}">
-                <button type="submit" style="display: none;"></button>
-            </form>
-
-            <div class="user-actions">
-                <div class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                </div>
-
-                <div class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </div>
-
-                <div class="user-profile">
-                    <div class="user-avatar">A</div>
-                    <div>
-                        <div>Admin Lab</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
         <!-- Header - KONSISTEN dengan halaman lain -->
         <div class="header">
             <div></div> <!-- Empty div untuk penyeimbang -->
