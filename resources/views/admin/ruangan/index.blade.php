@@ -34,7 +34,7 @@
             line-height: 1.6;
         }
 
-              /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -136,7 +136,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -222,7 +222,7 @@
             min-height: 100vh;
         }
 
-        /* Header - DIPERBAIKI agar konsisten */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -342,6 +342,24 @@
             background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(255, 152, 0, 0.2);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+            color: white;
         }
 
         .btn-outline {
@@ -594,6 +612,73 @@
             color: #dee2e6;
         }
 
+        /* Modal Styles */
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            border-bottom: none;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+        }
+
+        .form-group input:read-only {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        /* Status Badge Preview */
+        .status-preview {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -654,7 +739,8 @@
         body.dark-mode .header,
         body.dark-mode .stat-card,
         body.dark-mode .filter-section,
-        body.dark-mode .table-container {
+        body.dark-mode .table-container,
+        body.dark-mode .modal-content {
             background: var(--bg-card);
             color: var(--text-dark);
             border-color: var(--border-light);
@@ -676,10 +762,18 @@
 
         body.dark-mode .search-bar input,
         body.dark-mode .filter-group input,
-        body.dark-mode .filter-group select {
+        body.dark-mode .filter-group select,
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select,
+        body.dark-mode .form-group textarea {
             background: #2a2a2a;
             border-color: var(--border-light);
             color: var(--text-dark);
+        }
+
+        body.dark-mode .form-group input:read-only {
+            background-color: #333;
+            color: #a0a0a0;
         }
 
         body.dark-mode .notification-btn,
@@ -700,7 +794,8 @@
             color: var(--text-light);
         }
 
-        body.dark-mode .filter-group label {
+        body.dark-mode .filter-group label,
+        body.dark-mode .form-group label {
             color: var(--text-dark);
         }
 
@@ -741,7 +836,7 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- Menu Utama - DIPERBAIKI -->
+            <!-- Menu Utama -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
@@ -755,7 +850,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
@@ -781,13 +876,13 @@
                 </div>
             </div>
             
-            <!-- Manajemen Aset - DROPDOWN -->
+            <!-- Manajemen Aset -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="true" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse" id="asetMenu">
+                <div class="dropdown-items collapse show" id="asetMenu">
                     <a href="{{ route('projectors.index') }}" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
@@ -799,7 +894,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Akademik - DROPDOWN -->
+            <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
@@ -825,7 +920,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Pengguna - DROPDOWN -->
+            <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
@@ -839,7 +934,7 @@
                 </div>
             </div>
             
-            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
@@ -861,7 +956,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header - DIPERBAIKI agar konsisten -->
+        <!-- Header -->
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.ruangan.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
@@ -895,12 +990,9 @@
                 <p>Kelola informasi ruang dengan mudah dan efisien</p>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Ekspor
-                </button>
-                <a href="{{ route('admin.ruangan.create') }}" class="btn btn-primary">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahRuanganModal">
                     <i class="fas fa-plus"></i> Tambah Ruang
-                </a>
+                </button>
             </div>
         </div>
 
@@ -1012,9 +1104,14 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2 action-buttons">
-                                        <a href="{{ route('admin.ruangan.edit', $r->id) }}" class="btn btn-warning-custom btn-sm">
+                                        <button class="btn btn-warning-custom btn-sm edit-ruangan" 
+                                                data-id="{{ $r->id }}"
+                                                data-kode="{{ $r->kode_ruangan }}"
+                                                data-nama="{{ $r->nama_ruangan }}"
+                                                data-kapasitas="{{ $r->kapasitas }}"
+                                                data-status="{{ $r->status }}">
                                             <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
+                                        </button>
                                         <form action="{{ route('admin.ruangan.destroy', $r->id) }}" method="POST" onsubmit="return confirm('Yakin hapus ruangan ini?')">
                                             @csrf
                                             @method('DELETE')
@@ -1035,6 +1132,175 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Modal Tambah Ruangan -->
+        <div class="modal fade" id="tambahRuanganModal" tabindex="-1" aria-labelledby="tambahRuanganModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md"> <!-- Changed from modal-lg to modal-md -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahRuanganModalLabel">
+                            <i class="fas fa-door-open me-2"></i>Tambah Ruangan Baru
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="tambahRuanganForm" action="{{ route('admin.ruangan.store') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <!-- Form fields in single column layout -->
+                            <div class="form-group mb-3">
+                                <label for="tambah_kode_ruangan" class="form-label">
+                                    <i class="fas fa-hashtag me-1"></i>Kode Ruangan <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="tambah_kode_ruangan" name="kode_ruangan" 
+                                    class="form-control @error('kode_ruangan') is-invalid @enderror" 
+                                    value="{{ old('kode_ruangan') }}" required 
+                                    placeholder="Masukkan kode ruangan">
+                                @error('kode_ruangan')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="tambah_nama_ruangan" class="form-label">
+                                    <i class="fas fa-door-closed me-1"></i>Nama Ruangan <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="tambah_nama_ruangan" name="nama_ruangan" 
+                                    class="form-control @error('nama_ruangan') is-invalid @enderror" 
+                                    value="{{ old('nama_ruangan') }}" required 
+                                    placeholder="Masukkan nama ruangan">
+                                @error('nama_ruangan')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="tambah_kapasitas" class="form-label">
+                                    <i class="fas fa-users me-1"></i>Kapasitas <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" id="tambah_kapasitas" name="kapasitas" 
+                                    class="form-control @error('kapasitas') is-invalid @enderror" 
+                                    value="{{ old('kapasitas') }}" min="1" required 
+                                    placeholder="Jumlah orang">
+                                @error('kapasitas')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="tambah_status" class="form-label">
+                                    <i class="fas fa-info-circle me-1"></i>Status <span class="text-danger">*</span>
+                                </label>
+                                <select id="tambah_status" name="status" 
+                                        class="form-control @error('status') is-invalid @enderror" required>
+                                    <option value="">Pilih Status</option>
+                                    <option value="Tersedia" {{ old('status') == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                    <option value="Sedang Digunakan" {{ old('status') == 'Sedang Digunakan' ? 'selected' : '' }}>Sedang Digunakan</option>
+                                    <option value="Maintenance" {{ old('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
+                                </select>
+                                @error('status')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Simpan Ruangan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit Ruangan -->
+        <div class="modal fade" id="editRuanganModal" tabindex="-1" aria-labelledby="editRuanganModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md"> <!-- Changed from modal-lg to modal-md -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editRuanganModalLabel">
+                            <i class="fas fa-edit me-2"></i>Edit Ruangan
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editRuanganForm" action="" method="POST">
+                        @csrf 
+                        @method('PUT')
+                        <div class="modal-body">
+                            <!-- Form fields in single column layout -->
+                            <div class="form-group mb-3">
+                                <label for="edit_kode_ruangan" class="form-label">
+                                    <i class="fas fa-hashtag me-1"></i>Kode Ruangan <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="edit_kode_ruangan" name="kode_ruangan" 
+                                    class="form-control @error('kode_ruangan') is-invalid @enderror" 
+                                    required readonly>
+                                @error('kode_ruangan')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Kode ruangan tidak dapat diubah</small>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="edit_nama_ruangan" class="form-label">
+                                    <i class="fas fa-door-closed me-1"></i>Nama Ruangan <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="edit_nama_ruangan" name="nama_ruangan" 
+                                    class="form-control @error('nama_ruangan') is-invalid @enderror" 
+                                    required placeholder="Masukkan nama ruangan">
+                                @error('nama_ruangan')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="edit_kapasitas" class="form-label">
+                                    <i class="fas fa-users me-1"></i>Kapasitas <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" id="edit_kapasitas" name="kapasitas" 
+                                    class="form-control @error('kapasitas') is-invalid @enderror" 
+                                    min="1" required placeholder="Jumlah orang">
+                                @error('kapasitas')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="edit_status" class="form-label">
+                                    <i class="fas fa-info-circle me-1"></i>Status <span class="text-danger">*</span>
+                                </label>
+                                <select id="edit_status" name="status" 
+                                        class="form-control @error('status') is-invalid @enderror" required>
+                                    <option value="Tersedia">Tersedia</option>
+                                    <option value="Sedang Digunakan">Sedang Digunakan</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                </select>
+                                @error('status')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                                <div class="mt-2">
+                                    <small>Preview Status: 
+                                        <span class="status-preview status-tersedia" id="edit_status_preview">
+                                            Tersedia
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Perbarui Ruangan
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -1090,6 +1356,61 @@
                     document.getElementById('filterForm').submit();
                 });
             });
+
+            // Edit ruangan modal
+            const editButtons = document.querySelectorAll('.edit-ruangan');
+            const editModal = new bootstrap.Modal(document.getElementById('editRuanganModal'));
+            const editForm = document.getElementById('editRuanganForm');
+            const editStatusPreview = document.getElementById('edit_status_preview');
+            
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const kode = this.getAttribute('data-kode');
+                    const nama = this.getAttribute('data-nama');
+                    const kapasitas = this.getAttribute('data-kapasitas');
+                    const status = this.getAttribute('data-status');
+                    
+                    // Set form action
+                    editForm.action = `/admin/ruangan/${id}`;
+                    
+                    // Set form values
+                    document.getElementById('edit_kode_ruangan').value = kode;
+                    document.getElementById('edit_nama_ruangan').value = nama;
+                    document.getElementById('edit_kapasitas').value = kapasitas;
+                    document.getElementById('edit_status').value = status;
+                    
+                    // Update status preview
+                    updateStatusPreview(status, editStatusPreview);
+                    
+                    // Show modal
+                    editModal.show();
+                });
+            });
+
+            // Update status preview when status changes
+            const editStatusSelect = document.getElementById('edit_status');
+            
+            editStatusSelect.addEventListener('change', function() {
+                const status = this.value;
+                updateStatusPreview(status, editStatusPreview);
+            });
+
+            function updateStatusPreview(status, previewElement) {
+                previewElement.textContent = status;
+                
+                // Remove all status classes
+                previewElement.classList.remove('status-tersedia', 'status-digunakan', 'status-maintenance');
+                
+                // Add appropriate class based on status
+                if (status === 'Tersedia') {
+                    previewElement.classList.add('status-tersedia');
+                } else if (status === 'Sedang Digunakan') {
+                    previewElement.classList.add('status-digunakan');
+                } else {
+                    previewElement.classList.add('status-maintenance');
+                }
+            }
 
             // Terapkan dark mode jika sebelumnya diaktifkan
             if (localStorage.getItem('darkMode') === 'enabled') {

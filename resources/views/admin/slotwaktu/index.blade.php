@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Slot Waktu - Sistem Manajemen Peminjaman</title>
+    <title>ManajemenWaktu - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -34,7 +34,7 @@
             line-height: 1.6;
         }
 
-                  /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -136,7 +136,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -222,7 +222,7 @@
             min-height: 100vh;
         }
 
-        /* Header - KONSISTEN dengan halaman lain */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -342,6 +342,24 @@
             background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(255, 152, 0, 0.2);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+            color: white;
         }
 
         .btn-outline {
@@ -563,6 +581,56 @@
             color: #dee2e6;
         }
 
+        /* Modal Compact Styles */
+        .modal-md {
+            max-width: 500px;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-light);
+            padding: 1.2rem 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-light);
+            padding: 1.2rem 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-control {
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -623,7 +691,8 @@
         body.dark-mode .header,
         body.dark-mode .stat-card,
         body.dark-mode .filter-section,
-        body.dark-mode .table-container {
+        body.dark-mode .table-container,
+        body.dark-mode .modal-content {
             background: var(--bg-card);
             color: var(--text-dark);
             border-color: var(--border-light);
@@ -645,10 +714,16 @@
 
         body.dark-mode .search-bar input,
         body.dark-mode .filter-group input,
-        body.dark-mode .filter-group select {
+        body.dark-mode .filter-group select,
+        body.dark-mode .form-control {
             background: #2a2a2a;
             border-color: var(--border-light);
             color: var(--text-dark);
+        }
+
+        body.dark-mode .form-group input:read-only {
+            background-color: #333;
+            color: #a0a0a0;
         }
 
         body.dark-mode .notification-btn,
@@ -669,8 +744,14 @@
             color: var(--text-light);
         }
 
-        body.dark-mode .filter-group label {
+        body.dark-mode .filter-group label,
+        body.dark-mode .form-label {
             color: var(--text-dark);
+        }
+
+        body.dark-mode .modal-header,
+        body.dark-mode .modal-footer {
+            border-color: var(--border-light);
         }
 
         .menu-toggle {
@@ -710,7 +791,7 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- Menu Utama - DIPERBAIKI -->
+            <!-- Menu Utama -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
@@ -724,7 +805,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
@@ -750,7 +831,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Aset - DROPDOWN -->
+            <!-- Manajemen Aset -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
@@ -768,13 +849,13 @@
                 </div>
             </div>
             
-            <!-- Manajemen Akademik - DROPDOWN -->
+            <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="true" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse" id="akademikMenu">
+                <div class="dropdown-items collapse show" id="akademikMenu">
                     <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
@@ -794,7 +875,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Pengguna - DROPDOWN -->
+            <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
@@ -808,7 +889,7 @@
                 </div>
             </div>
             
-            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
@@ -830,7 +911,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header - KONSISTEN dengan halaman lain -->
+        <!-- Header -->
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.slotwaktu.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
@@ -860,16 +941,13 @@
         <!-- Page Title -->
         <div class="page-title">
             <div>
-                <h1>Manajemen Slot Waktu</h1>
+                <h1>Manajemen Waktu</h1>
                 <p>Kelola data waktu penggunaan ruangan secara efisien</p>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Ekspor
-                </button>
-                <a href="{{ route('admin.slotwaktu.create') }}" class="btn btn-primary">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahSlotWaktuModal">
                     <i class="fas fa-plus"></i> Tambah Slot Waktu
-                </a>
+                </button>
             </div>
         </div>
 
@@ -881,16 +959,7 @@
                 </div>
                 <div class="stat-info">
                     <h3 id="total-count">{{ $totalCount ?? 0 }}</h3>
-                    <p>Total Slot Waktu</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon active">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="active-count">{{ $activeCount ?? 0 }}</h3>
-                    <p>Slot Aktif</p>
+                    <p>Total Keseluaruhan Waktu</p>
                 </div>
             </div>
         </div>
@@ -935,9 +1004,12 @@
                                 <td>{{ $slot->waktu }}</td>
                                 <td>
                                     <div class="d-flex gap-2 action-buttons">
-                                        <a href="{{ route('admin.slotwaktu.edit', $slot->id) }}" class="btn btn-warning-custom btn-sm">
+                                        <button class="btn btn-warning-custom btn-sm edit-slotwaktu" 
+                                                data-id="{{ $slot->id }}"
+                                                data-id_slot="{{ $slot->id_slot }}"
+                                                data-waktu="{{ $slot->waktu }}">
                                             <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
+                                        </button>
                                         <form action="{{ route('admin.slotwaktu.destroy', $slot->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
                                             <button type="submit" onclick="return confirm('Yakin hapus slot waktu ini?')" class="btn btn-danger-custom btn-sm">
@@ -957,6 +1029,112 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Modal Tambah Slot Waktu -->
+        <div class="modal fade" id="tambahSlotWaktuModal" tabindex="-1" aria-labelledby="tambahSlotWaktuModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahSlotWaktuModalLabel">
+                            <i class="fas fa-plus-circle me-2"></i>Tambah Slot Waktu Baru
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="tambahSlotWaktuForm" action="{{ route('admin.slotwaktu.store') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group mb-3">
+                                <label for="tambah_id_slot" class="form-label">
+                                    <i class="fas fa-hashtag me-1"></i>ID Slot <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="tambah_id_slot" name="id_slot" 
+                                       class="form-control @error('id_slot') is-invalid @enderror" 
+                                       value="{{ old('id_slot') }}" required 
+                                       placeholder="Masukkan ID Slot">
+                                @error('id_slot')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="tambah_waktu" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>Waktu <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="tambah_waktu" name="waktu" 
+                                       class="form-control @error('waktu') is-invalid @enderror" 
+                                       value="{{ old('waktu') }}" required 
+                                       placeholder="Contoh: 07:30">
+                                @error('waktu')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Format: HH:MM (24 jam)</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Simpan Slot Waktu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit Slot Waktu -->
+        <div class="modal fade" id="editSlotWaktuModal" tabindex="-1" aria-labelledby="editSlotWaktuModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSlotWaktuModalLabel">
+                            <i class="fas fa-edit me-2"></i>Edit Slot Waktu
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editSlotWaktuForm" action="" method="POST">
+                        @csrf 
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="form-group mb-3">
+                                <label for="edit_id_slot" class="form-label">
+                                    <i class="fas fa-hashtag me-1"></i>ID Slot <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="edit_id_slot" name="id_slot" 
+                                       class="form-control @error('id_slot') is-invalid @enderror" 
+                                       required readonly>
+                                @error('id_slot')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">ID Slot tidak dapat diubah</small>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="edit_waktu" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>Waktu <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="edit_waktu" name="waktu" 
+                                       class="form-control @error('waktu') is-invalid @enderror" 
+                                       required placeholder="Contoh: 07:00">
+                                @error('waktu')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Format: HH:MM (24 jam)</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Perbarui Slot Waktu
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -1005,6 +1183,52 @@
                     }, 800);
                 });
             });
+
+            // Edit slot waktu modal
+            const editButtons = document.querySelectorAll('.edit-slotwaktu');
+            const editModal = new bootstrap.Modal(document.getElementById('editSlotWaktuModal'));
+            const editForm = document.getElementById('editSlotWaktuForm');
+            
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const id_slot = this.getAttribute('data-id_slot');
+                    const waktu = this.getAttribute('data-waktu');
+                    
+                    // Set form action
+                    editForm.action = `/admin/slotwaktu/${id}`;
+                    
+                    // Set form values
+                    document.getElementById('edit_id_slot').value = id_slot;
+                    document.getElementById('edit_waktu').value = waktu;
+                    
+                    // Show modal
+                    editModal.show();
+                });
+            });
+
+            // Validasi format waktu untuk modal tambah
+            const tambahWaktuInput = document.getElementById('tambah_waktu');
+            tambahWaktuInput.addEventListener('blur', function() {
+                validateTimeFormat(this);
+            });
+
+            // Validasi format waktu untuk modal edit
+            const editWaktuInput = document.getElementById('edit_waktu');
+            editWaktuInput.addEventListener('blur', function() {
+                validateTimeFormat(this);
+            });
+
+            function validateTimeFormat(inputElement) {
+                const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                if (inputElement.value && !timePattern.test(inputElement.value)) {
+                    inputElement.style.borderColor = '#dc3545';
+                    inputElement.title = 'Format waktu harus HH:MM (contoh: 07:30)';
+                } else {
+                    inputElement.style.borderColor = '';
+                    inputElement.title = '';
+                }
+            }
 
             // Terapkan dark mode jika sebelumnya diaktifkan
             if (localStorage.getItem('darkMode') === 'enabled') {
