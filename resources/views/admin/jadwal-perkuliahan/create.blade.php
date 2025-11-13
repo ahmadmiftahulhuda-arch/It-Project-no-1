@@ -25,6 +25,7 @@
             --border-light: #e9ecef;
         }
 
+        /* Dark Mode Variables */
         .dark-mode {
             --primary: #4a6fa5;
             --secondary: #5d7ba6;
@@ -47,7 +48,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
+                         /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
         .sidebar {
             position: fixed;
             top: 0;
@@ -104,6 +105,17 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+        }
+
         .menu-item {
             display: flex;
             align-items: center;
@@ -138,6 +150,84 @@
             text-overflow: ellipsis;
         }
 
+        /* Dropdown Menu Styles - DIPERBAIKI */
+        .dropdown-custom {
+            margin-bottom: 5px;
+        }
+
+        .dropdown-toggle-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .dropdown-toggle-custom:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dropdown-toggle-custom i:last-child {
+            transition: transform 0.3s;
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid white;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-items.show {
+            max-height: 500px;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px 10px 40px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
         /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
@@ -152,10 +242,10 @@
             justify-content: space-between;
             align-items: center;
             background: var(--bg-card);
-            padding: 15px 20px;
-            border-radius: 8px;
+            padding: 15px 25px;
+            border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border: 1px solid var(--border-light);
         }
 
@@ -164,12 +254,49 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 2;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+        }
+
+        .dark-mode .search-bar input {
+            background-color: #2a2a2a;
+            border-color: var(--border-light);
+        }
+
         .user-actions {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
+        .notification-btn,
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -184,16 +311,19 @@
             border: none;
         }
 
+        .notification-btn:hover,
         .theme-toggle:hover {
             background: #e4e6eb;
             color: var(--primary);
         }
 
+        .dark-mode .notification-btn,
         .dark-mode .theme-toggle {
             background: #2a2a2a;
             color: var(--text-dark);
         }
 
+        .dark-mode .notification-btn:hover,
         .dark-mode .theme-toggle:hover {
             background: #3a3a3a;
             color: var(--primary);
@@ -223,7 +353,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding: 0 5px;
         }
 
         .page-title h1 {
@@ -242,7 +373,7 @@
             background: var(--primary);
             border: none;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 500;
             transition: all 0.3s;
             box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
@@ -251,12 +382,14 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-primary:hover {
             background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+            color: white;
         }
 
         .btn-outline {
@@ -264,13 +397,14 @@
             color: var(--primary);
             background: transparent;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 500;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-outline:hover {
@@ -281,7 +415,7 @@
         /* Form Container */
         .table-container {
             background: var(--bg-card);
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-light);
@@ -297,7 +431,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 20px 25px;
             border-bottom: 1px solid var(--border-light);
             background: var(--bg-light);
         }
@@ -325,6 +459,9 @@
             background: var(--bg-card);
             color: var(--text-dark);
             transition: all 0.3s;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
         }
 
         .form-control:focus, .form-select:focus {
@@ -349,6 +486,50 @@
             color: #f56565 !important;
         }
 
+        /* Success Message dengan Auto-hide */
+        .alert-auto-hide {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .dark-mode .alert-auto-hide {
+            background: #1b5e20;
+            color: #e8f5e8;
+            border-color: #2e7d32;
+        }
+
+        .alert-auto-hide.hiding {
+            animation: slideOut 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -357,7 +538,8 @@
             }
 
             .sidebar-header h2,
-            .menu-item span {
+            .menu-item span,
+            .menu-section {
                 display: none;
             }
 
@@ -372,11 +554,27 @@
 
             .main-content {
                 margin-left: 70px;
+                padding: 15px;
             }
 
             .header {
                 flex-direction: column;
                 gap: 15px;
+                padding: 15px;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.5rem;
             }
         }
 
@@ -391,77 +589,149 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+      <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
                 <i class="fas fa-laptop-code"></i>
             </div>
-            <h2>Lab TIK</h2>
+            <h2>Admin TI</h2>
         </div>
 
         <div class="sidebar-menu">
-            <a href="/admin/dashboard" class="menu-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="/admin/peminjaman" class="menu-item">
-                <i class="fas fa-hand-holding"></i>
-                <span>Peminjaman</span>
-            </a>
-            <a href="/admin/pengembalian" class="menu-item">
-                <i class="fas fa-undo"></i>
-                <span>Pengembalian</span>
-            </a>
-            <a href="/admin/riwayat" class="menu-item">
-                <i class="fas fa-history"></i>
-                <span>Riwayat Peminjaman</span>
-            </a>
-            <a href="/admin/feedback" class="menu-item">
-                <i class="fas fa-comment"></i>
-                <span>Feedback</span>
-            </a>
-            <a href="/admin/projectors" class="menu-item">
-                <i class="fas fa-video"></i>
-                <span>Proyektor</span>
-            </a>
-            <a href="/admin/jadwal-perkuliahan" class="menu-item active">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Jadwal Perkuliahan</span>
-            </a>
-            <a href="/admin/ruangan" class="menu-item">
-                <i class="fas fa-door-open"></i>
-                <span>Ruangan</span>
-            </a>
-            <a href="/admin/matakuliah" class="menu-item">
-                <i class="fas fa-book"></i>
-                <span>Matakuliah</span>
-            </a>
-            <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Kelas</span>
-            </a>
-            <a href="/admin/pengguna" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Pengguna</span>
-            </a>
-            <a href="/admin/laporan" class="menu-item">
-                <i class="fas fa-chart-bar"></i>
-                <span>Statistik</span>
-            </a>
-            <a href="/admin/pengaturan" class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span>Pengaturan</span>
-            </a>
+            <!-- Menu Utama - DIPERBAIKI -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                    <span>Menu Utama</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="menuUtama">
+                    <a href="/admin/dashboard" class="dropdown-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                    <span>Manajemen Peminjaman</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="peminjamanMenu">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
+                        <i class="fas fa-hand-holding"></i>
+                        <span>Peminjaman</span>
+                    </a>
+                    <a href="/admin/pengembalian" class="dropdown-item">
+                        <i class="fas fa-undo"></i>
+                        <span>Pengembalian</span>
+                    </a>
+                    <a href="/admin/riwayat" class="dropdown-item">
+                        <i class="fas fa-history"></i>
+                        <span>Riwayat Peminjaman</span>
+                    </a>
+                    <a href="/admin/feedback" class="dropdown-item">
+                        <i class="fas fa-comment"></i>
+                        <span>Feedback</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Aset - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                    <span>Manajemen Aset</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="asetMenu">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        <span>Proyektor</span>
+                    </a>
+                    <a href="/admin/ruangan" class="dropdown-item">
+                        <i class="fas fa-door-open"></i>
+                        <span>Ruangan</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Akademik - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                    <span>Manajemen Akademik</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="akademikMenu">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item active">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jadwal Perkuliahan</span>
+                    </a>
+                    <a href="/admin/slotwaktu" class="dropdown-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Slot Waktu</span>
+                    </a>
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                    <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Pengguna - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                    <span>Manajemen Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="penggunaMenu">
+                    <a href="/admin/pengguna" class="dropdown-item">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                    <span>Laporan & Pengaturan</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="laporanMenu">
+                    <a href="/admin/laporan" class="dropdown-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Statistik</span>
+                    </a>
+                    <a href="/admin/pengaturan" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
         <div class="header">
-            <div></div> <!-- Spacer untuk alignment -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari mata kuliah/dosen/kelas...">
+            </div>
+
             <div class="user-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                </div>
+
                 <div class="theme-toggle" id="theme-toggle">
                     <i class="fas fa-moon"></i>
                 </div>
@@ -517,17 +787,9 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="waktu" class="form-label">Waktu <span class="text-danger">*</span></label>
-                            <select class="form-select" id="waktu" name="waktu" required>
-                                <option value="">Pilih Waktu</option>
-                                <option value="07:00 - 08:40" {{ old('waktu') == '07:00 - 08:40' ? 'selected' : '' }}>07:00 - 08:40</option>
-                                <option value="08:40 - 10:20" {{ old('waktu') == '08:40 - 10:20' ? 'selected' : '' }}>08:40 - 10:20</option>
-                                <option value="10:20 - 12:00" {{ old('waktu') == '10:20 - 12:00' ? 'selected' : '' }}>10:20 - 12:00</option>
-                                <option value="13:00 - 14:40" {{ old('waktu') == '13:00 - 14:40' ? 'selected' : '' }}>13:00 - 14:40</option>
-                                <option value="14:40 - 16:20" {{ old('waktu') == '14:40 - 16:20' ? 'selected' : '' }}>14:40 - 16:20</option>
-                                <option value="16:20 - 18:00" {{ old('waktu') == '16:20 - 18:00' ? 'selected' : '' }}>16:20 - 18:00</option>
-                            </select>
-                            @error('waktu')
+                            <label for="jam_mulai" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai') }}" required>
+                            @error('jam_mulai')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
@@ -535,39 +797,12 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" value="{{ old('kode_matkul') }}" required>
-                            @error('kode_matkul')
+                            <label for="jam_selesai" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
+                            @error('jam_selesai')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label for="nama_matkul" class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nama_matkul" name="nama_matkul" value="{{ old('nama_matkul') }}" required>
-                            @error('nama_matkul')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="dosen" class="form-label">Dosen Pengampu <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="dosen" name="dosen" value="{{ old('dosen') }}" required>
-                            @error('dosen')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="kelas" class="form-label">Kelas <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="kelas" name="kelas" value="{{ old('kelas') }}" required>
-                            @error('kelas')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="ruangan" class="form-label">Ruangan <span class="text-danger">*</span></label>
                             <select class="form-select" id="ruangan" name="ruangan" required>
@@ -583,25 +818,58 @@
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="semester" class="form-label">Semester <span class="text-danger">*</span></label>
-                            <select class="form-select" id="semester" name="semester" required>
-                                <option value="">Pilih Semester</option>
-                                @for($i = 1; $i <= 8; $i++)
-                                    <option value="{{ $i }}" {{ old('semester') == $i ? 'selected' : '' }}>Semester {{ $i }}</option>
-                                @endfor
+                            <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" value="{{ old('kode_matkul') }}" required>
+                            @error('kode_matkul')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
+                            <select class="form-select" id="sistem_kuliah" name="sistem_kuliah" required>
+                                <option value="">Pilih Sistem Kuliah</option>
+                                <option value="Teori" {{ old('sistem_kuliah') == 'Teori' ? 'selected' : '' }}>Teori</option>
+                                <option value="Praktikum" {{ old('sistem_kuliah') == 'Praktikum' ? 'selected' : '' }}>Praktikum</option>
                             </select>
-                            @error('semester')
+                            @error('sistem_kuliah')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-12">
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
-                            @error('keterangan')
+                        <div class="col-md-6">
+                            <label for="nama_kelas" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nama_kelas" name="nama_kelas" value="{{ old('nama_kelas') }}" required>
+                            @error('nama_kelas')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="kelas_mahasiswa" name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa') }}" required>
+                            @error('kelas_mahasiswa')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="sebaran_mahasiswa" class="form-label">Sebaran Mahasiswa</label>
+                            <input type="text" class="form-control" id="sebaran_mahasiswa" name="sebaran_mahasiswa" value="{{ old('sebaran_mahasiswa') }}">
+                            @error('sebaran_mahasiswa')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="daya_tampung" class="form-label">Daya Tampung <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="daya_tampung" name="daya_tampung" value="{{ old('daya_tampung') }}" required>
+                            @error('daya_tampung')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
@@ -619,9 +887,9 @@
             </div>
         </div>
 
-        <!-- Success Message -->
+        <!-- Success Message dengan Auto-hide -->
         @if(session('success'))
-            <div class="alert alert-success mt-3" id="successAlert">
+            <div class="alert-auto-hide" id="successAlert">
                 <i class="fas fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
@@ -657,7 +925,10 @@
             const successAlert = document.getElementById('successAlert');
             if (successAlert) {
                 setTimeout(() => {
-                    successAlert.style.display = 'none';
+                    successAlert.classList.add('hiding');
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 300);
                 }, 3000);
             }
         });

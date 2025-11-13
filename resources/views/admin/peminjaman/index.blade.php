@@ -35,7 +35,7 @@
             line-height: 1.6;
         }
 
-      /* Sidebar Styles - DIPERBAIKI agar konsisten */
+        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
         .sidebar {
             position: fixed;
             top: 0;
@@ -137,6 +137,83 @@
             text-overflow: ellipsis;
         }
 
+        /* Dropdown Menu Styles - DIPERBAIKI */
+        .dropdown-custom {
+            margin-bottom: 5px;
+        }
+
+        .dropdown-toggle-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .dropdown-toggle-custom:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dropdown-toggle-custom i:last-child {
+            transition: transform 0.3s;
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid white;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-items.show {
+            max-height: 500px;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px 10px 40px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            opacity: 0.8;
+        }
 
         /* Main Content */
         .main-content {
@@ -553,17 +630,28 @@
             }
 
             .sidebar-header h2,
-            .menu-item span {
+            .menu-item span,
+            .dropdown-toggle-custom span {
                 display: none;
             }
 
-            .menu-item {
+            .menu-item,
+            .dropdown-toggle-custom {
                 justify-content: center;
                 padding: 15px;
             }
 
-            .menu-item i {
+            .menu-item i,
+            .dropdown-toggle-custom i {
                 margin-right: 0;
+            }
+
+            .dropdown-toggle-custom i:last-child {
+                display: none;
+            }
+
+            .dropdown-items {
+                display: none;
             }
 
             .main-content {
@@ -682,7 +770,7 @@
 </head>
 
 <body>
-      <!-- Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -691,82 +779,124 @@
             <h2>Admin TI</h2>
         </div>
 
-            <div class="sidebar-menu">
-                <!-- Menu Utama -->
-                <div class="menu-section">Menu Utama</div>
-                <a href="/admin/dashboard" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                
-                <!-- Manajemen Peminjaman -->
-                <div class="menu-section">Manajemen Peminjaman</div>
-                <a href="{{ route('admin.peminjaman.index') }}" class="menu-item active">
-                    <i class="fas fa-hand-holding"></i>
-                    <span>Peminjaman</span>
-                </a>
-                <a href="/admin/pengembalian" class="menu-item">
-                    <i class="fas fa-undo"></i>
-                    <span>Pengembalian</span>
-                </a>
-                <a href="/admin/riwayat" class="menu-item">
-                    <i class="fas fa-history"></i>
-                    <span>Riwayat Peminjaman</span>
-                </a>
-                <a href="/admin/feedback" class="menu-item">
-                    <i class="fas fa-comment"></i>
-                    <span>Feedback</span>
-                </a>
-                
-                <!-- Manajemen Aset -->
-                <div class="menu-section">Manajemen Aset</div>
-                <a href="{{ route('projectors.index') }}" class="menu-item">
-                    <i class="fas fa-video"></i>
-                    <span>Proyektor</span>
-                </a>
-                <a href="/admin/ruangan" class="menu-item">
-                    <i class="fas fa-door-open"></i>
-                    <span>Ruangan</span>
-                </a>
-                
-                <!-- Manajemen Akademik -->
-                <div class="menu-section">Manajemen Akademik</div>
-                <a href="/admin/jadwal-perkuliahan" class="menu-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Jadwal Perkuliahan</span>
-                </a>
-                <a href="/admin/slotwaktu" class="menu-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Slot Waktu</span>
-                </a>
-                <a href="/admin/mata_kuliah" class="menu-item">
-                    <i class="fas fa-book"></i>
-                    <span>Matakuliah</span>
-                </a>
-                <a href="/admin/kelas" class="menu-item">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <span>Kelas</span>
-                </a>
-                
-                <!-- Manajemen Pengguna -->
-                <div class="menu-section">Manajemen Pengguna</div>
-                <a href="/admin/pengguna" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Pengguna</span>
-                </a>
-                
-                <!-- Laporan & Pengaturan -->
-                <div class="menu-section">Laporan & Pengaturan</div>
-                <a href="/admin/laporan" class="menu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Statistik</span>
-                </a>
-                <a href="/admin/pengaturan" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
+        <div class="sidebar-menu">
+            <!-- Menu Utama - DIPERBAIKI -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                    <span>Menu Utama</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="menuUtama">
+                    <a href="/admin/dashboard" class="dropdown-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                    <span>Manajemen Peminjaman</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="peminjamanMenu">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item active">
+                        <i class="fas fa-hand-holding"></i>
+                        <span>Peminjaman</span>
+                    </a>
+                    <a href="/admin/pengembalian" class="dropdown-item">
+                        <i class="fas fa-undo"></i>
+                        <span>Pengembalian</span>
+                    </a>
+                    <a href="/admin/riwayat" class="dropdown-item">
+                        <i class="fas fa-history"></i>
+                        <span>Riwayat Peminjaman</span>
+                    </a>
+                    <a href="/admin/feedback" class="dropdown-item">
+                        <i class="fas fa-comment"></i>
+                        <span>Feedback</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Aset - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                    <span>Manajemen Aset</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="asetMenu">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        <span>Proyektor</span>
+                    </a>
+                    <a href="/admin/ruangan" class="dropdown-item">
+                        <i class="fas fa-door-open"></i>
+                        <span>Ruangan</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Akademik - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                    <span>Manajemen Akademik</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="akademikMenu">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jadwal Perkuliahan</span>
+                    </a>
+                    <a href="/admin/slotwaktu" class="dropdown-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Slot Waktu</span>
+                    </a>
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                    <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Pengguna - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                    <span>Manajemen Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="penggunaMenu">
+                    <a href="/admin/pengguna" class="dropdown-item">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                    <span>Laporan & Pengaturan</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="laporanMenu">
+                    <a href="/admin/laporan" class="dropdown-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Statistik</span>
+                    </a>
+                    <a href="/admin/pengaturan" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
     <!-- Main Content -->
     <div class="main-content">
