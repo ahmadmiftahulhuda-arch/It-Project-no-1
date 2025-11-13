@@ -181,6 +181,23 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
+        /* ===== DROPDOWN TOGGLE YANG DIPERBAIKI ===== */
+        .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: 0.5em;
+            vertical-align: middle;
+            content: "";
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-toggle.show::after {
+            transform: rotate(180deg);
+        }
+
         /* ===== HERO SECTION ===== */
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
