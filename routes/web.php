@@ -132,8 +132,6 @@ Route::prefix('admin')->group(function () {
 // ROUTES UNTUK USER
 // ================================
 
-
-
 // Feedback Routes for User
 Route::prefix('user/feedback')->middleware('auth')->group(function () {
     Route::get('/', [FeedbackController::class, 'indexForUser'])->name('user.feedback.index');

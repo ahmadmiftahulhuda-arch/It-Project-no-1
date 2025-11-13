@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use Carbon\Carbon;
 
 class PeminjamanController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $query = Peminjaman::where('user_id', $userId);
 
         if ($request->has('search') && $request->search != '') {
@@ -34,7 +36,7 @@ class PeminjamanController extends Controller
 
     public function create()
     {
-        $pendingFeedbackCount = Peminjaman::where('user_id', auth()->id())
+        $pendingFeedbackCount = Peminjaman::where('user_id', Auth::id())
             ->where('status', 'selesai')
             ->whereDoesntHave('feedback')
             ->count();
@@ -57,7 +59,7 @@ class PeminjamanController extends Controller
         ]);
 
         Peminjaman::create([
-            'user_id'   => auth()->id() ?? 1,
+            'user_id'   => Auth::id() ?? 1,
             'tanggal'   => $request->tanggal,
             'ruang'     => $request->ruang,
             'proyektor' => $request->proyektor,
@@ -70,14 +72,14 @@ class PeminjamanController extends Controller
 
     public function show($id)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $peminjaman = Peminjaman::where('user_id', $userId)->findOrFail($id);
         return view('user.peminjaman.show', compact('peminjaman'));
     }
 
     public function edit($id)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $peminjaman = Peminjaman::where('user_id', $userId)->findOrFail($id);
         return view('user.peminjaman.edit', compact('peminjaman'));
     }
@@ -91,7 +93,7 @@ class PeminjamanController extends Controller
             'keperluan' => 'required|string|max:255',
         ]);
 
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $peminjaman = Peminjaman::where('user_id', $userId)->findOrFail($id);
 
         $peminjaman->update([
@@ -106,7 +108,7 @@ class PeminjamanController extends Controller
 
     public function destroy($id)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $peminjaman = Peminjaman::where('user_id', $userId)->findOrFail($id);
         $peminjaman->delete();
 
@@ -115,7 +117,7 @@ class PeminjamanController extends Controller
 
     public function riwayat(Request $request)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $query = Peminjaman::with('feedback')->where('user_id', $userId);
 
         if ($request->has('search') && $request->search != '') {
@@ -137,7 +139,7 @@ class PeminjamanController extends Controller
 
     public function pengembalianUser(Request $request)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         
         // Peminjaman aktif yang bisa dikembalikan (status disetujui dan belum dikembalikan)
         $activeQuery = Peminjaman::where('user_id', $userId)
@@ -188,7 +190,7 @@ class PeminjamanController extends Controller
    public function ajukanPengembalian(Request $request, $id)
 {
     try {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
 
         $request->validate([
             'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
@@ -227,7 +229,7 @@ class PeminjamanController extends Controller
 
     public function showPengembalian($id)
     {
-        $userId = auth()->id() ?? 1;
+        $userId = Auth::id() ?? 1;
         $pengembalian = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
             $q->where('user_id', $userId);
         })->with('peminjaman')->findOrFail($id);

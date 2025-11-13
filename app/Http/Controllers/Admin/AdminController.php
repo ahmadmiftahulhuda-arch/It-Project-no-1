@@ -265,11 +265,27 @@ class AdminController extends Controller
             'ruang' => 'required|string|max:100',
             'proyektor' => 'required|boolean',
             'keperluan' => 'required|string|max:500',
-            'status' => 'required|in:pending,disetujui,ditolak',
+            'status' => 'required|in:pending,disetujui,ditolak,selesai',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->update($request->only(['tanggal', 'ruang', 'proyektor', 'keperluan', 'status']));
+
+        // Data umum
+        $data = [
+            'tanggal' => $request->tanggal,
+            'ruang' => $request->ruang,
+            'proyektor' => $request->proyektor,
+            'keperluan' => $request->keperluan,
+            'status' => $request->status,
+        ];
+
+        // Jika status selesai → set tanggal kembali + status pengembalian
+        if ($request->status == 'selesai') {
+            $data['tanggal_kembali'] = Carbon::now();
+            $data['status_pengembalian'] = 'sudah dikembalikan';
+        }
+
+        $peminjaman->update($data);
 
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil diperbarui.');

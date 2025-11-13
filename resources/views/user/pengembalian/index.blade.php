@@ -1494,7 +1494,8 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await fetch(`/user/pengembalian/ajukan/${id}`, {
+                    const res = await fetch(`/pengembalian/ajukan/${id}`, {
+
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
