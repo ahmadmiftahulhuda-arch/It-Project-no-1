@@ -1190,7 +1190,7 @@
                             <td>
                                 <div class="d-flex gap-2 action-buttons">
                                     <!-- Tombol Edit -->
-                                    <button class="btn btn-warning-custom btn-sm" onclick="openEditModal('{{ $item->id }}', '{{ $item->judul }}', '{{ $item->kategori }}', `{{ addslashes($item->detail_feedback) }}`, `{{ addslashes($item->saran_perbaikan) }}`, '{{ $item->rating }}', '{{ $item->status }}')">
+                                    <button class="btn btn-warning-custom btn-sm" onclick="openEditModal('{{ $item->id }}', '{{ $item->judul }}', '{{ $item->kategori }}', {{ addslashes($item->detail_feedback) }}, {{ addslashes($item->saran_perbaikan) }}, '{{ $item->rating }}', '{{ $item->status }}')">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
