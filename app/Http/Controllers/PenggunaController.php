@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengguna;
-use App\Models\User; // Ditambahkan
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash; // Ditambahkan
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class PenggunaController extends Controller
 {
@@ -15,10 +16,22 @@ class PenggunaController extends Controller
      */
     public function index()
     {
-        // Ambil data dari database, muat relasi 'user' untuk efisiensi
-        $users = Pengguna::with('user')->latest()->get();
-        
-        return view('admin.pengguna.index', compact('users'));
+        try {
+            $users = Pengguna::with('user')->latest()->get();
+            
+            $jurusanList = [
+                'Teknik Informatika',
+                'Sistem Informasi',
+                'Teknik Komputer',
+                'Teknik Elektro',
+                'Manajemen Informatika'
+            ];
+
+            return view('admin.pengguna.index', compact('users', 'jurusanList'));
+        } catch (\Exception $e) {
+            Log::error('Error in PenggunaController@index: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat data pengguna.');
+        }
     }
 
     /**
@@ -26,15 +39,7 @@ class PenggunaController extends Controller
      */
     public function create()
     {
-        $jurusanList = [
-            'Teknik Informatika',
-            'Sistem Informasi',
-            'Teknik Komputer',
-            'Teknik Elektro',
-            'Manajemen Informatika'
-        ];
-
-        return view('admin.pengguna.create', compact('jurusanList'));
+        return redirect()->route('pengguna.index');
     }
 
     /**
@@ -42,43 +47,52 @@ class PenggunaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nim' => 'nullable|string|max:20|unique:penggunas,nim',
             'email' => 'required|email|unique:penggunas,email|unique:users,email',
-            'no_hp' => 'nullable|string|max:20', // Validasi untuk no_hp
+            'no_hp' => 'nullable|string|max:20',
             'password' => 'required|string|min:6|confirmed',
             'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
-            'jurusan' => 'nullable|string|max:255',
+            'jurusan' => 'required|string|max:255',
             'status' => 'required|in:Aktif,Non-Aktif',
-            'tanggal_bergabung' => 'nullable|date',
+            'tanggal_bergabung' => 'required|date',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
+            return redirect()->route('pengguna.index')
                 ->withErrors($validator)
-                ->withInput();
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan validasi. Silakan periksa data yang dimasukkan.');
         }
 
         try {
             $validatedData = $validator->validated();
 
             // 1. Simpan data ke tabel 'penggunas'
-            $pengguna = Pengguna::create($validatedData);
+            $pengguna = Pengguna::create([
+                'nama' => $validatedData['nama'],
+                'nim' => $validatedData['nim'],
+                'email' => $validatedData['email'],
+                'peran' => $validatedData['peran'],
+                'jurusan' => $validatedData['jurusan'],
+                'status' => $validatedData['status'],
+                'tanggal_bergabung' => $validatedData['tanggal_bergabung'],
+            ]);
             
             // 2. Buat data login di tabel 'users'
             User::create([
-                'name' => $pengguna->nama,
-                'email' => $pengguna->email,
-                'no_hp' => $validatedData['no_hp'], // Simpan no_hp
-                'password' => Hash::make($request->password),
+                'name' => $validatedData['nama'],
+                'email' => $validatedData['email'],
+                'no_hp' => $validatedData['no_hp'],
+                'password' => Hash::make($validatedData['password']),
             ]);
 
             return redirect()->route('pengguna.index')
-                ->with('success', 'Pengguna berhasil ditambahkan dengan data login.');
+                ->with('success', 'Pengguna baru berhasil ditambahkan.');
         } catch (\Exception $e) {
-            return redirect()->route('pengguna.create')
+            Log::error('Error storing user: ' . $e->getMessage());
+            return redirect()->route('pengguna.index')
                 ->with('error', 'Gagal menambahkan pengguna: ' . $e->getMessage())
                 ->withInput();
         }
@@ -89,9 +103,13 @@ class PenggunaController extends Controller
      */
     public function show($id)
     {
-        // Menampilkan detail pengguna
-        $user = Pengguna::findOrFail($id);
-        return view('admin.pengguna.show', compact('user'));
+        try {
+            $user = Pengguna::with('user')->findOrFail($id);
+            return view('admin.pengguna.show', compact('user'));
+        } catch (\Exception $e) {
+            Log::error('Error showing user: ' . $e->getMessage());
+            return redirect()->route('pengguna.index')->with('error', 'Pengguna tidak ditemukan.');
+        }
     }
 
     /**
@@ -99,19 +117,87 @@ class PenggunaController extends Controller
      */
     public function edit($id)
     {
-        $pengguna = Pengguna::findOrFail($id);
-        // Ambil data user login yang berelasi
-        $user = User::where('email', $pengguna->email)->first();
-        
-        $jurusanList = [
-            'Teknik Informatika',
-            'Sistem Informasi',
-            'Teknik Komputer',
-            'Teknik Elektro',
-            'Manajemen Informatika'
-        ];
+        try {
+            $pengguna = Pengguna::with('user')->findOrFail($id);
+            
+            // Untuk AJAX request - return JSON
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'id' => $pengguna->id,
+                        'nama' => $pengguna->nama,
+                        'email' => $pengguna->email,
+                        'nim' => $pengguna->nim,
+                        'jurusan' => $pengguna->jurusan,
+                        'peran' => $pengguna->peran,
+                        'status' => $pengguna->status,
+                        'tanggal_bergabung' => $pengguna->tanggal_bergabung ? $pengguna->tanggal_bergabung->format('Y-m-d') : '',
+                        'user' => [
+                            'no_hp' => $pengguna->user->no_hp ?? ''
+                        ]
+                    ]
+                ]);
+            }
 
-        return view('admin.pengguna.edit', compact('pengguna', 'user', 'jurusanList'));
+            // Untuk non-AJAX request (fallback)
+            $jurusanList = [
+                'Teknik Informatika',
+                'Sistem Informasi',
+                'Teknik Komputer',
+                'Teknik Elektro',
+                'Manajemen Informatika'
+            ];
+
+            $user = User::where('email', $pengguna->email)->first();
+            return view('admin.pengguna.edit', compact('pengguna', 'user', 'jurusanList'));
+            
+        } catch (\Exception $e) {
+            Log::error('Error editing user: ' . $e->getMessage());
+            
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User tidak ditemukan'
+                ], 404);
+            }
+            
+            return redirect()->route('pengguna.index')->with('error', 'Pengguna tidak ditemukan.');
+        }
+    }
+
+    /**
+     * Method khusus untuk AJAX edit
+     */
+    public function editAjax($id)
+    {
+        try {
+            $pengguna = Pengguna::with('user')->findOrFail($id);
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $pengguna->id,
+                    'nama' => $pengguna->nama,
+                    'email' => $pengguna->email,
+                    'nim' => $pengguna->nim,
+                    'jurusan' => $pengguna->jurusan,
+                    'peran' => $pengguna->peran,
+                    'status' => $pengguna->status,
+                    'tanggal_bergabung' => $pengguna->tanggal_bergabung ? $pengguna->tanggal_bergabung->format('Y-m-d') : '',
+                    'user' => [
+                        'no_hp' => $pengguna->user->no_hp ?? ''
+                    ]
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in editAjax: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan: ' . $e->getMessage()
+            ], 404);
+        }
     }
 
     /**
@@ -119,54 +205,71 @@ class PenggunaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $pengguna = Pengguna::findOrFail($id);
-
-        // Validasi data
-        $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
-            'nim' => 'nullable|string|max:20|unique:penggunas,nim,' . $id,
-            'email' => 'required|email|unique:penggunas,email,' . $id . '|unique:users,email,' . optional(User::where('email', $pengguna->email)->first())->id,
-            'no_hp' => 'nullable|string|max:20', // Validasi untuk no_hp
-            'password' => 'nullable|string|min:6|confirmed',
-            'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
-            'jurusan' => 'nullable|string|max:255',
-            'status' => 'required|in:Aktif,Non-Aktif',
-            'tanggal_bergabung' => 'nullable|date',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         try {
-            $validatedData = $validator->validated();
-
-            // Cari user login berdasarkan email LAMA
+            $pengguna = Pengguna::findOrFail($id);
             $user = User::where('email', $pengguna->email)->first();
 
-            // Update tabel 'penggunas'
-            $pengguna->update($validatedData);
+            $validator = Validator::make($request->all(), [
+                'nama' => 'required|string|max:255',
+                'nim' => 'nullable|string|max:20|unique:penggunas,nim,' . $id,
+                'email' => 'required|email|unique:penggunas,email,' . $id . '|unique:users,email,' . ($user ? $user->id : 'NULL'),
+                'no_hp' => 'nullable|string|max:20',
+                'password' => 'nullable|string|min:6|confirmed',
+                'peran' => 'required|in:Admin Lab,Asisten,Mahasiswa',
+                'jurusan' => 'required|string|max:255',
+                'status' => 'required|in:Aktif,Non-Aktif',
+                'tanggal_bergabung' => 'required|date',
+            ]);
 
-            // Jika ada data user login yang cocok
+            if ($validator->fails()) {
+                return redirect()->route('pengguna.index')
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Terjadi kesalahan validasi. Silakan periksa data yang dimasukkan.');
+            }
+
+            $validatedData = $validator->validated();
+
+            // Update tabel 'penggunas'
+            $pengguna->update([
+                'nama' => $validatedData['nama'],
+                'nim' => $validatedData['nim'],
+                'email' => $validatedData['email'],
+                'peran' => $validatedData['peran'],
+                'jurusan' => $validatedData['jurusan'],
+                'status' => $validatedData['status'],
+                'tanggal_bergabung' => $validatedData['tanggal_bergabung'],
+            ]);
+
+            // Update atau buat data di tabel 'users'
             if ($user) {
-                $user->name = $validatedData['nama'];
-                $user->email = $validatedData['email'];
-                $user->no_hp = $validatedData['no_hp']; // Update no_hp
+                $userData = [
+                    'name' => $validatedData['nama'],
+                    'email' => $validatedData['email'],
+                    'no_hp' => $validatedData['no_hp'],
+                ];
                 
-                // Jika admin mengisi password baru
                 if (!empty($validatedData['password'])) {
-                    $user->password = Hash::make($validatedData['password']);
+                    $userData['password'] = Hash::make($validatedData['password']);
                 }
                 
-                $user->save();
+                $user->update($userData);
+            } else {
+                // Buat user baru jika tidak ditemukan
+                User::create([
+                    'name' => $validatedData['nama'],
+                    'email' => $validatedData['email'],
+                    'no_hp' => $validatedData['no_hp'],
+                    'password' => Hash::make($validatedData['password'] ?? 'password123'),
+                ]);
             }
             
             return redirect()->route('pengguna.index')
                 ->with('success', 'Pengguna berhasil diperbarui');
+                
         } catch (\Exception $e) {
-            return redirect()->route('pengguna.edit', $id)
+            Log::error('Error updating user: ' . $e->getMessage());
+            return redirect()->route('pengguna.index')
                 ->with('error', 'Gagal memperbarui pengguna: ' . $e->getMessage())
                 ->withInput();
         }
@@ -181,15 +284,53 @@ class PenggunaController extends Controller
             $pengguna = Pengguna::findOrFail($id);
             $userName = $pengguna->nama;
 
-            // Hapus juga data login di tabel users
+            // Hapus data user terkait
             User::where('email', $pengguna->email)->delete();
+            
+            // Hapus data pengguna
             $pengguna->delete();
             
             return redirect()->route('pengguna.index')
                 ->with('success', "Pengguna '{$userName}' berhasil dihapus");
+                
         } catch (\Exception $e) {
+            Log::error('Error deleting user: ' . $e->getMessage());
             return redirect()->route('pengguna.index')
                 ->with('error', 'Gagal menghapus pengguna: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get user data for AJAX requests
+     */
+    public function getUserData($id)
+    {
+        try {
+            $pengguna = Pengguna::with('user')->findOrFail($id);
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $pengguna->id,
+                    'nama' => $pengguna->nama,
+                    'email' => $pengguna->email,
+                    'nim' => $pengguna->nim,
+                    'jurusan' => $pengguna->jurusan,
+                    'peran' => $pengguna->peran,
+                    'status' => $pengguna->status,
+                    'tanggal_bergabung' => $pengguna->tanggal_bergabung ? $pengguna->tanggal_bergabung->format('Y-m-d') : '',
+                    'user' => [
+                        'no_hp' => $pengguna->user->no_hp ?? ''
+                    ]
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in getUserData: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan'
+            ], 404);
         }
     }
 }
