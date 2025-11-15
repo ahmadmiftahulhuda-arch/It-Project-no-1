@@ -22,7 +22,7 @@
             --transition: all 0.3s ease;
         }
 
-        /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
+        /* ===== NAVBAR UTAMA DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
