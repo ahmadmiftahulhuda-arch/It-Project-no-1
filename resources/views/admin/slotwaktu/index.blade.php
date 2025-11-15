@@ -950,20 +950,7 @@
                 </button>
             </div>
         </div>
-
-        <!-- Stats Cards -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon total">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="total-count">{{ $totalCount ?? 0 }}</h3>
-                    <p>Total Keseluaruhan Waktu</p>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Filter Section -->
         <div class="filter-section">
             <form id="filterForm" method="GET" action="{{ route('admin.slotwaktu.index') }}">
