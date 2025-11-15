@@ -77,6 +77,8 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
+            display: flex;
+            align-items: center;
         }
 
         .navbar-nav .nav-link:hover,
@@ -97,7 +99,39 @@
             margin: 0 0.5rem;
         }
 
-        /* ===== DROPDOWN MENU ===== */
+        /* ===== NAVBAR DROPDOWN IMPROVEMENTS ===== */
+        .navbar-nav .nav-link.dropdown-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Hapus panah default Bootstrap */
+        .navbar-nav .nav-link.dropdown-toggle::after {
+            display: none !important;
+        }
+
+        /* Custom arrow icon - lebih kecil dan simpel seperti gambar */
+        .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+            margin-left: 8px;
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: normal;
+        }
+
+        .navbar-nav .nav-link.dropdown-toggle.show .custom-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Styling untuk dropdown yang aktif/diklik */
+        .navbar-nav .nav-link.dropdown-toggle.show {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
         .dropdown-menu-custom {
             background-color: white;
             border: none;
@@ -107,6 +141,19 @@
             min-width: 220px;
             margin-top: 8px;
             transition: all 0.3s ease;
+            transform-origin: top;
+            animation: dropdownFadeIn 0.3s ease;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dropdown-item-custom {
@@ -128,6 +175,12 @@
             color: var(--primary-color);
         }
 
+        .dropdown-item-custom.active {
+            background-color: rgba(59, 89, 152, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
         .dropdown-divider-custom {
             margin: 0.5rem 0;
             border-top: 1px solid #e9ecef;
@@ -138,6 +191,11 @@
             font-size: 0.85rem;
             color: #6c757d;
             font-weight: 600;
+        }
+
+        /* ===== NAVBAR DROPDOWN POSITIONING ===== */
+        .navbar-nav .dropdown-menu {
+            position: absolute;
         }
 
         /* ===== TOMBOL ===== */
@@ -219,47 +277,50 @@
             color: white;
         }
 
-        .btn-success-custom {
-            background-color: #198754;
-            border-color: #198754;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-flex;
+        /* ===== RESPONSIVE DROPDOWN ===== */
+        @media (max-width: 768px) {
+            .dropdown-menu-custom {
+                margin-top: 0;
+                border-radius: 0 0 8px 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle {
+                justify-content: flex-start;
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+                margin-left: auto;
+            }
+        }
+
+        /* ===== KONTEN UTAMA ===== */
+        .container.main-content {
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            transition: all 0.3s;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .btn-success-custom:hover {
-            background-color: #157347;
-            border-color: #146c43;
-            transform: translateY(-2px);
-            color: white;
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn-action {
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin: 0 2px;
-            font-size: 0.85rem;
-            border: none;
-            transition: var(--transition);
-        }
-
-        .btn-action:hover {
-            transform: translateY(-1px);
-        }
-
-        /* ===== TOMBOL DISABLED ===== */
-        .btn-action-disabled,
-        .btn-action:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-            filter: grayscale(0.7);
+        .page-description {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            width: 100%;
         }
 
         /* ===== KARTU ===== */
@@ -854,30 +915,6 @@
         }
 
         /* ===== PERBAIKAN VISUAL ===== */
-        .page-header {
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .page-title {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-description {
-            color: #6c757d;
-            margin-bottom: 1.5rem;
-            width: 100%;
-        }
-
         .form-select,
         .form-control {
             border-radius: 8px;
@@ -1101,6 +1138,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                            <span class="custom-arrow">
+    <i class="fa-solid fa-chevron-down"></i>
+</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
                             <li>
@@ -1124,11 +1164,15 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+                            <span class="custom-arrow">
+    <i class="fa-solid fa-chevron-down"></i>
+</span>
+
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
                             <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+                                <a class="dropdown-item-custom active" href="{{ route('user.peminjaman.index') }}">
                                     <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
                                 </a>
                             </li>
@@ -1143,7 +1187,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item-custom active" href="{{ route('user.peminjaman.riwayat') }}">
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
                                     <i class="fas fa-history me-2"></i> Riwayat
                                 </a>
                             </li>
@@ -1169,6 +1213,10 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-circle me-1"></i>
                                 {{ Auth::user()->name }}
+                                <span class="custom-arrow">
+    <i class="fa-solid fa-chevron-down"></i>
+</span>
+
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
                                 <li class="dropdown-header-custom">Masuk sebagai</li>
@@ -1744,6 +1792,37 @@
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
+            });
+        });
+
+        // ===== DROPDOWN ANIMATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle dropdown toggle animation
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    // Close other open dropdowns
+                    dropdownToggles.forEach(otherToggle => {
+                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                            otherToggle.classList.remove('show');
+                            const otherMenu = otherToggle.nextElementSibling;
+                            if (otherMenu && otherMenu.classList.contains('show')) {
+                                otherMenu.classList.remove('show');
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
+                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    openDropdowns.forEach(element => {
+                        element.classList.remove('show');
+                    });
+                }
             });
         });
 

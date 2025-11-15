@@ -70,6 +70,9 @@ Route::prefix('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+// Kelola Pengguna
+    Route::resource('pengguna', PenggunaController::class);
+
     // Feedback
     Route::resource('feedback', FeedbackController::class);
 
@@ -110,11 +113,13 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.peminjaman.destroy');
     });
 
-    Route::prefix('pengembalian')->group(function () {
+Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
         Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
-        Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])->name('admin.pengembalian.kembalikan');
-        Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])->name('admin.pengembalian.destroy');
+        Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])
+            ->name('admin.pengembalian.kembalikan');
+        Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])
+            ->name('admin.pengembalian.destroy');
     });
 
     Route::prefix('riwayat')->group(function () {
@@ -122,10 +127,6 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [AdminController::class, 'updateRiwayat'])->name('admin.riwayat.update');
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
     });
-});
-//routes pengguna
-Route::prefix('admin')->group(function () {
-    Route::resource('pengguna', PenggunaController::class);
 });
 
 // ================================

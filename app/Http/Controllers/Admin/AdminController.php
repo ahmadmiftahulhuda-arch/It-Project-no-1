@@ -75,27 +75,22 @@ class AdminController extends Controller
     /**
      * Display halaman pengembalian
      */
-    public function pengembalian(Request $request)
-    {
-        $query = Peminjaman::where('status', 'disetujui')
-            ->whereDoesntHave('pengembalian'); // Hanya tampilkan yg belum dikembalikan
+public function pengembalian(Request $request)
+{
+    // 1. Peminjaman aktif (belum ajukan pengembalian)
+    $peminjamans = Peminjaman::where('status', 'disetujui')
+        ->whereDoesntHave('pengembalian')
+        ->with('user')
+        ->orderBy('tanggal', 'desc')
+        ->paginate(10);   // <-- WAJIB paginate
 
-        // Filter pencarian
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('user', function ($userQuery) use ($search) {
-                    $userQuery->where('name', 'like', "%{$search}%");
-                })
-                    ->orWhere('keperluan', 'like', "%{$search}%")
-                    ->orWhere('ruang', 'like', "%{$search}%");
-            });
-        }
+    // 2. Pengembalian yang diajukan user
+    $pengembalians = \App\Models\Pengembalian::with(['peminjaman', 'user'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);   // <-- WAJIB paginate
 
-        $pengembalians = $query->orderBy('tanggal', 'desc')->paginate(10);
-
-        return view('admin.pengembalian.index', compact('pengembalians'));
-    }
+    return view('admin.pengembalian.index', compact('peminjamans', 'pengembalians'));
+}
 
     /**
      * Display riwayat peminjaman
@@ -326,21 +321,22 @@ class AdminController extends Controller
             ->with('success', 'Pengembalian berhasil dicatat.');
     }
 
-    /**
-     * Proses pengembalian
-     */
-    public function prosesPengembalian($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->update([
-            'status' => 'selesai',
-            'tanggal_kembali' => Carbon::now(),
-            'status_pengembalian' => 'sudah dikembalikan'
-        ]);
+public function prosesPengembalian(Request $request, $id)
+{
+    // Ambil data peminjaman berdasarkan ID peminjaman
+    $peminjaman = \App\Models\Peminjaman::findOrFail($id);
 
-        return redirect()->route('admin.pengembalian')
-            ->with('success', 'Pengembalian berhasil diproses.');
-    }
+    $peminjaman->update([
+        'status'             => 'selesai',
+        'status_pengembalian'=> 'sudah dikembalikan',
+        'tanggal_kembali'    => now(),
+        'kondisi_kembali'    => $request->kondisi_barang,
+        'keterangan_kembali' => $request->keterangan,
+    ]);
+
+    return redirect()->route('admin.pengembalian')
+        ->with('success', 'Pengembalian berhasil diproses.');
+}
 
     /**
      * Destroy pengembalian

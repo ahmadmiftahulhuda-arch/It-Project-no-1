@@ -66,6 +66,8 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
+            display: flex;
+            align-items: center;
         }
 
         .navbar-nav .nav-link:hover,
@@ -86,7 +88,39 @@
             margin: 0 0.5rem;
         }
 
-        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        /* ===== NAVBAR DROPDOWN IMPROVEMENTS ===== */
+        .navbar-nav .nav-link.dropdown-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Hapus panah default Bootstrap */
+        .navbar-nav .nav-link.dropdown-toggle::after {
+            display: none !important;
+        }
+
+        /* Custom arrow icon - lebih kecil dan simpel seperti gambar */
+        .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+            margin-left: 8px;
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: normal;
+        }
+
+        .navbar-nav .nav-link.dropdown-toggle.show .custom-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Styling untuk dropdown yang aktif/diklik */
+        .navbar-nav .nav-link.dropdown-toggle.show {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
         .dropdown-menu-custom {
             background-color: white;
             border: none;
@@ -96,6 +130,19 @@
             min-width: 220px;
             margin-top: 8px;
             transition: all 0.3s ease;
+            transform-origin: top;
+            animation: dropdownFadeIn 0.3s ease;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dropdown-item-custom {
@@ -117,6 +164,12 @@
             color: var(--primary-color);
         }
 
+        .dropdown-item-custom.active {
+            background-color: rgba(59, 89, 152, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
         .dropdown-divider-custom {
             margin: 0.5rem 0;
             border-top: 1px solid #e9ecef;
@@ -127,6 +180,28 @@
             font-size: 0.85rem;
             color: #6c757d;
             font-weight: 600;
+        }
+
+        /* ===== NAVBAR DROPDOWN POSITIONING ===== */
+        .navbar-nav .dropdown-menu {
+            position: absolute;
+        }
+
+        /* ===== RESPONSIVE DROPDOWN ===== */
+        @media (max-width: 768px) {
+            .dropdown-menu-custom {
+                margin-top: 0;
+                border-radius: 0 0 8px 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle {
+                justify-content: flex-start;
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+                margin-left: auto;
+            }
         }
 
         /* ===== TOMBOL LOGIN ===== */
@@ -556,6 +631,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                            <span class="custom-arrow">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
                             <li>
@@ -579,7 +657,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+                            <span class="custom-arrow">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
                             <li>
@@ -624,6 +705,9 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-circle me-1"></i>
                                 {{ Auth::user()->name }}
+                                <span class="custom-arrow">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
                                 <li class="dropdown-header-custom">Masuk sebagai</li>
@@ -927,6 +1011,37 @@
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        // ===== DROPDOWN ANIMATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle dropdown toggle animation
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    // Close other open dropdowns
+                    dropdownToggles.forEach(otherToggle => {
+                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                            otherToggle.classList.remove('show');
+                            const otherMenu = otherToggle.nextElementSibling;
+                            if (otherMenu && otherMenu.classList.contains('show')) {
+                                otherMenu.classList.remove('show');
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
+                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    openDropdowns.forEach(element => {
+                        element.classList.remove('show');
+                    });
+                }
+            });
         });
 
         // ===== BACK TO TOP BUTTON FUNCTIONALITY =====

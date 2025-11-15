@@ -35,7 +35,7 @@
             line-height: 1.6;
         }
 
-             /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
         .sidebar {
             position: fixed;
             top: 0;
@@ -773,7 +773,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -784,10 +785,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -810,10 +812,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -828,10 +831,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -854,10 +858,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -868,10 +873,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -895,7 +901,8 @@
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.pengembalian') }}" class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" name="search" placeholder="Cari pengembalian..." value="{{ request('search') }}">
+                <input type="text" name="search" placeholder="Cari pengembalian..."
+                    value="{{ request('search') }}">
                 <button type="submit" style="display: none;"></button>
             </form>
 
@@ -987,9 +994,13 @@
                         <label for="status_filter">Status Pengembalian</label>
                         <select id="status_filter" name="status">
                             <option value="">Semua Status</option>
-                            <option value="belum_dikembalikan" {{ request('status') == 'belum_dikembalikan' ? 'selected' : '' }}>Belum Dikembalikan</option>
-                            <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
-                            <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>Terlambat</option>
+                            <option value="belum_dikembalikan"
+                                {{ request('status') == 'belum_dikembalikan' ? 'selected' : '' }}>Belum Dikembalikan
+                            </option>
+                            <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>
+                                Dikembalikan</option>
+                            <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>
+                                Terlambat</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -999,9 +1010,12 @@
                     <div class="filter-group">
                         <label for="sort_filter">Urutkan</label>
                         <select id="sort_filter" name="sort">
-                            <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Terbaru</option>
-                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
-                            <option value="due_date" {{ request('sort') == 'due_date' ? 'selected' : '' }}>Tanggal Jatuh Tempo</option>
+                            <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>
+                                Terbaru</option>
+                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama
+                            </option>
+                            <option value="due_date" {{ request('sort') == 'due_date' ? 'selected' : '' }}>Tanggal
+                                Jatuh Tempo</option>
                         </select>
                     </div>
                 </div>
@@ -1034,10 +1048,11 @@
                         </tr>
                     </thead>
                     <tbody id="pengembalian-table-body">
-                        @if(isset($pengembalians) && $pengembalians->count() > 0)
-                            @foreach($pengembalians as $pengembalian)
+                        @if (isset($pengembalians) && $pengembalians->count() > 0)
+                            @foreach ($pengembalians as $pengembalian)
                                 <tr data-status="{{ $pengembalian->status }}" data-id="{{ $pengembalian->id }}">
-                                    <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}</td>
+                                    <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
+                                    </td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="user-avatar me-2"
@@ -1048,40 +1063,42 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <strong>{{ $pengembalian->ruang }}</strong><br>
-                                        <small class="text-muted">
-                                            {{ $pengembalian->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}
-                                        </small>
+                                        <strong>{{ $pengembalian->peminjaman->ruang }}</strong>
+                                        <small>{{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}</small>
                                     </td>
-                                    <td>{{ \Carbon\Carbon::parse($pengembalian->tanggal_pinjam)->format('d M Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') }}
+                                    </td>
                                     <td>
-                                        @if($pengembalian->tanggal_kembali)
+                                        @if ($pengembalian->tanggal_kembali)
                                             {{ \Carbon\Carbon::parse($pengembalian->tanggal_kembali)->format('d M Y') }}
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($pengembalian->status == 'dikembalikan')
-                                            <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
-                                        @elseif($pengembalian->status == 'terlambat')
-                                            <span class="badge status-badge status-terlambat">Terlambat</span>
+                                        @if ($pengembalian->peminjaman->status_pengembalian == 'sudah dikembalikan')
+                                            <span class="badge status-dikembalikan">Dikembalikan</span>
                                         @else
-                                            <span class="badge status-badge status-belum-dikembalikan">Belum Dikembalikan</span>
+                                            <span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>
                                         @endif
+
                                     </td>
                                     <td>
                                         @php
                                             $kondisi = '';
                                             if (str_contains($pengembalian->catatan ?? '', 'Kondisi: Baik')) {
                                                 $kondisi = 'Baik';
-                                            } elseif (str_contains($pengembalian->catatan ?? '', 'Kondisi: Rusak Ringan')) {
+                                            } elseif (
+                                                str_contains($pengembalian->catatan ?? '', 'Kondisi: Rusak Ringan')
+                                            ) {
                                                 $kondisi = 'Rusak Ringan';
-                                            } elseif (str_contains($pengembalian->catatan ?? '', 'Kondisi: Rusak Berat')) {
+                                            } elseif (
+                                                str_contains($pengembalian->catatan ?? '', 'Kondisi: Rusak Berat')
+                                            ) {
                                                 $kondisi = 'Rusak Berat';
                                             }
                                         @endphp
-                                        @if($kondisi)
+                                        @if ($kondisi)
                                             <span class="badge bg-success">{{ $kondisi }}</span>
                                         @else
                                             <span class="text-muted">-</span>
@@ -1094,11 +1111,11 @@
                                         <div class="d-flex gap-2 action-buttons">
                                             @if ($pengembalian->status != 'dikembalikan')
                                                 <button class="btn btn-success-custom btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#returnModal" 
-                                                    data-id="{{ $pengembalian->id }}"
+                                                    data-bs-target="#returnModal"
+                                                    data-id="{{ $pengembalian->peminjaman_id }}"
                                                     data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
-                                                    data-barang="{{ $pengembalian->ruang }} - {{ $pengembalian->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}"
-                                                    data-tanggal-pinjam="{{ $pengembalian->tanggal_pinjam }}"
+                                                    data-barang="{{ $pengembalian->peminjaman->ruang }} - {{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}"
+                                                    data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal }}"
                                                     data-tanggal-jatuh-tempo="{{ $pengembalian->tanggal_pinjam }}">
                                                     <i class="fas fa-undo me-1"></i> Kembalikan
                                                 </button>
@@ -1106,11 +1123,10 @@
 
                                             <!-- Tombol Detail -->
                                             <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#detailModal" 
-                                                data-id="{{ $pengembalian->id }}"
+                                                data-bs-target="#detailModal" data-id="{{ $pengembalian->id }}"
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
-                                                data-barang="{{ $pengembalian->ruang }} - {{ $pengembalian->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}"
-                                                data-tanggal-pinjam="{{ $pengembalian->tanggal_pinjam }}"
+                                                data-barang="{{ $pengembalian->peminjaman->ruang }} - {{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}"
+                                                data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal }}"
                                                 data-tanggal-jatuh-tempo="{{ $pengembalian->tanggal_pinjam }}"
                                                 data-tanggal-kembali="{{ $pengembalian->tanggal_kembali }}"
                                                 data-kondisi="{{ $kondisi }}"
@@ -1120,7 +1136,8 @@
                                             </button>
 
                                             <!-- Tombol Hapus -->
-                                            <form action="{{ route('admin.pengembalian.destroy', $pengembalian->id) }}"
+                                            <form
+                                                action="{{ route('admin.pengembalian.destroy', $pengembalian->id) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -1146,7 +1163,7 @@
         </div>
 
         <!-- Pagination -->
-        @if(isset($pengembalians) && $pengembalians->hasPages())
+        @if (isset($pengembalians) && $pengembalians->hasPages())
             <div class="pagination-container">
                 <nav>
                     <ul class="pagination">
@@ -1193,11 +1210,13 @@
         @endif
 
         <!-- Modal Kembalikan Barang -->
-        <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+        <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="returnModalLabel"><i class="fas fa-undo me-2"></i> Proses Pengembalian</h5>
+                        <h5 class="modal-title" id="returnModalLabel"><i class="fas fa-undo me-2"></i> Proses
+                            Pengembalian</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -1244,11 +1263,13 @@
         </div>
 
         <!-- Modal Detail Pengembalian -->
-        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-eye me-2"></i> Detail Pengembalian</h5>
+                        <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-eye me-2"></i> Detail
+                            Pengembalian</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -1296,11 +1317,13 @@
         </div>
 
         <!-- Modal Tambah Pengembalian -->
-        <div class="modal fade" id="addReturnModal" tabindex="-1" aria-labelledby="addReturnModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addReturnModal" tabindex="-1" aria-labelledby="addReturnModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addReturnModalLabel"><i class="fas fa-plus me-2"></i> Tambah Pengembalian</h5>
+                        <h5 class="modal-title" id="addReturnModalLabel"><i class="fas fa-plus me-2"></i> Tambah
+                            Pengembalian</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -1312,10 +1335,11 @@
                                 <select class="form-select" id="peminjaman_id" name="peminjaman_id" required>
                                     <option value="">-- Pilih Peminjaman --</option>
                                     <!-- Data peminjaman akan diisi dari backend -->
-                                    @if(isset($peminjamansAktif) && $peminjamansAktif->count() > 0)
-                                        @foreach($peminjamansAktif as $peminjaman)
+                                    @if (isset($peminjamansAktif) && $peminjamansAktif->count() > 0)
+                                        @foreach ($peminjamansAktif as $peminjaman)
                                             <option value="{{ $peminjaman->id }}">
-                                                {{ $peminjaman->user->name ?? 'Guest' }} - {{ $peminjaman->ruang }} ({{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }})
+                                                {{ $peminjaman->user->name ?? 'Guest' }} - {{ $peminjaman->ruang }}
+                                                ({{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }})
                                             </option>
                                         @endforeach
                                     @else
@@ -1452,10 +1476,11 @@
                     document.getElementById('detail_barang').textContent = barang;
                     document.getElementById('detail_tanggal_pinjam').textContent = formatDate(tanggalPinjam);
                     document.getElementById('detail_tanggal_jatuh_tempo').textContent = formatDate(tanggalJatuhTempo);
-                    document.getElementById('detail_tanggal_kembali').textContent = tanggalKembali ? formatDate(tanggalKembali) : '-';
+                    document.getElementById('detail_tanggal_kembali').textContent = tanggalKembali ? formatDate(
+                        tanggalKembali) : '-';
                     document.getElementById('detail_kondisi').textContent = kondisi || '-';
                     document.getElementById('detail_keterangan').textContent = keterangan || '-';
-                    
+
                     // Format status
                     let statusText = '';
                     if (status === 'dikembalikan') {
@@ -1556,4 +1581,5 @@
         </script>
     </div>
 </body>
+
 </html>

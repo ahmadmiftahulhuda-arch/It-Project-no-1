@@ -213,8 +213,6 @@ class PeminjamanController extends Controller
             'status' => 'pending',
         ]);
 
-        $peminjaman->update(['status' => 'proses_pengembalian']);
-
         return response()->json([
             'success' => true,
             'message' => 'Pengajuan pengembalian berhasil diajukan. Menunggu verifikasi admin.',

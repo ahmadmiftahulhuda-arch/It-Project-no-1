@@ -64,6 +64,8 @@
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
+            display: flex;
+            align-items: center;
         }
 
         .navbar-nav .nav-link:hover,
@@ -84,7 +86,39 @@
             margin: 0 0.5rem;
         }
 
-        /* ===== DROPDOWN MENU YANG DIPERBAIKI ===== */
+        /* ===== NAVBAR DROPDOWN IMPROVEMENTS ===== */
+        .navbar-nav .nav-link.dropdown-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Hapus panah default Bootstrap */
+        .navbar-nav .nav-link.dropdown-toggle::after {
+            display: none !important;
+        }
+
+        /* Custom arrow icon - lebih kecil dan simpel seperti gambar */
+        .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+            margin-left: 8px;
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: normal;
+        }
+
+        .navbar-nav .nav-link.dropdown-toggle.show .custom-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Styling untuk dropdown yang aktif/diklik */
+        .navbar-nav .nav-link.dropdown-toggle.show {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
         .dropdown-menu-custom {
             background-color: white;
             border: none;
@@ -94,6 +128,19 @@
             min-width: 220px;
             margin-top: 8px;
             transition: all 0.3s ease;
+            transform-origin: top;
+            animation: dropdownFadeIn 0.3s ease;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dropdown-item-custom {
@@ -115,6 +162,12 @@
             color: var(--primary-color);
         }
 
+        .dropdown-item-custom.active {
+            background-color: rgba(59, 89, 152, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
         .dropdown-divider-custom {
             margin: 0.5rem 0;
             border-top: 1px solid #e9ecef;
@@ -127,7 +180,12 @@
             font-weight: 600;
         }
 
-         /* ===== TOMBOL LOGIN ===== */
+        /* ===== NAVBAR DROPDOWN POSITIONING ===== */
+        .navbar-nav .dropdown-menu {
+            position: absolute;
+        }
+
+        /* ===== TOMBOL ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -165,6 +223,62 @@
             border-color: #d39e00;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-primary-custom:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        /* ===== RESPONSIVE DROPDOWN ===== */
+        @media (max-width: 768px) {
+            .dropdown-menu-custom {
+                margin-top: 0;
+                border-radius: 0 0 8px 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle {
+                justify-content: flex-start;
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+                margin-left: auto;
+            }
         }
 
         /* ===== STYLING UMUM ===== */
@@ -891,7 +1005,7 @@
 </head>
 
 <body>
-    <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
+    <!-- ===== NAVBAR UTAMA ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="/home">
@@ -914,6 +1028,9 @@
                         <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                            <span class="custom-arrow">
+    <i class="fa-solid fa-chevron-down"></i>
+</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
                             <li>
@@ -926,6 +1043,7 @@
                                     <i class="fas fa-clock me-2"></i> Jadwal Kuliah
                                 </a>
                             </li>
+                           
                             <li>
                                 <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
@@ -934,9 +1052,13 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="#" id="peminjamanDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman                           
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+                            <span class="custom-arrow">
+    <i class="fa-solid fa-chevron-down"></i>
+</span>
+
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
                             <li>
@@ -950,7 +1072,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+                                <a class="dropdown-item-custom active" href="{{ route('user.pengembalian.index') }}">
                                     <i class="fas fa-undo me-2"></i> Pengembalian
                                 </a>
                             </li>
@@ -981,6 +1103,10 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-circle me-1"></i>
                                 {{ Auth::user()->name }}
+                                <span class="custom-arrow">
+    <i class="fa-solid fa-chevron-down"></i>
+</span>
+
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
                                 <li class="dropdown-header-custom">Masuk sebagai</li>
