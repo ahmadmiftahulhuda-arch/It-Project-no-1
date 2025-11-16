@@ -25,17 +25,25 @@
             --danger: #f44336;
             --light: #f8f9fa;
             --dark: #343a40;
+            --gray: #6c757d;
             --sidebar-width: 250px;
+            --text-light: #6c757d;
+            --text-dark: #495057;
+            --bg-light: #f5f8fa;
+            --bg-card: #ffffff;
+            --border-light: #e9ecef;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f8fa;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
+            line-height: 1.6;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
         .sidebar {
             position: fixed;
             top: 0;
@@ -44,28 +52,63 @@
             height: 100%;
             background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
+            transition: all 0.3s;
             z-index: 1000;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .sidebar-header {
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
 
         .sidebar-logo {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
 
         .menu-section {
-            padding: 10px 20px;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.6);
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
             font-weight: 600;
-            margin-top: 10px;
         }
 
         .menu-item {
@@ -76,6 +119,9 @@
             text-decoration: none;
             transition: all 0.3s;
             border-left: 4px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .menu-item:hover,
@@ -89,26 +135,113 @@
             margin-right: 10px;
             width: 20px;
             text-align: center;
+            opacity: 0.8;
+            flex-shrink: 0;
+        }
+
+        .menu-item span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Dropdown Menu Styles - DIPERBAIKI */
+        .dropdown-custom {
+            margin-bottom: 5px;
+        }
+
+        .dropdown-toggle-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .dropdown-toggle-custom:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dropdown-toggle-custom i:last-child {
+            transition: transform 0.3s;
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid white;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-items.show {
+            max-height: 500px;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px 10px 40px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            opacity: 0.8;
         }
 
         /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 20px;
+            transition: all 0.3s;
             min-height: 100vh;
         }
 
-        /* Header Styles */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
+            background: var(--bg-card);
+            padding: 15px 20px;
+            border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
-            border: 1px solid #e9ecef;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
         }
 
         .search-bar {
@@ -121,16 +254,17 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #6c757d;
+            color: var(--text-light);
         }
 
         .search-bar input {
             width: 100%;
             padding: 10px 15px 10px 40px;
-            border: 1px solid #e9ecef;
+            border: 1px solid var(--border-light);
             border-radius: 30px;
             outline: none;
             transition: all 0.3s;
+            background-color: var(--bg-light);
         }
 
         .search-bar input:focus {
@@ -151,11 +285,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f8f9fa;
+            background: var(--bg-light);
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s;
-            border: none;
+            color: var(--text-dark);
         }
 
         .notification-btn:hover,
@@ -180,13 +314,15 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         /* User Card Styles */
         .user-card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            border: 1px solid #e9ecef;
+            border: 1px solid var(--border-light);
             border-radius: 10px;
+            background: var(--bg-card);
         }
 
         .user-card:hover {
@@ -195,7 +331,7 @@
         }
 
         .user-details .detail-item {
-            border-bottom: 1px solid #f8f9fa;
+            border-bottom: 1px solid var(--border-light);
             padding-bottom: 8px;
         }
 
@@ -206,6 +342,7 @@
 
         .card-title {
             font-size: 1.1rem;
+            color: var(--text-dark);
         }
 
         .badge {
@@ -222,44 +359,85 @@
             font-size: 0.875rem;
         }
 
-        /* Modal backdrop transparency */
+        /* Modal backdrop transparency - HITAM TRANSPARAN TANPA BLUR */
         .modal-backdrop {
-            opacity: 0.7 !important;
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            opacity: 1 !important;
+        }
+
+        .modal-backdrop.fade {
+            opacity: 0 !important;
+        }
+
+        .modal-backdrop.show {
+            opacity: 1 !important;
         }
 
         .modal {
-            backdrop-filter: blur(5px);
+            backdrop-filter: none !important;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: var(--text-dark);
+        }
+
+        /* Dark mode support */
+        body.dark-mode .modal-content {
+            background-color: #2d3748;
+            color: #ffffff;
+        }
+
+        body.dark-mode .modal-header,
+        body.dark-mode .modal-footer {
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .btn-close {
+            filter: invert(1);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
+                overflow: hidden;
             }
 
             .sidebar-header h2,
-            .menu-item span {
+            .menu-item span,
+            .dropdown-toggle-custom span {
                 display: none;
             }
 
-            .menu-item {
+            .menu-item,
+            .dropdown-toggle-custom {
                 justify-content: center;
                 padding: 15px;
             }
 
-            .menu-item i {
+            .menu-item i,
+            .dropdown-toggle-custom i {
                 margin-right: 0;
+            }
+
+            .dropdown-toggle-custom i:last-child {
+                display: none;
+            }
+
+            .dropdown-items {
+                display: none;
             }
 
             .main-content {
                 margin-left: 70px;
-                padding: 15px;
             }
 
             .header {
                 flex-direction: column;
                 gap: 15px;
-                padding: 15px;
             }
 
             .search-bar {
@@ -269,39 +447,39 @@
 
         /* Dark mode styles */
         body.dark-mode {
-            background-color: #1a1a1a;
-            color: #ffffff;
+            background-color: #121212;
+            color: #e0e0e0;
         }
 
         body.dark-mode .header {
-            background: #2d3748;
-            border-color: #4a5568;
+            background: #1e1e1e;
+            border-color: #333;
         }
 
         body.dark-mode .card {
-            background: #2d3748;
-            border-color: #4a5568;
-            color: #ffffff;
+            background: #1e1e1e;
+            border-color: #333;
+            color: #e0e0e0;
         }
 
         body.dark-mode .card-title {
-            color: #ffffff;
+            color: #e0e0e0;
         }
 
         body.dark-mode .text-muted {
-            color: #a0aec0 !important;
+            color: #a0a0a0 !important;
         }
 
         body.dark-mode .form-control,
         body.dark-mode .form-select {
-            background: #4a5568;
-            border-color: #718096;
+            background: #2a2a2a;
+            border-color: #333;
             color: #ffffff;
         }
 
         body.dark-mode .form-control:focus,
         body.dark-mode .form-select:focus {
-            background: #4a5568;
+            background: #2a2a2a;
             border-color: #4299e1;
             color: #ffffff;
         }
@@ -321,6 +499,30 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .menu-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
@@ -334,46 +536,121 @@
         </div>
 
         <div class="sidebar-menu">
-            <a href="/admin/dashboard" class="menu-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
+            <!-- Menu Utama - DIPERBAIKI -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                    <span>Menu Utama</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="menuUtama">
+                    <a href="/admin/dashboard" class="dropdown-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
             
-            <div class="menu-section">Manajemen Peminjaman</div>
-            <a href="/admin/peminjaman" class="menu-item">
-                <i class="fas fa-hand-holding"></i>
-                <span>Peminjaman</span>
-            </a>
-            <a href="/admin/pengembalian" class="menu-item">
-                <i class="fas fa-undo"></i>
-                <span>Pengembalian</span>
-            </a>
+            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                    <span>Manajemen Peminjaman</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="peminjamanMenu">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
+                        <i class="fas fa-hand-holding"></i>
+                        <span>Peminjaman</span>
+                    </a>
+                    <a href="/admin/pengembalian" class="dropdown-item">
+                        <i class="fas fa-undo"></i>
+                        <span>Pengembalian</span>
+                    </a>
+                    <a href="/admin/riwayat" class="dropdown-item">
+                        <i class="fas fa-history"></i>
+                        <span>Riwayat Peminjaman</span>
+                    </a>
+                    <a href="/admin/feedback" class="dropdown-item">
+                        <i class="fas fa-comment"></i>
+                        <span>Feedback</span>
+                    </a>
+                </div>
+            </div>
             
-            <div class="menu-section">Manajemen Aset</div>
-            <a href="/admin/proyektor" class="menu-item">
-                <i class="fas fa-video"></i>
-                <span>Proyektor</span>
-            </a>
-            <a href="/admin/ruangan" class="menu-item">
-                <i class="fas fa-door-open"></i>
-                <span>Ruangan</span>
-            </a>
+            <!-- Manajemen Aset - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                    <span>Manajemen Aset</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="asetMenu">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        <span>Proyektor</span>
+                    </a>
+                    <a href="/admin/ruangan" class="dropdown-item">
+                        <i class="fas fa-door-open"></i>
+                        <span>Ruangan</span>
+                    </a>
+                </div>
+            </div>
             
-            <div class="menu-section">Manajemen Akademik</div>
-            <a href="/admin/jadwal" class="menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Jadwal</span>
-            </a>
-            <a href="/admin/matakuliah" class="menu-item">
-                <i class="fas fa-book"></i>
-                <span>Matakuliah</span>
-            </a>
+            <!-- Manajemen Akademik - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                    <span>Manajemen Akademik</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="akademikMenu">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jadwal Perkuliahan</span>
+                    </a>
+                    <a href="/admin/slotwaktu" class="dropdown-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Slot Waktu</span>
+                    </a>
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                    <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                </div>
+            </div>
             
-            <div class="menu-section">Manajemen Pengguna</div>
-            <a href="/admin/pengguna" class="menu-item active">
-                <i class="fas fa-users"></i>
-                <span>Pengguna</span>
-            </a>
+            <!-- Manajemen Pengguna - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="true" aria-controls="penggunaMenu">
+                    <span>Manajemen Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse show" id="penggunaMenu">
+                    <a href="/admin/pengguna" class="dropdown-item active">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                    <span>Laporan & Pengaturan</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="laporanMenu">
+                    <a href="/admin/laporan" class="dropdown-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Statistik</span>
+                    </a>
+                    <a href="/admin/pengaturan" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -398,7 +675,7 @@
                     <div class="user-avatar">A</div>
                     <div>
                         <div>Admin Lab</div>
-                        <div style="font-size: 0.8rem; color: #6c757d;">Teknologi Informasi</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
                     </div>
                 </div>
             </div>
@@ -408,7 +685,7 @@
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h1 class="h3 text-dark mb-1">Manajemen Pengguna</h1>
+                    <h1 class="h3 mb-1">Manajemen Pengguna</h1>
                     <p class="text-muted mb-0">Kelola data pengguna sistem Lab Teknologi Informasi</p>
                 </div>
                 <div>
@@ -454,7 +731,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
                                         <div>
-                                            <h6 class="card-title mb-1 fw-bold text-dark">{{ $user->nama }}</h6>
+                                            <h6 class="card-title mb-1 fw-bold">{{ $user->nama }}</h6>
                                             @if($user->nim)
                                                 <p class="text-muted small mb-2">{{ $user->nim }}</p>
                                             @endif
@@ -505,7 +782,7 @@
 
                                         <div class="detail-item">
                                             <small class="text-muted">Bergabung:</small>
-                                            <div class="fw-medium text-dark">
+                                            <div class="fw-medium">
                                                 {{ $user->tanggal_bergabung ? \Carbon\Carbon::parse($user->tanggal_bergabung)->format('d M Y') : '-' }}
                                             </div>
                                         </div>
@@ -557,7 +834,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="userModalLabel">Tambah Pengguna Baru</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="handleModalClose()"></button>
                 </div>
                 <form id="userForm" method="POST">
                     @csrf
@@ -675,7 +952,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="handleModalClose()">Batal</button>
                         <button type="submit" class="btn btn-primary" id="submitBtn">
                             <span id="submitBtnText">Simpan</span>
                             <div class="loading-spinner d-none" id="submitSpinner"></div>
@@ -713,10 +990,16 @@
     // Global variables
     let currentEditId = null;
     let deleteUserId = null;
+    let userModal = null;
 
     // Initialize when document is ready
     $(document).ready(function() {
         initializeEventListeners();
+        // Initialize modal instance
+        userModal = new bootstrap.Modal(document.getElementById('userModal'));
+        
+        // Initialize theme
+        initializeTheme();
     });
 
     function initializeEventListeners() {
@@ -735,7 +1018,7 @@
             }
         });
 
-        // Reset form ketika modal ditutup
+        // Reset form ketika modal ditutup - PERBAIKAN: Gunakan event Bootstrap yang benar
         $('#userModal').on('hidden.bs.modal', function () {
             resetForm();
         });
@@ -756,6 +1039,20 @@
             const searchTerm = $(this).val().toLowerCase();
             filterUsers(searchTerm);
         });
+
+        // Theme toggle
+        $('#theme-toggle').on('click', function() {
+            toggleTheme();
+        });
+    }
+
+    // Fungsi untuk menangani penutupan modal
+    function handleModalClose() {
+        // Reset form dan tutup modal dengan benar
+        resetForm();
+        if (userModal) {
+            userModal.hide();
+        }
     }
 
     function filterUsers(searchTerm) {
@@ -782,25 +1079,25 @@
         $('#submitBtn').prop('disabled', false);
         $('#submitBtnText').text('Simpan');
         $('#submitSpinner').addClass('d-none');
+        
+        // Reset form action dan method
+        $('#userForm').attr('action', "{{ route('pengguna.store') }}");
+        $('#formMethod').html('');
+        currentEditId = null;
     }
 
     function openCreateModal() {
         resetForm();
         $('#userModalLabel').text('Tambah Pengguna Baru');
-        $('#formMethod').html('');
-        
-        // Gunakan route name yang benar
-        $('#userForm').attr('action', "{{ route('pengguna.store') }}");
         
         const today = new Date().toISOString().split('T')[0];
         $('#tanggal_bergabung').val(today);
         $('#status').val('Aktif');
         
-        currentEditId = null;
-        
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('userModal'));
-        modal.show();
+        // Show modal menggunakan instance Bootstrap
+        if (userModal) {
+            userModal.show();
+        }
     }
 
     function openEditModal(userId) {
@@ -809,7 +1106,7 @@
         // Reset form dulu
         resetForm();
         
-        // Set action URL untuk update - gunakan route yang benar
+        // Set action URL untuk update
         $('#userModalLabel').text('Edit Pengguna');
         $('#formMethod').html('@method("PUT")');
         $('#userForm').attr('action', `/admin/pengguna/${userId}`);
@@ -833,7 +1130,6 @@
         submitSpinner.removeClass('d-none');
         submitBtn.prop('disabled', true);
 
-        // Gunakan endpoint yang sederhana
         $.ajax({
             url: `/admin/pengguna/${userId}/edit`,
             type: 'GET',
@@ -900,8 +1196,10 @@
 
     function showModal() {
         resetSubmitButton();
-        const modal = new bootstrap.Modal(document.getElementById('userModal'));
-        modal.show();
+        // Show modal menggunakan instance Bootstrap
+        if (userModal) {
+            userModal.show();
+        }
     }
 
     function resetSubmitButton() {
@@ -986,26 +1284,26 @@
         }, 5000);
     }
 
-    // Theme toggle
-    $('#theme-toggle').on('click', function() {
-        $('body').toggleClass('dark-mode');
-        if ($('body').hasClass('dark-mode')) {
-            $(this).html('<i class="fas fa-sun"></i>');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            $(this).html('<i class="fas fa-moon"></i>');
-            localStorage.setItem('theme', 'light');
-        }
-    });
-
-    // Load saved theme
-    $(document).ready(function() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            $('body').addClass('dark-mode');
+    // Theme functions
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('darkMode');
+        if (savedTheme === 'enabled') {
+            document.body.classList.add('dark-mode');
             $('#theme-toggle').html('<i class="fas fa-sun"></i>');
         }
-    });
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+
+        if (document.body.classList.contains('dark-mode')) {
+            $('#theme-toggle').html('<i class="fas fa-sun"></i>');
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            $('#theme-toggle').html('<i class="fas fa-moon"></i>');
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    }
 
     // Auto-hide alerts after 5 seconds
     $(document).ready(function() {
