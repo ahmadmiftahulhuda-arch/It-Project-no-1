@@ -70,8 +70,20 @@ Route::prefix('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-// Kelola Pengguna
-    Route::resource('pengguna', PenggunaController::class);
+// Route untuk Pengguna
+Route::prefix('pengguna')->name('pengguna.')->group(function () {
+    Route::get('/', [PenggunaController::class, 'index'])->name('index');
+    Route::post('/', [PenggunaController::class, 'store'])->name('store');
+    Route::get('/create', [PenggunaController::class, 'create'])->name('create');
+    Route::get('/{pengguna}', [PenggunaController::class, 'show'])->name('show');
+    Route::get('/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('edit');
+    Route::put('/{pengguna}', [PenggunaController::class, 'update'])->name('update');
+    Route::delete('/{pengguna}', [PenggunaController::class, 'destroy'])->name('destroy');
+    Route::get('/{id}/get-data', [PenggunaController::class, 'getUserData'])->name('get-data');
+});
+
+Route::get('/pengguna/{id}/get-data', [PenggunaController::class, 'getUserData'])->name('pengguna.get-data');
+Route::get('/pengguna/{id}/edit-ajax', [PenggunaController::class, 'editAjax'])->name('pengguna.edit-ajax');
 
     // Feedback
     Route::resource('feedback', FeedbackController::class);

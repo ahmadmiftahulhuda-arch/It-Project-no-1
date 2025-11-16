@@ -46,9 +46,11 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            animation: none !important;
+            transition: none !important;
         }
 
-        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -57,7 +59,7 @@
             height: 100%;
             background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            transition: all 0.3s;
+            transition: none !important;
             z-index: 1000;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -122,7 +124,7 @@
             padding: 12px 20px;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            transition: all 0.3s;
+            transition: none !important;
             border-left: 4px solid transparent;
             white-space: nowrap;
             overflow: hidden;
@@ -150,7 +152,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -162,7 +164,7 @@
             padding: 12px 20px;
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
-            transition: all 0.3s;
+            transition: none !important;
             border-left: 4px solid transparent;
             cursor: pointer;
             width: 100%;
@@ -178,7 +180,7 @@
         }
 
         .dropdown-toggle-custom i:last-child {
-            transition: transform 0.3s;
+            transition: none !important;
             margin-left: auto;
             font-size: 0.8rem;
             opacity: 0.7;
@@ -196,7 +198,7 @@
         .dropdown-items {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
+            transition: none !important;
             background-color: rgba(0, 0, 0, 0.1);
         }
 
@@ -209,7 +211,7 @@
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             display: block;
-            transition: all 0.3s;
+            transition: none !important;
             border-left: 4px solid transparent;
             position: relative;
         }
@@ -232,8 +234,10 @@
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 20px;
-            transition: all 0.3s;
+            transition: none !important;
             min-height: 100vh;
+            position: relative;
+            overflow: hidden;
         }
 
         /* Header */
@@ -247,6 +251,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             margin-bottom: 25px;
             border: 1px solid var(--border-light);
+            transition: none !important;
         }
 
         .dark-mode .header {
@@ -274,7 +279,7 @@
             border: 1px solid var(--border-light);
             border-radius: 30px;
             outline: none;
-            transition: all 0.3s;
+            transition: none !important;
             background-color: var(--bg-light);
             color: var(--text-dark);
             font-size: 0.9rem;
@@ -306,7 +311,7 @@
             background: var(--bg-light);
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: none !important;
             color: var(--text-dark);
             border: none;
         }
@@ -375,7 +380,7 @@
             padding: 10px 20px;
             border-radius: 6px;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: none !important;
             box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
             color: white;
             text-decoration: none;
@@ -399,7 +404,7 @@
             padding: 10px 20px;
             border-radius: 6px;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: none !important;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -427,7 +432,7 @@
             display: flex;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
+            transition: none !important;
             border: 1px solid var(--border-light);
             cursor: pointer;
         }
@@ -485,6 +490,7 @@
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-light);
+            transition: none !important;
         }
 
         .dark-mode .table-container {
@@ -545,7 +551,7 @@
             background: var(--bg-card);
             font-size: 0.85rem;
             color: var(--text-dark);
-            transition: all 0.3s;
+            transition: none !important;
             width: 100%;
             height: 38px;
         }
@@ -583,7 +589,7 @@
             min-width: 90px;
             border-radius: 6px;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: none !important;
             text-decoration: none;
         }
 
@@ -649,7 +655,7 @@
         }
 
         .table tbody tr {
-            transition: all 0.3s;
+            transition: none !important;
         }
 
         .table tbody tr:last-child td {
@@ -724,8 +730,9 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            transition: all 0.3s;
+            transition: none !important;
             font-weight: 500;
+            cursor: pointer;
         }
 
         .btn-warning-custom:hover {
@@ -746,7 +753,7 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: none !important;
             font-weight: 500;
         }
 
@@ -794,7 +801,7 @@
             background: var(--bg-card);
             padding: 8px 12px;
             border-radius: 6px;
-            transition: all 0.3s;
+            transition: none !important;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -900,49 +907,356 @@
             color: var(--primary);
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .table-filters {
-                gap: 10px;
-            }
-            
-            .filter-group {
-                min-width: 130px;
+        /* ============================ */
+        /* MODAL STYLES - NO ANIMATION */
+        /* ============================ */
+        
+        /* NON-ANIMATED MODAL BACKDROP */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            animation: none !important;
+            transition: none !important;
+            opacity: 1 !important;
+        }
+
+        .dark-mode .modal-backdrop {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* NON-ANIMATED MODAL */
+        .modal {
+            animation: none !important;
+            transition: none !important;
+            opacity: 1 !important;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1055;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            outline: 0;
+        }
+
+        .modal.show {
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+        .modal.fade {
+            animation: none !important;
+            transition: none !important;
+            opacity: 1 !important;
+        }
+
+        .modal.fade .modal-dialog {
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        .modal-dialog {
+            position: relative;
+            width: auto;
+            margin: 0.5rem;
+            pointer-events: none;
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+        }
+
+        @media (min-width: 576px) {
+            .modal-dialog {
+                max-width: 500px;
+                margin: 1.75rem auto;
             }
         }
 
-        @media (max-width: 992px) {
-            .stats-container {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-            
-            .table-filters {
-                gap: 8px;
-            }
-            
-            .filter-group {
-                min-width: 120px;
-            }
-            
-            .filter-buttons {
-                flex-direction: column;
-                height: auto;
-            }
-            
-            .filter-buttons .btn {
-                width: 100%;
-                min-width: auto;
-            }
+        .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+            background: var(--bg-card);
+            color: var(--text-dark);
         }
 
+        .dark-mode .modal-content {
+            background: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #333;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-bottom: none;
+            padding: 25px 30px 20px;
+            position: relative;
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .dark-mode .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .modal-title i {
+            font-size: 1.6rem;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 30px;
+            background: var(--bg-card);
+            color: var(--text-dark);
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-light);
+            padding: 20px 30px;
+            background: var(--bg-light);
+            border-radius: 0 0 12px 12px;
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .dark-mode .modal-footer {
+            border-color: #333;
+            background: #252525;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dark-mode .form-label {
+            color: #ffffff;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            width: 100%;
+            font-size: 0.95rem;
+            transition: none !important;
+            background: var(--bg-card);
+            color: var(--text-dark);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.1);
+            outline: none;
+        }
+
+        .dark-mode .form-control {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #ffffff;
+        }
+
+        .dark-mode .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.2);
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+
+        .dark-mode .form-control::placeholder {
+            color: #888;
+        }
+
+        /* DROPDOWN STYLES DENGAN ICON PANAH */
+        .select-wrapper {
+            position: relative;
+            display: block;
+        }
+
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-light);
+            z-index: 1;
+        }
+
+        .dark-mode .select-wrapper::after {
+            color: #888;
+        }
+
+        .form-control.select-dropdown {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px;
+            background: var(--bg-card);
+        }
+
+        .dark-mode .form-control.select-dropdown {
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+
+        .form-control.select-dropdown option {
+            background: var(--bg-card);
+            color: var(--text-dark);
+            padding: 10px;
+        }
+
+        .dark-mode .form-control.select-dropdown option {
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+            font-weight: 500;
+        }
+
+        .dark-mode .text-danger {
+            color: #ff6b6b !important;
+        }
+
+        .required-star {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .dark-mode .required-star {
+            color: #ff6b6b;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        .dark-mode .text-muted {
+            color: #a0a0a0 !important;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: none !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .dark-mode .btn-outline {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .dark-mode .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            border: none;
+            color: white;
+        }
+
+        .dark-mode .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Loading State */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .sidebar {
                 width: 70px;
                 overflow: hidden;
             }
 
             .sidebar-header h2,
-            .menu-item span {
+            .menu-item span,
+            .dropdown-toggle-custom span {
                 display: none;
             }
 
@@ -951,8 +1265,22 @@
                 padding: 15px;
             }
 
-            .menu-item i {
+            .menu-item i,
+            .dropdown-toggle-custom i:first-child {
                 margin-right: 0;
+                font-size: 1.2rem;
+            }
+
+            .dropdown-toggle-custom {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .dropdown-items {
+                position: fixed;
+                left: 70px;
+                width: 200px;
+                z-index: 1001;
             }
 
             .main-content {
@@ -1032,6 +1360,16 @@
             .page-title h1 {
                 font-size: 1.5rem;
             }
+
+            .modal-dialog {
+                margin: 20px 10px;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 20px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1084,21 +1422,38 @@
             .filter-buttons {
                 flex-direction: column;
             }
+
+            .modal-dialog {
+                margin: 10px 5px;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 15px;
+            }
         }
 
-        /* Dark Mode Transition */
-        body,
-        .header,
-        .table-container,
-        .stat-card,
-        .table thead th,
-        .table tbody td,
-        .page-link,
-        .search-bar input,
-        .filter-group select,
-        .filter-group input,
-        .table {
-            transition: all 0.3s ease;
+        /* HAPUS SEMUA ANIMASI UNTUK SELURUH ELEMEN */
+        * {
+            animation: none !important;
+        }
+
+        /* OVERRIDE BOOTSTRAP ANIMATIONS */
+        .fade {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .modal.fade .modal-dialog {
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+        }
+
+        .modal.show .modal-dialog {
+            animation: none !important;
+            transform: none !important;
         }
     </style>
 </head>
@@ -1142,7 +1497,7 @@
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="/admin/riwayat" class="dropdown-item">
+                    <a href="/admin/riwayat" class="dropdown-item active">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
@@ -1160,7 +1515,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="asetMenu">
-                    <a href="{{ route('projectors.index') }}" class="dropdown-item active">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
@@ -1241,11 +1596,11 @@
             </div>
 
             <div class="user-actions">
-                <div class="notification-btn">
+                <div class="notification-btn" title="Notifikasi">
                     <i class="fas fa-bell"></i>
                 </div>
 
-                <div class="theme-toggle" id="theme-toggle">
+                <div class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
                     <i class="fas fa-moon"></i>
                 </div>
 
@@ -1266,9 +1621,9 @@
                 <p>Kelola data proyektor Lab Teknologi Informasi</p>
             </div>
             <div>
-                <a href="{{ route('projectors.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Proyektor
-                </a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectorModal">
+                    <i class="fas fa-plus-circle"></i> Tambah Proyektor
+                </button>
             </div>
         </div>
 
@@ -1401,13 +1756,21 @@
                                 <td>{{ $projector->created_at->format('d/m/Y') }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ route('projectors.edit', $projector->id) }}" class="btn-warning-custom">
+                                        <button type="button" class="btn-warning-custom" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#editProjectorModal"
+                                                data-projector-id="{{ $projector->id }}"
+                                                data-kode-proyektor="{{ $projector->kode_proyektor }}"
+                                                data-merk="{{ $projector->merk }}"
+                                                data-model="{{ $projector->model }}"
+                                                data-status="{{ $projector->status }}"
+                                                data-keterangan="{{ $projector->keterangan }}">
                                             <i class="fas fa-edit"></i> Edit
-                                        </a>
+                                        </button>
                                         <form action="{{ route('projectors.destroy', $projector->id) }}" method="POST" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn-danger-custom" onclick="return confirm('Hapus proyektor {{ $projector->kode_proyektor }}?')">
+                                            <button type="submit" class="btn-danger-custom" onclick="return confirm('Apakah Anda yakin ingin menghapus proyektor {{ $projector->kode_proyektor }}?')">
                                                 <i class="fas fa-trash"></i> Hapus
                                             </button>
                                         </form>
@@ -1417,11 +1780,11 @@
                         @empty
                             <tr>
                                 <td colspan="8" class="empty-state">
-                                    <i class="fas fa-video"></i><br>
+                                    <i class="fas fa-video-slash"></i><br>
                                     @if(request()->anyFilled(['search', 'status', 'merk']))
                                         Tidak ada data proyektor yang sesuai dengan filter
                                     @else
-                                        Belum ada data proyektor
+                                        Belum ada data proyektor. <a href="#" data-bs-toggle="modal" data-bs-target="#createProjectorModal" style="color: var(--primary);">Tambahkan proyektor pertama</a>
                                     @endif
                                 </td>
                             </tr>
@@ -1439,11 +1802,13 @@
                     {{-- Previous Page Link --}}
                     @if($projectors->onFirstPage())
                         <li class="page-item disabled">
-                            <span class="page-link">Sebelumnya</span>
+                            <span class="page-link"><i class="fas fa-chevron-left"></i> Sebelumnya</span>
                         </li>
                     @else
                         <li class="page-item">
-                            <a class="page-link" href="{{ $projectors->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">Sebelumnya</a>
+                            <a class="page-link" href="{{ $projectors->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">
+                                <i class="fas fa-chevron-left"></i> Sebelumnya
+                            </a>
                         </li>
                     @endif
 
@@ -1463,11 +1828,13 @@
                     {{-- Next Page Link --}}
                     @if($projectors->hasMorePages())
                         <li class="page-item">
-                            <a class="page-link" href="{{ $projectors->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">Selanjutnya</a>
+                            <a class="page-link" href="{{ $projectors->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">
+                                Selanjutnya <i class="fas fa-chevron-right"></i>
+                            </a>
                         </li>
                     @else
                         <li class="page-item disabled">
-                            <span class="page-link">Selanjutnya</span>
+                            <span class="page-link">Selanjutnya <i class="fas fa-chevron-right"></i></span>
                         </li>
                     @endif
                 </ul>
@@ -1476,8 +1843,8 @@
         @endif
 
         <!-- Info Jumlah Data -->
-        <div style="text-align: center; margin-top: 15px; color: var(--text-light); font-size: 0.9rem;">
-            Menampilkan {{ $projectors->firstItem() ?? 0 }} - {{ $projectors->lastItem() ?? 0 }} dari {{ $projectors->total() }} data
+        <div class="data-info">
+            Menampilkan <strong>{{ $projectors->firstItem() ?? 0 }}</strong> - <strong>{{ $projectors->lastItem() ?? 0 }}</strong> dari <strong>{{ $projectors->total() }}</strong> data proyektor
         </div>
 
         <!-- Success Message dengan Auto-hide -->
@@ -1486,6 +1853,201 @@
                 <i class="fas fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
+
+        @if($errors->any() && (session('form_type') == 'create' || session('form_type') == 'edit'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    @if(session('form_type') == 'create')
+                        const createModal = new bootstrap.Modal(document.getElementById('createProjectorModal'));
+                        createModal.show();
+                    @elseif(session('form_type') == 'edit')
+                        const editModal = new bootstrap.Modal(document.getElementById('editProjectorModal'));
+                        editModal.show();
+                    @endif
+                });
+            </script>
+        @endif
+    </div>
+
+    <!-- Create Projector Modal -->
+    <div class="modal fade" id="createProjectorModal" tabindex="-1" aria-labelledby="createProjectorModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createProjectorModalLabel">
+                        <i class="fas fa-plus-circle"></i> Tambah Proyektor Baru
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('projectors.store') }}" method="POST" id="createProjectorForm">
+                    @csrf
+                    <input type="hidden" name="form_type" value="create">
+                    <div class="modal-body">
+                        <p class="text-muted mb-4">Tambahkan data proyektor baru ke dalam sistem inventory</p>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="kode_proyektor" class="form-label">
+                                    Kode Proyektor <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="kode_proyektor" name="kode_proyektor" 
+                                       value="{{ old('kode_proyektor') }}" placeholder="PROJ-001" required>
+                                @error('kode_proyektor')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="merk" class="form-label">
+                                    Merk <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="merk" name="merk" 
+                                       value="{{ old('merk') }}" placeholder="Epson, Sony, Panasonic" required>
+                                @error('merk')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="model" class="form-label">
+                                    Model <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="model" name="model" 
+                                       value="{{ old('model') }}" placeholder="EB-X06, VPL-DX120, PT-LB30" required>
+                                @error('model')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status" class="form-label">
+                                    Status <span class="required-star">*</span>
+                                </label>
+                                <div class="select-wrapper">
+                                    <select class="form-control select-dropdown" id="status" name="status" required>
+                                        <option value="">Pilih Status</option>
+                                        <option value="tersedia" {{ old('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                        <option value="dipinjam" {{ old('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
+                                        <option value="rusak" {{ old('status') == 'rusak' ? 'selected' : '' }}>Rusak</option>
+                                    </select>
+                                </div>
+                                @error('status')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keterangan" class="form-label">Keterangan</label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" 
+                                      rows="3" placeholder="Keterangan tambahan mengenai kondisi atau spesifikasi proyektor...">{{ old('keterangan') }}</textarea>
+                            @error('keterangan')
+                                <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="createSubmitBtn">
+                            <i class="fas fa-save"></i> Simpan Proyektor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Projector Modal -->
+    <div class="modal fade" id="editProjectorModal" tabindex="-1" aria-labelledby="editProjectorModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProjectorModalLabel">
+                        <i class="fas fa-edit"></i> Edit Data Proyektor
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editProjectorForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="form_type" value="edit">
+                    <div class="modal-body">
+                        <p class="text-muted mb-4">Perbarui informasi data proyektor</p>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="edit_kode_proyektor" class="form-label">
+                                    Kode Proyektor <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="edit_kode_proyektor" name="kode_proyektor" 
+                                       placeholder="PROJ-001" required>
+                                @error('kode_proyektor')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_merk" class="form-label">
+                                    Merk <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="edit_merk" name="merk" 
+                                       placeholder="Epson, Sony, Panasonic" required>
+                                @error('merk')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_model" class="form-label">
+                                    Model <span class="required-star">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="edit_model" name="model" 
+                                       placeholder="EB-X06, VPL-DX120, PT-LB30" required>
+                                @error('model')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_status" class="form-label">
+                                    Status <span class="required-star">*</span>
+                                </label>
+                                <div class="select-wrapper">
+                                    <select class="form-control select-dropdown" id="edit_status" name="status" required>
+                                        <option value="">Pilih Status</option>
+                                        <option value="tersedia">Tersedia</option>
+                                        <option value="dipinjam">Dipinjam</option>
+                                        <option value="rusak">Rusak</option>
+                                    </select>
+                                </div>
+                                @error('status')
+                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_keterangan" class="form-label">Keterangan</label>
+                            <textarea class="form-control" id="edit_keterangan" name="keterangan" 
+                                      rows="3" placeholder="Keterangan tambahan mengenai kondisi atau spesifikasi proyektor..."></textarea>
+                            @error('keterangan')
+                                <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-warning" id="editSubmitBtn">
+                            <i class="fas fa-save"></i> Perbarui Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1497,9 +2059,11 @@
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                themeToggle.title = 'Toggle Light Mode';
                 localStorage.setItem('darkMode', 'enabled');
             } else {
                 themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                themeToggle.title = 'Toggle Dark Mode';
                 localStorage.setItem('darkMode', 'disabled');
             }
         }
@@ -1512,9 +2076,10 @@
             if (darkMode === 'enabled') {
                 document.body.classList.add('dark-mode');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                themeToggle.title = 'Toggle Light Mode';
             }
 
-            // Auto-hide success message setelah 3 detik
+            // Auto-hide success message setelah 5 detik
             const successAlert = document.getElementById('successAlert');
             if (successAlert) {
                 setTimeout(() => {
@@ -1522,13 +2087,73 @@
                     setTimeout(() => {
                         successAlert.remove();
                     }, 300);
-                }, 3000);
+                }, 5000);
             }
 
             // Set nilai global search dari filter search
             const searchValue = document.getElementById('search').value;
             document.getElementById('globalSearch').value = searchValue;
+
+            // Setup edit modal event listeners
+            setupEditModal();
+
+            // Setup form submission handlers
+            setupFormHandlers();
+
+            // Auto open modal if there are errors
+            @if($errors->any() && session('form_type') == 'create')
+                const createModal = new bootstrap.Modal(document.getElementById('createProjectorModal'));
+                createModal.show();
+            @elseif($errors->any() && session('form_type') == 'edit')
+                const editModal = new bootstrap.Modal(document.getElementById('editProjectorModal'));
+                editModal.show();
+            @endif
+
+            // DISABLE ALL BOOTSTRAP ANIMATIONS
+            disableAllAnimations();
         });
+
+        // Function to disable all animations
+        function disableAllAnimations() {
+            // Remove all transition and animation styles
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                element.style.animation = 'none !important';
+                element.style.transition = 'none !important';
+                element.style.transform = 'none !important';
+            });
+
+            // Override Bootstrap modal animations
+            const style = document.createElement('style');
+            style.textContent = `
+                .modal.fade .modal-dialog {
+                    transition: none !important;
+                    transform: none !important;
+                    animation: none !important;
+                }
+                .modal.show .modal-dialog {
+                    transform: none !important;
+                    animation: none !important;
+                }
+                .fade {
+                    transition: none !important;
+                    animation: none !important;
+                }
+                .modal-backdrop.fade {
+                    transition: none !important;
+                    animation: none !important;
+                    opacity: 0.5 !important;
+                }
+                .modal-backdrop.show {
+                    opacity: 0.5 !important;
+                }
+                * {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
 
         // Auto submit filter changes
         document.getElementById('status').addEventListener('change', function() {
@@ -1566,6 +2191,105 @@
             document.getElementById('status').value = status;
             document.getElementById('filterForm').submit();
         }
+
+        // Setup edit modal functionality
+        function setupEditModal() {
+            const editModal = document.getElementById('editProjectorModal');
+            
+            editModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                
+                // Extract data from button attributes
+                const projectorId = button.getAttribute('data-projector-id');
+                const kodeProyektor = button.getAttribute('data-kode-proyektor');
+                const merk = button.getAttribute('data-merk');
+                const model = button.getAttribute('data-model');
+                const status = button.getAttribute('data-status');
+                const keterangan = button.getAttribute('data-keterangan');
+                
+                // Update modal content
+                document.getElementById('editProjectorForm').action = `/projectors/${projectorId}`;
+                document.getElementById('edit_kode_proyektor').value = kodeProyektor;
+                document.getElementById('edit_merk').value = merk;
+                document.getElementById('edit_model').value = model;
+                document.getElementById('edit_status').value = status;
+                document.getElementById('edit_keterangan').value = keterangan || '';
+                
+                // Update modal title dengan kode proyektor
+                document.getElementById('editProjectorModalLabel').innerHTML = 
+                    `<i class="fas fa-edit"></i> Edit Proyektor - ${kodeProyektor}`;
+            });
+            
+            // Reset form when modal is hidden
+            editModal.addEventListener('hidden.bs.modal', function () {
+                document.getElementById('editProjectorForm').reset();
+                document.getElementById('editProjectorModalLabel').innerHTML = 
+                    `<i class="fas fa-edit"></i> Edit Data Proyektor`;
+            });
+        }
+
+        // Setup form submission handlers
+        function setupFormHandlers() {
+            const createForm = document.getElementById('createProjectorForm');
+            const editForm = document.getElementById('editProjectorForm');
+            const createSubmitBtn = document.getElementById('createSubmitBtn');
+            const editSubmitBtn = document.getElementById('editSubmitBtn');
+
+            if (createForm) {
+                createForm.addEventListener('submit', function() {
+                    createSubmitBtn.disabled = true;
+                    createSubmitBtn.classList.add('btn-loading');
+                });
+            }
+
+            if (editForm) {
+                editForm.addEventListener('submit', function() {
+                    editSubmitBtn.disabled = true;
+                    editSubmitBtn.classList.add('btn-loading');
+                });
+            }
+        }
+
+        // Reset create modal ketika ditutup
+        document.getElementById('createProjectorModal').addEventListener('hidden.bs.modal', function () {
+            const form = document.getElementById('createProjectorForm');
+            form.reset();
+            const submitBtn = document.getElementById('createSubmitBtn');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-loading');
+            
+            // Clear error messages
+            const errorMessages = form.querySelectorAll('.text-danger');
+            errorMessages.forEach(error => error.remove());
+        });
+
+        // Reset edit modal ketika ditutup
+        document.getElementById('editProjectorModal').addEventListener('hidden.bs.modal', function () {
+            const submitBtn = document.getElementById('editSubmitBtn');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-loading');
+            
+            // Clear error messages
+            const form = document.getElementById('editProjectorForm');
+            const errorMessages = form.querySelectorAll('.text-danger');
+            errorMessages.forEach(error => error.remove());
+        });
+
+        // Enhanced search functionality
+        document.getElementById('globalSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('filterForm').submit();
+            }
+        });
+
+        // Auto-focus on first input when modal opens
+        document.getElementById('createProjectorModal').addEventListener('shown.bs.modal', function () {
+            document.getElementById('kode_proyektor').focus();
+        });
+
+        document.getElementById('editProjectorModal').addEventListener('shown.bs.modal', function () {
+            document.getElementById('edit_kode_proyektor').focus();
+        });
     </script>
 </body>
 </html>
