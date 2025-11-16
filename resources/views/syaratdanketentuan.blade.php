@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Syarat & Ketentuan Peminjaman Sarpas</title>
-    <style>:root {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
             --primary-color: #3b5998;
             --secondary-color: #6d84b4;
             --accent-color: #4c6baf;
@@ -26,26 +29,24 @@
             scroll-behavior: smooth;
         }
         
-        /* ===== NAVBAR STYLES ===== */
-        .navbar {
+        /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
+        .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
             transition: all 0.3s ease;
+            border-radius: 0;
         }
-        
-        .navbar.scrolled {
+
+        .navbar-custom.scrolled {
             padding: 0.5rem 1rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
-        
-        .logo {
+
+        .navbar-brand {
             color: white;
             font-size: 1.5rem;
             font-weight: bold;
@@ -53,71 +54,181 @@
             align-items: center;
             text-decoration: none;
         }
-        
-        .logo i {
-            margin-right: 10px;
+
+        /* Logo TI yang diperbesar */
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 12px;
             transition: transform 0.3s;
         }
-        
-        .logo:hover i {
+
+        .navbar-brand:hover img {
             transform: rotate(-10deg);
         }
-        
-        .navbar ul {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-        
-        .navbar ul li {
-            margin-left: 1.2rem;
-        }
-        
-        .navbar ul li a {
+
+        .navbar-nav .nav-link {
             color: white;
             text-decoration: none;
             padding: 0.5rem 0.8rem;
             border-radius: 4px;
             transition: all 0.3s;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== NAVBAR CENTER ALIGNMENT ===== */
+        .navbar-nav-center {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 auto;
+        }
+
+        .navbar-nav-center .nav-item {
+            margin: 0 0.5rem;
+        }
+
+        /* ===== NAVBAR DROPDOWN IMPROVEMENTS ===== */
+        .navbar-nav .nav-link.dropdown-toggle {
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        
-        .navbar ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
+
+        /* Hapus panah default Bootstrap */
+        .navbar-nav .nav-link.dropdown-toggle::after {
+            display: none !important;
+        }
+
+        /* Custom arrow icon - lebih kecil dan simpel seperti gambar */
+        .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+            margin-left: 8px;
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: normal;
+        }
+
+        .navbar-nav .nav-link.dropdown-toggle.show .custom-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Styling untuk dropdown yang aktif/diklik */
+        .navbar-nav .nav-link.dropdown-toggle.show {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .dropdown-menu-custom {
             background-color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 220px;
+            margin-top: 8px;
             transition: all 0.3s ease;
-            transform: translateX(-50%);
+            transform-origin: top;
+            animation: dropdownFadeIn 0.3s ease;
         }
-        
-        .navbar ul li a:hover::after, 
-        .navbar ul li a.active::after {
-            width: 70%;
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
+        .dropdown-item-custom {
+            padding: 0.7rem 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .dropdown-item-custom:hover {
+            background-color: rgba(59, 89, 152, 0.1);
+            color: var(--primary-color);
+        }
+
+        .dropdown-item-custom.active {
+            background-color: rgba(59, 89, 152, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .dropdown-divider-custom {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .dropdown-header-custom {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        /* ===== NAVBAR DROPDOWN POSITIONING ===== */
+        .navbar-nav .dropdown-menu {
+            position: absolute;
+        }
+
+        /* ===== RESPONSIVE DROPDOWN ===== */
+        @media (max-width: 768px) {
+            .dropdown-menu-custom {
+                margin-top: 0;
+                border-radius: 0 0 8px 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle {
+                justify-content: flex-start;
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+                margin-left: auto;
+            }
+        }
+
+        /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
             color: #212529;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             font-weight: 500;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            font-size: 0.9rem;
         }
-        
+
         .btn-warning::before {
             content: '';
             position: absolute;
@@ -128,19 +239,19 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: all 0.5s ease;
         }
-        
+
         .btn-warning:hover::before {
             left: 100%;
         }
-        
+
         .btn-warning:hover {
             background-color: #e0a800;
             border-color: #d39e00;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
-      /* ===== HERO SECTION ===== */
+
+        /* ===== HERO SECTION ===== */
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -196,9 +307,16 @@
         main {
             flex: 2;
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
         
         aside {
@@ -207,10 +325,16 @@
         
         .info-box {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .info-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
         
         .info-box h3 {
@@ -218,6 +342,9 @@
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .contact-info {
@@ -246,6 +373,9 @@
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .section ol, .section ul {
@@ -255,22 +385,25 @@
         
         .section li {
             margin-bottom: 0.8rem;
+            line-height: 1.7;
         }
         
         .important-note {
             background-color: #fff8e1;
             border-left: 4px solid #ffc107;
-            padding: 1rem 1.5rem;
+            padding: 1.5rem;
             margin: 1.5rem 0;
-            border-radius: 0 4px 4px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .warning-note {
             background-color: #ffebee;
             border-left: 4px solid var(--accent-color);
-            padding: 1rem 1.5rem;
+            padding: 1.5rem;
             margin: 1.5rem 0;
-            border-radius: 0 4px 4px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .btn {
@@ -506,25 +639,176 @@
             background-color: var(--secondary-color);
             transform: translateY(-5px);
         }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
-     <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <a href="#" class="logo">
-            <i class="fas fa-building"></i>SarPras TI
-        </a>
-        <ul>
-            <li><a href="/home">Beranda</a></li>
-            <li><a href="/kalender">Kalender Perkuliahan</a></li>
-            <li><a href="/peminjaman1">Daftar Peminjaman</a></li>
-            <li><a href="/about">Tentang</a></li>
-            <li>
-                <a href="/login" class="btn-warning">
-                    <i class="fa-solid fa-right-to-bracket"></i> Login
-                </a>
-            </li>
-        </ul>
+    <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/home">
+                <!-- Logo TI yang ditambahkan -->
+                <img src="/img/Logo_TI.png" alt="Logo TI">
+                PINTER
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Menu tengah -->
+                <ul class="navbar-nav navbar-nav-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">
+                            <i class="fas fa-home me-1"></i> Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+                            <span class="custom-arrow">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="/kalender">
+                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="#">
+                                    <i class="fas fa-download me-2"></i> Download Kalender
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+                            <span class="custom-arrow">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+                                    <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+                                    <i class="fas fa-undo me-2"></i> Pengembalian
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
+                                    <i class="fas fa-history me-2"></i> Riwayat
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
+                                    <i class="fas fa-comment-dots me-2"></i> Feedback
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="fas fa-info-circle me-1"></i> Tentang
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Menu sebelah kanan (login/user) -->
+                <ul class="navbar-nav ms-auto">
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ Auth::user()->name }}
+                                <span class="custom-arrow">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+                                <li class="dropdown-header-custom">Masuk sebagai</li>
+                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item-custom" href="#">
+                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider-custom">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item-custom text-danger">
+                                            <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn-warning">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </a>
+                        </li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -532,83 +816,125 @@
         <div class="container">
             <div class="hero-content">
                 <h1 class="display-4 fw-bold">Syarat dan Ketentuan Peminjaman</h1>
-                <p class="lead"></p>
+                <p class="lead">Ketahui hak dan kewajiban Anda dalam menggunakan layanan peminjaman sarana prasarana</p>
             </div>
         </div>
     </section>
 
-    
-    <div class="container">
-        <div class="content">
-            <main>
-                <div class="section">
-                    <h2>Persyaratan Umum</h2>
-                    <ol>
-                        <li>Peminjam harus merupakan anggota resmi dari institusi/organisasi yang berwenang.</li>
-                        <li>Peminjam harus memiliki tujuan yang jelas dan dapat dipertanggungjawabkan atas penggunaan sarana dan prasarana.</li>
-                        <li>Peminjam harus mengisi formulir permohonan peminjaman secara lengkap dan benar.</li>
-                        <li>Peminjam harus menunjukkan kartu identitas yang masih berlaku pada saat pengajuan permohonan.</li>
-                        <li>Untuk peminjaman tertentu, mungkin diperlukan surat pengantar dari institusi terkait.</li>
-                    </ol>
-                </div>
-                
-                <div class="section">
-                    <h2>Prosedur Peminjaman</h2>
-                    <ol>
-                        <li>Peminjam mengajukan permohonan secara online atau offline minimal 3 hari kerja sebelum tanggal peminjaman.</li>
-                        <li>Petugas akan memverifikasi kelengkapan dan kebenaran data permohonan.</li>
-                        <li>Peminjam akan menerima konfirmasi persetujuan atau penolakan permohonan dalam waktu 2×24 jam.</li>
-                        <li>Untuk permohonan yang disetujui, peminjam harus melakukan penandatanganan perjanjian peminjaman.</li>
-                        <li>Peminjam dapat mengambil barang yang dipinjam pada waktu yang telah disepakati.</li>
-                    </ol>
-                </div>
-                
-                <div class="section">
-                    <h2>Hak dan Kewajiban Peminjam</h2>
-                    <h3>Hak Peminjam:</h3>
-                    <ul>
-                        <li>Menggunakan sarana dan prasarana sesuai dengan peruntukannya.</li>
-                        <li>Mendapatkan bantuan teknis sesuai dengan ketersediaan.</li>
-                        <li>Mengajukan keluhan atau saran terkait layanan peminjaman.</li>
-                    </ul>
-                    
-                    <h3>Kewajiban Peminjam:</h3>
-                    <ul>
-                        <li>Menggunakan sarana dan prasarana dengan hati-hati dan bertanggung jawab.</li>
-                        <li>Mengembalikan sarana dan prasarana dalam kondisi baik sesuai dengan keadaan awal.</li>
-                        <li>Mengganti kerusakan atau kehilangan yang terjadi selama masa peminjaman.</li>
-                        <li>Mengembalikan barang yang dipinjam tepat waktu sesuai perjanjian.</li>
-                        <li>Mematuhi semua peraturan dan tata tertib yang berlaku.</li>
-                    </ul>
-                </div>
-                
-                <div class="section">
-                    <h2>Sanksi dan Denda</h2>
-                    <ol>
-                        <li>Keterlambatan pengembalian akan dikenakan denda sebesar Rp 50.000 per hari untuk setiap item (disesuaikan dengan jenis barang).</li>
-                        <li>Kerusakan akibat kelalaian peminjam akan dikenakan biaya perbaikan sesuai dengan tingkat kerusakan.</li>
-                        <li>Kehilangan barang yang dipinjam wajib diganti dengan barang yang sama atau setara.</li>
-                        <li>Penyalahgunaan sarana dan prasarana dapat dikenakan sanksi berupa pembatasan atau pencabutan hak peminjaman.</li>
-                    </ol>
-                    
-                    <div class="warning-note">
-                        <p><strong>Peringatan:</strong> Pelanggaran berat dapat dilaporkan kepada pihak berwajib untuk ditindaklanjuti secara hukum.</p>
+    <div class="container main-content">
+        <div class="row">
+            <div class="col-lg-8">
+                <main>
+                    <div class="section">
+                        <h2><i class="fas fa-clipboard-list"></i> Persyaratan Umum</h2>
+                        <ol>
+                            <li>Peminjam harus merupakan anggota resmi dari institusi/organisasi yang berwenang.</li>
+                            <li>Peminjam harus memiliki tujuan yang jelas dan dapat dipertanggungjawabkan atas penggunaan sarana dan prasarana.</li>
+                            <li>Peminjam harus mengisi formulir permohonan peminjaman secara lengkap dan benar.</li>
+                            <li>Peminjam harus menunjukkan kartu identitas yang masih berlaku pada saat pengajuan permohonan.</li>
+                            <li>Untuk peminjaman tertentu, mungkin diperlukan surat pengantar dari institusi terkait.</li>
+                        </ol>
                     </div>
-                </div>
-                
-                <div class="section">
-                    <h2>Ketentuan Lainnya</h2>
-                    <ol>
-                        <li>Pihak pengelola berhak membatalkan peminjaman jika terdapat force majeure atau keadaan darurat.</li>
-                        <li>Pihak pengelola berhak melakukan perubahan terhadap syarat dan ketentuan dengan pemberitahuan sebelumnya.</li>
-                        <li>Semua sengkata yang timbul akan diselesaikan secara musyawarah untuk mufakat.</li>
-                    </ol>
                     
-                    <div class="important-note">
-                        <p><strong>Catatan Penting:</strong> Dengan menyetujui syarat dan ketentuan ini, peminjam dianggap telah membaca, memahami, dan menyetujui semua ketentuan yang berlaku.</p>
+                    <div class="section">
+                        <h2><i class="fas fa-list-ol"></i> Prosedur Peminjaman</h2>
+                        <ol>
+                            <li>Peminjam mengajukan permohonan secara online atau offline minimal 3 hari kerja sebelum tanggal peminjaman.</li>
+                            <li>Petugas akan memverifikasi kelengkapan dan kebenaran data permohonan.</li>
+                            <li>Peminjam akan menerima konfirmasi persetujuan atau penolakan permohonan dalam waktu 2×24 jam.</li>
+                            <li>Untuk permohonan yang disetujui, peminjam harus melakukan penandatanganan perjanjian peminjaman.</li>
+                            <li>Peminjam dapat mengambil barang yang dipinjam pada waktu yang telah disepakati.</li>
+                        </ol>
                     </div>
-                </div>
-            </main>
+                    
+                    <div class="section">
+                        <h2><i class="fas fa-balance-scale"></i> Hak dan Kewajiban Peminjam</h2>
+                        <h3><i class="fas fa-check-circle"></i> Hak Peminjam:</h3>
+                        <ul>
+                            <li>Menggunakan sarana dan prasarana sesuai dengan peruntukannya.</li>
+                            <li>Mendapatkan bantuan teknis sesuai dengan ketersediaan.</li>
+                            <li>Mengajukan keluhan atau saran terkait layanan peminjaman.</li>
+                        </ul>
+                        
+                        <h3><i class="fas fa-exclamation-circle"></i> Kewajiban Peminjam:</h3>
+                        <ul>
+                            <li>Menggunakan sarana dan prasarana dengan hati-hati dan bertanggung jawab.</li>
+                            <li>Mengembalikan sarana dan prasarana dalam kondisi baik sesuai dengan keadaan awal.</li>
+                            <li>Mengganti kerusakan atau kehilangan yang terjadi selama masa peminjaman.</li>
+                            <li>Mengembalikan barang yang dipinjam tepat waktu sesuai perjanjian.</li>
+                            <li>Mematuhi semua peraturan dan tata tertib yang berlaku.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Sanksi dan Denda</h2>
+                        <ol>
+                            <li>Keterlambatan pengembalian akan dikenakan denda sebesar Rp 50.000 per hari untuk setiap item (disesuaikan dengan jenis barang).</li>
+                            <li>Kerusakan akibat kelalaian peminjam akan dikenakan biaya perbaikan sesuai dengan tingkat kerusakan.</li>
+                            <li>Kehilangan barang yang dipinjam wajib diganti dengan barang yang sama atau setara.</li>
+                            <li>Penyalahgunaan sarana dan prasarana dapat dikenakan sanksi berupa pembatasan atau pencabutan hak peminjaman.</li>
+                        </ol>
+                        
+                        <div class="warning-note">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Peringatan:</strong> Pelanggaran berat dapat dilaporkan kepada pihak berwajib untuk ditindaklanjuti secara hukum.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2><i class="fas fa-file-alt"></i> Ketentuan Lainnya</h2>
+                        <ol>
+                            <li>Pihak pengelola berhak membatalkan peminjaman jika terdapat force majeure atau keadaan darurat.</li>
+                            <li>Pihak pengelola berhak melakukan perubahan terhadap syarat dan ketentuan dengan pemberitahuan sebelumnya.</li>
+                            <li>Semua sengkata yang timbul akan diselesaikan secara musyawarah untuk mufakat.</li>
+                        </ol>
+                        
+                        <div class="important-note">
+                            <p><strong><i class="fas fa-info-circle"></i> Catatan Penting:</strong> Dengan menyetujui syarat dan ketentuan ini, peminjam dianggap telah membaca, memahami, dan menyetujui semua ketentuan yang berlaku.</p>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            
+            <div class="col-lg-4">
+                <aside>
+                    <div class="info-box">
+                        <h3><i class="fas fa-info-circle"></i> Informasi Kontak</h3>
+                        <ul class="contact-info">
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <span>(0512) 2021065</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>peminjaman@example.ac.id</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-clock"></i>
+                                <span>Senin - Jumat: 08:00 - 16:00</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h3><i class="fas fa-question-circle"></i> Butuh Bantuan?</h3>
+                        <p>Jika Anda memiliki pertanyaan lebih lanjut mengenai syarat dan ketentuan, jangan ragu untuk menghubungi kami.</p>
+                        <div class="action-buttons">
+                            <a href="/faq" class="btn btn-primary">
+                                <i class="fas fa-question"></i> FAQ
+                            </a>
+                            <a href="/contact" class="btn btn-outline">
+                                <i class="fas fa-envelope"></i> Kontak
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
 
     <!-- Back to top button -->
     <a href="#" class="back-to-top" id="backToTop">
@@ -619,12 +945,12 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Layanan peminjaman alat dan barang untuk mendukung kegiatan akademik dan non-akademik di lingkungan sekolah/kampus.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             
@@ -675,8 +1001,70 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2023 Sistem Peminjaman Alat - Nama Sekolah/Kampus. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== DROPDOWN ANIMATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle dropdown toggle animation
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    // Close other open dropdowns
+                    dropdownToggles.forEach(otherToggle => {
+                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                            otherToggle.classList.remove('show');
+                            const otherMenu = otherToggle.nextElementSibling;
+                            if (otherMenu && otherMenu.classList.contains('show')) {
+                                otherMenu.classList.remove('show');
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
+                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    openDropdowns.forEach(element => {
+                        element.classList.remove('show');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
