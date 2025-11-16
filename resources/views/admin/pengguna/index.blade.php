@@ -43,7 +43,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -145,7 +145,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -359,7 +359,7 @@
             font-size: 0.875rem;
         }
 
-        /* Modal backdrop transparency - HITAM TRANSPARAN TANPA BLUR */
+        /* Modal backdrop transparency */
         .modal-backdrop {
             background-color: rgba(0, 0, 0, 0.7) !important;
             opacity: 1 !important;
@@ -536,7 +536,7 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- Menu Utama - DIPERBAIKI -->
+            <!-- Menu Utama -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
@@ -550,7 +550,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
@@ -576,7 +576,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Aset - DROPDOWN -->
+            <!-- Manajemen Aset -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
@@ -594,7 +594,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Akademik - DROPDOWN -->
+            <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
@@ -620,7 +620,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Pengguna - DROPDOWN -->
+            <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="true" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
@@ -634,7 +634,7 @@
                 </div>
             </div>
             
-            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
@@ -765,11 +765,6 @@
                                                 {{ $user->peran }}
                                             </span>
                                         </div>
-                                        
-                                        <div class="detail-item mb-2">
-                                            <small class="text-muted">Jurusan:</small>
-                                            <div class="fw-medium">{{ $user->jurusan ?? '-' }}</div>
-                                        </div>
 
                                         <div class="detail-item mb-2">
                                             <small class="text-muted">Status:</small>
@@ -839,6 +834,7 @@
                 <form id="userForm" method="POST">
                     @csrf
                     <div id="formMethod"></div>
+                    <input type="hidden" id="jurusan" name="jurusan" value="Teknik Informatika">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -877,20 +873,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="jurusan" class="form-label">Jurusan <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="jurusan" name="jurusan" required>
-                                        <option value="">Pilih Jurusan</option>
-                                        <option value="Teknik Informatika">Teknik Informatika</option>
-                                        <option value="Sistem Informasi">Sistem Informasi</option>
-                                        <option value="Teknik Komputer">Teknik Komputer</option>
-                                        <option value="Teknik Elektro">Teknik Elektro</option>
-                                        <option value="Manajemen Informatika">Manajemen Informatika</option>
-                                    </select>
-                                    <div class="invalid-feedback" id="jurusanError"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
                                     <label for="peran" class="form-label">Peran <span class="text-danger">*</span></label>
                                     <select class="form-select" id="peran" name="peran" required>
                                         <option value="">Pilih Peran</option>
@@ -901,9 +883,6 @@
                                     <div class="invalid-feedback" id="peranError"></div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
@@ -915,6 +894,9 @@
                                     <div class="invalid-feedback" id="statusError"></div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="tanggal_bergabung" class="form-label">Tanggal Bergabung <span class="text-danger">*</span></label>
@@ -1018,7 +1000,7 @@
             }
         });
 
-        // Reset form ketika modal ditutup - PERBAIKAN: Gunakan event Bootstrap yang benar
+        // Reset form ketika modal ditutup
         $('#userModal').on('hidden.bs.modal', function () {
             resetForm();
         });
@@ -1046,9 +1028,7 @@
         });
     }
 
-    // Fungsi untuk menangani penutupan modal
     function handleModalClose() {
-        // Reset form dan tutup modal dengan benar
         resetForm();
         if (userModal) {
             userModal.hide();
@@ -1084,6 +1064,9 @@
         $('#userForm').attr('action', "{{ route('pengguna.store') }}");
         $('#formMethod').html('');
         currentEditId = null;
+        
+        // Set jurusan otomatis ke Teknik Informatika
+        $('#jurusan').val('Teknik Informatika');
     }
 
     function openCreateModal() {
@@ -1093,8 +1076,8 @@
         const today = new Date().toISOString().split('T')[0];
         $('#tanggal_bergabung').val(today);
         $('#status').val('Aktif');
+        $('#jurusan').val('Teknik Informatika');
         
-        // Show modal menggunakan instance Bootstrap
         if (userModal) {
             userModal.show();
         }
@@ -1103,21 +1086,18 @@
     function openEditModal(userId) {
         currentEditId = userId;
         
-        // Reset form dulu
         resetForm();
         
-        // Set action URL untuk update
         $('#userModalLabel').text('Edit Pengguna');
         $('#formMethod').html('@method("PUT")');
         $('#userForm').attr('action', `/admin/pengguna/${userId}`);
         
-        // Sembunyikan password fields untuk edit
         $('#passwordFields').addClass('d-none');
         $('#changePasswordSection').removeClass('d-none');
         $('#password').prop('required', false);
         $('#password_confirmation').prop('required', false);
+        $('#jurusan').val('Teknik Informatika');
         
-        // Coba ambil data user via AJAX
         fetchUserData(userId);
     }
 
@@ -1145,13 +1125,11 @@
                 } else if (response.data) {
                     populateEditForm(response.data);
                 } else {
-                    // Jika tidak ada data, coba dengan data dari HTML
                     populateWithLocalData(userId);
                 }
                 showModal();
             },
             error: function(xhr, status, error) {
-                // Fallback: coba populate dengan data yang ada di HTML
                 populateWithLocalData(userId);
                 showModal();
             }
@@ -1159,14 +1137,12 @@
     }
 
     function populateWithLocalData(userId) {
-        // Cari user data dari card yang ada
         const userCard = $(`[onclick*="openEditModal(${userId})"]`).closest('.user-card');
         if (userCard.length) {
             const userName = userCard.find('.card-title').text().trim();
             const userNim = userCard.find('.text-muted.small').first().text().trim();
             const userEmail = userCard.find('.text-muted.small').eq(1).text().trim();
             const userNoHp = userCard.find('.text-primary.small').text().replace('', '').trim();
-            const userJurusan = userCard.find('.fw-medium').first().text().trim();
             const userPeran = userCard.find('.badge').first().text().trim();
             const userStatus = userCard.find('.badge').last().text().trim();
             
@@ -1174,29 +1150,27 @@
             $('#email').val(userEmail);
             $('#nim').val(userNim);
             $('#no_hp').val(userNoHp);
-            $('#jurusan').val(userJurusan);
             $('#peran').val(userPeran);
             $('#status').val(userStatus);
+            $('#jurusan').val('Teknik Informatika');
         }
     }
 
     function populateEditForm(user) {
-        // Populate form fields
         $('#nama').val(user.nama || '');
         $('#email').val(user.email || '');
         $('#nim').val(user.nim || '');
         $('#no_hp').val(user.no_hp || '');
-        $('#jurusan').val(user.jurusan || '');
         $('#peran').val(user.peran || '');
         $('#status').val(user.status || '');
         $('#tanggal_bergabung').val(user.tanggal_bergabung || '');
+        $('#jurusan').val('Teknik Informatika');
         
         clearFormErrors();
     }
 
     function showModal() {
         resetSubmitButton();
-        // Show modal menggunakan instance Bootstrap
         if (userModal) {
             userModal.show();
         }
@@ -1221,14 +1195,12 @@
         const url = $('#userForm').attr('action');
         const method = $('#userForm').find('input[name="_method"]').val() || 'POST';
 
-        // Validasi form sebelum submit
         if (!form.checkValidity()) {
             form.reportValidity();
             resetSubmitButton();
             return;
         }
 
-        // Submit form secara normal (bukan AJAX) untuk menghindari CORS issues
         form.submit();
     }
 
@@ -1240,20 +1212,17 @@
     }
 
     function deleteUser(userId) {
-        // Create a form for deletion
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = `/admin/pengguna/${userId}`;
         form.style.display = 'none';
 
-        // Add CSRF token
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
         csrfToken.name = '_token';
         csrfToken.value = '{{ csrf_token() }}';
         form.appendChild(csrfToken);
 
-        // Add method spoofing for DELETE
         const methodInput = document.createElement('input');
         methodInput.type = 'hidden';
         methodInput.name = '_method';
@@ -1278,7 +1247,6 @@
         `;
         $('#alertContainer').html(alertHtml);
         
-        // Auto-hide after 5 seconds
         setTimeout(() => {
             $('.alert').alert('close');
         }, 5000);
