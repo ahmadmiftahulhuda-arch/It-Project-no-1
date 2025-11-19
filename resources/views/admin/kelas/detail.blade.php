@@ -53,7 +53,7 @@
                             <th class="py-3 px-4" style="width: 5%;">No</th>
                             <th class="py-3 px-4" style="width: 15%;">NIM</th>
                             <th class="py-3 px-4" style="width: 30%;">Nama</th>
-                            <th class="py-3 px-4" style="width: 35%;">Program Studi</th>
+                            <th class="py-3 px-4" style="width: 35%;">Jenis Kelamin</th>
                             <th class="py-3 px-4 text-center" style="width: 15%;">Aksi</th>
                         </tr>
                     </thead>
@@ -66,11 +66,8 @@
                             {{-- Memastikan Nama menggunakan text-dark-mode-aware --}}
                             <td class="px-4 text-dark-mode-aware">{{ $m->nama }}</td>
                             
-                            {{-- TAMPILAN PROGRAM STUDI YANG RAPI --}}
                             <td class="px-4">
-                                <span class="badge program-studi-badge text-white">
-                                    {{ $m->program_studi }}
-                                </span>
+                                {{ $m->jenis_kelamin }}
                             </td>
                             
                             {{-- AKSI (Ikon ringkas, fungsi tidak diubah) --}}
@@ -104,9 +101,9 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <input type="text" name="nim" value="{{ $m->nim }}" class="form-control mb-2" placeholder="NIM">
+                                            <input type="number" name="nim" value="{{ $m->nim }}" class="form-control mb-2" placeholder="NIM" pattern="[0-9]*">
                                             <input type="text" name="nama" value="{{ $m->nama }}" class="form-control mb-2" placeholder="Nama Lengkap">
-                                            <input type="text" name="program_studi" value="{{ $m->program_studi }}" class="form-control mb-2" placeholder="Program Studi">
+                                            <input type="text" name="jenis_kelamin" value="{{ $m->jenis_kelamin }}" class="form-control mb-2" placeholder="Jenis Kelamin">
                                             <input type="hidden" name="kelas_id" value="{{ $kela->id }}">
                                         </div>
                                         <div class="modal-footer">
@@ -145,9 +142,9 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="nim" placeholder="NIM" class="form-control mb-2">
+                    <input type="number" name="nim" placeholder="NIM" class="form-control mb-2" pattern="[0-9]*">
                     <input type="text" name="nama" placeholder="Nama Lengkap" class="form-control mb-2">
-                    <input type="text" name="program_studi" placeholder="Program Studi" class="form-control mb-2">
+                    <input type="text" name="jenis_kelamin" placeholder="Jenis Kelamin" class="form-control mb-2">
                     <input type="hidden" name="kelas_id" value="{{ $kela->id }}">
                 </div>
                 <div class="modal-footer">

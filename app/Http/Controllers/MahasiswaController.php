@@ -10,9 +10,9 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required|unique:mahasiswa',
+            'nim' => 'required|numeric|unique:mahasiswa',
             'nama' => 'required',
-            'program_studi' => 'required',
+            'jenis_kelamin' => 'required',
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
@@ -23,9 +23,9 @@ class MahasiswaController extends Controller
     public function update(Request $request, Mahasiswa $mahasiswa)
     {
         $request->validate([
-            'nim' => 'required|unique:mahasiswa,nim,'.$mahasiswa->id,
+            'nim' => 'required|numeric|unique:mahasiswa,nim,'.$mahasiswa->id,
             'nama' => 'required',
-            'program_studi' => 'required',
+            'jenis_kelamin' => 'required',
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
