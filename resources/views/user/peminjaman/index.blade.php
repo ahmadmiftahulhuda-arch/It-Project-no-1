@@ -1930,7 +1930,7 @@
             if (confirm(`Apakah Anda yakin ingin menghapus peminjaman:\n"${keperluan}"?`)) {
                 // Set action form dan submit
                 const form = document.getElementById('deleteForm');
-                form.action = `/user/peminjaman/${id}`;
+                form.action = `/peminjaman/${id}`;
                 form.submit();
             }
         }

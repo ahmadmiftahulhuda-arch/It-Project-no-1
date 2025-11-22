@@ -338,17 +338,39 @@ public function prosesPengembalian(Request $request, $id)
         ->with('success', 'Pengembalian berhasil diproses.');
 }
 
-    /**
-     * Destroy pengembalian
-     */
-    public function destroyPengembalian($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->delete();
+public function approvePengembalian($id)
+{
+    $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
 
-        return redirect()->route('admin.pengembalian')
-            ->with('success', 'Data pengembalian berhasil dihapus.');
-    }
+    // Update status pengembalian
+    $pengembalian->update([
+        'status' => 'verified'
+    ]);
+
+    // Update status di tabel peminjaman
+    $pengembalian->peminjaman->update([
+        'status' => 'selesai',
+        'status_pengembalian' => 'sudah dikembalikan',
+        'tanggal_kembali' => now()
+    ]);
+
+    return redirect()->route('admin.pengembalian')
+        ->with('success', 'Pengembalian berhasil disetujui.');
+}
+
+public function rejectPengembalian($id)
+{
+    $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
+
+    // Update status pengembalian
+    $pengembalian->update([
+        'status' => 'rejected'
+    ]);
+
+    return redirect()->route('admin.pengembalian')
+        ->with('success', 'Pengembalian ditolak.');
+}
+
 
     /**
      * Update riwayat peminjaman

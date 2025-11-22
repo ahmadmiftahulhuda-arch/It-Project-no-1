@@ -157,7 +157,7 @@ Route::get('/peminjaman/{peminjaman}/feedback', [FeedbackController::class, 'cre
 // Rute untuk menyimpan data feedback
 Route::post('/peminjaman/{peminjaman}/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
-Route::prefix('peminjaman')->group(function () {
+Route::prefix('peminjaman')->middleware('auth')->group(function () {
     Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');
     Route::get('/create', [PeminjamanController::class, 'create'])->name('user.peminjaman.create');
     Route::post('/', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
@@ -168,11 +168,10 @@ Route::prefix('peminjaman')->group(function () {
     Route::get('/riwayat/user', [PeminjamanController::class, 'riwayat'])->name('user.peminjaman.riwayat');
 });
 
-Route::prefix('pengembalian')->group(function () {
+Route::prefix('pengembalian')->middleware('auth')->group(function () {
     Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
     Route::get('/{id}', [PeminjamanController::class, 'showPengembalian'])->name('user.pengembalian.show');
-    Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])
-        ->name('pengembalian.ajukan');
+    Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])->name('pengembalian.ajukan');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
