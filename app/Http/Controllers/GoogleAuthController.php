@@ -23,8 +23,19 @@ class GoogleAuthController extends Controller
             $googleUser = Socialite::driver('google')->user();
 
             // ✅ Batasi hanya akun kampus
-            if (!str_ends_with($googleUser->getEmail(), '@politala.ac.id')) {
-                return redirect('/login')->with('error', 'Hanya email @politala.ac.id yang bisa login.');
+            $email = $googleUser->getEmail();
+            $allowedDomains = ['@politala.ac.id', '@mhs.politala.ac.id'];
+            $isAllowed = false;
+
+            foreach ($allowedDomains as $domain) {
+                if (str_ends_with($email, $domain)) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!$isAllowed) {
+                return redirect('/login')->with('error', 'Hanya email institusi Politala (@politala.ac.id atau @mhs.politala.ac.id) yang diizinkan.');
             }
 
             // Cek apakah user sudah ada

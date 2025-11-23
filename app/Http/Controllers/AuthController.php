@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Pengguna; // <-- Ditambahkan
 
 class AuthController extends Controller
 {
@@ -24,16 +23,13 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Cek peran pengguna dari tabel 'penggunas'
             $user = Auth::user();
-            $pengguna = Pengguna::where('email', $user->email)->first();
 
-            // Arahkan berdasarkan peran
-            if ($pengguna && $pengguna->peran === 'Admin') {
-                return redirect()->intended('/admin/dashboard'); // Arahkan ke dashboard admin
-            } 
+            if ($user->peran === 'Admin') {
+                return redirect()->intended('/admin/dashboard');
+            }
 
-            return redirect()->intended('/'); // Arahkan ke halaman utama untuk user biasa
+            return redirect()->intended('/home');
         }
 
         return back()->withErrors([
@@ -66,11 +62,20 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'verified' => false,
         ]);
+
+        Auth::login($user);
+
+        $emailDomain = substr(strrchr($user->email, "@"), 1);
+
+        if ($emailDomain === 'mhs.politala.ac.id' || $emailDomain === 'politala.ac.id') {
+            return redirect('/home');
+        }
 
         return redirect('/login')->with('success', 'Registrasi berhasil, silakan login.');
     }

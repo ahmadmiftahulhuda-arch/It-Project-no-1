@@ -49,6 +49,11 @@ class PeminjamanController extends Controller
 
     public function store(Request $request)
     {
+        // Check if the user is verified
+        if (!Auth::user()->verified) {
+            return redirect()->back()->with('error', 'Akun Anda belum diverifikasi oleh admin. Anda tidak dapat membuat peminjaman.');
+        }
+
         $request->validate([
             'tanggal'   => 'required|date',
             'ruang'     => 'required|string|max:100',

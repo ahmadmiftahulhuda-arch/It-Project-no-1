@@ -66,24 +66,23 @@ Route::middleware('auth')->group(function () {
 // ================================
 // ADMIN ROUTES
 // ================================
+
 Route::prefix('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-// Route untuk Pengguna
-Route::prefix('pengguna')->name('pengguna.')->group(function () {
-    Route::get('/', [PenggunaController::class, 'index'])->name('index');
-    Route::post('/', [PenggunaController::class, 'store'])->name('store');
-    Route::get('/create', [PenggunaController::class, 'create'])->name('create');
-    Route::get('/{pengguna}', [PenggunaController::class, 'show'])->name('show');
-    Route::get('/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('edit');
-    Route::put('/{pengguna}', [PenggunaController::class, 'update'])->name('update');
-    Route::delete('/{pengguna}', [PenggunaController::class, 'destroy'])->name('destroy');
-    Route::get('/{id}/get-data', [PenggunaController::class, 'getUserData'])->name('get-data');
-});
+    Route::prefix('users')->name('admin.users.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('store');
+        Route::get('/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('destroy');
+        Route::post('/{user}/verify', [App\Http\Controllers\Admin\UserController::class, 'verify'])->name('verify');
+    });
 
-Route::get('/pengguna/{id}/get-data', [PenggunaController::class, 'getUserData'])->name('pengguna.get-data');
-Route::get('/pengguna/{id}/edit-ajax', [PenggunaController::class, 'editAjax'])->name('pengguna.edit-ajax');
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
 
     // Feedback
     Route::resource('feedback', FeedbackController::class);
