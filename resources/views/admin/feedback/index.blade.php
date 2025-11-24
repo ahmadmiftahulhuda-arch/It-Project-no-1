@@ -993,7 +993,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="penggunaMenu">
-                    <a href="/admin/pengguna" class="dropdown-item">
+                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
