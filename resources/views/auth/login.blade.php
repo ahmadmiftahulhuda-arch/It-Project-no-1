@@ -413,13 +413,15 @@
             });
             
             // Form validation
+            // Form validation
             const form = document.querySelector('form');
             form.addEventListener('submit', function(e) {
                 const email = document.querySelector('input[name="email"]').value;
                 
-                if (!email.endsWith('@politala.ac.id')) {
+                // PERBAIKAN: Cek apakah berakhiran @politala.ac.id ATAU @mhs.politala.ac.id
+                if (!email.endsWith('@politala.ac.id') && !email.endsWith('@mhs.politala.ac.id')) {
                     e.preventDefault();
-                    alert('Harap gunakan email POLITALA yang valid (@politala.ac.id)');
+                    alert('Harap gunakan email POLITALA yang valid (@politala.ac.id atau @mhs.politala.ac.id)');
                 }
             });
             

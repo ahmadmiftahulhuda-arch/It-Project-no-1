@@ -53,7 +53,7 @@ class GoogleAuthController extends Controller
             // Login user
             Auth::login($user, true);
 
-            return redirect('/dashboard');
+            return redirect('/home');
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Login gagal, coba lagi.');
         }
