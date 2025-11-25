@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -44,7 +45,9 @@ class PeminjamanController extends Controller
                 ->with('error', 'Anda harus mengisi feedback dari peminjaman sebelumnya.');
         }
 
-        return view('user.peminjaman.create');
+        $ruangan = Ruangan::all();
+
+        return view('user.peminjaman.create', compact('ruangan'));
     }
 
     public function store(Request $request)
