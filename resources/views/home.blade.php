@@ -1252,107 +1252,78 @@
         <section id="rooms" class="mb-5">
             <h2 class="section-title"><i class="fas fa-door-open"></i> Info Ruangan</h2>
             <div class="room-status-grid">
-                <!-- Ruangan Tersedia -->
-                <div class="room-card">
-                    <div class="room-header">
-                        <div class="room-name">Lab A</div>
-                        <div class="room-status status-available">Tersedia</div>
-                    </div>
-                    <div class="room-body">
-                        <div class="room-details">
-                            <div class="room-detail">
-                                <i class="fas fa-users"></i>
-                                <span>Kapasitas: 30 orang</span>
-                            </div>
-                            <div class="room-detail">
-                                <i class="fas fa-video"></i>
-                                <span>Proyektor: Tersedia</span>
-                            </div>
-                        </div>
-                        <div class="room-schedule">
-                            <div class="schedule-item">
-                                <span>08:00 - 10:00</span>
-                                <span class="text-success">Kosong</span>
-                            </div>
-                            <div class="schedule-item">
-                                <span>10:00 - 12:00</span>
-                                <span class="text-success">Kosong</span>
-                            </div>
-                            <div class="schedule-item">
-                                <span>13:00 - 15:00</span>
-                                <span class="text-danger">Terpakai</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @foreach($ruangan as $room)
+                    <div class="room-card">
+                        <div class="room-header">
+                            <div class="room-name">{{ $room->nama_ruangan }}</div>
+                            @php
+                                $status = strtolower($room->status ?? '');
+                                $statusClass = 'status-available';
+                                $statusLabel = 'Tersedia';
 
-                <!-- Ruangan Terpakai -->
-                <div class="room-card">
-                    <div class="room-header">
-                        <div class="room-name">Lab B</div>
-                        <div class="room-status status-occupied">Terpakai</div>
-                    </div>
-                    <div class="room-body">
-                        <div class="room-details">
-                            <div class="room-detail">
-                                <i class="fas fa-users"></i>
-                                <span>Kapasitas: 25 orang</span>
-                            </div>
-                            <div class="room-detail">
-                                <i class="fas fa-video"></i>
-                                <span>Proyektor: Digunakan</span>
-                            </div>
+                                if (in_array($status, ['terpakai', 'occupied', 'digunakan'])) {
+                                    $statusClass = 'status-occupied';
+                                    $statusLabel = 'Terpakai';
+                                } elseif (in_array($status, ['maintenance', 'perbaikan'])) {
+                                    $statusClass = 'status-maintenance';
+                                    $statusLabel = 'Maintenance';
+                                }
+                            @endphp
+                            <div class="room-status {{ $statusClass }}">{{ $statusLabel }}</div>
                         </div>
-                        <div class="room-schedule">
-                            <div class="schedule-item">
-                                <span>08:00 - 10:00</span>
-                                <span class="text-danger">Praktikum Jaringan</span>
+                        <div class="room-body">
+                            <div class="room-details">
+                                <div class="room-detail">
+                                    <i class="fas fa-users"></i>
+                                    <span>Kapasitas: {{ $room->kapasitas ?? 'N/A' }} orang</span>
+                                </div>
                             </div>
-                            <div class="schedule-item">
-                                <span>10:00 - 12:00</span>
-                                <span class="text-danger">Kuliah Sistem Operasi</span>
-                            </div>
-                            <div class="schedule-item">
-                                <span>13:00 - 15:00</span>
-                                <span class="text-success">Kosong</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="room-schedule">
+                                @if(isset($slotwaktu) && $slotwaktu->count())
+                                    @foreach($slotwaktu as $slot)
+                                        @php
+                                            // cari jadwal di ruangan ini yang cocok dengan slot waktu
+                                            $match = null;
+                                            if (isset($room->jadwals)) {
+                                                $match = $room->jadwals->first(function($j) use ($slot) {
+                                                    $slotText = trim($slot->waktu);
+                                                    $jadwalText = trim(($j->jam_mulai ?? '') . ' - ' . ($j->jam_selesai ?? ''));
+                                                    return $slotText === $jadwalText;
+                                                });
+                                            }
 
-                <!-- Ruangan Maintenance -->
-                <div class="room-card">
-                    <div class="room-header">
-                        <div class="room-name">Lab C</div>
-                        <div class="room-status status-maintenance">Maintenance</div>
-                    </div>
-                    <div class="room-body">
-                        <div class="room-details">
-                            <div class="room-detail">
-                                <i class="fas fa-users"></i>
-                                <span>Kapasitas: 20 orang</span>
-                            </div>
-                            <div class="room-detail">
-                                <i class="fas fa-video"></i>
-                                <span>Proyektor: Perbaikan</span>
+                                            if ($match) {
+                                                $label = $match->nama_kelas ?? ($match->sebaran_mahasiswa ?? 'Terpakai');
+                                                $textClass = (!empty($match->nama_kelas) || !empty($match->kelas_mahasiswa)) ? 'text-danger' : 'text-success';
+                                            } else {
+                                                $label = 'Kosong';
+                                                $textClass = 'text-success';
+                                            }
+                                        @endphp
+                                        <div class="schedule-item">
+                                            <span>{{ $slot->waktu }}</span>
+                                            <span class="{{ $textClass }}">{{ $label }}</span>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    {{-- fallback lama jika tidak ada slot waktu --}}
+                                    <div class="schedule-item">
+                                        <span>08:00 - 10:00</span>
+                                        <span class="text-success">Kosong</span>
+                                    </div>
+                                    <div class="schedule-item">
+                                        <span>10:00 - 12:00</span>
+                                        <span class="text-success">Kosong</span>
+                                    </div>
+                                    <div class="schedule-item">
+                                        <span>13:00 - 15:00</span>
+                                        <span class="text-success">Kosong</span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
-                        <div class="room-schedule">
-                            <div class="schedule-item">
-                                <span>08:00 - 10:00</span>
-                                <span class="text-warning">Maintenance</span>
-                            </div>
-                            <div class="schedule-item">
-                                <span>10:00 - 12:00</span>
-                                <span class="text-warning">Maintenance</span>
-                            </div>
-                            <div class="schedule-item">
-                                <span>13:00 - 15:00</span>
-                                <span class="text-warning">Maintenance</span>
-                            </div>
-                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
         </section>
 

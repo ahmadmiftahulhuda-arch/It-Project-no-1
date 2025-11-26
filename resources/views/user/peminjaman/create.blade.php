@@ -908,11 +908,11 @@
                                     <i class="fas fa-door-open"></i>
                                     <select name="ruang" class="form-select @error('ruang') is-invalid @enderror" required>
                                         <option value="">-- Pilih Ruang --</option>
-                                        <option value="Lab A" {{ old('ruang') == 'Lab A' ? 'selected' : '' }}>Lab A</option>
-                                        <option value="Lab B" {{ old('ruang') == 'Lab B' ? 'selected' : '' }}>Lab B</option>
-                                        <option value="Lab C" {{ old('ruang') == 'Lab C' ? 'selected' : '' }}>Lab C</option>
-                                        <option value="Ruang Meeting" {{ old('ruang') == 'Ruang Meeting' ? 'selected' : '' }}>Ruang Meeting</option>
-                                        <option value="Ruang Seminar" {{ old('ruang') == 'Ruang Seminar' ? 'selected' : '' }}>Ruang Seminar</option>
+                                        @foreach ($ruangan as $ruang)
+                                            <option value="{{ $ruang->id }}" {{ old('ruang') == $ruang->id ? 'selected' : '' }}>
+                                                {{ $ruang->nama_ruangan ?? $ruang->name }}  {{ $ruang->lokasi ?? $ruang->building ?? '' }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @error('ruang')
