@@ -1048,7 +1048,7 @@
                         </tr>
                     </thead>
                     <tbody id="pengembalian-table-body">
-                        @if (isset($pengembalians) && $pengembalians->count() > 0)
+                        @if ($pengembalians->count() > 0)
                             @foreach ($pengembalians as $pengembalian)
                                 <tr data-status="{{ $pengembalian->status }}" data-id="{{ $pengembalian->id }}">
                                     <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
@@ -1063,10 +1063,11 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <strong>{{ $pengembalian->peminjaman->ruang }}</strong>
-                                        <small>{{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}</small>
+                                        <strong>{{ $pengembalian->peminjaman->ruang ?? 'N/A' }}</strong><br>
+                                        <small
+                                            class="text-muted">{{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}</small>
                                     </td>
-                                    <td>{{ \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') }}
+                                    <td>{{ $pengembalian->peminjaman->tanggal ? \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') : 'N/A' }}
                                     </td>
                                     <td>
                                         @if ($pengembalian->tanggal_kembali)
@@ -1076,12 +1077,15 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($pengembalian->peminjaman->status_pengembalian == 'sudah dikembalikan')
+                                        @if ($pengembalian->status == 'verified')
                                             <span class="badge status-dikembalikan">Dikembalikan</span>
-                                        @else
+                                        @elseif ($pengembalian->status == 'pending')
                                             <span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>
+                                        @elseif ($pengembalian->status == 'overdue')
+                                            <span class="badge status-terlambat">Terlambat</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ $pengembalian->status }}</span>
                                         @endif
-
                                     </td>
                                     <td>
                                         @php
@@ -1109,42 +1113,49 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2 action-buttons">
-                                            @if ($pengembalian->status != 'dikembalikan')
-                                                <button class="btn btn-success-custom btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#returnModal"
-                                                    data-id="{{ $pengembalian->peminjaman_id }}"
-                                                    data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
-                                                    data-barang="{{ $pengembalian->peminjaman->ruang }} - {{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}"
-                                                    data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal }}"
-                                                    data-tanggal-jatuh-tempo="{{ $pengembalian->tanggal_pinjam }}">
-                                                    <i class="fas fa-undo me-1"></i> Kembalikan
-                                                </button>
+                                            {{-- Jika status pending → tampilkan setujui & tolak --}}
+                                            @if ($pengembalian->status == 'pending')
+                                                <form
+                                                    action="{{ route('admin.pengembalian.approve', $pengembalian->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success-custom btn-sm">
+                                                        <i class="fas fa-check"></i> Setujui
+                                                    </button>
+                                                </form>
+
+                                                <form
+                                                    action="{{ route('admin.pengembalian.reject', $pengembalian->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-danger-custom btn-sm">
+                                                        <i class="fas fa-times"></i> Tolak
+                                                    </button>
+                                                </form>
                                             @endif
 
-                                            <!-- Tombol Detail -->
+                                            {{-- Tombol Edit --}}
+                                            <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#editModal" data-id="{{ $pengembalian->id }}"
+                                                data-kondisi="{{ $kondisi }}"
+                                                data-keterangan="{{ $pengembalian->catatan ?? '' }}">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+
+                                            {{-- Tombol Detail --}}
                                             <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $pengembalian->id }}"
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
-                                                data-barang="{{ $pengembalian->peminjaman->ruang }} - {{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}"
-                                                data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal }}"
-                                                data-tanggal-jatuh-tempo="{{ $pengembalian->tanggal_pinjam }}"
-                                                data-tanggal-kembali="{{ $pengembalian->tanggal_kembali }}"
+                                                data-barang="{{ $pengembalian->peminjaman->ruang ?? 'N/A' }}"
+                                                data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal ?? '' }}"
+                                                data-tanggal-kembali="{{ $pengembalian->tanggal_kembali ?? '' }}"
                                                 data-kondisi="{{ $kondisi }}"
-                                                data-keterangan="{{ $pengembalian->catatan }}"
+                                                data-keterangan="{{ $pengembalian->catatan ?? '' }}"
                                                 data-status="{{ $pengembalian->status }}">
-                                                <i class="fas fa-eye me-1"></i> Detail
+                                                <i class="fas fa-eye"></i> Detail
                                             </button>
-
-                                            <!-- Tombol Hapus -->
-                                            <form
-                                                action="{{ route('admin.pengembalian.destroy', $pengembalian->id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger-custom btn-sm">
-                                                    <i class="fas fa-trash me-1"></i> Hapus
-                                                </button>
-                                            </form>
                                         </div>
                                     </td>
                                 </tr>

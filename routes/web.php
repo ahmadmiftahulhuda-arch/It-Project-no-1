@@ -18,10 +18,24 @@ use App\Http\Controllers\SlotWaktuController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenggunaController;
+use App\Models\Ruangan;
+use App\Models\SlotWaktu;
+
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
 // ================================
-Route::get('/', fn() => view('home'))->name('home');
+
+
+Route::get('/', function () {
+    // Ambil hanya ruangan yang statusnya 'tersedia' (case-insensitive)
+    $ruangan = Ruangan::with('jadwals')
+        ->whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])
+        ->get();
+
+    $slotwaktu = SlotWaktu::all();
+
+    return view('home', compact('ruangan', 'slotwaktu'));
+})->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/kalender', 'kalender');
 Route::view('/peminjaman1', 'peminjaman1');
@@ -30,7 +44,13 @@ Route::view('/post', 'post');
 Route::view('/syaratdanketentuan', 'syaratdanketentuan');
 Route::view('/faq', 'faq');
 Route::get('/home', function () {
-    return view('home');
+    $ruangan = Ruangan::with('jadwals')
+        ->whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])
+        ->get();
+
+    $slotwaktu = SlotWaktu::all();
+
+    return view('home', compact('ruangan', 'slotwaktu'));
 });
 
 
