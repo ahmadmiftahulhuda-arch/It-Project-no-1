@@ -187,10 +187,32 @@ Route::prefix('peminjaman')->middleware('auth')->group(function () {
     Route::get('/riwayat/user', [PeminjamanController::class, 'riwayat'])->name('user.peminjaman.riwayat');
 });
 
-Route::prefix('pengembalian')->middleware('auth')->group(function () {
-    Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
-    Route::get('/{id}', [PeminjamanController::class, 'showPengembalian'])->name('user.pengembalian.show');
-    Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])->name('pengembalian.ajukan');
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+
+    // Halaman index pengembalian
+    Route::get('/pengembalian', [AdminController::class, 'pengembalian'])
+        ->name('admin.pengembalian');
+
+    // Proses tambah pengembalian
+    Route::post('/pengembalian', [AdminController::class, 'storePengembalian'])
+        ->name('admin.pengembalian.store');
+
+    // Edit pengembalian
+    Route::get('/pengembalian/{id}/edit', [AdminController::class, 'editPengembalian'])
+        ->name('admin.pengembalian.edit');
+
+    // Update pengembalian
+    Route::put('/pengembalian/{id}', [AdminController::class, 'updatePengembalian'])
+        ->name('admin.pengembalian.update');
+
+    // Approve pengembalian
+    Route::put('/pengembalian/{id}/approve', [AdminController::class, 'approvePengembalian'])
+        ->name('admin.pengembalian.approve');
+
+    // Reject pengembalian
+    Route::put('/pengembalian/{id}/reject', [AdminController::class, 'rejectPengembalian'])
+        ->name('admin.pengembalian.reject');
+
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
