@@ -1323,7 +1323,7 @@
                                             <button class="btn btn-success btn-sm ajukan-pengembalian"
                                                 data-id="{{ $p->id }}"
                                                 data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
-                                                data-tanggal="{{ \\Carbon\\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
                                                 data-projector-id="{{ $p->projector->id ?? $p->projector_id ?? '' }}"
                                                 data-projector-label="{{ isset($p->projector) && $p->projector ? ($p->projector->kode_proyektor . ' - ' . $p->projector->merk . ' ' . $p->projector->model) : ($p->proyektor ? 'Ya' : 'Tidak') }}"
                                                 data-proyektor="{{ $p->proyektor ? 'Ya' : 'Tidak' }}">
