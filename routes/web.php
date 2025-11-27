@@ -188,8 +188,11 @@ Route::prefix('peminjaman')->middleware('auth')->group(function () {
 });
 
 Route::prefix('pengembalian')->middleware('auth')->group(function () {
-    
+
     Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
+
+    Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])->name('pengembalian.ajukan');
+
     // Halaman index pengembalian
     Route::get('/pengembalian', [AdminController::class, 'pengembalian'])
         ->name('admin.pengembalian');
