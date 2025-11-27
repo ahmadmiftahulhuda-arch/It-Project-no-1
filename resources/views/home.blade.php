@@ -1331,38 +1331,28 @@
         <section id="projectors" class="mb-5">
             <h2 class="section-title"><i class="fas fa-video"></i> Status Proyektor</h2>
             <div class="projector-grid">
-                <div class="projector-card">
-                    <div class="projector-icon projector-available">
-                        <i class="fas fa-video"></i>
+                @foreach($projectors as $projector)
+                    @php
+                        $status = strtolower($projector->status ?? '');
+                        $statusClass = 'projector-available';
+                        $statusLabel = 'Tersedia';
+
+                        if (in_array($status, ['in use', 'digunakan'])) {
+                            $statusClass = 'projector-in-use';
+                            $statusLabel = 'Digunakan';
+                        } elseif (in_array($status, ['maintenance', 'perbaikan'])) {
+                            $statusClass = 'projector-maintenance';
+                            $statusLabel = 'Maintenance';
+                        }
+                    @endphp
+                    <div class="projector-card">
+                        <div class="projector-icon {{ $statusClass }}">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="projector-name">{{ $projector->kode_proyektor }} - {{ $projector->merk }} {{ $projector->model }}</div>
+                        <div class="projector-status {{ $statusClass }}">{{ $statusLabel }}</div>
                     </div>
-                    <div class="projector-name">Proyektor 1</div>
-                    <div class="projector-location">Lab A</div>
-                    <div class="room-status status-available">Tersedia</div>
-                </div>
-                <div class="projector-card">
-                    <div class="projector-icon projector-in-use">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <div class="projector-name">Proyektor 2</div>
-                    <div class="projector-location">Lab B</div>
-                    <div class="room-status status-occupied">Digunakan</div>
-                </div>
-                <div class="projector-card">
-                    <div class="projector-icon projector-maintenance">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <div class="projector-name">Proyektor 3</div>
-                    <div class="projector-location">Lab C</div>
-                    <div class="room-status status-maintenance">Perbaikan</div>
-                </div>
-                <div class="projector-card">
-                    <div class="projector-icon projector-available">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <div class="projector-name">Proyektor 4</div>
-                    <div class="projector-location">Ruang Meeting</div>
-                    <div class="room-status status-available">Tersedia</div>
-                </div>
+                @endforeach
             </div>
         </section>
 

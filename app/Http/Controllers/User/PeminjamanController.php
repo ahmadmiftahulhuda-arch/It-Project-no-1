@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Ruangan;
+use App\Models\Projector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -47,7 +48,10 @@ class PeminjamanController extends Controller
 
         $ruangan = Ruangan::all();
 
-        return view('user.peminjaman.create', compact('ruangan'));
+        // Ambil proyektor yang tersedia untuk dipilih (status 'tersedia')
+        $projectors = Projector::where('status', 'tersedia')->get();
+
+        return view('user.peminjaman.create', compact('ruangan', 'projectors'));
     }
 
     public function store(Request $request)
@@ -60,7 +64,7 @@ class PeminjamanController extends Controller
         $request->validate([
             'tanggal'   => 'required|date',
             'ruang'     => 'required|string|max:100',
-            'proyektor' => 'required|boolean',
+            'proyektor' => 'required|exists:projectors,id',
             'keperluan' => 'required|string|max:255',
         ]);
 

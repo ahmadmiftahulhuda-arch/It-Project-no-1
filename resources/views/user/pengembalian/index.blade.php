@@ -1286,7 +1286,7 @@
                             <tbody>
                                 @foreach($peminjamans as $p)
                                     <tr class="table-row-highlight" 
-                                        data-ruang="{{ $p->ruang }}" 
+                                        data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}" 
                                         data-tanggal="{{ $p->tanggal }}">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
@@ -1295,17 +1295,23 @@
                                         </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $p->ruang }}
+                                            {{ $p->ruangan->nama_ruangan ?? $p->ruang }}
                                         </td>
                                         <td>
                                             <i class="fas fa-clock me-1 text-success"></i>
                                             {{ $p->waktu_mulai ?? '08:00' }} - {{ $p->waktu_selesai ?? '17:00' }}
                                         </td>
                                         <td class="text-center">
-                                            @if($p->proyektor)
-                                                <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i> Ya</span>
+                                            @if(isset($p->projector) && $p->projector)
+                                                <span class="badge bg-success status-badge">{{ $p->projector->kode_proyektor }} - {{ $p->projector->merk }} {{ $p->projector->model }}</span>
+                                            @elseif(!empty($p->projector_id))
+                                                <span class="badge bg-success status-badge">ID: {{ $p->projector_id }}</span>
                                             @else
-                                                <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
+                                                @if($p->proyektor)
+                                                    <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i> Ya</span>
+                                                @else
+                                                    <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>
@@ -1316,8 +1322,10 @@
                                         <td class="text-center">
                                             <button class="btn btn-success btn-sm ajukan-pengembalian"
                                                 data-id="{{ $p->id }}"
-                                                data-ruang="{{ $p->ruang }}"
-                                                data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
+                                                data-tanggal="{{ \\Carbon\\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                data-projector-id="{{ $p->projector->id ?? $p->projector_id ?? '' }}"
+                                                data-projector-label="{{ isset($p->projector) && $p->projector ? ($p->projector->kode_proyektor . ' - ' . $p->projector->merk . ' ' . $p->projector->model) : ($p->proyektor ? 'Ya' : 'Tidak') }}"
                                                 data-proyektor="{{ $p->proyektor ? 'Ya' : 'Tidak' }}">
                                                 <i class="fas fa-paper-plane me-1"></i> Ajukan
                                             </button>
@@ -1362,7 +1370,7 @@
                                 @foreach($pengembalians as $k)
                                     <tr class="table-row-highlight" 
                                         data-status="{{ $k->status }}" 
-                                        data-ruang="{{ $k->peminjaman->ruang }}" 
+                                        data-ruang="{{ $k->peminjaman->ruangan->nama_ruangan ?? $k->peminjaman->ruang }}" 
                                         data-tanggal="{{ $k->peminjaman->tanggal }}">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
@@ -1371,7 +1379,7 @@
                                         </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $k->peminjaman->ruang }}
+                                            {{ $k->peminjaman->ruangan->nama_ruangan ?? $k->peminjaman->ruang }}
                                         </td>
                                         <td>
                                             @if($k->tanggal_pengembalian)
@@ -1382,10 +1390,19 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($k->peminjaman->proyektor)
-                                                <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i> Ya</span>
+                                            @php
+                                                $pj = $k->peminjaman;
+                                            @endphp
+                                            @if(isset($pj->projector) && $pj->projector)
+                                                <span class="badge bg-success status-badge">{{ $pj->projector->kode_proyektor }} - {{ $pj->projector->merk }} {{ $pj->projector->model }}</span>
+                                            @elseif(!empty($pj->projector_id))
+                                                <span class="badge bg-success status-badge">ID: {{ $pj->projector_id }}</span>
                                             @else
-                                                <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
+                                                @if($pj->proyektor)
+                                                    <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i> Ya</span>
+                                                @else
+                                                    <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -1594,8 +1611,11 @@
                     document.getElementById('peminjaman_id').value = btn.dataset.id;
                     document.getElementById('modal-ruang').textContent = btn.dataset.ruang;
                     document.getElementById('modal-tanggal').textContent = btn.dataset.tanggal;
-                    document.getElementById('modal-proyektor').textContent = btn.dataset.proyektor;
-                    if (btn.dataset.proyektor === 'Ya') {
+                    const projectorLabel = btn.dataset.projectorLabel || btn.dataset.proyektor || '-';
+                    document.getElementById('modal-proyektor').textContent = projectorLabel;
+                    if (btn.dataset.projectorId && btn.dataset.projectorId !== '') {
+                        document.getElementById('proyektor-section').style.display = 'block';
+                    } else if (btn.dataset.proyektor === 'Ya') {
                         document.getElementById('proyektor-section').style.display = 'block';
                     } else {
                         document.getElementById('proyektor-section').style.display = 'none';

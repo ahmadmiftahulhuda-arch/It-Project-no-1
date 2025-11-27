@@ -24,7 +24,8 @@ class AdminController extends Controller
         $totalCount = Peminjaman::count();
 
         // Query untuk data peminjaman dengan filter
-        $query = Peminjaman::with('user');
+        // Eager load related models so views can show names/details
+        $query = Peminjaman::with(['user', 'projector', 'ruangan']);
 
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {

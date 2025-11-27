@@ -20,6 +20,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PenggunaController;
 use App\Models\Ruangan;
 use App\Models\SlotWaktu;
+use App\Models\Projector;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -33,8 +34,9 @@ Route::get('/', function () {
         ->get();
 
     $slotwaktu = SlotWaktu::all();
+    $projectors = Projector::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->get();
 
-    return view('home', compact('ruangan', 'slotwaktu'));
+    return view('home', compact('ruangan', 'slotwaktu', 'projectors'));
 })->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/kalender', 'kalender');
@@ -50,7 +52,9 @@ Route::get('/home', function () {
 
     $slotwaktu = SlotWaktu::all();
 
-    return view('home', compact('ruangan', 'slotwaktu'));
+    $projectors = Projector::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->get();
+
+    return view('home', compact('ruangan', 'slotwaktu', 'projectors'));
 });
 
 

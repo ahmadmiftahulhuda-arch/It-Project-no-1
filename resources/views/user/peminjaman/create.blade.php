@@ -928,9 +928,12 @@
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
                                     <select name="proyektor" class="form-select @error('proyektor') is-invalid @enderror" required>
-                                        <option value="">-- Pilih Ketersediaan --</option>
-                                        <option value="1" {{ old('proyektor') == '1' ? 'selected' : '' }}>Ya, butuh proyektor</option>
-                                        <option value="0" {{ old('proyektor') == '0' ? 'selected' : '' }}>Tidak butuh proyektor</option>
+                                        <option value="">-- Pilih Proyektor --</option>
+                                        @foreach($projectors as $projector)
+                                            <option value="{{ $projector->id }}" {{ old('proyektor') == $projector->id ? 'selected' : '' }}>
+                                                {{ $projector->kode_proyektor ?? ('' . $projector->id) }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @error('proyektor')
@@ -944,7 +947,6 @@
                                     Keperluan
                                 </label>
                                 <div class="input-icon">
-                                    <i class="fas fa-clipboard-list"></i>
                                     <textarea name="keperluan" class="form-control @error('keperluan') is-invalid @enderror" 
                                               rows="4" placeholder="Jelaskan keperluan peminjaman secara detail..." required>{{ old('keperluan') }}</textarea>
                                 </div>

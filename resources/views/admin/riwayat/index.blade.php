@@ -1135,10 +1135,13 @@
                                             </div>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
-                                        <td>{{ $item->ruang }}</td>
+                                        <td>{{ $item->ruangan->nama_ruangan ?? $item->ruang }}</td>
                                         <td>
-                                            @if ($item->proyektor)
-                                                <span class="badge bg-success">Ya</span>
+                                            @if ($item->projector)
+                                                <div>
+                                                    <strong>{{ $item->projector->kode_proyektor ?? ('ID:' . $item->projector->id) }}</strong>
+                                                    <div class="text-muted small">{{ $item->projector->merk ?? '' }} {{ $item->projector->model ?? '' }}</div>
+                                                </div>
                                             @else
                                                 <span class="badge bg-secondary">Tidak</span>
                                             @endif
@@ -1184,8 +1187,9 @@
                                                     data-id="{{ $item->id }}"
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                     data-tanggal="{{ $item->tanggal }}"
-                                                    data-ruang="{{ $item->ruang }}"
-                                                    data-proyektor="{{ $item->proyektor ? 'Ya' : 'Tidak' }}"
+                                                    data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
+                                                    data-projector-id="{{ $item->projector->id ?? '' }}"
+                                                    data-projector-label="{{ $item->projector ? ($item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '')) : 'Tidak' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
                                                     data-status-pengembalian="{{ $item->status_pengembalian }}"
@@ -1199,8 +1203,9 @@
                                                     data-id="{{ $item->id }}"
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                     data-tanggal="{{ $item->tanggal }}"
-                                                    data-ruang="{{ $item->ruang }}"
-                                                    data-proyektor="{{ $item->proyektor ? '1' : '0' }}"
+                                                    data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
+                                                    data-projector-id="{{ $item->projector->id ?? '' }}"
+                                                    data-projector-label="{{ $item->projector ? ($item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '')) : '0' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
                                                     data-status-pengembalian="{{ $item->status_pengembalian ?? 'belum dikembalikan' }}"
@@ -1351,8 +1356,9 @@
                                                 data-id="{{ $item->id }}"
                                                 data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                 data-tanggal="{{ $item->tanggal }}"
-                                                data-ruang="{{ $item->ruang }}"
-                                                data-proyektor="{{ $item->proyektor ? 'Ya' : 'Tidak' }}"
+                                                data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
+                                                data-projector-id="{{ $item->projector->id ?? '' }}"
+                                                data-projector-label="{{ $item->projector ? ($item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '')) : 'Tidak' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
                                                 data-status-pengembalian="{{ $item->status_pengembalian }}"
@@ -1364,8 +1370,9 @@
                                                 data-id="{{ $item->id }}"
                                                 data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                 data-tanggal="{{ $item->tanggal }}"
-                                                data-ruang="{{ $item->ruang }}"
-                                                data-proyektor="{{ $item->proyektor ? '1' : '0' }}"
+                                                data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
+                                                data-projector-id="{{ $item->projector->id ?? '' }}"
+                                                data-projector-label="{{ $item->projector ? ($item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '')) : '0' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
                                                 data-status-pengembalian="{{ $item->status_pengembalian ?? 'belum dikembalikan' }}"
@@ -1617,7 +1624,7 @@
                     const peminjam = button.getAttribute('data-peminjam');
                     const tanggal = button.getAttribute('data-tanggal');
                     const ruang = button.getAttribute('data-ruang');
-                    const proyektor = button.getAttribute('data-proyektor');
+                    const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-proyektor');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
                     const statusPengembalian = button.getAttribute('data-status-pengembalian');
@@ -1667,7 +1674,8 @@
                     const peminjam = button.getAttribute('data-peminjam');
                     const tanggal = button.getAttribute('data-tanggal');
                     const ruang = button.getAttribute('data-ruang');
-                    const proyektor = button.getAttribute('data-proyektor');
+                    const projectorId = button.getAttribute('data-projector-id');
+                    const proyektor = (projectorId && projectorId !== '') ? '1' : '0';
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
                     const statusPengembalian = button.getAttribute('data-status-pengembalian');

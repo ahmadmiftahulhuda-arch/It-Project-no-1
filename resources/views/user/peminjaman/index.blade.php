@@ -1445,14 +1445,15 @@
                                         <i class="fas fa-paper-plane me-1"></i> Diajukan {{ $selisih }} yang lalu
                                     </div>
                                 </td>
-                                <td><i class="fas fa-door-open text-info me-1"></i> {{ $peminjaman->ruang }}</td>
+                                <td><i class="fas fa-door-open text-info me-1"></i> {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}</td>
                                 <td class="text-center">
-                                    @if ($peminjaman->proyektor)
-                                        <span class="badge bg-success status-badge"><i class="fas fa-check me-1"></i>
-                                            Ya</span>
+                                    @if ($peminjaman->projector)
+                                        <div>
+                                            <strong>{{ $peminjaman->projector->kode_proyektor ?? ('ID:' . $peminjaman->projector->id) }}</strong>
+                                            <div class="text-muted small">{{ $peminjaman->projector->merk ?? '' }} {{ $peminjaman->projector->model ?? '' }}</div>
+                                        </div>
                                     @else
-                                        <span class="badge bg-secondary status-badge"><i
-                                                class="fas fa-times me-1"></i> Tidak</span>
+                                        <span class="badge bg-secondary status-badge"><i class="fas fa-times me-1"></i> Tidak</span>
                                     @endif
                                 </td>
                                 <td>
@@ -1505,8 +1506,9 @@
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
-                                            data-ruang="{{ $peminjaman->ruang }}"
-                                            data-proyektor="{{ $peminjaman->proyektor ? 'Ya' : 'Tidak' }}"
+                                            data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
+                                            data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
+                                            data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}"
                                             data-nama-peminjam="{{ $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
@@ -1841,7 +1843,7 @@
             const waktuMulai = button.getAttribute('data-waktu-mulai');
             const waktuSelesai = button.getAttribute('data-waktu-selesai');
             const ruang = button.getAttribute('data-ruang');
-            const proyektor = button.getAttribute('data-proyektor');
+            const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-proyektor');
             const keperluan = button.getAttribute('data-keperluan');
             const status = button.getAttribute('data-status');
             const namaPeminjam = button.getAttribute('data-nama-peminjam');

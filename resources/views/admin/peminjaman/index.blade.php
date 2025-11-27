@@ -1093,11 +1093,14 @@
                                 </td>
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
-                                    {{ $peminjaman->ruang }}
+                                    {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
                                 </td>
                                 <td>
-                                    @if ($peminjaman->proyektor)
-                                        <span class="badge bg-success">Ya</span>
+                                    @if ($peminjaman->projector)
+                                        <div>
+                                            <strong>{{ $peminjaman->projector->kode_proyektor ?? ('ID:' . $peminjaman->projector->id) }}</strong>
+                                            <div class="text-muted small">{{ $peminjaman->projector->merk ?? '' }} {{ $peminjaman->projector->model ?? '' }}</div>
+                                        </div>
                                     @else
                                         <span class="badge bg-secondary">Tidak</span>
                                     @endif
@@ -1149,20 +1152,21 @@
 
                                         <!-- Tombol Detail -->
                                         <button class="btn btn-info-custom btn-sm view-detail" 
-                                                data-id="{{ $peminjaman->id }}"
-                                                data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
-                                                data-nim="{{ $peminjaman->user->nim ?? '-' }}"
-                                                data-prodi="{{ $peminjaman->user->prodi ?? '-' }}"
-                                                data-email="{{ $peminjaman->user->email ?? '-' }}"
-                                                data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"
-                                                data-tanggal="{{ $tanggal->format('d M Y') }}"
-                                                data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
-                                                data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
-                                                data-ruang="{{ $peminjaman->ruang }}"
-                                                data-proyektor="{{ $peminjaman->proyektor ? 'Ya' : 'Tidak' }}"
-                                                data-keperluan="{{ $peminjaman->keperluan }}"
-                                                data-status="{{ $peminjaman->status }}"
-                                                data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
+                                            data-id="{{ $peminjaman->id }}"
+                                            data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
+                                            data-nim="{{ $peminjaman->user->nim ?? '-' }}"
+                                            data-prodi="{{ $peminjaman->user->prodi ?? '-' }}"
+                                            data-email="{{ $peminjaman->user->email ?? '-' }}"
+                                            data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"
+                                            data-tanggal="{{ $tanggal->format('d M Y') }}"
+                                            data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
+                                            data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
+                                            data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
+                                            data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
+                                            data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
+                                            data-keperluan="{{ $peminjaman->keperluan }}"
+                                            data-status="{{ $peminjaman->status }}"
+                                            data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
                                             <i class="fas fa-eye me-1"></i> Detail
                                         </button>
 
@@ -1177,8 +1181,9 @@
                                             data-tanggal="{{ $peminjaman->tanggal }}"
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai }}"
-                                            data-ruang="{{ $peminjaman->ruang }}"
-                                            data-proyektor="{{ $peminjaman->proyektor ? '1' : '0' }}"
+                                            data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
+                                            data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
+                                            data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : '0' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}">
                                             <i class="fas fa-edit me-1"></i> Edit
@@ -1445,7 +1450,7 @@
                     const waktuMulai = this.getAttribute('data-waktu-mulai');
                     const waktuSelesai = this.getAttribute('data-waktu-selesai');
                     const ruang = this.getAttribute('data-ruang');
-                    const proyektor = this.getAttribute('data-proyektor');
+                    const proyektorLabel = this.getAttribute('data-projector-label');
                     const keperluan = this.getAttribute('data-keperluan');
                     const status = this.getAttribute('data-status');
                     const isOngoing = this.getAttribute('data-is-ongoing') === 'true';
@@ -1484,7 +1489,7 @@
                                 <p><strong>Tanggal:</strong> ${tanggal}</p>
                                 <p><strong>Waktu:</strong> ${waktuMulai} - ${waktuSelesai}</p>
                                 <p><strong>Ruang:</strong> ${ruang}</p>
-                                <p><strong>Proyektor:</strong> ${proyektor}</p>
+                                <p><strong>Proyektor:</strong> ${proyektorLabel}</p>
                                 <p><strong>Status:</strong> ${statusBadge}</p>
                             </div>
                             <div class="col-12 mt-3">
@@ -1514,7 +1519,8 @@
                     const waktuMulai = button.getAttribute('data-waktu-mulai');
                     const waktuSelesai = button.getAttribute('data-waktu-selesai');
                     const ruang = button.getAttribute('data-ruang');
-                    const proyektor = button.getAttribute('data-proyektor');
+                    const projectorId = button.getAttribute('data-projector-id');
+                    const projectorLabel = button.getAttribute('data-projector-label');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
 
@@ -1534,8 +1540,8 @@
                     document.getElementById('keperluan').value = keperluan;
                     document.getElementById('status').value = status;
 
-                    // Set radio button proyektor
-                    if (proyektor === '1') {
+                    // Set radio button proyektor (check based on whether a projector is attached)
+                    if (projectorId && projectorId !== '') {
                         document.getElementById('proyektor_ya').checked = true;
                     } else {
                         document.getElementById('proyektor_tidak').checked = true;
