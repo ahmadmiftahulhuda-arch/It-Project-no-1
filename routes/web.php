@@ -187,8 +187,8 @@ Route::prefix('peminjaman')->middleware('auth')->group(function () {
     Route::get('/riwayat/user', [PeminjamanController::class, 'riwayat'])->name('user.peminjaman.riwayat');
 });
 
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-
+Route::prefix('pengembalian')->middleware('auth')->group(function () {
+    Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
     // Halaman index pengembalian
     Route::get('/pengembalian', [AdminController::class, 'pengembalian'])
         ->name('admin.pengembalian');
@@ -214,6 +214,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         ->name('admin.pengembalian.reject');
 
 });
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);
