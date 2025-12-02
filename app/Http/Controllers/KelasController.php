@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Kelas;
 use App\Models\Mahasiswa; 
 use Illuminate\Http\Request;
+use App\Imports\MahasiswaImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KelasController extends Controller
 {
@@ -54,5 +56,16 @@ class KelasController extends Controller
     {
         $mahasiswa = $kela->mahasiswa;
         return view('admin.kelas.detail', compact('kela', 'mahasiswa'));
+    }
+
+    public function importMahasiswa(Request $request, $kelas_id)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        Excel::import(new MahasiswaImport($kelas_id), $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data mahasiswa berhasil diimport');
     }
 }

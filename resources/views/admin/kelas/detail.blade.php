@@ -29,6 +29,9 @@
                     <a href="{{ route('admin.kelas.index') }}" class="btn btn-outline-secondary d-flex align-items-center">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
+                    <button class="btn btn-success d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modalImportMahasiswa">
+                        <i class="fas fa-file-excel"></i> Import Excel
+                    </button>
                     <button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modalTambahMahasiswa">
                         <i class="fas fa-user-plus"></i> Tambah Mahasiswa
                     </button>
@@ -154,6 +157,32 @@
         </form>
     </div>
 </div>
+<div class="modal fade" id="modalImportMahasiswa" tabindex="-1" aria-labelledby="modalImportMahasiswaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{{ route('admin.kelas.importMahasiswa', ['kela' => $kela->id]) }}" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-content rounded-4">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold text-white" id="modalImportMahasiswaLabel"><i class="fas fa-file-excel"></i> Import Mahasiswa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Pilih file Excel</label>
+                        <input class="form-control" type="file" name="file" id="file" required>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="text-success">Unduh template Excel</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success"><i class="fas fa-upload"></i> Import</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')

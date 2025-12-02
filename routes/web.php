@@ -131,6 +131,7 @@ Route::prefix('admin')->group(function () {
     // Kelas & Mahasiswa
     Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('kelas', KelasController::class);
+    Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
 });
     Route::resource('kelas', KelasController::class);
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
