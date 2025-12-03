@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\PeminjamanController;
+use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Exports\RiwayatExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -108,7 +109,10 @@ Route::prefix('admin')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
+    // Admin authentication (login/logout)
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
     // Feedback
     Route::resource('feedback', FeedbackController::class);
