@@ -383,10 +383,6 @@
 
                     <button type="submit" class="btn-login">Masuk</button>
                 </form>
-                
-                <div class="signup-link">
-                    Belum punya akun? Gunakan opsi <a href="{{ route('google.login') }}">Masuk dengan Google</a>.
-                </div>
             </div>
         </div>
     </div>

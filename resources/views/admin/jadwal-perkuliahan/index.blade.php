@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +49,7 @@
             line-height: 1.6;
         }
 
-             /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
         .sidebar {
             position: fixed;
             top: 0;
@@ -575,12 +576,29 @@
             opacity: 0.9;
         }
 
-        .stat-icon.total { background: var(--primary); }
-        .stat-icon.senin { background: #66bb6a; }
-        .stat-icon.selasa { background: #ffb74d; }
-        .stat-icon.rabu { background: #ef5350; }
-        .stat-icon.kamis { background: #5c6bc0; }
-        .stat-icon.jumat { background: #26c6da; }
+        .stat-icon.total {
+            background: var(--primary);
+        }
+
+        .stat-icon.senin {
+            background: #66bb6a;
+        }
+
+        .stat-icon.selasa {
+            background: #ffb74d;
+        }
+
+        .stat-icon.rabu {
+            background: #ef5350;
+        }
+
+        .stat-icon.kamis {
+            background: #5c6bc0;
+        }
+
+        .stat-icon.jumat {
+            background: #26c6da;
+        }
 
         .stat-info h3 {
             margin: 0;
@@ -972,6 +990,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -983,6 +1002,7 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateY(-20px);
@@ -1010,7 +1030,7 @@
             .table-filters {
                 gap: 10px;
             }
-            
+
             .filter-group {
                 min-width: 130px;
             }
@@ -1020,11 +1040,11 @@
             .stats-container {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
-            
+
             .table-filters {
                 gap: 8px;
             }
-            
+
             .filter-group {
                 min-width: 120px;
             }
@@ -1110,19 +1130,19 @@
                 padding: 6px 10px;
                 font-size: 0.8rem;
             }
-            
+
             .table thead th,
             .table tbody td {
                 padding: 10px 8px;
                 font-size: 0.85rem;
             }
-            
+
             .page-title {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            
+
             .page-title h1 {
                 font-size: 1.5rem;
             }
@@ -1158,45 +1178,45 @@
             .main-content {
                 padding: 10px;
             }
-            
+
             .header {
                 margin-bottom: 15px;
             }
-            
+
             .stats-container {
                 margin-bottom: 20px;
             }
-            
+
             .stat-card {
                 padding: 15px;
             }
-            
+
             .stat-icon {
                 width: 50px;
                 height: 50px;
                 font-size: 1.2rem;
                 margin-right: 12px;
             }
-            
+
             .stat-info h3 {
                 font-size: 1.5rem;
             }
-            
+
             .table {
                 font-size: 0.8rem;
             }
-            
+
             .table thead th,
             .table tbody td {
                 padding: 8px 6px;
             }
-            
+
             .btn-warning-custom,
             .btn-danger-custom {
                 padding: 4px 8px;
                 font-size: 0.7rem;
             }
-            
+
             .pagination-container {
                 padding: 15px 0;
             }
@@ -1223,6 +1243,7 @@
             gap: 10px;
             align-items: center;
         }
+
         .modal-content {
             background: var(--bg-card);
             color: var(--text-dark);
@@ -1260,8 +1281,9 @@
         }
     </style>
 </head>
+
 <body>
-      <!-- Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -1273,7 +1295,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1284,10 +1307,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1310,10 +1334,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1328,10 +1353,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1354,10 +1380,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1368,10 +1395,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1395,7 +1423,8 @@
         <div class="header">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari mata kuliah/dosen/kelas..." id="globalSearch" value="{{ request('search') ?? '' }}">
+                <input type="text" placeholder="Cari mata kuliah/dosen/kelas..." id="globalSearch"
+                    value="{{ request('search') ?? '' }}">
             </div>
 
             <div class="user-actions">
@@ -1417,7 +1446,7 @@
             </div>
         </div>
 
-       <!-- Page Title -->
+        <!-- Page Title -->
         <div class="page-title">
             <div>
                 <h1>Manajemen Jadwal Perkuliahan</h1>
@@ -1428,7 +1457,8 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
                     <i class="fas fa-plus"></i> Tambah Jadwal
                 </button>
-                <form action="{{ route('jadwal-perkuliahan.delete-all') }}" method="POST" onsubmit="return confirmDeleteAll()" style="display: inline;">
+                <form action="{{ route('jadwal-perkuliahan.delete-all') }}" method="POST"
+                    onsubmit="return confirmDeleteAll()" style="display: inline;">
                     @csrf
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash"></i> Hapus Semua
@@ -1438,7 +1468,8 @@
         </div>
 
         <!-- Import Excel Form -->
-        <form action="{{ route('jadwal-perkuliahan.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
+        <form action="{{ route('jadwal-perkuliahan.import') }}" method="POST" enctype="multipart/form-data"
+            class="import-form">
             @csrf
             <div class="import-header">
                 <h3 class="import-title">
@@ -1451,11 +1482,11 @@
                     <button class="btn btn-success" type="submit">
                         <i class="fas fa-upload me-1"></i> Import Excel
                     </button>
-                    
+
                 </div>
             </div>
             <!-- Alert untuk pesan sukses/error import -->
-            @if(session('import_success'))
+            @if (session('import_success'))
                 <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
                     <i class="fas fa-check-circle me-2"></i>
                     {{ session('import_success') }}
@@ -1463,7 +1494,7 @@
                 </div>
             @endif
 
-            @if(session('import_error'))
+            @if (session('import_error'))
                 <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
                     <i class="fas fa-exclamation-circle me-2"></i>
                     {{ session('import_error') }}
@@ -1471,11 +1502,11 @@
                 </div>
             @endif
 
-            @if($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     <ul class="mb-0">
-                        @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -1549,10 +1580,12 @@
                 <div class="table-title">
                     Daftar Jadwal Perkuliahan
                 </div>
-                <form id="filterForm" method="GET" action="{{ route('jadwal-perkuliahan.index') }}" class="table-filters">
+                <form id="filterForm" method="GET" action="{{ route('jadwal-perkuliahan.index') }}"
+                    class="table-filters">
                     <div class="filter-group">
                         <label for="search">Cari</label>
-                        <input type="text" id="search" name="search" placeholder="Mata Kuliah/Dosen/Kelas" value="{{ request('search') ?? '' }}">
+                        <input type="text" id="search" name="search" placeholder="Mata Kuliah/Dosen/Kelas"
+                            value="{{ request('search') ?? '' }}">
                     </div>
                     <div class="filter-group">
                         <label for="hari">Hari</label>
@@ -1569,29 +1602,39 @@
                         <label for="ruangan">Ruangan</label>
                         <select id="ruangan" name="ruangan">
                             <option value="">Semua Ruangan</option>
-                            <option value="Lab TIK 1" {{ request('ruangan') == 'Lab TIK 1' ? 'selected' : '' }}>Lab TIK 1</option>
-                            <option value="Lab TIK 2" {{ request('ruangan') == 'Lab TIK 2' ? 'selected' : '' }}>Lab TIK 2</option>
-                            <option value="Lab TIK 3" {{ request('ruangan') == 'Lab TIK 3' ? 'selected' : '' }}>Lab TIK 3</option>
-                            <option value="Lab TIK 4" {{ request('ruangan') == 'Lab TIK 4' ? 'selected' : '' }}>Lab TIK 4</option>
-                            <option value="Ruang Teori 1" {{ request('ruangan') == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1</option>
-                            <option value="Ruang Teori 2" {{ request('ruangan') == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2</option>
+                            <option value="Lab TIK 1" {{ request('ruangan') == 'Lab TIK 1' ? 'selected' : '' }}>Lab
+                                TIK 1</option>
+                            <option value="Lab TIK 2" {{ request('ruangan') == 'Lab TIK 2' ? 'selected' : '' }}>Lab
+                                TIK 2</option>
+                            <option value="Lab TIK 3" {{ request('ruangan') == 'Lab TIK 3' ? 'selected' : '' }}>Lab
+                                TIK 3</option>
+                            <option value="Lab TIK 4" {{ request('ruangan') == 'Lab TIK 4' ? 'selected' : '' }}>Lab
+                                TIK 4</option>
+                            <option value="Ruang Teori 1"
+                                {{ request('ruangan') == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1</option>
+                            <option value="Ruang Teori 2"
+                                {{ request('ruangan') == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="semester">Semester</label>
                         <select id="semester" name="semester">
                             <option value="">Semua Semester</option>
-                            @for($i = 1; $i <= 8; $i++)
-                                <option value="{{ $i }}" {{ request('semester') == $i ? 'selected' : '' }}>Semester {{ $i }}</option>
+                            @for ($i = 1; $i <= 8; $i++)
+                                <option value="{{ $i }}"
+                                    {{ request('semester') == $i ? 'selected' : '' }}>Semester {{ $i }}
+                                </option>
                             @endfor
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="sort">Urutkan</label>
                         <select id="sort" name="sort">
-                            <option value="hari" {{ request('sort', 'hari') == 'hari' ? 'selected' : '' }}>Hari</option>
+                            <option value="hari" {{ request('sort', 'hari') == 'hari' ? 'selected' : '' }}>Hari
+                            </option>
                             <option value="waktu" {{ request('sort') == 'waktu' ? 'selected' : '' }}>Waktu</option>
-                            <option value="matakuliah" {{ request('sort') == 'matakuliah' ? 'selected' : '' }}>Mata Kuliah</option>
+                            <option value="matakuliah" {{ request('sort') == 'matakuliah' ? 'selected' : '' }}>Mata
+                                Kuliah</option>
                         </select>
                     </div>
                     <div class="filter-actions">
@@ -1605,7 +1648,7 @@
                 </form>
             </div>
 
-<!-- Table -->
+            <!-- Table -->
             <div style="overflow-x: auto;">
                 <table class="table">
                     <thead>
@@ -1634,8 +1677,9 @@
                                 <td>{{ $item->kelas_mahasiswa ?? '-' }}</td>
                                 <td>{{ $item->sebaran_mahasiswa ?? '-' }}</td>
                                 <td>
-                                    @if($item->hari)
-                                        <span class="badge status-{{ strtolower($item->hari) }}">{{ $item->hari }}</span>
+                                    @if ($item->hari)
+                                        <span
+                                            class="badge status-{{ strtolower($item->hari) }}">{{ $item->hari }}</span>
                                     @else
                                         -
                                     @endif
@@ -1647,13 +1691,16 @@
                                 <td>
                                     <div class="action-buttons">
                                         <!-- GANTI LINK EDIT DENGAN BUTTON MODAL -->
-                                        <button type="button" class="btn-warning-custom" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
+                                        <button type="button" class="btn-warning-custom" data-bs-toggle="modal"
+                                            data-bs-target="#editModal{{ $item->id }}">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
-                                        <form action="{{ route('jadwal-perkuliahan.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('jadwal-perkuliahan.destroy', $item->id) }}"
+                                            method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn-danger-custom" onclick="return confirm('Hapus jadwal {{ $item->kode_matkul }}?')">
+                                            <button type="submit" class="btn-danger-custom"
+                                                onclick="return confirm('Hapus jadwal {{ $item->kode_matkul }}?')">
                                                 <i class="fas fa-trash"></i> Hapus
                                             </button>
                                         </form>
@@ -1664,7 +1711,7 @@
                             <tr>
                                 <td colspan="12" class="empty-state">
                                     <i class="fas fa-calendar-times"></i><br>
-                                    @if(request()->anyFilled(['search', 'hari', 'ruangan', 'semester']))
+                                    @if (request()->anyFilled(['search', 'hari', 'ruangan', 'semester']))
                                         Tidak ada data jadwal yang sesuai dengan filter
                                     @else
                                         Belum ada data jadwal perkuliahan
@@ -1676,512 +1723,610 @@
                 </table>
             </div>
 
-        <!-- Pagination -->
-        @if($jadwal->hasPages())
-        <div class="pagination-container">
-            <nav>
-                <ul class="pagination">
-                    {{-- Previous Page Link --}}
-                    @if($jadwal->onFirstPage())
-                        <li class="page-item disabled">
-                            <span class="page-link">Sebelumnya</span>
-                        </li>
-                    @else
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $jadwal->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}">Sebelumnya</a>
-                        </li>
-                    @endif
+            <!-- Pagination -->
+            @if ($jadwal->hasPages())
+                <div class="pagination-container">
+                    <nav>
+                        <ul class="pagination">
+                            {{-- Previous Page Link --}}
+                            @if ($jadwal->onFirstPage())
+                                <li class="page-item disabled">
+                                    <span class="page-link">Sebelumnya</span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="{{ $jadwal->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}">Sebelumnya</a>
+                                </li>
+                            @endif
 
-                    {{-- Pagination Elements --}}
-                    @for($page = 1; $page <= $jadwal->lastPage(); $page++)
-                        @if($page == $jadwal->currentPage())
-                            <li class="page-item active">
-                                <span class="page-link">{{ $page }}</span>
-                            </li>
-                        @else
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $jadwal->url($page) }}&{{ http_build_query(request()->except('page')) }}">{{ $page }}</a>
-                            </li>
-                        @endif
-                    @endfor
+                            {{-- Pagination Elements --}}
+                            @for ($page = 1; $page <= $jadwal->lastPage(); $page++)
+                                @if ($page == $jadwal->currentPage())
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ $page }}</span>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                            href="{{ $jadwal->url($page) }}&{{ http_build_query(request()->except('page')) }}">{{ $page }}</a>
+                                    </li>
+                                @endif
+                            @endfor
 
-                    {{-- Next Page Link --}}
-                    @if($jadwal->hasMorePages())
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $jadwal->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}">Selanjutnya</a>
-                        </li>
-                    @else
-                        <li class="page-item disabled">
-                            <span class="page-link">Selanjutnya</span>
-                        </li>
-                    @endif
-                </ul>
-            </nav>
-        </div>
-        @endif
-
-        <!-- Info Jumlah Data -->
-        <div style="text-align: center; margin-top: 15px; color: var(--text-light); font-size: 0.9rem;">
-            Menampilkan {{ $jadwal->firstItem() ?? 0 }} - {{ $jadwal->lastItem() ?? 0 }} dari {{ $jadwal->total() }} data
-        </div>
-
-        <!-- Success Message dengan Auto-hide -->
-        @if(session('success'))
-            <div class="alert-auto-hide" id="successAlert">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-            </div>
-        @endif
-    </div>
-    <!-- =========================== -->
-    <!-- MODAL CREATE (Tanpa AJAX) -->
-    <!-- =========================== -->
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Tambah Jadwal Perkuliahan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            {{-- Next Page Link --}}
+                            @if ($jadwal->hasMorePages())
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="{{ $jadwal->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}">Selanjutnya</a>
+                                </li>
+                            @else
+                                <li class="page-item disabled">
+                                    <span class="page-link">Selanjutnya</span>
+                                </li>
+                            @endif
+                        </ul>
+                    </nav>
                 </div>
-                <div class="modal-body">
-                    <!-- FORM CREATE SAMA PERSIS DENGAN create.blade.php -->
-                    <form action="{{ route('jadwal-perkuliahan.store') }}" method="POST">
-                        @csrf
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="hari" class="form-label">Hari <span class="text-danger">*</span></label>
-                                <select class="form-select" id="hari" name="hari" required>
-                                    <option value="">Pilih Hari</option>
-                                    <option value="Senin" {{ old('hari') == 'Senin' ? 'selected' : '' }}>Senin</option>
-                                    <option value="Selasa" {{ old('hari') == 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                                    <option value="Rabu" {{ old('hari') == 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                                    <option value="Kamis" {{ old('hari') == 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                                    <option value="Jumat" {{ old('hari') == 'Jumat' ? 'selected' : '' }}>Jumat</option>
-                                </select>
-                                @error('hari')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="jam_mulai" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai') }}" required>
-                                @error('jam_mulai')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="jam_selesai" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
-                                @error('jam_selesai')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="ruangan" class="form-label">Ruangan <span class="text-danger">*</span></label>
-                                <select class="form-select" id="ruangan" name="ruangan" required>
-                                    <option value="">Pilih Ruangan</option>
-                                    <option value="Lab TIK 1" {{ old('ruangan') == 'Lab TIK 1' ? 'selected' : '' }}>Lab TIK 1</option>
-                                    <option value="Lab TIK 2" {{ old('ruangan') == 'Lab TIK 2' ? 'selected' : '' }}>Lab TIK 2</option>
-                                    <option value="Lab TIK 3" {{ old('ruangan') == 'Lab TIK 3' ? 'selected' : '' }}>Lab TIK 3</option>
-                                    <option value="Lab TIK 4" {{ old('ruangan') == 'Lab TIK 4' ? 'selected' : '' }}>Lab TIK 4</option>
-                                    <option value="Ruang Teori 1" {{ old('ruangan') == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1</option>
-                                    <option value="Ruang Teori 2" {{ old('ruangan') == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2</option>
-                                </select>
-                                @error('ruangan')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="kode_matkul" name="kode_matkul" value="{{ old('kode_matkul') }}" required>
-                                @error('kode_matkul')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
-                                <select class="form-select" id="sistem_kuliah" name="sistem_kuliah" required>
-                                    <option value="">Pilih Sistem Kuliah</option>
-                                    <option value="Teori" {{ old('sistem_kuliah') == 'Teori' ? 'selected' : '' }}>Teori</option>
-                                    <option value="Praktikum" {{ old('sistem_kuliah') == 'Praktikum' ? 'selected' : '' }}>Praktikum</option>
-                                </select>
-                                @error('sistem_kuliah')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="nama_kelas" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nama_kelas" name="nama_kelas" value="{{ old('nama_kelas') }}" required>
-                                @error('nama_kelas')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="kelas_mahasiswa" name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa') }}" required>
-                                @error('kelas_mahasiswa')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="sebaran_mahasiswa" class="form-label">Sebaran Mahasiswa</label>
-                                <input type="text" class="form-control" id="sebaran_mahasiswa" name="sebaran_mahasiswa" value="{{ old('sebaran_mahasiswa') }}">
-                                @error('sebaran_mahasiswa')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="daya_tampung" class="form-label">Daya Tampung <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="daya_tampung" name="daya_tampung" value="{{ old('daya_tampung') }}" required>
-                                @error('daya_tampung')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
-                                <i class="fas fa-times"></i> Batal
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Simpan
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- =========================== -->
-    <!-- MODAL EDIT UNTUK SETIAP DATA -->
-    <!-- =========================== -->
-    @foreach($jadwal as $item)
-    <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Jadwal Perkuliahan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- FORM EDIT SAMA PERSIS DENGAN edit.blade.php -->
-                    <form action="{{ route('jadwal-perkuliahan.update', $item->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="edit_hari{{ $item->id }}" class="form-label">Hari <span class="text-danger">*</span></label>
-                                <select class="form-select" id="edit_hari{{ $item->id }}" name="hari" required>
-                                    <option value="">Pilih Hari</option>
-                                    <option value="Senin" {{ old('hari', $item->hari) == 'Senin' ? 'selected' : '' }}>Senin</option>
-                                    <option value="Selasa" {{ old('hari', $item->hari) == 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                                    <option value="Rabu" {{ old('hari', $item->hari) == 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                                    <option value="Kamis" {{ old('hari', $item->hari) == 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                                    <option value="Jumat" {{ old('hari', $item->hari) == 'Jumat' ? 'selected' : '' }}>Jumat</option>
-                                </select>
-                                @error('hari')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="edit_jam_mulai{{ $item->id }}" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="edit_jam_mulai{{ $item->id }}" name="jam_mulai" value="{{ old('jam_mulai', $item->jam_mulai) }}" required>
-                                @error('jam_mulai')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="edit_jam_selesai{{ $item->id }}" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="edit_jam_selesai{{ $item->id }}" name="jam_selesai" value="{{ old('jam_selesai', $item->jam_selesai) }}" required>
-                                @error('jam_selesai')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="edit_ruangan{{ $item->id }}" class="form-label">Ruangan <span class="text-danger">*</span></label>
-                                <select class="form-select" id="edit_ruangan{{ $item->id }}" name="ruangan" required>
-                                    <option value="">Pilih Ruangan</option>
-                                    <option value="Lab TIK 1" {{ old('ruangan', $item->ruangan) == 'Lab TIK 1' ? 'selected' : '' }}>Lab TIK 1</option>
-                                    <option value="Lab TIK 2" {{ old('ruangan', $item->ruangan) == 'Lab TIK 2' ? 'selected' : '' }}>Lab TIK 2</option>
-                                    <option value="Lab TIK 3" {{ old('ruangan', $item->ruangan) == 'Lab TIK 3' ? 'selected' : '' }}>Lab TIK 3</option>
-                                    <option value="Lab TIK 4" {{ old('ruangan', $item->ruangan) == 'Lab TIK 4' ? 'selected' : '' }}>Lab TIK 4</option>
-                                    <option value="Ruang Teori 1" {{ old('ruangan', $item->ruangan) == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1</option>
-                                    <option value="Ruang Teori 2" {{ old('ruangan', $item->ruangan) == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2</option>
-                                </select>
-                                @error('ruangan')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="edit_kode_matkul{{ $item->id }}" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_kode_matkul{{ $item->id }}" name="kode_matkul" value="{{ old('kode_matkul', $item->kode_matkul) }}" required>
-                                @error('kode_matkul')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="edit_sistem_kuliah{{ $item->id }}" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
-                                <select class="form-select" id="edit_sistem_kuliah{{ $item->id }}" name="sistem_kuliah" required>
-                                    <option value="">Pilih Sistem Kuliah</option>
-                                    <option value="Teori" {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Teori' ? 'selected' : '' }}>Teori</option>
-                                    <option value="Praktikum" {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Praktikum' ? 'selected' : '' }}>Praktikum</option>
-                                </select>
-                                @error('sistem_kuliah')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="edit_nama_kelas{{ $item->id }}" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_nama_kelas{{ $item->id }}" name="nama_kelas" value="{{ old('nama_kelas', $item->nama_kelas) }}" required>
-                                @error('nama_kelas')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="edit_kelas_mahasiswa{{ $item->id }}" class="form-label">Kelas Mahasiswa <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_kelas_mahasiswa{{ $item->id }}" name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa', $item->kelas_mahasiswa) }}" required>
-                                @error('kelas_mahasiswa')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="edit_sebaran_mahasiswa{{ $item->id }}" class="form-label">Sebaran Mahasiswa</label>
-                                <input type="text" class="form-control" id="edit_sebaran_mahasiswa{{ $item->id }}" name="sebaran_mahasiswa" value="{{ old('sebaran_mahasiswa', $item->sebaran_mahasiswa) }}">
-                                @error('sebaran_mahasiswa')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="edit_daya_tampung{{ $item->id }}" class="form-label">Daya Tampung <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="edit_daya_tampung{{ $item->id }}" name="daya_tampung" value="{{ old('daya_tampung', $item->daya_tampung) }}" required>
-                                @error('daya_tampung')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
-                                <i class="fas fa-times"></i> Batal
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Perbarui
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Toggle Dark Mode
-    const themeToggle = document.getElementById('theme-toggle');
-    
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        if (document.body.classList.contains('dark-mode')) {
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    }
-
-    themeToggle.addEventListener('click', toggleDarkMode);
-
-    // Load saved theme preference
-    document.addEventListener('DOMContentLoaded', function() {
-        const darkMode = localStorage.getItem('darkMode');
-        if (darkMode === 'enabled') {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-
-        // Auto-hide success message setelah 3 detik
-        const successAlert = document.getElementById('successAlert');
-        if (successAlert) {
-            setTimeout(() => {
-                successAlert.classList.add('hiding');
-                setTimeout(() => {
-                    successAlert.remove();
-                }, 300);
-            }, 3000);
-        }
-
-        // ==========================================
-        // VALIDASI WAKTU PADA SEMUA FORM MODAL
-        // ==========================================
-        
-        // Validasi untuk form CREATE
-        const createForm = document.querySelector('#createModal form');
-        if (createForm) {
-            initializeTimeValidation(createForm);
-        }
-        
-        // Validasi untuk semua form EDIT
-        document.querySelectorAll('[id^="editModal"] form').forEach(form => {
-            initializeTimeValidation(form);
-        });
-        
-        // ==========================================
-        // AUTO BUKA MODAL JIKA ADA ERROR VALIDASI
-        // ==========================================
-        @if($errors->any())
-            // Cek apakah error berasal dari create
-            @if(request()->isMethod('post') && !isset($jadwalPerkuliahan))
-                // Error dari create, buka modal create
-                setTimeout(function() {
-                    const createModal = new bootstrap.Modal(document.getElementById('createModal'));
-                    createModal.show();
-                }, 300);
             @endif
-            
-            // Untuk error edit, modal akan terbuka ketika user klik edit lagi
-        @endif
-    });
 
-    // Filter dari stats cards
-    function filterByDay(hari) {
-        document.getElementById('hari').value = hari;
-        document.getElementById('filterForm').submit();
-    }
+            <!-- Info Jumlah Data -->
+            <div style="text-align: center; margin-top: 15px; color: var(--text-light); font-size: 0.9rem;">
+                Menampilkan {{ $jadwal->firstItem() ?? 0 }} - {{ $jadwal->lastItem() ?? 0 }} dari
+                {{ $jadwal->total() }} data
+            </div>
 
-    // Auto submit filter changes
-    document.getElementById('hari').addEventListener('change', function() {
-        document.getElementById('filterForm').submit();
-    });
+            <!-- Success Message dengan Auto-hide -->
+            @if (session('success'))
+                <div class="alert-auto-hide" id="successAlert">
+                    <i class="fas fa-check-circle"></i> {{ session('success') }}
+                </div>
+            @endif
+        </div>
+        <!-- =========================== -->
+        <!-- MODAL CREATE (Tanpa AJAX) -->
+        <!-- =========================== -->
+        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Tambah Jadwal Perkuliahan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- FORM CREATE SAMA PERSIS DENGAN create.blade.php -->
+                        <form action="{{ route('jadwal-perkuliahan.store') }}" method="POST">
+                            @csrf
 
-    document.getElementById('ruangan').addEventListener('change', function() {
-        document.getElementById('filterForm').submit();
-    });
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="hari" class="form-label">Hari <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="hari" name="hari" required>
+                                        <option value="">Pilih Hari</option>
+                                        <option value="Senin" {{ old('hari') == 'Senin' ? 'selected' : '' }}>Senin
+                                        </option>
+                                        <option value="Selasa" {{ old('hari') == 'Selasa' ? 'selected' : '' }}>Selasa
+                                        </option>
+                                        <option value="Rabu" {{ old('hari') == 'Rabu' ? 'selected' : '' }}>Rabu
+                                        </option>
+                                        <option value="Kamis" {{ old('hari') == 'Kamis' ? 'selected' : '' }}>Kamis
+                                        </option>
+                                        <option value="Jumat" {{ old('hari') == 'Jumat' ? 'selected' : '' }}>Jumat
+                                        </option>
+                                    </select>
+                                    @error('hari')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="jam_mulai" class="form-label">Jam Mulai <span
+                                            class="text-danger">*</span></label>
+                                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai"
+                                        value="{{ old('jam_mulai') }}" required>
+                                    @error('jam_mulai')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
-    document.getElementById('semester').addEventListener('change', function() {
-        document.getElementById('filterForm').submit();
-    });
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="jam_selesai" class="form-label">Jam Selesai <span
+                                            class="text-danger">*</span></label>
+                                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai"
+                                        value="{{ old('jam_selesai') }}" required>
+                                    @error('jam_selesai')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ruangan" class="form-label">Ruangan <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="ruangan" name="ruangan" required>
+                                        <option value="">Pilih Ruangan</option>
+                                        <option value="Lab TIK 1"
+                                            {{ old('ruangan') == 'Lab TIK 1' ? 'selected' : '' }}>Lab TIK 1</option>
+                                        <option value="Lab TIK 2"
+                                            {{ old('ruangan') == 'Lab TIK 2' ? 'selected' : '' }}>Lab TIK 2</option>
+                                        <option value="Lab TIK 3"
+                                            {{ old('ruangan') == 'Lab TIK 3' ? 'selected' : '' }}>Lab TIK 3</option>
+                                        <option value="Lab TIK 4"
+                                            {{ old('ruangan') == 'Lab TIK 4' ? 'selected' : '' }}>Lab TIK 4</option>
+                                        <option value="Ruang Teori 1"
+                                            {{ old('ruangan') == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1
+                                        </option>
+                                        <option value="Ruang Teori 2"
+                                            {{ old('ruangan') == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2
+                                        </option>
+                                    </select>
+                                    @error('ruangan')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
-    document.getElementById('sort').addEventListener('change', function() {
-        document.getElementById('filterForm').submit();
-    });
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="kode_matkul" name="kode_matkul"
+                                        value="{{ old('kode_matkul') }}" required>
+                                    @error('kode_matkul')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="sistem_kuliah" name="sistem_kuliah" required>
+                                        <option value="">Pilih Sistem Kuliah</option>
+                                        <option value="Teori"
+                                            {{ old('sistem_kuliah') == 'Teori' ? 'selected' : '' }}>Teori</option>
+                                        <option value="Praktikum"
+                                            {{ old('sistem_kuliah') == 'Praktikum' ? 'selected' : '' }}>Praktikum
+                                        </option>
+                                    </select>
+                                    @error('sistem_kuliah')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
-    // Auto submit search dengan debounce
-    let searchTimeout;
-    document.getElementById('search').addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            document.getElementById('filterForm').submit();
-        }, 800);
-    });
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nama_kelas" class="form-label">Nama Kelas <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nama_kelas" name="nama_kelas"
+                                        value="{{ old('nama_kelas') }}" required>
+                                    @error('nama_kelas')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="kelas_mahasiswa"
+                                        name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa') }}" required>
+                                    @error('kelas_mahasiswa')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
-    // Global search
-    document.getElementById('globalSearch').addEventListener('input', function() {
-        document.getElementById('search').value = this.value;
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            document.getElementById('filterForm').submit();
-        }, 800);
-    });
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="sebaran_mahasiswa" class="form-label">Sebaran Mahasiswa</label>
+                                    <input type="text" class="form-control" id="sebaran_mahasiswa"
+                                        name="sebaran_mahasiswa" value="{{ old('sebaran_mahasiswa') }}">
+                                    @error('sebaran_mahasiswa')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="daya_tampung" class="form-label">Daya Tampung <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="daya_tampung" name="daya_tampung"
+                                        value="{{ old('daya_tampung') }}" required>
+                                    @error('daya_tampung')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
-    // Konfirmasi hapus semua data
-    function confirmDeleteAll() {
-        const totalData = {{ $jadwal->total() ?? 0 }};
-        if (totalData === 0) {
-            alert('Tidak ada data yang bisa dihapus!');
-            return false;
-        }
-        
-        return confirm(`Apakah Anda yakin ingin menghapus SEMUA data jadwal perkuliahan?\n\nTotal data yang akan dihapus: ${totalData} jadwal\n\nTindakan ini tidak dapat dibatalkan!`);
-    }
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i> Batal
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Simpan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    // Konfirmasi hapus single data dengan SweetAlert (optional)
-    function confirmDeleteSingle(event, kodeMatkul) {
-        if (!confirm(`Hapus jadwal ${kodeMatkul}?`)) {
-            event.preventDefault();
-        }
-    }
+        <!-- =========================== -->
+        <!-- MODAL EDIT UNTUK SETIAP DATA -->
+        <!-- =========================== -->
+        @foreach ($jadwal as $item)
+            <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
+                aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Jadwal Perkuliahan
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- FORM EDIT SAMA PERSIS DENGAN edit.blade.php -->
+                            <form action="{{ route('jadwal-perkuliahan.update', $item->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
 
-    // ==========================================
-    // FUNGSI VALIDASI WAKTU
-    // ==========================================
-    function initializeTimeValidation(form) {
-        const jamMulai = form.querySelector('[name="jam_mulai"]');
-        const jamSelesai = form.querySelector('[name="jam_selesai"]');
-        
-        if (jamMulai && jamSelesai) {
-            // Fungsi validasi
-            function validateTime() {
-                if (jamMulai.value && jamSelesai.value) {
-                    if (jamMulai.value >= jamSelesai.value) {
-                        jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
-                        jamSelesai.reportValidity();
-                        return false;
-                    } else {
-                        jamSelesai.setCustomValidity('');
-                    }
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="edit_hari{{ $item->id }}" class="form-label">Hari <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_hari{{ $item->id }}"
+                                            name="hari" required>
+                                            <option value="">Pilih Hari</option>
+                                            <option value="Senin"
+                                                {{ old('hari', $item->hari) == 'Senin' ? 'selected' : '' }}>Senin
+                                            </option>
+                                            <option value="Selasa"
+                                                {{ old('hari', $item->hari) == 'Selasa' ? 'selected' : '' }}>Selasa
+                                            </option>
+                                            <option value="Rabu"
+                                                {{ old('hari', $item->hari) == 'Rabu' ? 'selected' : '' }}>Rabu
+                                            </option>
+                                            <option value="Kamis"
+                                                {{ old('hari', $item->hari) == 'Kamis' ? 'selected' : '' }}>Kamis
+                                            </option>
+                                            <option value="Jumat"
+                                                {{ old('hari', $item->hari) == 'Jumat' ? 'selected' : '' }}>Jumat
+                                            </option>
+                                        </select>
+                                        @error('hari')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="edit_jam_mulai{{ $item->id }}" class="form-label">Jam Mulai
+                                            <span class="text-danger">*</span></label>
+                                        <input type="time" class="form-control"
+                                            id="edit_jam_mulai{{ $item->id }}" name="jam_mulai"
+                                            value="{{ old('jam_mulai', $item->jam_mulai) }}" required>
+                                        @error('jam_mulai')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="edit_jam_selesai{{ $item->id }}" class="form-label">Jam
+                                            Selesai <span class="text-danger">*</span></label>
+                                        <input type="time" class="form-control"
+                                            id="edit_jam_selesai{{ $item->id }}" name="jam_selesai"
+                                            value="{{ old('jam_selesai', $item->jam_selesai) }}" required>
+                                        @error('jam_selesai')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="edit_ruangan{{ $item->id }}" class="form-label">Ruangan
+                                            <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_ruangan{{ $item->id }}"
+                                            name="ruangan" required>
+                                            <option value="">Pilih Ruangan</option>
+                                            <option value="Lab TIK 1"
+                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 1' ? 'selected' : '' }}>
+                                                Lab TIK 1</option>
+                                            <option value="Lab TIK 2"
+                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 2' ? 'selected' : '' }}>
+                                                Lab TIK 2</option>
+                                            <option value="Lab TIK 3"
+                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 3' ? 'selected' : '' }}>
+                                                Lab TIK 3</option>
+                                            <option value="Lab TIK 4"
+                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 4' ? 'selected' : '' }}>
+                                                Lab TIK 4</option>
+                                            <option value="Ruang Teori 1"
+                                                {{ old('ruangan', $item->ruangan) == 'Ruang Teori 1' ? 'selected' : '' }}>
+                                                Ruang Teori 1</option>
+                                            <option value="Ruang Teori 2"
+                                                {{ old('ruangan', $item->ruangan) == 'Ruang Teori 2' ? 'selected' : '' }}>
+                                                Ruang Teori 2</option>
+                                        </select>
+                                        @error('ruangan')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="edit_kode_matkul{{ $item->id }}" class="form-label">Kode
+                                            Mata Kuliah <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                            id="edit_kode_matkul{{ $item->id }}" name="kode_matkul"
+                                            value="{{ old('kode_matkul', $item->kode_matkul) }}" required>
+                                        @error('kode_matkul')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="edit_sistem_kuliah{{ $item->id }}" class="form-label">Sistem
+                                            Kuliah <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_sistem_kuliah{{ $item->id }}"
+                                            name="sistem_kuliah" required>
+                                            <option value="">Pilih Sistem Kuliah</option>
+                                            <option value="Teori"
+                                                {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Teori' ? 'selected' : '' }}>
+                                                Teori</option>
+                                            <option value="Praktikum"
+                                                {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Praktikum' ? 'selected' : '' }}>
+                                                Praktikum</option>
+                                        </select>
+                                        @error('sistem_kuliah')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="edit_nama_kelas{{ $item->id }}" class="form-label">Nama
+                                            Kelas <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                            id="edit_nama_kelas{{ $item->id }}" name="nama_kelas"
+                                            value="{{ old('nama_kelas', $item->nama_kelas) }}" required>
+                                        @error('nama_kelas')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="edit_kelas_mahasiswa{{ $item->id }}"
+                                            class="form-label">Kelas Mahasiswa <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                            id="edit_kelas_mahasiswa{{ $item->id }}" name="kelas_mahasiswa"
+                                            value="{{ old('kelas_mahasiswa', $item->kelas_mahasiswa) }}" required>
+                                        @error('kelas_mahasiswa')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="edit_sebaran_mahasiswa{{ $item->id }}"
+                                            class="form-label">Sebaran Mahasiswa</label>
+                                        <input type="text" class="form-control"
+                                            id="edit_sebaran_mahasiswa{{ $item->id }}" name="sebaran_mahasiswa"
+                                            value="{{ old('sebaran_mahasiswa', $item->sebaran_mahasiswa) }}">
+                                        @error('sebaran_mahasiswa')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="edit_daya_tampung{{ $item->id }}" class="form-label">Daya
+                                            Tampung <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control"
+                                            id="edit_daya_tampung{{ $item->id }}" name="daya_tampung"
+                                            value="{{ old('daya_tampung', $item->daya_tampung) }}" required>
+                                        @error('daya_tampung')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                                        <i class="fas fa-times"></i> Batal
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Perbarui
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Toggle Dark Mode
+            const themeToggle = document.getElementById('theme-toggle');
+
+            function toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('darkMode', 'disabled');
                 }
-                return true;
             }
-            
-            // Event listeners
-            jamMulai.addEventListener('change', validateTime);
-            jamSelesai.addEventListener('change', validateTime);
-            
-            // Validasi sebelum submit
-            form.addEventListener('submit', function(e) {
-                if (!validateTime()) {
-                    e.preventDefault();
+
+            themeToggle.addEventListener('click', toggleDarkMode);
+
+            // Load saved theme preference
+            document.addEventListener('DOMContentLoaded', function() {
+                const darkMode = localStorage.getItem('darkMode');
+                if (darkMode === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+
+                // Auto-hide success message setelah 3 detik
+                const successAlert = document.getElementById('successAlert');
+                if (successAlert) {
+                    setTimeout(() => {
+                        successAlert.classList.add('hiding');
+                        setTimeout(() => {
+                            successAlert.remove();
+                        }, 300);
+                    }, 3000);
+                }
+
+                // ==========================================
+                // VALIDASI WAKTU PADA SEMUA FORM MODAL
+                // ==========================================
+
+                // Validasi untuk form CREATE
+                const createForm = document.querySelector('#createModal form');
+                if (createForm) {
+                    initializeTimeValidation(createForm);
+                }
+
+                // Validasi untuk semua form EDIT
+                document.querySelectorAll('[id^="editModal"] form').forEach(form => {
+                    initializeTimeValidation(form);
+                });
+
+                // ==========================================
+                // AUTO BUKA MODAL JIKA ADA ERROR VALIDASI
+                // ==========================================
+                @if ($errors->any())
+                    // Cek apakah error berasal dari create
+                    @if (request()->isMethod('post') && !isset($jadwalPerkuliahan))
+                        // Error dari create, buka modal create
+                        setTimeout(function() {
+                            const createModal = new bootstrap.Modal(document.getElementById('createModal'));
+                            createModal.show();
+                        }, 300);
+                    @endif
+
+                    // Untuk error edit, modal akan terbuka ketika user klik edit lagi
+                @endif
+            });
+
+            // Filter dari stats cards
+            function filterByDay(hari) {
+                document.getElementById('hari').value = hari;
+                document.getElementById('filterForm').submit();
+            }
+
+            // Auto submit filter changes
+            document.getElementById('hari').addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            document.getElementById('ruangan').addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            document.getElementById('semester').addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            document.getElementById('sort').addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            // Auto submit search dengan debounce
+            let searchTimeout;
+            document.getElementById('search').addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    document.getElementById('filterForm').submit();
+                }, 800);
+            });
+
+            // Global search
+            document.getElementById('globalSearch').addEventListener('input', function() {
+                document.getElementById('search').value = this.value;
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    document.getElementById('filterForm').submit();
+                }, 800);
+            });
+
+            // Konfirmasi hapus semua data
+            function confirmDeleteAll() {
+                const totalData = {{ $jadwal->total() ?? 0 }};
+                if (totalData === 0) {
+                    alert('Tidak ada data yang bisa dihapus!');
                     return false;
                 }
-                return true;
-            });
-        }
-    }
 
-    // ==========================================
-    // FUNGSI UNTUK MENGHANDLE ERROR PADA MODAL
-    // ==========================================
-    // Reset form validation ketika modal ditutup
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('hidden.bs.modal', function () {
-            // Reset semua validasi custom
-            const form = this.querySelector('form');
-            if (form) {
-                const jamSelesai = form.querySelector('[name="jam_selesai"]');
-                if (jamSelesai) {
-                    jamSelesai.setCustomValidity('');
+                return confirm(
+                    `Apakah Anda yakin ingin menghapus SEMUA data jadwal perkuliahan?\n\nTotal data yang akan dihapus: ${totalData} jadwal\n\nTindakan ini tidak dapat dibatalkan!`
+                    );
+            }
+
+            // Konfirmasi hapus single data dengan SweetAlert (optional)
+            function confirmDeleteSingle(event, kodeMatkul) {
+                if (!confirm(`Hapus jadwal ${kodeMatkul}?`)) {
+                    event.preventDefault();
                 }
             }
-        });
-    });
-</script>
+
+            // ==========================================
+            // FUNGSI VALIDASI WAKTU
+            // ==========================================
+            function initializeTimeValidation(form) {
+                const jamMulai = form.querySelector('[name="jam_mulai"]');
+                const jamSelesai = form.querySelector('[name="jam_selesai"]');
+
+                if (jamMulai && jamSelesai) {
+                    // Fungsi validasi
+                    function validateTime() {
+                        if (jamMulai.value && jamSelesai.value) {
+                            if (jamMulai.value >= jamSelesai.value) {
+                                jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
+                                jamSelesai.reportValidity();
+                                return false;
+                            } else {
+                                jamSelesai.setCustomValidity('');
+                            }
+                        }
+                        return true;
+                    }
+
+                    // Event listeners
+                    jamMulai.addEventListener('change', validateTime);
+                    jamSelesai.addEventListener('change', validateTime);
+
+                    // Validasi sebelum submit
+                    form.addEventListener('submit', function(e) {
+                        if (!validateTime()) {
+                            e.preventDefault();
+                            return false;
+                        }
+                        return true;
+                    });
+                }
+            }
+
+            // ==========================================
+            // FUNGSI UNTUK MENGHANDLE ERROR PADA MODAL
+            // ==========================================
+            // Reset form validation ketika modal ditutup
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('hidden.bs.modal', function() {
+                    // Reset semua validasi custom
+                    const form = this.querySelector('form');
+                    if (form) {
+                        const jamSelesai = form.querySelector('[name="jam_selesai"]');
+                        if (jamSelesai) {
+                            jamSelesai.setCustomValidity('');
+                        }
+                    }
+                });
+            });
+        </script>
 </body>
+
 </html>
