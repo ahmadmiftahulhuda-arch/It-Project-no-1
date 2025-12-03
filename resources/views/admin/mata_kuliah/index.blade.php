@@ -859,13 +859,119 @@
             Menampilkan {{ $mataKuliahs->firstItem() ?? 0 }} - {{ $mataKuliahs->lastItem() ?? 0 }} dari {{ $mataKuliahs->total() }} data
         </div>
 
-    </main>
+    </div> {{-- tutup .main-content --}}
 
-    <!-- Modals -->
-    @include('admin.mata_kuliah._modal_create')
-    @include('admin.mata_kuliah._modal_edit')
-    @include('admin.mata_kuliah._modal_detail')
+    <!-- ===================================== -->
+    <!-- MODAL CREATE -->
+    <!-- ===================================== -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Tambah Mata Kuliah Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('mata_kuliah.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="create_nama" class="form-label">Nama Mata Kuliah</label>
+                            <input type="text" id="create_nama" name="nama" class="form-control" placeholder="Contoh: Pemrograman Web Lanjut" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="create_kode" class="form-label">Kode</label>
+                                <input type="text" id="create_kode" name="kode" class="form-control" placeholder="Contoh: IF202" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="create_semester" class="form-label">Semester</label>
+                                <input type="number" id="create_semester" name="semester" class="form-control" placeholder="Contoh: 3" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <!-- ===================================== -->
+    <!-- MODAL DETAIL -->
+    <!-- ===================================== -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Detail Mata Kuliah</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="w-50">Nama Mata Kuliah</th>
+                                <td id="detail_nama"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Kode</th>
+                                <td id="detail_kode"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Semester</th>
+                                <td id="detail_semester"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- MODAL EDIT -->
+    <!-- ===================================== -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Mata Kuliah</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit_nama" class="form-label">Nama Mata Kuliah</label>
+                            <input type="text" id="edit_nama" name="nama" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_kode" class="form-label">Kode</label>
+                                <input type="text" id="edit_kode" name="kode" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_semester" class="form-label">Semester</label>
+                                <input type="number" id="edit_semester" name="semester" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Toggle Dark Mode
@@ -893,10 +999,6 @@
             }
         });
 
-        const createModal = document.getElementById('createModal');
-        const editModal = document.getElementById('editModal');
-        const detailModal = document.getElementById('detailModal');
-
         function openCreateModal() {
             var createModal = new bootstrap.Modal(document.getElementById('createModal'));
             createModal.show();
@@ -923,4 +1025,4 @@
     </script>
 
 </body>
-</html>  
+</html>
