@@ -14,28 +14,28 @@ class ProjectorController extends Controller
     public function index(Request $request)
     {
         $query = Projector::query();
-        
+
         // Filter berdasarkan pencarian
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('kode_proyektor', 'like', "%{$search}%")
-                  ->orWhere('merk', 'like', "%{$search}%")
-                  ->orWhere('model', 'like', "%{$search}%")
-                  ->orWhere('keterangan', 'like', "%{$search}%");
+                    ->orWhere('merk', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%")
+                    ->orWhere('keterangan', 'like', "%{$search}%");
             });
         }
-        
+
         // Filter berdasarkan status
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
-        
+
         // Filter berdasarkan merk
         if ($request->has('merk') && $request->merk != '') {
             $query->where('merk', $request->merk);
         }
-        
+
         // Sorting
         $sort = $request->get('sort', 'newest');
         switch ($sort) {
@@ -49,20 +49,20 @@ class ProjectorController extends Controller
                 $query->latest();
                 break;
         }
-        
+
         $projectors = $query->paginate(10);
-        
+
         // Hitung statistik
         $totalCount = Projector::count();
         $tersediaCount = Projector::where('status', 'tersedia')->count();
         $dipinjamCount = Projector::where('status', 'dipinjam')->count();
         $rusakCount = Projector::where('status', 'rusak')->count();
-        
+
         // Ambil daftar merk untuk filter
         $merks = Projector::distinct()->pluck('merk')->toArray();
-        
+
         return view('admin.projectors.index', compact(
-            'projectors', 
+            'projectors',
             'totalCount',
             'tersediaCount',
             'dipinjamCount',
@@ -109,8 +109,9 @@ class ProjectorController extends Controller
      */
     public function show(Projector $projector)
     {
-        return view('admin.projectors.show', compact('projector'));
+        return redirect()->route('projectors.index');
     }
+
 
     /**
      * Show the form for editing the specified resource.

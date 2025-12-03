@@ -113,8 +113,8 @@ Route::prefix('admin')->group(function () {
     // Feedback
     Route::resource('feedback', FeedbackController::class);
 
-    // Projector
-    Route::resource('projectors', ProjectorController::class);
+    // Projector 
+    Route::resource('projectors', ProjectorController::class)->except(['show']);
 
     // Jadwal Perkuliahan
     Route::resource('jadwal-perkuliahan', JadwalPerkuliahanController::class);
@@ -226,7 +226,6 @@ Route::prefix('pengembalian')->middleware('auth')->group(function () {
     // Reject pengembalian
     Route::put('/pengembalian/{id}/reject', [AdminController::class, 'rejectPengembalian'])
         ->name('admin.pengembalian.reject');
-
 });
 
 
