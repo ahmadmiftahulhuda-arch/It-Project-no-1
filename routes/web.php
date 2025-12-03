@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\PeminjamanController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Exports\RiwayatExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProjectorController;
 use App\Http\Controllers\GoogleAuthController;
@@ -122,17 +124,17 @@ Route::prefix('admin')->group(function () {
 
     // Ruangan, Mata Kuliah, Slot Waktu
     Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('slotwaktu', App\Http\Controllers\SlotWaktuController::class);
-});
+        Route::resource('slotwaktu', App\Http\Controllers\SlotWaktuController::class);
+    });
     Route::resource('ruangan', RuanganController::class);
     Route::resource('mata_kuliah', MataKuliahController::class);
     Route::resource('slotwaktu', SlotWaktuController::class);
 
     // Kelas & Mahasiswa
     Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('kelas', KelasController::class);
-    Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
-});
+        Route::resource('kelas', KelasController::class);
+        Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
+    });
     Route::resource('kelas', KelasController::class);
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
@@ -149,7 +151,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.peminjaman.destroy');
     });
 
-Route::prefix('pengembalian')->group(function () {
+    Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
         Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
         Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])
@@ -163,6 +165,9 @@ Route::prefix('pengembalian')->group(function () {
         Route::put('/{id}', [AdminController::class, 'updateRiwayat'])->name('admin.riwayat.update');
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
     });
+    Route::get('/riwayat/export', function (Request $request) {
+        return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
+    })->name('admin.riwayat.export');
 });
 
 // ================================
