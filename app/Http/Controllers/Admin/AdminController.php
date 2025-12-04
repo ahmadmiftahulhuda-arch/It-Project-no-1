@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Exports\PeminjamanExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log; // <-- Ditambahkan
 
 class AdminController extends Controller

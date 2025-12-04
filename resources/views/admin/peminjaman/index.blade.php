@@ -782,7 +782,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -793,10 +794,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -819,10 +821,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -837,10 +840,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -863,10 +867,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -877,10 +882,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -904,7 +910,8 @@
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.peminjaman.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" name="search" placeholder="Cari peminjaman..." value="{{ request('search') }}">
+                <input type="text" name="search" placeholder="Cari peminjaman..."
+                    value="{{ request('search') }}">
                 <button type="submit" style="display: none;"></button>
             </form>
 
@@ -933,14 +940,10 @@
                 <h1>Dashboard Peminjaman</h1>
                 <p>Kelola proses peminjaman barang Lab Teknologi Informasi</p>
             </div>
-            <div class="action-buttons">
-                <button class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Ekspor
-                </button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                    <i class="fas fa-plus"></i> Tambah Peminjaman
-                </button>
-            </div>
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                <i class="fas fa-plus"></i> Tambah Peminjaman
+            </button>
         </div>
 
         <!-- Stats Cards -->
@@ -1017,19 +1020,33 @@
                             <option value="Lab A" {{ request('ruang') == 'Lab A' ? 'selected' : '' }}>Lab A</option>
                             <option value="Lab B" {{ request('ruang') == 'Lab B' ? 'selected' : '' }}>Lab B</option>
                             <option value="Lab C" {{ request('ruang') == 'Lab C' ? 'selected' : '' }}>Lab C</option>
-                            <option value="Ruang Meeting" {{ request('ruang') == 'Ruang Meeting' ? 'selected' : '' }}>Ruang Meeting</option>
-                            <option value="Ruang Seminar" {{ request('ruang') == 'Ruang Seminar' ? 'selected' : '' }}>Ruang Seminar</option>
+                            <option value="Ruang Meeting" {{ request('ruang') == 'Ruang Meeting' ? 'selected' : '' }}>
+                                Ruang Meeting</option>
+                            <option value="Ruang Seminar" {{ request('ruang') == 'Ruang Seminar' ? 'selected' : '' }}>
+                                Ruang Seminar</option>
                         </select>
                     </div>
                 </div>
-                <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Terapkan Filter
-                    </button>
-                    <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-refresh me-1"></i> Reset
+                <div class="d-flex justify-content-between align-items-center mt-3">
+
+                    <!-- Tombol kiri (Filter + Reset) -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fas fa-filter me-1"></i> Terapkan Filter
+                        </button>
+
+                        <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline btn-sm">
+                            <i class="fas fa-refresh me-1"></i> Reset
+                        </a>
+                    </div>
+
+                    <!-- Tombol kanan (Ekspor) -->
+                    <a href="{{ route('admin.peminjaman.export') }}" class="btn btn-outline btn-sm">
+                        <i class="fas fa-file-export me-1"></i> Ekspor
                     </a>
+
                 </div>
+
             </form>
         </div>
 
@@ -1055,12 +1072,13 @@
                                 $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
                                 $isToday = $tanggal->isToday();
                                 $now = \Carbon\Carbon::now();
-                                
+
                                 // Cek apakah sedang berlangsung (hari ini, disetujui, dan dalam rentang waktu)
-                                $isOngoing = $isToday && 
-                                            $peminjaman->status === 'disetujui' && 
-                                            $now->format('H:i:s') >= ($peminjaman->waktu_mulai ?? '00:00:00') && 
-                                            $now->format('H:i:s') <= ($peminjaman->waktu_selesai ?? '23:59:59');
+                                $isOngoing =
+                                    $isToday &&
+                                    $peminjaman->status === 'disetujui' &&
+                                    $now->format('H:i:s') >= ($peminjaman->waktu_mulai ?? '00:00:00') &&
+                                    $now->format('H:i:s') <= ($peminjaman->waktu_selesai ?? '23:59:59');
                             @endphp
 
                             <tr data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
@@ -1087,7 +1105,8 @@
                                     <div>
                                         <span class="badge bg-light text-dark">
                                             <i class="fas fa-clock me-1"></i>
-                                            {{ $peminjaman->waktu_mulai ?? '08:00' }} - {{ $peminjaman->waktu_selesai ?? '17:00' }}
+                                            {{ $peminjaman->waktu_mulai ?? '08:00' }} -
+                                            {{ $peminjaman->waktu_selesai ?? '17:00' }}
                                         </span>
                                     </div>
                                 </td>
@@ -1098,8 +1117,9 @@
                                 <td>
                                     @if ($peminjaman->projector)
                                         <div>
-                                            <strong>{{ $peminjaman->projector->kode_proyektor ?? ('ID:' . $peminjaman->projector->id) }}</strong>
-                                            <div class="text-muted small">{{ $peminjaman->projector->merk ?? '' }} {{ $peminjaman->projector->model ?? '' }}</div>
+                                            <strong>{{ $peminjaman->projector->kode_proyektor ?? 'ID:' . $peminjaman->projector->id }}</strong>
+                                            <div class="text-muted small">{{ $peminjaman->projector->merk ?? '' }}
+                                                {{ $peminjaman->projector->model ?? '' }}</div>
                                         </div>
                                     @else
                                         <span class="badge bg-secondary">Tidak</span>
@@ -1151,7 +1171,7 @@
                                         @endif
 
                                         <!-- Tombol Detail -->
-                                        <button class="btn btn-info-custom btn-sm view-detail" 
+                                        <button class="btn btn-info-custom btn-sm view-detail"
                                             data-id="{{ $peminjaman->id }}"
                                             data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
                                             data-nim="{{ $peminjaman->user->nim ?? '-' }}"
@@ -1163,7 +1183,7 @@
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
-                                            data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
+                                            data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}"
                                             data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
@@ -1183,7 +1203,7 @@
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
-                                            data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : '0' }}"
+                                            data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : '0' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}">
                                             <i class="fas fa-edit me-1"></i> Edit
@@ -1262,12 +1282,15 @@
         @endif
 
         <!-- Modal Detail Peminjaman -->
-        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-info-circle me-2"></i> Detail Peminjaman</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-info-circle me-2"></i> Detail
+                            Peminjaman</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="modalBody">
                         <!-- Konten akan diisi oleh JavaScript -->
@@ -1296,31 +1319,38 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="peminjam" class="form-label">Nama Peminjam</label>
-                                    <input type="text" class="form-control" id="peminjam" name="peminjam" readonly>
+                                    <input type="text" class="form-control" id="peminjam" name="peminjam"
+                                        readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="nim" class="form-label">NIM</label>
-                                    <input type="text" class="form-control" id="nim" name="nim" readonly>
+                                    <input type="text" class="form-control" id="nim" name="nim"
+                                        readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="prodi" class="form-label">Program Studi</label>
-                                    <input type="text" class="form-control" id="prodi" name="prodi" readonly>
+                                    <input type="text" class="form-control" id="prodi" name="prodi"
+                                        readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" readonly>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="tanggal" class="form-label">Tanggal</label>
-                                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                                    <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                        required>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="waktu_mulai" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="waktu_mulai" name="waktu_mulai" required>
+                                    <input type="time" class="form-control" id="waktu_mulai" name="waktu_mulai"
+                                        required>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="waktu_selesai" class="form-label">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="waktu_selesai" name="waktu_selesai" required>
+                                    <input type="time" class="form-control" id="waktu_selesai"
+                                        name="waktu_selesai" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="ruang" class="form-label">Ruang</label>
@@ -1457,20 +1487,25 @@
 
                     let statusBadge = '';
                     if (isOngoing) {
-                        statusBadge = '<span class="badge status-badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
+                        statusBadge =
+                            '<span class="badge status-badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
                     } else {
-                        switch(status) {
+                        switch (status) {
                             case 'disetujui':
-                                statusBadge = '<span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                                statusBadge =
+                                    '<span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
                                 break;
                             case 'selesai':
-                                statusBadge = '<span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
+                                statusBadge =
+                                    '<span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
                                 break;
                             case 'ditolak':
-                                statusBadge = '<span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
+                                statusBadge =
+                                    '<span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
                                 break;
                             default:
-                                statusBadge = '<span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
+                                statusBadge =
+                                    '<span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
                         }
                     }
 

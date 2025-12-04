@@ -1163,7 +1163,7 @@
                                         class="form-control @error('peran') is-invalid @enderror" 
                                         required>
                                     <option value="">Pilih Peran</option>
-                                    <option value="Admin Lab" {{ old('peran') == 'Admin Lab' ? 'selected' : '' }}>Admin Lab</option>
+                                    <option value="Administrator" {{ old('peran') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
                                     <option value="Asisten" {{ old('peran') == 'Asisten' ? 'selected' : '' }}>Asisten</option>
                                     <option value="Mahasiswa" {{ old('peran') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                                 </select>

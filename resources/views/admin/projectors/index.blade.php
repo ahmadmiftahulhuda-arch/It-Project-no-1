@@ -2208,8 +2208,7 @@
                 const keterangan = button.getAttribute('data-keterangan');
                 
                 // Update modal content
-                document.getElementById('editProjectorForm').action = `/projectors/${projectorId}`;
-                document.getElementById('edit_kode_proyektor').value = kodeProyektor;
+                document.getElementById('editProjectorForm').action = `/admin/projectors/${projectorId}`;                document.getElementById('edit_kode_proyektor').value = kodeProyektor;
                 document.getElementById('edit_merk').value = merk;
                 document.getElementById('edit_model').value = model;
                 document.getElementById('edit_status').value = status;

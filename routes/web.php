@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\PeminjamanController;
+use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Exports\RiwayatExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PeminjamanExport;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProjectorController;
 use App\Http\Controllers\GoogleAuthController;
@@ -23,6 +25,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Models\Ruangan;
 use App\Models\SlotWaktu;
 use App\Models\Projector;
+use App\Http\Controllers\Admin\AHPController;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -108,13 +111,16 @@ Route::prefix('admin')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
+    // Admin authentication (login/logout)
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
     // Feedback
     Route::resource('feedback', FeedbackController::class);
 
-    // Projector
-    Route::resource('projectors', ProjectorController::class);
+    // Projector 
+    Route::resource('projectors', ProjectorController::class)->except(['show']);
 
     // Jadwal Perkuliahan
     Route::resource('jadwal-perkuliahan', JadwalPerkuliahanController::class);
@@ -150,6 +156,11 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [AdminController::class, 'update'])->name('admin.peminjaman.update');
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.peminjaman.destroy');
     });
+
+    // --- EKSPORT EXCEL PEMINJAMAN ---
+    Route::get('/peminjaman-export', function () {
+        return Excel::download(new PeminjamanExport, 'data_peminjaman.xlsx');
+    })->name('admin.peminjaman.export');
 
     Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
@@ -226,9 +237,16 @@ Route::prefix('pengembalian')->middleware('auth')->group(function () {
     // Reject pengembalian
     Route::put('/pengembalian/{id}/reject', [AdminController::class, 'rejectPengembalian'])
         ->name('admin.pengembalian.reject');
-
 });
 
+Route::prefix('admin')->group(function () {
+
+    Route::get('/ahp-settings', [AHPController::class, 'index'])
+        ->name('admin.ahp.settings');
+
+    Route::post('/ahp-settings', [AHPController::class, 'store'])
+        ->name('admin.ahp.settings.save');
+});
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);

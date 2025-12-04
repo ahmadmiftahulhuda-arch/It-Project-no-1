@@ -931,14 +931,6 @@
                 <h1>Dashboard Pengembalian</h1>
                 <p>Kelola proses pengembalian barang Lab Teknologi Informasi</p>
             </div>
-            <div class="action-buttons">
-                <button class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Ekspor
-                </button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addReturnModal">
-                    <i class="fas fa-plus"></i> Tambah Pengembalian
-                </button>
-            </div>
         </div>
 
         <!-- Stats Cards -->

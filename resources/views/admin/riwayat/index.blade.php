@@ -1000,11 +1000,6 @@
                 <p>Lihat dan kelola riwayat peminjaman barang Lab Teknologi Informasi</p>
             </div>
             <div class="action-buttons">
-                <a href="{{ route('admin.riwayat.export', request()->query()) }}" class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Ekspor
-                </a>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
-                    <i class="fas fa-filter"></i> Filter Lanjutan
                 </button>
             </div>
         </div>
@@ -1081,12 +1076,21 @@
                         <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}">
                     </div>
                 </div>
-                <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Terapkan Filter
-                    </button>
-                    <a href="{{ route('admin.riwayat') }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-refresh me-1"></i> Reset
+                <div class="d-flex justify-content-between align-items-center mt-3">
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i> Terapkan Filter
+                        </button>
+
+                        <a href="{{ route('admin.riwayat') }}" class="btn btn-outline">
+                            <i class="fas fa-refresh me-1"></i> Reset
+                        </a>
+                    </div>
+
+                    {{-- Tombol Export --}}
+                    <a href="{{ route('admin.riwayat.export', request()->query()) }}" class="btn btn-outline">
+                        <i class="fas fa-file-export"></i> Ekspor
                     </a>
                 </div>
             </form>
