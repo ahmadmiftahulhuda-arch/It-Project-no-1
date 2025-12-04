@@ -140,12 +140,14 @@ Route::prefix('admin')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('kelas', KelasController::class);
         Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
+        Route::get('/kelas/{kela}/mahasiswa/export', [KelasController::class, 'exportMahasiswa'])->name('kelas.mahasiswa.export');
         
     });
     Route::resource('kelas', KelasController::class);
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
+    Route::delete('/admin/kelas/{kela_id}/mahasiswa/destroy-all', [MahasiswaController::class, 'destroyAllByKelas'])->name('admin.kelas.mahasiswa.destroyAll');
 
     // Admin Peminjaman, Pengembalian, Riwayat
     Route::prefix('peminjaman')->group(function () {

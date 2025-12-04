@@ -38,4 +38,10 @@ class MahasiswaController extends Controller
         $mahasiswa->delete();
         return redirect()->back()->with('success', 'Mahasiswa berhasil dihapus');
     }
+
+    public function destroyAllByKelas($kela_id)
+    {
+        Mahasiswa::where('kelas_id', $kela_id)->delete();
+        return redirect()->back()->with('success', 'Semua data mahasiswa di kelas ini berhasil dihapus.');
+    }
 }

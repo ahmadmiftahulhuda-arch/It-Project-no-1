@@ -43,9 +43,25 @@
     <div class="card shadow-sm border-0">
         {{-- Card Header: Menggunakan text-dark-mode-aware untuk mengatasi warna teks di Dark Mode --}}
         <div class="card-header bg-white dark-mode-bg-card border-bottom-0 p-4">
-            <h5 class="mb-0 fw-bold d-flex align-items-center text-dark-mode-aware">
-                <i class="fas fa-list-ul me-2 text-primary"></i> Daftar Mahasiswa
-            </h5>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold d-flex align-items-center text-dark-mode-aware">
+                    <i class="fas fa-list-ul me-2 text-primary"></i> Daftar Mahasiswa
+                </h5>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="w-auto">
+                    </div>
+                    <a href="{{ route('admin.kelas.mahasiswa.export', $kela->id) }}" class="btn btn-success d-flex align-items-center">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </a>
+                    <form action="{{ route('admin.kelas.mahasiswa.destroyAll', $kela->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus semua mahasiswa di kelas ini? Aksi ini tidak dapat dibatalkan.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger d-flex align-items-center">
+                            <i class="fas fa-trash-alt"></i> Hapus Semua
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
         
         <div class="card-body p-0">
@@ -62,7 +78,7 @@
                     </thead>
                     <tbody>
                         @forelse($mahasiswa as $i => $m)
-                        <tr>
+                        <tr class="mahasiswa-row">
                             <td class="px-4">{{ $i+1 }}</td>
                             {{-- Memastikan NIM menggunakan text-dark-mode-aware --}}
                             <td class="px-4"><span class="fw-semibold text-dark-mode-aware">{{ $m->nim }}</span></td>
@@ -128,6 +144,15 @@
                             </td>
                         </tr>
                         @endforelse
+                        <tr id="no-results" style="display: none;">
+                            <td colspan="5" class="text-center py-5">
+                                <div class="text-center p-4">
+                                    <i class="fas fa-search fa-3x text-gray mb-3"></i>
+                                    <h6 class="mb-1 text-dark-mode-aware">Tidak ada mahasiswa yang cocok.</h6>
+                                    <p class="text-secondary">Coba periksa kembali NIM atau Nama yang dicari.</p>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -187,4 +212,38 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) { // Check if search input exists
+        const noResultsRow = document.getElementById('no-results');
+        const studentRows = document.querySelectorAll('.mahasiswa-row');
+
+        if (studentRows.length > 0) {
+            searchInput.addEventListener('keyup', function () {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                studentRows.forEach(row => {
+                    const nim = row.cells[1].textContent.toLowerCase();
+                    const nama = row.cells[2].textContent.toLowerCase();
+
+                    if (nim.includes(searchTerm) || nama.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (noResultsRow) {
+                    noResultsRow.style.display = visibleCount === 0 ? '' : 'none';
+                }
+            });
+        } else {
+            searchInput.disabled = true;
+        }
+    }
+});
+</script>
 @endpush

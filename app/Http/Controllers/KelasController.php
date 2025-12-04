@@ -5,6 +5,7 @@ use App\Models\Kelas;
 use App\Models\Mahasiswa; 
 use Illuminate\Http\Request;
 use App\Imports\MahasiswaImport;
+use App\Exports\MahasiswaExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class KelasController extends Controller
@@ -66,5 +67,10 @@ class KelasController extends Controller
         Excel::import(new MahasiswaImport($kelas_id), $request->file('file'));
 
         return redirect()->back()->with('success', 'Data mahasiswa berhasil diimport');
+    }
+
+    public function exportMahasiswa(Kelas $kela)
+    {
+        return Excel::download(new MahasiswaExport($kela->id), 'mahasiswa-' . $kela->nama_kelas . '.xlsx');
     }
 }
