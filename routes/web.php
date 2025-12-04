@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Exports\RiwayatExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PeminjamanExport;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProjectorController;
 use App\Http\Controllers\GoogleAuthController;
@@ -154,6 +155,11 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [AdminController::class, 'update'])->name('admin.peminjaman.update');
         Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.peminjaman.destroy');
     });
+
+    // --- EKSPORT EXCEL PEMINJAMAN ---
+    Route::get('/peminjaman-export', function () {
+        return Excel::download(new PeminjamanExport, 'data_peminjaman.xlsx');
+    })->name('admin.peminjaman.export');
 
     Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');

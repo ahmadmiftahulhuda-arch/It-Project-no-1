@@ -1027,22 +1027,26 @@
                         </select>
                     </div>
                 </div>
-                <div class="d-flex gap-2 mt-3">
-                    <div class="action-buttons">
+                <div class="d-flex justify-content-between align-items-center mt-3">
+
+                    <!-- Tombol kiri (Filter + Reset) -->
+                    <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm">
                             <i class="fas fa-filter me-1"></i> Terapkan Filter
                         </button>
+
                         <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-refresh me-1"></i> Reset
                         </a>
-
-                        <div class="action-buttons">
-                            <button class="btn btn-outline">
-                                <i class="fas fa-file-export"></i> Ekspor
-
-                        </div>
                     </div>
+
+                    <!-- Tombol kanan (Ekspor) -->
+                    <a href="{{ route('admin.peminjaman.export') }}" class="btn btn-outline btn-sm">
+                        <i class="fas fa-file-export me-1"></i> Ekspor
+                    </a>
+
                 </div>
+
             </form>
         </div>
 
