@@ -24,20 +24,7 @@ class KelasController extends Controller
 
         return view('admin.kelas.index', compact('kelas', 'totalMahasiswa', 'totalKelas', 'rataRata'));
     }
-
-     public function deleteAll()
-    {
-        try {
-            Kelas::truncate();
-            return redirect()->route('kelas.index')
-                ->with('success', 'Semua kelas berhasil dihapus!');
-        } catch (\Exception $e) {
-            return redirect()->route('kelas.index')
-                ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
-        }
-    }
-
-
+    
     public function store(Request $request)
     {
         $request->validate([
