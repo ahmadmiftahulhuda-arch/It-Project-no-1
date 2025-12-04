@@ -803,9 +803,20 @@
                 <h1>Manajemen Kelas</h1>
                 <p>Platform terpusat untuk mengelola data kelas secara efisien.</p>
             </div>
+            
+        {{-- Tombol Hapus Semua --}}
+        @if($kelas->count() > 0)
+            <form action="{{ route('kelas.delete-all') }}" method="POST"
+                  onsubmit="return confirm('Yakin ingin menghapus semua data kelas? Tindakan ini tidak dapat dibatalkan!');">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="fas fa-trash-alt"></i> Hapus Semua
+                </button>
+            </form>
+        @endif
             <div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahKelas">
-                    <i class="fas fa-plus"></i> Tambah Baru
+                    <i class="fas fa-plus"></i> Tambah Kelas
                 </button>
             </div>
         </div>
