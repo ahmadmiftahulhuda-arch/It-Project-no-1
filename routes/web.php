@@ -25,6 +25,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Models\Ruangan;
 use App\Models\SlotWaktu;
 use App\Models\Projector;
+use App\Http\Controllers\Admin\AHPController;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -238,6 +239,14 @@ Route::prefix('pengembalian')->middleware('auth')->group(function () {
         ->name('admin.pengembalian.reject');
 });
 
+Route::prefix('admin')->group(function () {
+
+    Route::get('/ahp-settings', [AHPController::class, 'index'])
+        ->name('admin.ahp.settings');
+
+    Route::post('/ahp-settings', [AHPController::class, 'store'])
+        ->name('admin.ahp.settings.save');
+});
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);
