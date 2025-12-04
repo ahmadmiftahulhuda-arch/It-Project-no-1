@@ -56,9 +56,9 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'no_hp' => 'nullable|string|max:20',
             'password' => 'required|string|min:6|confirmed',
-            'peran' => 'nullable|in:Admin Lab,Asisten,Mahasiswa',
+            'peran' => 'nullable|in:Admin Lab,Asisten,Mahasiswa,admin,Administrator',
             'jurusan' => 'nullable|string|max:255',
-            'status' => 'nullable|in:Aktif,Non-Aktif',
+            'status' => 'nullable|in:Aktif,Nonaktif,Non-Aktif',
             'tanggal_bergabung' => 'nullable|date',
         ]);
 
@@ -92,9 +92,9 @@ class UserController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'no_hp' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:6|confirmed',
-            'peran' => 'nullable|in:Admin Lab,Asisten,Mahasiswa',
+            'peran' => 'nullable|in:Admin Lab,Asisten,Mahasiswa,admin,Administrator',
             'jurusan' => 'nullable|string|max:255',
-            'status' => 'nullable|in:Aktif,Non-Aktif',
+            'status' => 'nullable|in:Aktif,Nonaktif,Non-Aktif',
             'tanggal_bergabung' => 'nullable|date',
         ]);
 

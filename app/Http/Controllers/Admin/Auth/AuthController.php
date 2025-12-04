@@ -5,49 +5,125 @@ namespace App\Http\Controllers\Admin\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Tampilkan form login admin
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Tampilkan form login admin
+     */
     public function showLoginForm()
     {
         return view('admin.auth.index');
     }
 
-    // Proses login admin
+    /**
+     * Proses login admin
+     */
     public function login(Request $request)
     {
+        // Validasi input
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'required|email|ends_with:@politala.ac.id',
+            'password' => 'required|min:6',
+        ], [
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.ends_with' => 'Email admin harus menggunakan domain @politala.ac.id',
+            'password.required' => 'Password wajib diisi',
+            'password.min' => 'Password minimal 6 karakter',
         ]);
 
+        // Authenticate using the users provider (users table)
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-
-            // Pastikan user memiliki peran admin
-            if (isset($user->peran) && strtolower($user->peran) === 'admin') {
-                return redirect()->intended(route('admin.dashboard'));
-            }
-
-            // jika bukan admin, logout dan beri pesan
-            Auth::logout();
-            return back()->withErrors(['email' => 'Akun tidak memiliki akses admin.'])->withInput();
+        if (!Auth::attempt($credentials, $request->filled('remember'))) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.'
+            ])->withInput($request->only('email', 'remember'));
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
+        // Ambil instance user yang terautentikasi (dari tabel `users` melalui provider)
+        $user = Auth::user();
+
+        // Pastikan akun memiliki akses admin (cek beberapa kemungkinan kolom)
+        $isAdmin = false;
+        // Jika kolom peran mengandung kata 'admin' (mis. 'Admin Lab')
+        if (isset($user->peran) && str_contains(strtolower($user->peran), 'admin')) {
+            $isAdmin = true;
+        } elseif (isset($user->role) && str_contains(strtolower($user->role), 'admin')) {
+            $isAdmin = true;
+        } elseif (isset($user->type) && str_contains(strtolower($user->type), 'admin')) {
+            $isAdmin = true;
+        } elseif (isset($user->is_admin) && $user->is_admin == 1) {
+            $isAdmin = true;
+        }
+
+        if (!$isAdmin) {
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Akun tidak memiliki akses admin.'
+            ])->withInput($request->only('email', 'remember'));
+        }
+
+        // Cek apakah akun aktif (jika ada kolom status)
+        if (isset($user->status)) {
+            $statusNormalized = strtolower(trim($user->status));
+            $activeValues = ['active', 'aktif', '1', 'true', 'yes'];
+            if (!in_array($statusNormalized, $activeValues, true)) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun tidak aktif. Silakan hubungi administrator.'
+                ])->withInput($request->only('email', 'remember'));
+            }
+        }
+
+        // Regenerasi session setelah login berhasil
+        $request->session()->regenerate();
+
+        // Log aktivitas (opsional) — hanya jika helper tersedia
+        if (function_exists('activity')) {
+            \activity('auth')
+                ->performedOn($user)
+                ->log('Admin logged in');
+        }
+
+        return redirect()->intended(route('admin.dashboard'))->with('success', 'Login berhasil!');
     }
 
-    // Logout admin
+    /**
+     * Logout admin
+     */
     public function logout(Request $request)
     {
+        // Log aktivitas sebelum logout (opsional)
+        if (Auth::check() && function_exists('activity')) {
+            \activity('auth')
+                ->performedOn(Auth::user())
+                ->log('Admin logged out');
+        }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('admin.login')->with('success', 'Anda telah berhasil logout.');
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     */
+    protected function guard()
+    {
+        return Auth::guard();
     }
 }
