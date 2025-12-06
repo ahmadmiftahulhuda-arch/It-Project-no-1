@@ -202,6 +202,10 @@ Route::prefix('admin')->group(function () {
 Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('/profile', [App\Http\Controllers\User\UserProfileController::class, 'index'])->name('user.profile.index');
     Route::put('/profile', [App\Http\Controllers\User\UserProfileController::class, 'update'])->name('user.profile.update');
+
+    // User Settings
+    Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings.index');
+    Route::put('/settings', [App\Http\Controllers\User\SettingsController::class, 'update'])->name('user.settings.update');
 });
 
 // Rute untuk menampilkan form feedback untuk peminjaman tertentu

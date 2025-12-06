@@ -779,8 +779,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom" href="#">
-                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
                                 <li>
