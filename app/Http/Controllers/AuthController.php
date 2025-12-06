@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\User;
 
@@ -17,15 +18,34 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // proses login
+    // proses login - 1 akun hanya untuk 1 device
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // Invalidate semua session lain untuk user ini (1 akun 1 device)
+            // Query tabel sessions dan hapus session lain yang memiliki user_id yang sama
+            DB::table('sessions')
+                ->where('user_id', $user->id)
+                ->where('id', '!=', $request->session()->getId())
+                ->delete();
+            
+            // Regenerate session token untuk keamanan
             $request->session()->regenerate();
 
-            $user = Auth::user();
+            // Log aktivitas login (jika package activity sudah install)
+            if (function_exists('activity')) {
+                activity()
+                    ->performedOn($user)
+                    ->withProperties([
+                        'ip_address' => $request->ip(),
+                        'user_agent' => $request->userAgent(),
+                    ])
+                    ->log('Login');
+            }
 
             if ($user->peran === 'Admin') {
                 return redirect()->intended('/admin/dashboard');
@@ -42,6 +62,18 @@ class AuthController extends Controller
     // logout
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        
+        // Log aktivitas logout (jika package activity sudah install)
+        if (function_exists('activity') && $user) {
+            activity()
+                ->performedOn($user)
+                ->withProperties([
+                    'ip_address' => $request->ip(),
+                ])
+                ->log('Logout');
+        }
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

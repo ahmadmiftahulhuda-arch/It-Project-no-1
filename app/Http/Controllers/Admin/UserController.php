@@ -37,7 +37,8 @@ class UserController extends Controller
                 });
             }
 
-            $users = $query->latest()->get();
+            // Paginate results and preserve query string so search/filter persist across pages
+            $users = $query->latest()->paginate(15)->withQueryString();
             
             $jurusanList = ['Teknik Informatika', 'Sistem Informasi', 'Teknik Komputer', 'Teknik Elektro', 'Manajemen Informatika'];
 

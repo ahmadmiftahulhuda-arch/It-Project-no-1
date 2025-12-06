@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -54,6 +55,13 @@ class AuthController extends Controller
 
         // Ambil instance user yang terautentikasi (dari tabel `users` melalui provider)
         $user = Auth::user();
+
+        // Invalidate semua session lain untuk user ini (1 akun 1 device)
+        // Query tabel sessions dan hapus session lain yang memiliki user_id yang sama
+        DB::table('sessions')
+            ->where('user_id', $user->id)
+            ->where('id', '!=', $request->session()->getId())
+            ->delete();
 
         // Pastikan akun memiliki akses admin (cek beberapa kemungkinan kolom)
         $isAdmin = false;

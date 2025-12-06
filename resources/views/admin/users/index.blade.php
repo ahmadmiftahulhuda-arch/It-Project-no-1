@@ -924,7 +924,7 @@
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.users.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" name="cari" placeholder="Cari pengguna berdasarkan nama atau email..." value="{{ request('cari') }}">
+                <input type="text" id="searchInput" name="cari" placeholder="Cari pengguna berdasarkan nama atau email..." value="{{ request('cari') }}" autocomplete="off">
                 <button type="submit" style="display: none;"></button>
             </form>
 
@@ -999,7 +999,7 @@
                         @if(isset($users) && count($users) > 0)
                             @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $users->firstItem() + $loop->index }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
@@ -1061,6 +1061,10 @@
                         @endif
                     </tbody>
                 </table>
+
+                <div class="p-3 d-flex justify-content-end">
+                    {{ $users->withQueryString()->links() }}
+                </div>
             </div>
         </div>
 
@@ -1385,6 +1389,30 @@
         localStorage.setItem('darkMode', theme);
         $('#theme-toggle').html(icon);
     }
+
+    // Debounce helper kept in case it's needed elsewhere
+    function debounce(fn, delay) {
+        let timer = null;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                fn.apply(context, args);
+            }, delay);
+        };
+    }
+
+    // Submit search only when user presses Enter or Space (keyup so the character is present)
+    $(document).ready(function() {
+        $('#searchInput').on('keyup', function(e) {
+            const key = e.key || (e.originalEvent && e.originalEvent.key);
+            const isEnter = key === 'Enter';
+            const isSpace = key === ' ' || key === 'Spacebar' || key === 'Space' || e.keyCode === 32;
+            if (isEnter || isSpace) {
+                $('#searchForm').submit();
+            }
+        });
+    });
 </script>
-</body>
+</body> 
 </html>
