@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Peminjaman;
+use App\Models\Feedback;
 
 class User extends Authenticatable
 {
@@ -53,5 +55,10 @@ class User extends Authenticatable
     public function peminjaman()
     {
         return $this->hasMany(Peminjaman::class);
+    }
+
+    public function feedback()
+    {
+        return $this->hasManyThrough(Feedback::class, Peminjaman::class);
     }
 }

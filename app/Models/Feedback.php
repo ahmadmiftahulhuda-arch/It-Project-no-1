@@ -11,9 +11,7 @@ class Feedback extends Model
         'peminjaman_id',
         'kategori',
         'rating',
-        'judul',
         'detail_feedback',
-        'saran_perbaikan',
         'status',
     ];
     /**

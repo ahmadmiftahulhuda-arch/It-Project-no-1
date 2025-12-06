@@ -1571,7 +1571,7 @@
                                                     <i class="fas fa-check"></i>
                                                 </button>
                                             @else
-                                                <a href="{{ route('feedback.create', $peminjaman->id) }}"
+                                                <a href="{{ route('user.feedback.create_with_peminjaman', $peminjaman->id) }}"
                                                     class="btn btn-success btn-action" title="Beri Feedback">
                                                     <i class="fas fa-comment-dots"></i>
                                                 </a>

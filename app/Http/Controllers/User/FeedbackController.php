@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Feedback;
+use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Auth;
 
 class FeedbackController extends Controller
@@ -14,8 +15,25 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feedbacks = Auth::user()->feedback()->latest()->paginate(10);
-        return view('user.feedback.index', compact('feedbacks'));
+        $peminjamans = Peminjaman::where('user_id', Auth::id())
+            ->where('status', 'selesai')
+            ->whereDoesntHave('feedback')
+            ->get();
+
+        return view('user.feedback.create', compact('peminjamans'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $peminjamans = Peminjaman::where('user_id', Auth::id())
+            ->where('status', 'selesai')
+            ->whereDoesntHave('feedback')
+            ->get();
+
+        return view('user.feedback.create', compact('peminjamans'));
     }
 
     /**
@@ -27,7 +45,6 @@ class FeedbackController extends Controller
             'peminjaman_id' => 'required|exists:peminjamans,id',
             'kategori' => 'required|string|max:255',
             'rating' => 'required|integer|min:1|max:5',
-            'judul' => 'required|string|max:255',
             'detail_feedback' => 'required|string',
             'saran_perbaikan' => 'nullable|string',
         ]);
@@ -42,7 +59,6 @@ class FeedbackController extends Controller
             'peminjaman_id' => $peminjaman->id,
             'kategori' => $request->kategori,
             'rating' => $request->rating,
-            'judul' => $request->judul,
             'detail_feedback' => $request->detail_feedback,
             'saran_perbaikan' => $request->saran_perbaikan,
             'status' => 'baru', // Default status

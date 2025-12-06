@@ -6,6 +6,7 @@
     <title>Dashboard Peminjaman Barang - Lab TIK</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
             --primary: #3b5998;
@@ -34,7 +35,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -136,7 +137,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -755,6 +756,51 @@
             background: var(--secondary);
         }
 
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .star-rating .star {
+            color: #ddd;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .star-rating .star:hover {
+            transform: scale(1.2);
+        }
+
+        .star-rating .star.active {
+            color: #ffc107;
+        }
+
+        .rating-stars {
+            margin-bottom: 10px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        /* Spinner */
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -795,6 +841,20 @@
 
             .filter-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+                margin-bottom: 10px;
             }
         }
 
@@ -902,7 +962,7 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- Menu Utama - DIPERBAIKI -->
+            <!-- Menu Utama -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
@@ -916,7 +976,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
@@ -942,7 +1002,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Aset - DROPDOWN -->
+            <!-- Manajemen Aset -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
@@ -960,7 +1020,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Akademik - DROPDOWN -->
+            <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
@@ -986,7 +1046,7 @@
                 </div>
             </div>
             
-            <!-- Manajemen Pengguna - DROPDOWN -->
+            <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
@@ -1000,7 +1060,7 @@
                 </div>
             </div>
             
-            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
@@ -1026,7 +1086,7 @@
         <div class="header">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari feedback...">
+                <input type="text" id="searchInput" placeholder="Cari feedback...">
             </div>
 
             <div class="user-actions">
@@ -1054,11 +1114,7 @@
                 <h1>Manajemen Feedback</h1>
                 <p>Kelola feedback dari pengguna Lab Teknologi Informasi</p>
             </div>
-            <div class="action-buttons">
-                <button class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Ekspor
-                </button>
-            </div>
+
         </div>
 
         <!-- Stats Cards -->
@@ -1102,55 +1158,56 @@
         </div>
 
         <!-- Filter Section -->
-        <div class="filter-section">
+        <form id="filterForm" method="GET" action="{{ route('admin.feedback.index') }}" class="filter-section">
             <div class="filter-grid">
                 <div class="filter-group">
                     <label for="search">Cari Feedback</label>
-                    <input type="text" id="search" name="search" placeholder="Cari...">
+                    <input type="text" id="search" name="search" placeholder="Cari..." value="{{ request('search') }}">
                 </div>
                 <div class="filter-group">
                     <label for="status_filter">Status</label>
                     <select id="status_filter" name="status">
                         <option value="">Semua Status</option>
-                        <option value="published">Dipublikasikan</option>
-                        <option value="draft">Draft</option>
+                        <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Dipublikasikan</option>
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="rating_filter">Rating</label>
                     <select id="rating_filter" name="rating">
                         <option value="">Semua Rating</option>
-                        <option value="5">5 Bintang</option>
-                        <option value="4">4 Bintang</option>
-                        <option value="3">3 Bintang</option>
-                        <option value="2">2 Bintang</option>
-                        <option value="1">1 Bintang</option>
+                        <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>5 Bintang</option>
+                        <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>4 Bintang</option>
+                        <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>3 Bintang</option>
+                        <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>2 Bintang</option>
+                        <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>1 Bintang</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="date_filter">Tanggal Feedback</label>
-                    <input type="date" id="date_filter" name="date">
+                    <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
                 </div>
             </div>
-            <div class="d-flex gap-2 mt-3">
-                <button type="submit" class="btn btn-primary btn-sm">
-                    <i class="fas fa-filter me-1"></i> Terapkan Filter
-                </button>
-                <a href="/admin/feedback" class="btn btn-outline btn-sm">
-                    <i class="fas fa-refresh me-1"></i> Reset
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex gap-2">
+                    <button type="button" id="resetFilter" class="btn btn-outline">
+                        <i class="fas fa-refresh me-1"></i> Reset
+                    </button>
+                </div>
+                <a href="{{ route('admin.feedback.export', request()->query()) }}" class="btn btn-outline">
+                    <i class="fas fa-file-export"></i> Ekspor
                 </a>
             </div>
-        </div>
+        </form>
 
         <!-- Table -->
         <div class="table-container">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover mb-0" id="feedbackTable">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Peminjam</th>
-                            <th>Judul</th>
                             <th>Kategori</th>
                             <th>Detail Feedback</th>
                             <th>Rating</th>
@@ -1159,14 +1216,13 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="feedbackTableBody">
                         @foreach($feedback as $item)
                         <tr>
-                            <td>FB{{ str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
+                            <td>{{ $item->id }}</td>
                             <td>{{ $item->peminjaman->user->name ?? '-' }}</td>
-                            <td>{{ $item->judul }}</td>
                             <td>{{ $item->kategori }}</td>
-                            <td title="Saran: {{ $item->saran_perbaikan ?? '-' }}">
+                            <td>
                                 {{ \Illuminate\Support\Str::limit($item->detail_feedback ?? '-', 50) }}
                             </td>
                             <td>
@@ -1190,12 +1246,20 @@
                             <td>
                                 <div class="d-flex gap-2 action-buttons">
                                     <!-- Tombol Edit -->
-                                    <button class="btn btn-warning-custom btn-sm" onclick="openEditModal('{{ $item->id }}', '{{ $item->judul }}', '{{ $item->kategori }}', {{ addslashes($item->detail_feedback) }}, {{ addslashes($item->saran_perbaikan) }}, '{{ $item->rating }}', '{{ $item->status }}')">
+                                    <button class="btn btn-warning-custom btn-sm" 
+                                            onclick="showEditModal(
+                                                {{ $item->id }},
+                                                '{{ $item->peminjaman->user->name ?? '-' }}',
+                                                '{{ $item->kategori }}',
+                                                `{{ addslashes($item->detail_feedback) }}`,
+                                                {{ $item->rating }},
+                                                '{{ $item->status }}'
+                                            )">
                                         <i class="fas fa-edit"></i>
                                     </button>
 
                                     <!-- Tombol Hapus -->
-                                    <form action="{{ route('feedback.destroy', ['feedback' => $item->id]) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('admin.feedback.destroy', ['feedback' => $item->id]) }}" method="POST" class="d-inline">
                                         @csrf 
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger-custom btn-sm" onclick="return confirm('Yakin mau hapus feedback ini?')">
@@ -1211,76 +1275,13 @@
             </div>
         </div>
 
+        <div class="mt-4 d-flex justify-content-center">
+            {{ $feedback->links() }}
+        </div>
+
         <!-- Modal Edit Feedback -->
         <div id="editModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Edit Feedback</h2>
-                    <span class="close-btn" onclick="closeEditModal()">&times;</span>
-                </div>
-
-                <form id="editForm" method="POST">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="form-group">
-                        <label>Judul</label>
-                        <input type="text" name="judul" id="editJudul" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Kategori</label>
-                        <select name="kategori" id="editKategori" class="form-control" required>
-                            <option value="Fasilitas Ruangan">Fasilitas Ruangan</option>
-                            <option value="Kebersihan">Kebersihan</option>
-                            <option value="Layanan Staff">Layanan Staff</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Detail Feedback</label>
-                        <textarea name="detail_feedback" id="editDetailFeedback" class="form-control" maxlength="1000" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Saran Perbaikan</label>
-                        <textarea name="saran_perbaikan" id="editSaranPerbaikan" class="form-control" maxlength="1000"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Rating</label>
-                        <select name="rating" id="editRating" class="form-control" required>
-                            <option value="1">1 ★</option>
-                            <option value="2">2 ★★</option>
-                            <option value="3">3 ★★★</option>
-                            <option value="4">4 ★★★★</option>
-                            <option value="5">5 ★★★★★</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Status Publikasi</label>
-                        <div class="status-radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="status" value="Dipublikasikan" id="statusPublished">
-                                <span class="radio-custom"></span>
-                                Dipublikasikan
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="status" value="Draft" id="statusDraft">
-                                <span class="radio-custom"></span>
-                                Draft
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-cancel" onclick="closeEditModal()">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    </div>
-                </form>
-            </div>
+            <!-- Modal content akan diisi oleh JavaScript -->
         </div>
 
         <div class="menu-toggle" id="menu-toggle">
@@ -1311,40 +1312,325 @@
                 sidebar.classList.toggle('active');
             });
 
-            // Modal Functions
-            function openEditModal(id, judul, kategori, detail_feedback, saran_perbaikan, rating, status) {
-                // Set form action dengan URL yang benar
-                document.getElementById('editForm').action = "/admin/feedback/" + id;
+            // =============================================
+            // FUNGSI UTAMA EDIT MODAL
+            // =============================================
+
+            // Fungsi untuk menampilkan modal edit tanpa AJAX
+            function showEditModal(id, namaPeminjam, kategori, detailFeedback, rating, status) {
+                // Escape karakter khusus untuk HTML
+                const escapeHtml = (text) => {
+                    return text
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                };
+
+                // Buat modal content
+                const modalContent = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Edit Feedback</h2>
+                            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+                        </div>
+
+                        <form id="editForm" method="POST" action="/admin/feedback/${id}">
+                            @csrf
+                            @method('PUT')
+                            
+                            <!-- Hidden input untuk ID -->
+                            <input type="hidden" name="id" id="editId" value="${id}">
+
+                            <div class="form-group">
+                                <label>Peminjam</label>
+                                <input type="text" class="form-control" value="${escapeHtml(namaPeminjam)}" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <select name="kategori" id="editKategori" class="form-control" required>
+                                    <option value="Fasilitas Ruangan" ${kategori === 'Fasilitas Ruangan' ? 'selected' : ''}>Fasilitas Ruangan</option>
+                                    <option value="Kebersihan" ${kategori === 'Kebersihan' ? 'selected' : ''}>Kebersihan</option>
+                                    <option value="Layanan Staff" ${kategori === 'Layanan Staff' ? 'selected' : ''}>Layanan Staff</option>
+                                    <option value="Lainnya" ${kategori === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Detail Feedback</label>
+                                <textarea name="detail_feedback" id="editDetailFeedback" class="form-control" maxlength="1000" rows="4" required>${escapeHtml(detailFeedback)}</textarea>
+                                <div class="char-count">
+                                    <span id="charCountModal">${detailFeedback.length}</span>/1000 karakter
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Rating</label>
+                                <div class="rating-stars">
+                                    <div class="star-rating" id="starRating">
+                                        <span class="star" data-value="1">★</span>
+                                        <span class="star" data-value="2">★</span>
+                                        <span class="star" data-value="3">★</span>
+                                        <span class="star" data-value="4">★</span>
+                                        <span class="star" data-value="5">★</span>
+                                    </div>
+                                </div>
+                                <select name="rating" id="editRating" class="form-control" required style="display: none;">
+                                    <option value="1" ${rating == 1 ? 'selected' : ''}>1 ★</option>
+                                    <option value="2" ${rating == 2 ? 'selected' : ''}>2 ★★</option>
+                                    <option value="3" ${rating == 3 ? 'selected' : ''}>3 ★★★</option>
+                                    <option value="4" ${rating == 4 ? 'selected' : ''}>4 ★★★★</option>
+                                    <option value="5" ${rating == 5 ? 'selected' : ''}>5 ★★★★★</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Status Publikasi</label>
+                                <div class="status-radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="status" value="Dipublikasikan" id="statusPublished" ${status === "Dipublikasikan" ? 'checked' : ''}>
+                                        <span class="radio-custom"></span>
+                                        Dipublikasikan
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="status" value="Draft" id="statusDraft" ${status === "Draft" ? 'checked' : ''}>
+                                        <span class="radio-custom"></span>
+                                        Draft
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-cancel" onclick="closeEditModal()">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
                 
-                // Isi form fields
-                document.getElementById('editJudul').value = judul;
-                document.getElementById('editKategori').value = kategori;
-                document.getElementById('editDetailFeedback').value = detail_feedback;
-                document.getElementById('editSaranPerbaikan').value = saran_perbaikan;
-                document.getElementById('editRating').value = rating;
-
-                // Set status radio button
-                if (status === "Dipublikasikan") {
-                    document.getElementById('statusPublished').checked = true;
-                } else {
-                    document.getElementById('statusDraft').checked = true;
-                }
-
                 // Tampilkan modal
-                document.getElementById('editModal').style.display = "flex";
+                const modal = document.getElementById('editModal');
+                modal.innerHTML = modalContent;
+                modal.style.display = "flex";
+                
+                // Setup event listeners
+                setupModalListeners(rating);
             }
 
+            // Setup event listeners untuk modal
+            function setupModalListeners(initialRating) {
+                // Character count
+                const detailTextarea = document.getElementById('editDetailFeedback');
+                if (detailTextarea) {
+                    detailTextarea.addEventListener('input', function() {
+                        const charCount = document.getElementById('charCountModal');
+                        if (charCount) {
+                            charCount.textContent = this.value.length;
+                        }
+                    });
+                }
+                
+                // Star rating
+                const stars = document.querySelectorAll('.star-rating .star');
+                const ratingInput = document.getElementById('editRating');
+                
+                if (stars.length && ratingInput) {
+                    // Set initial rating
+                    updateStarRating(initialRating);
+                    
+                    stars.forEach(star => {
+                        star.addEventListener('click', function() {
+                            const value = this.getAttribute('data-value');
+                            ratingInput.value = value;
+                            updateStarRating(value);
+                        });
+                        
+                        star.addEventListener('mouseover', function() {
+                            const value = this.getAttribute('data-value');
+                            updateStarRating(value);
+                        });
+                    });
+                    
+                    // Reset rating saat mouse leave
+                    const starRatingDiv = document.querySelector('.star-rating');
+                    if (starRatingDiv) {
+                        starRatingDiv.addEventListener('mouseleave', function() {
+                            const currentRating = parseInt(ratingInput.value);
+                            updateStarRating(currentRating);
+                        });
+                    }
+                }
+                
+                // Form submission
+                const editForm = document.getElementById('editForm');
+                if (editForm) {
+                    editForm.addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        
+                        // Validasi form
+                        if (!validateForm()) {
+                            return;
+                        }
+                        
+                        const formData = new FormData(this);
+                        
+                        try {
+                            // Tampilkan loading
+                            const submitBtn = this.querySelector('button[type="submit"]');
+                            const originalText = submitBtn.innerHTML;
+                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+                            submitBtn.disabled = true;
+                            
+                            const response = await fetch(this.action, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: formData
+                            });
+                            
+                            if (response.ok) {
+                                const result = await response.json();
+                                alert('Feedback berhasil diperbarui!');
+                                closeEditModal();
+                                location.reload();
+                            } else {
+                                const errorData = await response.json();
+                                let errorMessage = errorData.message || 'Gagal memperbarui feedback';
+                                if (response.status === 422 && errorData.errors) {
+                                    // Collect all error messages from the 'errors' object
+                                    const errorMessages = Object.values(errorData.errors).flat();
+                                    errorMessage = errorMessages.join('\n');
+                                }
+                                throw new Error(errorMessage);
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat menyimpan perubahan: ' + error.message);
+                            
+                            // Reset button
+                            const submitBtn = editForm.querySelector('button[type="submit"]');
+                            submitBtn.innerHTML = 'Simpan Perubahan';
+                            submitBtn.disabled = false;
+                        }
+                    });
+                }
+            }
+
+            // Validasi form
+            function validateForm() {
+                const detailFeedback = document.getElementById('editDetailFeedback').value.trim();
+                if (detailFeedback.length === 0) {
+                    alert('Detail feedback harus diisi');
+                    return false;
+                }
+                
+                if (detailFeedback.length > 1000) {
+                    alert('Detail feedback maksimal 1000 karakter');
+                    return false;
+                }
+                
+                return true;
+            }
+
+            // Fungsi untuk update star rating visual
+            function updateStarRating(rating) {
+                const stars = document.querySelectorAll('.star-rating .star');
+                if (stars.length) {
+                    stars.forEach(star => {
+                        const starValue = parseInt(star.getAttribute('data-value'));
+                        if (starValue <= rating) {
+                            star.classList.add('active');
+                            star.style.color = '#ffc107';
+                        } else {
+                            star.classList.remove('active');
+                            star.style.color = '#ddd';
+                        }
+                    });
+                }
+            }
+
+            // Fungsi untuk menutup modal
             function closeEditModal() {
                 document.getElementById('editModal').style.display = "none";
+                document.getElementById('editModal').innerHTML = '';
             }
 
-            // Character count for modal
+            // =============================================
+            // FILTER DAN PENCARIAN (SERVER-SIDE)
+            // =============================================
+            const filterForm = document.getElementById('filterForm');
+            const searchInputHeader = document.getElementById('searchInput'); // Header search input
+            const searchInputForm = document.getElementById('search'); // Form search input
+            const statusFilter = document.getElementById('status_filter');
+            const ratingFilter = document.getElementById('rating_filter');
+            const dateFilter = document.getElementById('date_filter');
+            const resetFilterButton = document.getElementById('resetFilter');
+
+            // Function to submit the form
+            function submitFilterForm() {
+                filterForm.submit();
+            }
+
+            // Auto-submit on change for selects and date
+            statusFilter.addEventListener('change', submitFilterForm);
+            ratingFilter.addEventListener('change', submitFilterForm);
+            dateFilter.addEventListener('change', submitFilterForm);
+
+            // Auto-submit on input for text search (with a small delay)
+            let searchTimeout;
+            searchInputForm.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(submitFilterForm, 500); // Submit after 500ms of inactivity
+            });
+
+            // Handle header search input
+            searchInputHeader.addEventListener('input', () => {
+                searchInputForm.value = searchInputHeader.value; // Sync header search with form search
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(submitFilterForm, 500); // Submit after 500ms of inactivity
+            });
+
+            // Reset Filter functionality
+            resetFilterButton.addEventListener('click', () => {
+                searchInputForm.value = '';
+                searchInputHeader.value = ''; // Also clear header search
+                statusFilter.value = '';
+                ratingFilter.value = '';
+                dateFilter.value = '';
+                submitFilterForm();
+            });
+
+            // =============================================
+            // INITIALIZATION
+            // =============================================
+
+            // Initialize saat halaman dimuat
             document.addEventListener('DOMContentLoaded', function() {
                 // Terapkan dark mode jika sebelumnya diaktifkan
                 if (localStorage.getItem('darkMode') === 'enabled') {
                     document.body.classList.add('dark-mode');
                     themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 }
+                
+                // Tutup modal saat klik di luar modal
+                window.addEventListener('click', function(event) {
+                    const modal = document.getElementById('editModal');
+                    if (event.target === modal) {
+                        closeEditModal();
+                    }
+                });
+                
+                // Tutup modal dengan tombol ESC
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape') {
+                        closeEditModal();
+                    }
+                });
             });
         </script>
     </div>

@@ -898,13 +898,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="judul" class="form-label">Judul Feedback *</label>
-                        <input type="text" class="form-control @error('judul') is-invalid @enderror" id="judul" name="judul" placeholder="Ringkasan singkat feedback Anda" value="{{ old('judul') }}" required>
-                        @error('judul') 
-                            <div class="invalid-feedback">{{ $message }}</div> 
-                            @enderror
-                    </div>
+
 
                     <div class="mb-4">
                         <label for="detail_feedback" class="form-label">Detail Feedback *</label>
@@ -914,10 +908,7 @@
                             @enderror
                     </div>
 
-                    <div class="mb-4">
-                        <label for="saran_perbaikan" class="form-label">Saran Perbaikan (opsional)</label>
-                        <textarea class="form-control" id="saran_perbaikan" name="saran_perbaikan" rows="3" placeholder="Berikan saran untuk perbaikan...">{{ old('saran_perbaikan') }}</textarea>
-                    </div>
+
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary-custom px-4 py-2">

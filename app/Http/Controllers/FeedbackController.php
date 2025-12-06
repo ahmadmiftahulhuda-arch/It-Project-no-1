@@ -9,15 +9,52 @@ use Illuminate\Support\Facades\Auth;
 
 class FeedbackController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $feedback = Feedback::with('peminjaman')->get();
-        $totalFeedback = $feedback->count();
-        $averageRating = $feedback->avg('rating');
-        $published = $feedback->where('status', 'Dipublikasikan')->count();
-        $draft = $feedback->where('status', 'Draft')->count();
+        $query = Feedback::with('peminjaman.user');
 
-        return view('admin.feedback.index', compact('feedback', 'totalFeedback', 'averageRating', 'published', 'draft'));
+        // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('kategori', 'like', '%' . $search . '%')
+                  ->orWhere('detail_feedback', 'like', '%' . $search . '%')
+                  ->orWhereHas('peminjaman.user', function ($q2) use ($search) {
+                      $q2->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        if ($request->input('status') === 'published') {
+            $query->where('status', 'Dipublikasikan');
+        } elseif ($request->input('status') === 'draft') {
+            $query->where('status', 'Draft');
+        }
+
+        if ($request->filled('rating')) {
+            $query->where('rating', $request->input('rating'));
+        }
+
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->input('date'));
+        }
+
+        // Use withQueryString() to append filter parameters to pagination links
+        $feedback = $query->latest()->paginate(10)->withQueryString();
+
+        // Calculate stats for the entire dataset
+        $totalFeedback = Feedback::count();
+        $averageRating = Feedback::avg('rating');
+        $published = Feedback::where('status', 'Dipublikasikan')->count();
+        $draft = Feedback::where('status', 'Draft')->count();
+
+        return view('admin.feedback.index', compact(
+            'feedback',
+            'totalFeedback',
+            'averageRating',
+            'published',
+            'draft'
+        ));
     }
 
     public function create(Peminjaman $peminjaman)
@@ -37,7 +74,7 @@ class FeedbackController extends Controller
 
         Feedback::create($request->all());
 
-        return redirect()->route('feedback.index')->with('success', 'Feedback berhasil ditambahkan');
+        return redirect()->route('admin.feedback.index')->with('success', 'Feedback berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -49,25 +86,29 @@ class FeedbackController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'judul' => 'required|string|max:255',
             'kategori' => 'required|string',
             'detail_feedback' => 'required|string|max:1000',
-            'saran_perbaikan' => 'nullable|string|max:1000',
             'rating' => 'required|integer|min:1|max:5',
             'status' => 'required|in:Dipublikasikan,Draft',
         ]);
 
         $feedback = Feedback::findOrFail($id);
         $feedback->update([
-            'judul' => $request->judul,
             'kategori' => $request->kategori,
             'detail_feedback' => $request->detail_feedback,
-            'saran_perbaikan' => $request->saran_perbaikan,
             'rating' => $request->rating,
             'status' => $request->status,
         ]);
 
-        return redirect()->route('feedback.index')->with('success', 'Feedback berhasil diupdate');
+        // Untuk AJAX request
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Feedback berhasil diupdate'
+            ]);
+        }
+
+        return redirect()->route('admin.feedback.index')->with('success', 'Feedback berhasil diupdate');
     }
 
     public function destroy($id)
@@ -75,7 +116,7 @@ class FeedbackController extends Controller
         $feedback = Feedback::findOrFail($id);
         $feedback->delete();
 
-        return redirect()->route('feedback.index')->with('success', 'Feedback berhasil dihapus');
+        return redirect()->route('admin.feedback.index')->with('success', 'Feedback berhasil dihapus');
     }
 
     public function show($id)
@@ -94,6 +135,33 @@ class FeedbackController extends Controller
         return view('admin.feedback.stats', compact('totalFeedback', 'averageRating', 'published', 'draft'));
     }
 
+    // Method untuk mengambil data feedback dalam format JSON (untuk modal)
+    public function getFeedbackData($id)
+    {
+        try {
+            $feedback = Feedback::with('peminjaman.user')->findOrFail($id);
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $feedback->id,
+                    'peminjaman_id' => $feedback->peminjaman_id,
+                    'nama_peminjam' => $feedback->peminjaman->user->name ?? '-',
+                    'kategori' => $feedback->kategori,
+                    'detail_feedback' => $feedback->detail_feedback,
+                    'rating' => $feedback->rating,
+                    'status' => $feedback->status,
+                    'created_at' => $feedback->created_at->format('d M Y'),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+    }
+
     // ===============================================
     // USER FEEDBACK METHODS
     // ===============================================
@@ -104,8 +172,8 @@ class FeedbackController extends Controller
     public function indexForUser(Request $request)
     {
         $feedbackItems = Feedback::where('user_id', Auth::id())
-                                 ->with('peminjaman') // Eager load peminjaman details
-                                 ->latest() // Order by newest first
+                                 ->with('peminjaman')
+                                 ->latest()
                                  ->paginate(10);
 
         return view('user.feedback.index', compact('feedbackItems'));
@@ -118,11 +186,10 @@ class FeedbackController extends Controller
     {
         $user = Auth::user();
         
-        // Get completed borrowings for the user that don't have feedback yet
         $peminjamans = Peminjaman::where('user_id', $user->id)
                                 ->where('status', 'selesai')
                                 ->whereDoesntHave('feedback')
-                                ->with('ruangan', 'projector') // Eager load details
+                                ->with('ruangan', 'projector')
                                 ->get();
 
         return view('user.feedback.create', compact('peminjamans'));
@@ -137,29 +204,23 @@ class FeedbackController extends Controller
             'peminjaman_id' => 'required|exists:peminjamans,id',
             'rating' => 'required|integer|min:1|max:5',
             'kategori' => 'required|string',
-            'judul' => 'required|string|max:255',
             'detail_feedback' => 'required|string|max:1000',
-            'saran_perbaikan' => 'nullable|string|max:1000',
         ]);
 
-        // Check if feedback for this loan already exists
         $existingFeedback = Feedback::where('peminjaman_id', $request->peminjaman_id)->first();
         if ($existingFeedback) {
             return redirect()->back()->with('error', 'Anda sudah pernah memberikan feedback untuk peminjaman ini.');
         }
 
-        // Additional check to ensure the user owns the peminjaman
         $peminjaman = Peminjaman::where('id', $request->peminjaman_id)
                                 ->where('user_id', Auth::id())
-                                ->firstOrFail(); // Fails if not found or not owned by user
+                                ->firstOrFail();
 
         Feedback::create([
             'peminjaman_id' => $peminjaman->id,
             'kategori' => $request->kategori,
-            'judul' => $request->judul,
             'rating' => $request->rating,
             'detail_feedback' => $request->detail_feedback,
-            'saran_perbaikan' => $request->saran_perbaikan,
             'status' => 'Draft',
         ]);
 

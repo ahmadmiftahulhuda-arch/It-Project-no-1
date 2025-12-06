@@ -10,6 +10,7 @@ use App\Http\Controllers\User\PeminjamanController;
 use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Exports\RiwayatExport;
+use App\Exports\FeedbackExport; // Add this line
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PeminjamanExport;
 use App\Http\Controllers\FeedbackController;
@@ -116,8 +117,13 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
+    // --- EKSPORT EXCEL FEEDBACK ---
+    Route::get('/feedback/export', function () {
+        return Excel::download(new FeedbackExport(), 'feedback.xlsx');
+    })->name('admin.feedback.export');
+    
     // Feedback
-    Route::resource('feedback', FeedbackController::class);
+    Route::resource('feedback', FeedbackController::class)->names('admin.feedback');
 
     // Projector 
     Route::resource('projectors', ProjectorController::class)->except(['show']);
@@ -182,23 +188,19 @@ Route::prefix('admin')->group(function () {
     Route::get('/riwayat/export', function (Request $request) {
         return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
     })->name('admin.riwayat.export');
+
+    // --- EKSPORT EXCEL FEEDBACK ---
+    Route::get('/feedback/export', function () {
+        return Excel::download(new FeedbackExport(), 'feedback.xlsx');
+    })->name('admin.feedback.export');
 });
 
 // ================================
 // ROUTES UNTUK USER
 // ================================
 
-// Feedback Routes for User
-Route::prefix('user/feedback')->middleware('auth')->group(function () {
-    Route::get('/', [FeedbackController::class, 'indexForUser'])->name('user.feedback.index');
-    Route::get('/create', [FeedbackController::class, 'createForUser'])->name('user.feedback.create');
-    Route::post('/', [FeedbackController::class, 'storeForUser'])->name('user.feedback.store');
-});
 // Rute untuk menampilkan form feedback untuk peminjaman tertentu
-Route::get('/peminjaman/{peminjaman}/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
-
-// Rute untuk menyimpan data feedback
-Route::post('/peminjaman/{peminjaman}/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::get('user/feedback/create/{peminjaman}', [App\Http\Controllers\User\FeedbackController::class, 'create'])->name('user.feedback.create_with_peminjaman');
 
 Route::prefix('peminjaman')->middleware('auth')->group(function () {
     Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');
