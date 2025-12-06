@@ -38,15 +38,39 @@ class GoogleAuthController extends Controller
                 return redirect('/login')->with('error', 'Hanya email institusi Politala (@politala.ac.id atau @mhs.politala.ac.id) yang diizinkan.');
             }
 
-            // Cek apakah user sudah ada
+            // --- Logika Ekstrak NIM ---
+            $nim = null;
+            // 1. Coba ekstrak angka dari nama pengguna Google
+            $nimFromName = preg_replace('/[^0-9]/', '', $googleUser->getName());
+            if (!empty($nimFromName)) {
+                $nim = $nimFromName;
+            } else {
+                // 2. Jika di nama tidak ada, coba ekstrak dari bagian sebelum @ di email
+                $emailLocalPart = explode('@', $googleUser->getEmail())[0];
+                $nimFromEmail = preg_replace('/[^0-9]/', '', $emailLocalPart);
+                if (!empty($nimFromEmail)) {
+                    $nim = $nimFromEmail;
+                }
+            }
+            // --- Akhir Logika Ekstrak NIM ---
+
+            // Cek apakah user sudah ada atau buat user baru
             $user = User::where('email', $googleUser->getEmail())->first();
 
-            if (!$user) {
-                // Buat user baru otomatis
+            if ($user) {
+                // Jika user sudah ada, update NIM jika masih kosong
+                if (is_null($user->nim) && !is_null($nim)) {
+                    $user->nim = $nim;
+                    $user->save();
+                }
+            } else {
+                // Jika user belum ada, buat user baru dengan data dari Google + NIM
                 $user = User::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
-                    'password' => Hash::make(uniqid()), // password random, tidak dipakai
+                    'nim' => $nim, // Simpan NIM yang diekstrak
+                    'password' => Hash::make(uniqid()), // Buat password random
+                    'verified' => true, // Langsung set terverifikasi
                 ]);
             }
 

@@ -61,4 +61,15 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Feedback::class, Peminjaman::class);
     }
+
+    /**
+     * Accessor for getting the display name without numbers.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        // Removes all numeric characters and trims whitespace
+        return trim(preg_replace('/[0-9]/', '', $this->name));
+    }
 }

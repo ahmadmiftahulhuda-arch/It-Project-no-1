@@ -3,24 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Peminjaman - Sistem Manajemen Peminjaman</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Pengaturan Profil - Sistem Peminjaman Sarana Prasarana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* ===== VARIABEL CSS YANG DIPERBAIKI ===== */
         :root {
             --primary-color: #3b5998;
             --secondary-color: #6d84b4;
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
-            --border-radius: 12px;
-            --box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
         }
-
-        /* ===== NAVBAR UTAMA YANG DIPERBAIKI ===== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f8fa;
+            color: #333;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+        
+        /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
             padding: 0.8rem 1rem;
@@ -185,24 +198,7 @@
             position: absolute;
         }
 
-        /* ===== RESPONSIVE DROPDOWN ===== */
-        @media (max-width: 768px) {
-            .dropdown-menu-custom {
-                margin-top: 0;
-                border-radius: 0 0 8px 8px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            }
-            
-            .navbar-nav .nav-link.dropdown-toggle {
-                justify-content: flex-start;
-            }
-            
-            .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
-                margin-left: auto;
-            }
-        }
-
-         /* ===== TOMBOL LOGIN ===== */
+        /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -242,224 +238,293 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* ===== STYLING UMUM YANG DIPERBAIKI ===== */
-        body {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            color: #334155;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            scroll-behavior: smooth;
+        /* ===== RESPONSIVE DROPDOWN ===== */
+        @media (max-width: 768px) {
+            .dropdown-menu-custom {
+                margin-top: 0;
+                border-radius: 0 0 8px 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle {
+                justify-content: flex-start;
+            }
+            
+            .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
+                margin-left: auto;
+            }
         }
 
-        /* ===== KONTEN UTAMA YANG DIPERBAIKI ===== */
-        .main-content {
-            flex: 1;
-            padding: 2rem 0;
-        }
-
-        /* ===== KARTU YANG DIPERBAIKI ===== */
-        .card-custom {
-            border-radius: var(--border-radius);
-            border: none;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 1.5rem;
+        /* ===== BREADCRUMB STYLES ===== */
+        .breadcrumb-custom {
             background-color: white;
-            overflow: hidden;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
 
-        .card-custom:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        .breadcrumb-item-custom {
+            font-size: 0.9rem;
+            color: var(--primary-color);
         }
 
-        /* ===== TOMBOL YANG DIPERBAIKI ===== */
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            border-color: var(--primary-color);
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
+        .breadcrumb-item-custom.active {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item-custom a {
+            color: var(--primary-color);
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-item-custom a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* ===== CARD STYLES ===== */
+        .card-profile {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: none;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .card-profile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header-profile {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-bottom: none;
             position: relative;
             overflow: hidden;
         }
 
-        .btn-primary-custom::before {
+        .card-header-profile::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: all 0.5s ease;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,138.7C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
         }
 
-        .btn-primary-custom:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary-custom:hover {
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 89, 152, 0.3);
-            color: white;
-        }
-
-        .btn-secondary-custom {
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            border-color: #6c757d;
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary-custom:hover {
-            background: linear-gradient(135deg, #5a6268, #545b62);
-            border-color: #545b62;
-            transform: translateY(-2px);
-            color: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* ===== FORM YANG DIPERBAIKI ===== */
-        .form-label {
-            font-weight: 600;
-            color: #475569;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-control, .form-select {
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.15);
-            outline: none;
-        }
-
-        .input-icon {
+        .card-header-profile h4 {
             position: relative;
-        }
-
-        .input-icon i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-            z-index: 10;
-            font-size: 1rem;
-        }
-
-        .input-icon .form-control, .input-icon .form-select {
-            padding-left: 45px;
-        }
-
-        /* ===== HEADER YANG DIPERBAIKI ===== */
-        .page-header {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .page-title {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            z-index: 1;
+            margin: 0;
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .card-header-profile h4 i {
             font-size: 1.8rem;
         }
 
-        .page-description {
-            color: #64748b;
-            margin-bottom: 1.5rem;
-            width: 100%;
-            font-size: 1.1rem;
+        .card-body-profile {
+            padding: 2rem;
         }
 
-        /* ===== ALERT YANG DIPERBAIKI ===== */
-        .alert {
-            border-radius: 10px;
-            border: none;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            padding: 1rem 1.5rem;
-        }
-
-        .alert ul {
-            margin-bottom: 0;
-        }
-
-        .alert li {
-            margin-bottom: 0.25rem;
-        }
-
-        /* ===== INFO BOX YANG DIPERBAIKI ===== */
-        .info-box {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            border-left: 4px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-        }
-
-        .info-box h5 {
-            color: var(--primary-color);
+        /* ===== FORM STYLES ===== */
+        .form-label-profile {
             font-weight: 600;
-            margin-bottom: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
         }
 
-        .info-box ul {
+        .form-label-profile i {
+            font-size: 0.9rem;
+        }
+
+        .form-control-profile {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control-profile:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(59, 89, 152, 0.15);
+        }
+
+        .form-control-profile.is-invalid {
+            border-color: var(--danger-color);
+        }
+
+        .form-text-profile {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ===== SECTION DIVIDER ===== */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e9ecef, transparent);
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.3rem;
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn-profile-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-profile-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 89, 152, 0.2);
+            color: white;
+        }
+
+        .btn-profile-secondary {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-profile-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 89, 152, 0.2);
+        }
+
+        /* ===== ALERT STYLES ===== */
+        .alert-profile {
+            border-radius: 8px;
+            border: none;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-profile-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid var(--success-color);
+            color: #155724;
+        }
+
+        .alert-profile-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid var(--danger-color);
+            color: #721c24;
+        }
+
+        .alert-profile-danger ul {
             margin-bottom: 0;
             padding-left: 1.5rem;
         }
 
-        .info-box li {
-            margin-bottom: 0.5rem;
-            color: #475569;
+        .alert-profile-danger li {
+            margin-bottom: 0.25rem;
         }
 
-        /* ===== FOOTER YANG DIPERBAIKI ===== */
+        /* ===== USER INFO CARD ===== */
+        .user-info-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .user-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .user-detail i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        /* ===== FOOTER STYLES ===== */
         .footer {
-            background: linear-gradient(135deg, #1e293b, #334155);
+            background-color: #2d3748;
             color: white;
             padding: 40px 0 20px;
-            margin-top: auto;
+            margin-top: 2rem;
         }
-
+        
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -468,15 +533,14 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
         }
-
+        
         .footer-section h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
-            font-weight: 700;
         }
-
+        
         .footer-section h3::after {
             content: '';
             position: absolute;
@@ -486,46 +550,45 @@
             height: 2px;
             background-color: var(--primary-color);
         }
-
+        
         .footer-links {
             list-style: none;
-            padding: 0;
         }
-
+        
         .footer-links li {
             margin-bottom: 12px;
         }
-
+        
         .footer-links a {
-            color: #cbd5e1;
+            color: #e5e7eb;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
         }
-
+        
         .footer-links a:hover {
             color: var(--primary-color);
             padding-left: 5px;
         }
-
+        
         .contact-info {
             margin-bottom: 15px;
             display: flex;
             align-items: flex-start;
         }
-
+        
         .contact-info i {
             margin-right: 10px;
             color: var(--primary-color);
             min-width: 20px;
         }
-
+        
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-
+        
         .social-icons a {
             display: inline-flex;
             align-items: center;
@@ -537,169 +600,78 @@
             color: white;
             transition: all 0.3s ease;
         }
-
+        
         .social-icons a:hover {
             background-color: var(--primary-color);
             transform: translateY(-3px);
         }
-
+        
         .opening-hours {
             margin-bottom: 15px;
         }
-
+        
         .opening-hours div {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
         }
-
+        
         .footer-bottom {
             max-width: 1200px;
             margin: 30px auto 0;
             padding: 20px;
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
         }
 
-        /* Back to top button yang diperbaiki */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 999;
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .back-to-top:hover {
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-            transform: translateY(-5px);
-        }
-
-        /* ===== RESPONSIVITAS YANG DIPERBAIKI ===== */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .container {
-                padding-left: 15px;
-                padding-right: 15px;
+            .card-body-profile {
+                padding: 1.5rem;
             }
-
-            .navbar-brand {
-                font-size: 1rem;
+            
+            .card-header-profile {
+                padding: 1.25rem;
             }
-
-            .page-header .col-md-6 {
-                margin-bottom: 15px;
+            
+            .btn-profile-primary,
+            .btn-profile-secondary {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
             }
-
-            .page-header .text-md-end {
-                text-align: left !important;
+            
+            .breadcrumb-custom {
+                padding: 0.75rem 0;
+                margin-bottom: 1.5rem;
             }
-
+            
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-
-            .footer-section h3 {
-                font-size: 1.3rem;
-            }
-
-            .back-to-top {
-                bottom: 20px;
-                right: 20px;
-                width: 40px;
-                height: 40px;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-
-            /* Responsivitas untuk navbar center */
-            .navbar-nav-center {
-                justify-content: flex-start;
-                margin: 0;
-            }
         }
 
         @media (max-width: 576px) {
-            .btn-primary-custom, .btn-secondary-custom {
-                width: 100%;
-                padding: 12px;
+            .card-body-profile {
+                padding: 1rem;
             }
-
-            .d-md-flex.justify-content-md-end {
-                flex-direction: column;
-                gap: 0.5rem;
+            
+            .form-control-profile {
+                padding: 0.7rem 0.9rem;
+                font-size: 0.9rem;
             }
-
-            .d-md-flex.justify-content-md-end .btn {
-                width: 100%;
+            
+            .section-title {
+                font-size: 1.2rem;
             }
-        }
-
-        /* ===== ANIMASI TAMBAHAN ===== */
-        .form-group {
-            transition: all 0.3s ease;
-        }
-
-        .form-group:focus-within {
-            transform: translateX(5px);
-        }
-
-        /* ===== STYLING UNTUK VALIDASI FORM ===== */
-        .is-invalid {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
-        }
-
-        .invalid-feedback {
-            display: block;
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-
-        /* ===== STYLING UNTUK TEXTAREA ===== */
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        /* ===== STYLING UNTUK CARD FORM ===== */
-        .card-form {
-            border-top: 4px solid var(--primary-color);
-        }
-
-        .card-form .card-body {
-            padding: 2rem;
         }
     </style>
 </head>
-
 <body>
-    <!-- ===== NAVBAR UTAMA YANG DIPERBAIKI ===== -->
+    <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="/home">
-                <!-- Logo TI yang ditambahkan -->
+            <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="/img/Logo_TI.png" alt="Logo TI">
                 PINTER
             </a>
@@ -710,7 +682,7 @@
                 <!-- Menu tengah -->
                 <ul class="navbar-nav navbar-nav-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="/home">
+                        <a class="nav-link" href="{{ route('home') }}">
                             <i class="fas fa-home me-1"></i> Beranda
                         </a>
                     </li>
@@ -733,7 +705,6 @@
                                     <i class="fas fa-clock me-2"></i> Jadwal Kuliah
                                 </a>
                             </li>
-                           
                             <li>
                                 <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
@@ -756,7 +727,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item-custom active" href="{{ route('user.peminjaman.create') }}">
+                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
                                     <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
                                 </a>
                             </li>
@@ -803,7 +774,7 @@
                                     <hr class="dropdown-divider-custom">
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom" href="{{ route('user.profile.index') }}">
+                                    <a class="dropdown-item-custom active" href="{{ route('user.profile.index') }}">
                                         <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
                                     </a>
                                 </li>
@@ -842,152 +813,205 @@
         </div>
     </nav>
 
-    <!-- ===== KONTEN UTAMA YANG DIPERBAIKI ===== -->
-    <div class="container main-content">
-        <!-- Header dan Kembali ke Daftar -->
-        <div class="page-header">
-            <div>
-                <h1 class="page-title"><i class="fa-solid fa-plus-circle"></i> Tambah Peminjaman</h1>
-                <p class="page-description">Isi form berikut untuk menambahkan data peminjaman baru</p>
-            </div>
-            <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary-custom">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
-            </a>
+    <!-- ===== BREADCRUMB ===== -->
+    <div class="breadcrumb-custom">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item breadcrumb-item-custom">
+                        <a href="{{ route('home') }}">
+                            <i class="fas fa-home me-1"></i> Beranda
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item breadcrumb-item-custom active" aria-current="page">
+                        <i class="fas fa-user-cog me-1"></i> Pengaturan Profil
+                    </li>
+                </ol>
+            </nav>
         </div>
+    </div>
 
-        <!-- Alert Notifikasi -->
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Terjadi kesalahan:</strong>
-                <ul class="mb-0 mt-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        <!-- Form Peminjaman -->
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container mb-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card card-custom card-form">
-                    <div class="card-body">
-                        <form action="{{ route('user.peminjaman.store') }}" method="POST" id="peminjamanForm">
+            <div class="col-lg-10">
+                <!-- User Info Card -->
+                <div class="user-info-card">
+                    <div class="user-avatar">
+                        {{ strtoupper(substr(Auth::user()->display_name, 0, 1)) }}
+                    </div>
+                    <div class="user-details">
+                        <div class="user-detail">
+                            <i class="fas fa-user"></i>
+                            <span><strong>Nama:</strong> {{ Auth::user()->display_name }}</span>
+                        </div>
+                        <div class="user-detail">
+                            <i class="fas fa-envelope"></i>
+                            <span><strong>Email:</strong> {{ Auth::user()->email }}</span>
+                        </div>
+                        @if(Auth::user()->no_hp)
+                        <div class="user-detail">
+                            <i class="fas fa-phone"></i>
+                            <span><strong>No. Telepon:</strong> {{ Auth::user()->no_hp }}</span>
+                        </div>
+                        @endif
+                        <div class="user-detail">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span><strong>Bergabung:</strong> {{ Auth::user()->created_at->format('d F Y') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Settings Card -->
+                <div class="card-profile">
+                    <div class="card-header-profile">
+                        <h4><i class="fas fa-user-cog"></i> Pengaturan Profil</h4>
+                    </div>
+                    <div class="card-body-profile">
+                        @if (session('success'))
+                            <div class="alert alert-profile-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if ($errors->any())
+                            <div class="alert alert-profile-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Terjadi kesalahan:</strong>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('user.profile.update') }}" method="POST">
                             @csrf
+                            @method('PUT')
+
+                            <!-- Informasi Pribadi Section -->
+                            <h5 class="section-title"><i class="fas fa-user"></i> Informasi Pribadi</h5>
                             
-                            <div class="mb-4 form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-calendar-day text-primary"></i>
-                                    Tanggal Peminjaman
-                                </label>
-                                <div class="input-icon">
-                                    <i class="fas fa-calendar-day"></i>
-                                    <input type="date" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror" 
-                                           value="{{ old('tanggal') }}" required id="tanggalInput">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label-profile">
+                                        <i class="fas fa-user"></i> Nama Lengkap
+                                    </label>
+                                    <input type="text" class="form-control form-control-profile @error('name') is-invalid @enderror" 
+                                           id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text-profile">
+                                        <i class="fas fa-info-circle"></i> Nama lengkap Anda yang terdaftar
+                                    </small>
                                 </div>
-                                @error('tanggal')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="nim" class="form-label-profile">
+                                        <i class="fas fa-id-card"></i> NIM
+                                    </label>
+                                    <input type="text" class="form-control form-control-profile @error('nim') is-invalid @enderror"
+                                           id="nim" name="nim" value="{{ old('nim', $user->nim) }}">
+                                    @error('nim')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text-profile">
+                                        <i class="fas fa-info-circle"></i> Nomor Induk Mahasiswa Anda
+                                    </small>
+                                </div>
                             </div>
 
-                            <div class="mb-4 form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-door-open text-primary"></i>
-                                    Ruang
-                                </label>
-                                <div class="input-icon">
-                                    <i class="fas fa-door-open"></i>
-                                    <select name="ruang" class="form-select @error('ruang') is-invalid @enderror" required>
-                                        <option value="">-- Pilih Ruang --</option>
-                                        @foreach ($ruangan as $ruang)
-                                            <option value="{{ $ruang->id }}" {{ old('ruang') == $ruang->id ? 'selected' : '' }}>
-                                                {{ $ruang->nama_ruangan ?? $ruang->name }}  {{ $ruang->lokasi ?? $ruang->building ?? '' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label-profile">
+                                        <i class="fas fa-envelope"></i> Alamat Email
+                                    </label>
+                                    <input type="email" class="form-control form-control-profile @error('email') is-invalid @enderror" 
+                                           id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text-profile">
+                                        <i class="fas fa-info-circle"></i> Alamat email yang aktif
+                                    </small>
                                 </div>
-                                @error('ruang')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="col-md-6 mb-3">
+                                    <label for="no_hp" class="form-label-profile">
+                                        <i class="fas fa-phone"></i> Nomor Telepon
+                                    </label>
+                                    <input type="text" class="form-control form-control-profile @error('no_hp') is-invalid @enderror" 
+                                           id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}" 
+                                           placeholder="Contoh: 081234567890">
+                                    @error('no_hp')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text-profile">
+                                        <i class="fas fa-info-circle"></i> Opsional, untuk notifikasi WhatsApp
+                                    </small>
+                                </div>
                             </div>
 
-                            <div class="mb-4 form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-video text-primary"></i>
-                                    Proyektor
-                                </label>
-                                <div class="input-icon">
-                                    <i class="fas fa-video"></i>
-                                    <select name="proyektor" class="form-select @error('proyektor') is-invalid @enderror" required>
-                                        <option value="">-- Pilih Proyektor --</option>
-                                        @foreach($projectors as $projector)
-                                            <option value="{{ $projector->id }}" {{ old('proyektor') == $projector->id ? 'selected' : '' }}>
-                                                {{ $projector->kode_proyektor ?? ('' . $projector->id) }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+
+                            <hr class="section-divider">
+
+                            <!-- Ubah Kata Sandi Section -->
+                            <h5 class="section-title"><i class="fas fa-lock"></i> Keamanan Akun</h5>
+                            <p class="text-muted mb-4">
+                                <i class="fas fa-shield-alt me-2"></i>Kosongkan kolom password jika Anda tidak ingin mengubah kata sandi.
+                            </p>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label-profile">
+                                        <i class="fas fa-key"></i> Kata Sandi Baru
+                                    </label>
+                                    <input type="password" class="form-control form-control-profile @error('password') is-invalid @enderror" 
+                                           id="password" name="password">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text-profile">
+                                        <i class="fas fa-info-circle"></i> Minimal 8 karakter
+                                    </small>
                                 </div>
-                                @error('proyektor')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+
+                                <div class="col-md-6 mb-4">
+                                    <label for="password_confirmation" class="form-label-profile">
+                                        <i class="fas fa-key"></i> Konfirmasi Kata Sandi
+                                    </label>
+                                    <input type="password" class="form-control form-control-profile" 
+                                           id="password_confirmation" name="password_confirmation">
+                                    <small class="form-text-profile">
+                                        <i class="fas fa-info-circle"></i> Ulangi kata sandi baru Anda
+                                    </small>
+                                </div>
                             </div>
 
-                            <div class="mb-4 form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-clipboard-list text-primary"></i>
-                                    Keperluan
-                                </label>
-                                <div class="input-icon">
-                                    <textarea name="keperluan" class="form-control @error('keperluan') is-invalid @enderror" 
-                                              rows="4" placeholder="Jelaskan keperluan peminjaman secara detail..." required>{{ old('keperluan') }}</textarea>
+                            <!-- Action Buttons -->
+                            <div class="row mt-4">
+                                <div class="col-md-6 mb-3">
+                                    <button type="submit" class="btn-profile-primary">
+                                        <i class="fas fa-save me-2"></i> Simpan Perubahan
+                                    </button>
                                 </div>
-                                @error('keperluan')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary-custom me-md-2">
-                                    <i class="fas fa-times me-2"></i>Batal
-                                </a>
-                                <button type="submit" class="btn btn-primary-custom" id="submitBtn">
-                                    <i class="fas fa-save me-2"></i>Simpan Peminjaman
-                                </button>
+                                <div class="col-md-6 mb-3">
+                                    <a href="{{ route('home') }}" class="btn-profile-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda
+                                    </a>
+                                </div>
                             </div>
                         </form>
                     </div>
-                </div>
-                
-                <!-- Info Box yang Diperbaiki -->
-                <div class="info-box mt-4">
-                    <h5><i class="fas fa-info-circle"></i> Informasi Penting</h5>
-                    <ul class="mb-0">
-                        <li>Pastikan untuk memeriksa ketersediaan ruangan sebelum melakukan peminjaman</li>
-                        <li>Peminjaman proyektor harus dilakukan minimal 1 hari sebelumnya</li>
-                        <li>Hubungi administrator untuk bantuan terkait peminjaman</li>
-                        <li>Status peminjaman akan ditinjau oleh administrator</li>
-                        <li>Waktu peminjaman default adalah 08:00 - 17:00</li>
-                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Back to top button -->
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="fas fa-arrow-up"></i>
-    </a>
-
-    <!-- Footer -->
+    <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-section">
@@ -1056,7 +1080,7 @@
     <script>
         // ===== NAVBAR SCROLL EFFECT =====
         const navbar = document.getElementById('navbar');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 50) {
                 navbar.classList.add('scrolled');
@@ -1096,115 +1120,65 @@
             });
         });
 
-        // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
-        const backToTopButton = document.getElementById('backToTop');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-        
-        backToTopButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // ===== SET TANGGAL MINIMUM DAN VALIDASI FORM =====
+        // Password visibility toggle
         document.addEventListener('DOMContentLoaded', function() {
-            // Set tanggal minimum ke hari ini
-            const today = new Date().toISOString().split('T')[0];
-            const dateInput = document.getElementById('tanggalInput');
+            // Add eye icons to password fields
+            const passwordInputs = document.querySelectorAll('input[type="password"]');
             
-            if (dateInput) {
-                dateInput.setAttribute('min', today);
+            passwordInputs.forEach(input => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'position-relative';
                 
-                // Jika tidak ada nilai sebelumnya, set ke hari ini
-                if (!dateInput.value) {
-                    dateInput.value = today;
-                }
-            }
-            
-            // Validasi form yang lebih baik
-            const form = document.getElementById('peminjamanForm');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    const ruang = document.querySelector('select[name="ruang"]').value;
-                    const keperluan = document.querySelector('textarea[name="keperluan"]').value;
-                    const proyektor = document.querySelector('select[name="proyektor"]').value;
+                const eyeIcon = document.createElement('span');
+                eyeIcon.className = 'position-absolute end-0 top-50 translate-middle-y me-3';
+                eyeIcon.style.cursor = 'pointer';
+                eyeIcon.innerHTML = '<i class="fas fa-eye" style="color: #6c757d;"></i>';
+                
+                input.parentNode.insertBefore(wrapper, input);
+                wrapper.appendChild(input);
+                wrapper.appendChild(eyeIcon);
+                
+                eyeIcon.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
                     
-                    let isValid = true;
-                    
-                    if (ruang === '') {
-                        isValid = false;
-                        showToast('Pilih ruang terlebih dahulu', 'error');
-                    }
-                    
-                    if (keperluan.trim() === '') {
-                        isValid = false;
-                        showToast('Keperluan tidak boleh kosong', 'error');
-                    }
-                    
-                    if (proyektor === '') {
-                        isValid = false;
-                        showToast('Pilih ketersediaan proyektor', 'error');
-                    }
-                    
-                    if (!isValid) {
-                        e.preventDefault();
-                        return false;
-                    }
-                    
-                    // Tampilkan loading state
-                    if (submitBtn) {
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-                        submitBtn.disabled = true;
+                    const icon = this.querySelector('i');
+                    if (type === 'text') {
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
                     }
                 });
-            }
+            });
             
-            // Fungsi untuk menampilkan toast notification
-            function showToast(message, type = 'info') {
-                // Buat elemen toast
-                const toast = document.createElement('div');
-                toast.className = `alert alert-${type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
-                toast.style.top = '20px';
-                toast.style.right = '20px';
-                toast.style.zIndex = '1060';
-                toast.style.minWidth = '300px';
-                toast.innerHTML = `
-                    <i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle'} me-2"></i>
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
+            // Form validation enhancement
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('password_confirmation');
                 
-                document.body.appendChild(toast);
-                
-                // Hapus toast setelah 5 detik
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
+                if (password.value || confirmPassword.value) {
+                    if (password.value !== confirmPassword.value) {
+                        e.preventDefault();
+                        alert('Kata sandi dan konfirmasi kata sandi tidak cocok!');
+                        confirmPassword.focus();
                     }
-                }, 5000);
-            }
-            
-            // Animasi untuk form groups
-            const formGroups = document.querySelectorAll('.form-group');
-            formGroups.forEach(group => {
-                const input = group.querySelector('input, select, textarea');
-                if (input) {
-                    input.addEventListener('focus', function() {
-                        group.style.transform = 'translateX(5px)';
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        group.style.transform = 'translateX(0)';
-                    });
                 }
+            });
+            
+            // Add animation to cards
+            const cards = document.querySelectorAll('.card-profile, .user-info-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
             });
         });
     </script>

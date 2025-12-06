@@ -199,6 +199,11 @@ Route::prefix('admin')->group(function () {
 // ROUTES UNTUK USER
 // ================================
 
+Route::prefix('user')->middleware('auth')->group(function () {
+    Route::get('/profile', [App\Http\Controllers\User\UserProfileController::class, 'index'])->name('user.profile.index');
+    Route::put('/profile', [App\Http\Controllers\User\UserProfileController::class, 'update'])->name('user.profile.update');
+});
+
 // Rute untuk menampilkan form feedback untuk peminjaman tertentu
 Route::get('user/feedback/create/{peminjaman}', [App\Http\Controllers\User\FeedbackController::class, 'create'])->name('user.feedback.create_with_peminjaman');
 

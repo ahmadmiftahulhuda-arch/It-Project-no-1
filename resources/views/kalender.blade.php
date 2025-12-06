@@ -993,20 +993,19 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle me-1"></i>
-                                {{ Auth::user()->name }}
+                                 <i class="fas fa-user"></i> {{ Auth::user()->display_name }}
                                 <span class="custom-arrow">
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
                                 <li class="dropdown-header-custom">Masuk sebagai</li>
-                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->name }}</li>
+                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->display_name }}</li>
                                 <li>
                                     <hr class="dropdown-divider-custom">
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom" href="#">
+                                    <a class="dropdown-item-custom" href="{{ route('user.profile.index') }}">
                                         <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
                                     </a>
                                 </li>
