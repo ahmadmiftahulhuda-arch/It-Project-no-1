@@ -527,6 +527,21 @@
             color: #c62828;
         }
 
+        .status-disetujui {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-menunggu {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .status-ditolak {
+            background: #ffebee;
+            color: #c62828;
+        }
+
         /* Action Buttons */
         .action-buttons {
             display: flex;
@@ -892,6 +907,21 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Sistem Pendukung Keputusan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                    <span>Sistem TPK</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="spkMenu">
+                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Pengaturan AHP</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -986,12 +1016,14 @@
                         <label for="status_filter">Status Pengembalian</label>
                         <select id="status_filter" name="status">
                             <option value="">Semua Status</option>
-                            <option value="belum_dikembalikan"
-                                {{ request('status') == 'belum_dikembalikan' ? 'selected' : '' }}>Belum Dikembalikan
+                            <option value="pending"
+                                {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu Verifikasi
                             </option>
-                            <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>
-                                Dikembalikan</option>
-                            <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>
+                            <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>
+                                Disetujui</option>
+                            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak
+                            </option>
+                            <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>
                                 Terlambat</option>
                         </select>
                     </div>
@@ -1055,9 +1087,15 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <strong>{{ $pengembalian->peminjaman->ruang ?? 'N/A' }}</strong><br>
-                                        <small
-                                            class="text-muted">{{ $pengembalian->peminjaman->proyektor ? 'Dengan Proyektor' : 'Tanpa Proyektor' }}</small>
+                                        <strong>{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? $pengembalian->peminjaman->ruang ?? 'N/A' }}</strong><br>
+                                        @if($pengembalian->peminjaman->projector)
+                                            <small class="text-muted">
+                                                <i class="fas fa-video me-1"></i>
+                                                {{ $pengembalian->peminjaman->projector->kode_proyektor ?? 'Proyektor ID: ' . $pengembalian->peminjaman->projector_id }}
+                                            </small>
+                                        @else
+                                            <small class="text-muted">Tanpa Proyektor</small>
+                                        @endif
                                     </td>
                                     <td>{{ $pengembalian->peminjaman->tanggal ? \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') : 'N/A' }}
                                     </td>
@@ -1070,13 +1108,23 @@
                                     </td>
                                     <td>
                                         @if ($pengembalian->status == 'verified')
-                                            <span class="badge status-dikembalikan">Dikembalikan</span>
+                                            <span class="badge status-badge status-disetujui">
+                                                <i class="fas fa-check-circle me-1"></i> Disetujui
+                                            </span>
                                         @elseif ($pengembalian->status == 'pending')
-                                            <span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>
+                                            <span class="badge status-badge status-menunggu">
+                                                <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
+                                            </span>
+                                        @elseif ($pengembalian->status == 'rejected')
+                                            <span class="badge status-badge status-ditolak">
+                                                <i class="fas fa-times-circle me-1"></i> Ditolak
+                                            </span>
                                         @elseif ($pengembalian->status == 'overdue')
-                                            <span class="badge status-terlambat">Terlambat</span>
+                                            <span class="badge status-badge status-terlambat">
+                                                <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                            </span>
                                         @else
-                                            <span class="badge bg-secondary">{{ $pengembalian->status }}</span>
+                                            <span class="badge bg-secondary">{{ ucfirst($pengembalian->status) }}</span>
                                         @endif
                                     </td>
                                     <td>

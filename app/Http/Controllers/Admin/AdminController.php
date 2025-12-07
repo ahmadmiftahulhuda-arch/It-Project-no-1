@@ -105,16 +105,73 @@ class AdminController extends Controller
         // 1. Peminjaman aktif (belum ajukan pengembalian)
         $peminjamans = Peminjaman::where('status', 'disetujui')
             ->whereDoesntHave('pengembalian')
-            ->with('user')
+            ->with(['user', 'ruangan', 'projector'])
             ->orderBy('tanggal', 'desc')
             ->paginate(10);   // <-- WAJIB paginate
 
-        // 2. Pengembalian yang diajukan user
-        $pengembalians = \App\Models\Pengembalian::with(['peminjaman', 'user'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);   // <-- WAJIB paginate
+        // 2. Pengembalian yang diajukan user - dengan filter
+        $query = \App\Models\Pengembalian::with(['peminjaman', 'user', 'peminjaman.ruangan', 'peminjaman.projector']);
 
-        return view('admin.pengembalian.index', compact('peminjamans', 'pengembalians'));
+        // Filter pencarian
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('user', function($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('peminjaman', function($peminjamanQuery) use ($search) {
+                    $peminjamanQuery->where('keperluan', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Filter status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter tanggal
+        if ($request->has('date') && $request->date != '') {
+            $query->whereDate('tanggal_pengembalian', $request->date);
+        }
+
+        // Sort
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'due_date':
+                $query->orderBy('tanggal_pengembalian', 'asc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        $pengembalians = $query->paginate(10);   // <-- WAJIB paginate
+
+        // Hitung statistik
+        $pendingReturns = Peminjaman::where('status', 'disetujui')
+            ->whereDoesntHave('pengembalian')
+            ->count();
+
+        $returnedCount = \App\Models\Pengembalian::where('status', 'verified')->count();
+
+        $overdueCount = Peminjaman::where('status', 'disetujui')
+            ->whereDoesntHave('pengembalian')
+            ->whereDate('tanggal', '<', Carbon::now())
+            ->count();
+
+        $totalReturns = \App\Models\Pengembalian::count();
+
+        return view('admin.pengembalian.index', compact(
+            'peminjamans',
+            'pengembalians',
+            'pendingReturns',
+            'returnedCount',
+            'overdueCount',
+            'totalReturns'
+        ));
     }
 
     /**
