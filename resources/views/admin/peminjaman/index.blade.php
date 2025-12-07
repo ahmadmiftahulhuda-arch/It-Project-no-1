@@ -1015,16 +1015,16 @@
                     </div>
                     <div class="filter-group">
                         <label for="ruang_filter">Ruang</label>
-                        <select id="ruang_filter" name="ruang">
+                        <select id="ruang_filter" name="ruangan_id">
                             <option value="">Semua Ruang</option>
-                            <option value="Lab A" {{ request('ruang') == 'Lab A' ? 'selected' : '' }}>Lab A</option>
-                            <option value="Lab B" {{ request('ruang') == 'Lab B' ? 'selected' : '' }}>Lab B</option>
-                            <option value="Lab C" {{ request('ruang') == 'Lab C' ? 'selected' : '' }}>Lab C</option>
-                            <option value="Ruang Meeting" {{ request('ruang') == 'Ruang Meeting' ? 'selected' : '' }}>
-                                Ruang Meeting</option>
-                            <option value="Ruang Seminar" {{ request('ruang') == 'Ruang Seminar' ? 'selected' : '' }}>
-                                Ruang Seminar</option>
+                            @foreach ($ruangan as $r)
+                                <option value="{{ $r->id }}"
+                                    {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                    {{ $r->nama_ruangan }}
+                                </option>
+                            @endforeach
                         </select>
+
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
@@ -1181,8 +1181,9 @@
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
+                                            data-ruangan-id="{{ $peminjaman->ruangan_id ?? '' }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
-                                            data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
+                                            data-projector-id="{{ $peminjaman->projector_id ?? '' }}"
                                             data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}"
@@ -1201,8 +1202,9 @@
                                             data-tanggal="{{ $peminjaman->tanggal }}"
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai }}"
+                                            data-ruangan-id="{{ $peminjaman->ruangan_id ?? '' }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
-                                            data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
+                                            data-projector-id="{{ $peminjaman->projector_id ?? '' }}"
                                             data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : '0' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}">
@@ -1353,29 +1355,28 @@
                                         name="waktu_selesai" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="ruang" class="form-label">Ruang</label>
-                                    <select class="form-select" id="ruang" name="ruang" required>
-                                        <option value="Lab A">Lab A</option>
-                                        <option value="Lab B">Lab B</option>
-                                        <option value="Lab C">Lab C</option>
-                                        <option value="Ruang Meeting">Ruang Meeting</option>
-                                        <option value="Ruang Seminar">Ruang Seminar</option>
+                                    <label for="ruangan_id" class="form-label">Ruang</label>
+                                    <select class="form-select" id="ruangan_id" name="ruangan_id" required>
+                                        <option value="">-- Pilih Ruang --</option>
+                                        @foreach ($ruangan as $r)
+                                            <option value="{{ $r->id }}">
+                                                {{ $r->nama_ruangan }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Proyektor</label>
-                                    <div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="proyektor"
-                                                id="proyektor_ya" value="1">
-                                            <label class="form-check-label" for="proyektor_ya">Ya</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="proyektor"
-                                                id="proyektor_tidak" value="0">
-                                            <label class="form-check-label" for="proyektor_tidak">Tidak</label>
-                                        </div>
-                                    </div>
+                                    <label for="projector_id" class="form-label">Proyektor</label>
+                                    <select class="form-select" id="projector_id" name="projector_id">
+                                        <option value="">-- Tidak Ada Proyektor --</option>
+                                        @if(isset($projectors))
+                                            @foreach ($projectors as $p)
+                                                <option value="{{ $p->id }}">
+                                                    {{ $p->kode_proyektor }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="keperluan" class="form-label">Keperluan</label>
@@ -1397,6 +1398,76 @@
                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Tambah Peminjaman -->
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-plus me-2"></i> Tambah Peminjaman</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form action="{{ route('admin.peminjaman.store') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row">
+
+                                <!-- PEMINJAM -->
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Nama Peminjam</label>
+                                    <input type="text" name="peminjam" class="form-control"
+                                        placeholder="Masukkan nama peminjam" required>
+                                    <small class="text-muted">Admin akan mencari user berdasarkan nama ini.</small>
+                                </div>
+
+                                <!-- TANGGAL -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Tanggal</label>
+                                    <input type="date" name="tanggal" class="form-control" required>
+                                </div>
+
+                                <!-- WAKTU MULAI -->
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Waktu Mulai</label>
+                                    <input type="time" name="waktu_mulai" class="form-control" required>
+                                </div>
+
+                                <!-- WAKTU SELESAI -->
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Waktu Selesai</label>
+                                    <input type="time" name="waktu_selesai" class="form-control" required>
+                                </div>
+
+                                <!-- RUANG -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Ruang</label>
+                                    <select name="ruangan_id" class="form-select" required>
+                                        <option value="">-- Pilih Ruang --</option>
+                                        @foreach ($ruangan as $r)
+                                            <option value="{{ $r->id }}">{{ $r->nama_ruangan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- KEPERLUAN -->
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Keperluan</label>
+                                    <textarea name="keperluan" class="form-control" rows="3" required></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
+                            <button class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -1553,9 +1624,8 @@
                     const tanggal = button.getAttribute('data-tanggal');
                     const waktuMulai = button.getAttribute('data-waktu-mulai');
                     const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                    const ruang = button.getAttribute('data-ruang');
+                    const ruanganId = button.getAttribute('data-ruangan-id');
                     const projectorId = button.getAttribute('data-projector-id');
-                    const projectorLabel = button.getAttribute('data-projector-label');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
 
@@ -1571,15 +1641,22 @@
                     document.getElementById('tanggal').value = tanggal;
                     document.getElementById('waktu_mulai').value = waktuMulai;
                     document.getElementById('waktu_selesai').value = waktuSelesai;
-                    document.getElementById('ruang').value = ruang;
+                    
+                    // Set ruangan_id langsung dari data attribute
+                    const ruanganSelect = document.getElementById('ruangan_id');
+                    if (ruanganId && ruanganId !== '') {
+                        ruanganSelect.value = ruanganId;
+                    }
+                    
                     document.getElementById('keperluan').value = keperluan;
                     document.getElementById('status').value = status;
 
-                    // Set radio button proyektor (check based on whether a projector is attached)
+                    // Set projector berdasarkan ID
+                    const projectorSelect = document.getElementById('projector_id');
                     if (projectorId && projectorId !== '') {
-                        document.getElementById('proyektor_ya').checked = true;
+                        projectorSelect.value = projectorId;
                     } else {
-                        document.getElementById('proyektor_tidak').checked = true;
+                        projectorSelect.value = '';
                     }
                 });
             }

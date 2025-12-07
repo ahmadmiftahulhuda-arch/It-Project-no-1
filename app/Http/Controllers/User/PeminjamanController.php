@@ -62,19 +62,23 @@ class PeminjamanController extends Controller
         }
 
         $request->validate([
-            'tanggal'   => 'required|date',
-            'ruang'     => 'required|string|max:100',
-            'proyektor' => 'required|exists:projectors,id',
-            'keperluan' => 'required|string|max:255',
+            'tanggal'       => 'required|date',
+            'ruangan_id'    => 'required|exists:ruangan,id',
+            'projector_id'  => 'nullable|exists:projectors,id',
+            'waktu_mulai'   => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i',
+            'keperluan'     => 'required|string|max:255',
         ]);
 
         Peminjaman::create([
-            'user_id'   => Auth::id(),
-            'tanggal'   => $request->tanggal,
-            'ruang'     => $request->ruang,
-            'proyektor' => $request->proyektor,
-            'keperluan' => $request->keperluan,
-            'status'    => 'pending',
+            'user_id'       => Auth::id(),
+            'tanggal'       => $request->tanggal,
+            'ruangan_id'    => $request->ruangan_id,
+            'projector_id'  => $request->projector_id,
+            'waktu_mulai'   => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai,
+            'keperluan'     => $request->keperluan,
+            'status'        => 'pending',
         ]);
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil disimpan');
@@ -89,25 +93,31 @@ class PeminjamanController extends Controller
     public function edit($id)
     {
         $peminjaman = Peminjaman::where('user_id', Auth::id())->findOrFail($id);
-        return view('user.peminjaman.edit', compact('peminjaman'));
+        $ruangan = Ruangan::all();
+        $projectors = Projector::where('status', 'tersedia')->get();
+        return view('user.peminjaman.edit', compact('peminjaman', 'ruangan', 'projectors'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'tanggal'   => 'required|date',
-            'ruang'     => 'required|string|max:100',
-            'proyektor' => 'required|boolean',
-            'keperluan' => 'required|string|max:255',
+            'tanggal'       => 'required|date',
+            'ruangan_id'    => 'required|exists:ruangan,id',
+            'projector_id'  => 'nullable|exists:projectors,id',
+            'waktu_mulai'   => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i',
+            'keperluan'     => 'required|string|max:255',
         ]);
 
         $peminjaman = Peminjaman::where('user_id', Auth::id())->findOrFail($id);
 
         $peminjaman->update([
-            'tanggal'   => $request->tanggal,
-            'ruang'     => $request->ruang,
-            'proyektor' => $request->proyektor,
-            'keperluan' => $request->keperluan,
+            'tanggal'       => $request->tanggal,
+            'ruangan_id'    => $request->ruangan_id,
+            'projector_id'  => $request->projector_id,
+            'waktu_mulai'   => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai,
+            'keperluan'     => $request->keperluan,
         ]);
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil diupdate');

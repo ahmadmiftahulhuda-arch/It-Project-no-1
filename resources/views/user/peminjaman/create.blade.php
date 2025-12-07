@@ -899,6 +899,38 @@
                                 @enderror
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-6 mb-4 form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-clock text-primary"></i>
+                                        Waktu Mulai
+                                    </label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-clock"></i>
+                                        <input type="time" name="waktu_mulai" class="form-control @error('waktu_mulai') is-invalid @enderror" 
+                                               value="{{ old('waktu_mulai', '08:00') }}" required>
+                                    </div>
+                                    @error('waktu_mulai')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-4 form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-clock text-primary"></i>
+                                        Waktu Selesai
+                                    </label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-clock"></i>
+                                        <input type="time" name="waktu_selesai" class="form-control @error('waktu_selesai') is-invalid @enderror" 
+                                               value="{{ old('waktu_selesai', '17:00') }}" required>
+                                    </div>
+                                    @error('waktu_selesai')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="mb-4 form-group">
                                 <label class="form-label">
                                     <i class="fas fa-door-open text-primary"></i>
@@ -906,16 +938,16 @@
                                 </label>
                                 <div class="input-icon">
                                     <i class="fas fa-door-open"></i>
-                                    <select name="ruang" class="form-select @error('ruang') is-invalid @enderror" required>
+                                    <select name="ruangan_id" class="form-select @error('ruangan_id') is-invalid @enderror" required>
                                         <option value="">-- Pilih Ruang --</option>
                                         @foreach ($ruangan as $ruang)
-                                            <option value="{{ $ruang->id }}" {{ old('ruang') == $ruang->id ? 'selected' : '' }}>
+                                            <option value="{{ $ruang->id }}" {{ old('ruangan_id') == $ruang->id ? 'selected' : '' }}>
                                                 {{ $ruang->nama_ruangan ?? $ruang->name }}  {{ $ruang->lokasi ?? $ruang->building ?? '' }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-                                @error('ruang')
+                                @error('ruangan_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -923,20 +955,20 @@
                             <div class="mb-4 form-group">
                                 <label class="form-label">
                                     <i class="fas fa-video text-primary"></i>
-                                    Proyektor
+                                    Proyektor (Opsional)
                                 </label>
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
-                                    <select name="proyektor" class="form-select @error('proyektor') is-invalid @enderror" required>
-                                        <option value="">-- Pilih Proyektor --</option>
+                                    <select name="projector_id" class="form-select @error('projector_id') is-invalid @enderror">
+                                        <option value="">-- Tidak Ada Proyektor --</option>
                                         @foreach($projectors as $projector)
-                                            <option value="{{ $projector->id }}" {{ old('proyektor') == $projector->id ? 'selected' : '' }}>
+                                            <option value="{{ $projector->id }}" {{ old('projector_id') == $projector->id ? 'selected' : '' }}>
                                                 {{ $projector->kode_proyektor ?? ('' . $projector->id) }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-                                @error('proyektor')
+                                @error('projector_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

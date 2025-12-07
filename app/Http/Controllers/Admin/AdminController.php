@@ -7,6 +7,8 @@ use App\Services\FonnteService; // <-- Ditambahkan
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\User;
+use App\Models\Ruangan;
+use App\Models\Projector;
 use Carbon\Carbon;
 use App\Exports\PeminjamanExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,12 +34,27 @@ class AdminController extends Controller
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
+
             $query->where(function ($q) use ($search) {
+
+                // Cari berdasarkan nama peminjam
                 $q->whereHas('user', function ($userQuery) use ($search) {
                     $userQuery->where('name', 'like', "%{$search}%");
                 })
+
+                    // Cari berdasarkan keperluan
                     ->orWhere('keperluan', 'like', "%{$search}%")
-                    ->orWhere('ruang', 'like', "%{$search}%");
+
+                    // Cari berdasarkan nama ruangan
+                    ->orWhereHas('ruangan', function ($r) use ($search) {
+                        $r->where('nama_ruangan', 'like', "%{$search}%");
+                    })
+
+                    // Cari berdasarkan kode proyektor / merk
+                    ->orWhereHas('projector', function ($p) use ($search) {
+                        $p->where('kode_proyektor', 'like', "%{$search}%")
+                            ->orWhere('merk', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -66,34 +83,39 @@ class AdminController extends Controller
 
         $peminjamans = $query->paginate(10);
 
+        $ruangan = Ruangan::where('status', 'Tersedia')->get();
+        $projectors = Projector::where('status', 'tersedia')->get();
+
         return view('admin.peminjaman.index', compact(
             'peminjamans',
             'pendingCount',
             'approvedCount',
             'rejectedCount',
-            'totalCount'
+            'totalCount',
+            'ruangan',
+            'projectors'
         ));
     }
 
     /**
      * Display halaman pengembalian
      */
-public function pengembalian(Request $request)
-{
-    // 1. Peminjaman aktif (belum ajukan pengembalian)
-    $peminjamans = Peminjaman::where('status', 'disetujui')
-        ->whereDoesntHave('pengembalian')
-        ->with('user')
-        ->orderBy('tanggal', 'desc')
-        ->paginate(10);   // <-- WAJIB paginate
+    public function pengembalian(Request $request)
+    {
+        // 1. Peminjaman aktif (belum ajukan pengembalian)
+        $peminjamans = Peminjaman::where('status', 'disetujui')
+            ->whereDoesntHave('pengembalian')
+            ->with('user')
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);   // <-- WAJIB paginate
 
-    // 2. Pengembalian yang diajukan user
-    $pengembalians = \App\Models\Pengembalian::with(['peminjaman', 'user'])
-        ->orderBy('created_at', 'desc')
-        ->paginate(10);   // <-- WAJIB paginate
+        // 2. Pengembalian yang diajukan user
+        $pengembalians = \App\Models\Pengembalian::with(['peminjaman', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);   // <-- WAJIB paginate
 
-    return view('admin.pengembalian.index', compact('peminjamans', 'pengembalians'));
-}
+        return view('admin.pengembalian.index', compact('peminjamans', 'pengembalians'));
+    }
 
     /**
      * Display riwayat peminjaman
@@ -110,7 +132,9 @@ public function pengembalian(Request $request)
                     $userQuery->where('name', 'like', "%{$search}%");
                 })
                     ->orWhere('keperluan', 'like', "%{$search}%")
-                    ->orWhere('ruang', 'like', "%{$search}%");
+                    ->orWhereHas('ruangan', function ($r) use ($search) {
+                        $r->where('nama_ruangan', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -162,26 +186,29 @@ public function pengembalian(Request $request)
         $request->validate([
             'peminjam' => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'ruang' => 'required|string|max:100',
-            'proyektor' => 'required|boolean',
+            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i',
+            'ruangan_id' => 'required|exists:ruangan,id',
+            'projector_id' => 'nullable|exists:projectors,id',
             'keperluan' => 'required|string|max:500',
         ]);
 
-        // Cari user berdasarkan nama atau buat guest user
+        // Cari user berdasarkan nama
         $user = User::where('name', $request->peminjam)->first();
 
         if (!$user) {
-            // Jika user tidak ditemukan, buat guest user atau gunakan user default
-            $user = User::first(); // atau handle sesuai kebutuhan
+            $user = User::first();
         }
 
         Peminjaman::create([
             'user_id' => $user->id,
             'tanggal' => $request->tanggal,
-            'ruang' => $request->ruang,
-            'proyektor' => $request->proyektor,
+            'waktu_mulai' => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai,
+            'ruangan_id' => $request->ruangan_id,
+            'projector_id' => $request->projector_id,
             'keperluan' => $request->keperluan,
-            'status' => 'disetujui', // Otomatis disetujui jika dibuat admin
+            'status' => 'disetujui',
         ]);
 
         return redirect()->route('admin.peminjaman.index')
@@ -193,12 +220,13 @@ public function pengembalian(Request $request)
      */
     public function approve($id)
     {
-        $peminjaman = Peminjaman::with('user')->findOrFail($id);
+        $peminjaman = Peminjaman::with(['user', 'ruangan'])->findOrFail($id);
         $peminjaman->update(['status' => 'disetujui']);
 
         // Kirim notifikasi WhatsApp
         if ($peminjaman->user && $peminjaman->user->no_hp) {
-            $message = "Peminjaman Anda untuk ruang {$peminjaman->ruang} pada tanggal {$peminjaman->tanggal} telah DISETUJUI.";
+            $ruangName = $peminjaman->ruangan ? $peminjaman->ruangan->nama_ruangan : 'ruang';
+            $message = "Peminjaman Anda untuk ruang {$ruangName} pada tanggal {$peminjaman->tanggal} telah DISETUJUI.";
             try {
                 $fonnteService = resolve(FonnteService::class);
                 $fonnteService->sendMessage($peminjaman->user->no_hp, $message);
@@ -218,12 +246,13 @@ public function pengembalian(Request $request)
      */
     public function reject($id)
     {
-        $peminjaman = Peminjaman::with('user')->findOrFail($id);
+        $peminjaman = Peminjaman::with(['user', 'ruangan'])->findOrFail($id);
         $peminjaman->update(['status' => 'ditolak']);
 
         // Kirim notifikasi WhatsApp
         if ($peminjaman->user && $peminjaman->user->no_hp) {
-            $message = "Mohon maaf, peminjaman Anda untuk ruang {$peminjaman->ruang} pada tanggal {$peminjaman->tanggal} telah DITOLAK.";
+            $ruangName = $peminjaman->ruangan ? $peminjaman->ruangan->nama_ruangan : 'ruang';
+            $message = "Mohon maaf, peminjaman Anda untuk ruang {$ruangName} pada tanggal {$peminjaman->tanggal} telah DITOLAK.";
             try {
                 $fonnteService = resolve(FonnteService::class);
                 $fonnteService->sendMessage($peminjaman->user->no_hp, $message);
@@ -260,26 +289,28 @@ public function pengembalian(Request $request)
     {
         $request->validate([
             'tanggal' => 'required|date',
-            'ruang' => 'required|string|max:100',
-            'proyektor' => 'required|boolean',
+            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i',
+            'ruangan_id' => 'required|exists:ruangan,id',
+            'projector_id' => 'nullable|exists:projectors,id',
             'keperluan' => 'required|string|max:500',
             'status' => 'required|in:pending,disetujui,ditolak,selesai',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($id);
 
-        // Data umum
         $data = [
             'tanggal' => $request->tanggal,
-            'ruang' => $request->ruang,
-            'proyektor' => $request->proyektor,
+            'waktu_mulai' => $request->waktu_mulai,
+            'waktu_selesai' => $request->waktu_selesai,
+            'ruangan_id' => $request->ruangan_id,
+            'projector_id' => $request->projector_id,
             'keperluan' => $request->keperluan,
             'status' => $request->status,
         ];
 
-        // Jika status selesai → set tanggal kembali + status pengembalian
         if ($request->status == 'selesai') {
-            $data['tanggal_kembali'] = Carbon::now();
+            $data['tanggal_kembali'] = now();
             $data['status_pengembalian'] = 'sudah dikembalikan';
         }
 
@@ -324,55 +355,55 @@ public function pengembalian(Request $request)
             ->with('success', 'Pengembalian berhasil dicatat.');
     }
 
-public function prosesPengembalian(Request $request, $id)
-{
-    // Ambil data peminjaman berdasarkan ID peminjaman
-    $peminjaman = \App\Models\Peminjaman::findOrFail($id);
+    public function prosesPengembalian(Request $request, $id)
+    {
+        // Ambil data peminjaman berdasarkan ID peminjaman
+        $peminjaman = \App\Models\Peminjaman::findOrFail($id);
 
-    $peminjaman->update([
-        'status'             => 'selesai',
-        'status_pengembalian'=> 'sudah dikembalikan',
-        'tanggal_kembali'    => now(),
-        'kondisi_kembali'    => $request->kondisi_barang,
-        'keterangan_kembali' => $request->keterangan,
-    ]);
+        $peminjaman->update([
+            'status'             => 'selesai',
+            'status_pengembalian' => 'sudah dikembalikan',
+            'tanggal_kembali'    => now(),
+            'kondisi_kembali'    => $request->kondisi_barang,
+            'keterangan_kembali' => $request->keterangan,
+        ]);
 
-    return redirect()->route('admin.pengembalian')
-        ->with('success', 'Pengembalian berhasil diproses.');
-}
+        return redirect()->route('admin.pengembalian')
+            ->with('success', 'Pengembalian berhasil diproses.');
+    }
 
-public function approvePengembalian($id)
-{
-    $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
+    public function approvePengembalian($id)
+    {
+        $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
 
-    // Update status pengembalian
-    $pengembalian->update([
-        'status' => 'verified'
-    ]);
+        // Update status pengembalian
+        $pengembalian->update([
+            'status' => 'verified'
+        ]);
 
-    // Update status di tabel peminjaman
-    $pengembalian->peminjaman->update([
-        'status' => 'selesai',
-        'status_pengembalian' => 'sudah dikembalikan',
-        'tanggal_kembali' => now()
-    ]);
+        // Update status di tabel peminjaman
+        $pengembalian->peminjaman->update([
+            'status' => 'selesai',
+            'status_pengembalian' => 'sudah dikembalikan',
+            'tanggal_kembali' => now()
+        ]);
 
-    return redirect()->route('admin.pengembalian')
-        ->with('success', 'Pengembalian berhasil disetujui.');
-}
+        return redirect()->route('admin.pengembalian')
+            ->with('success', 'Pengembalian berhasil disetujui.');
+    }
 
-public function rejectPengembalian($id)
-{
-    $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
+    public function rejectPengembalian($id)
+    {
+        $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
 
-    // Update status pengembalian
-    $pengembalian->update([
-        'status' => 'rejected'
-    ]);
+        // Update status pengembalian
+        $pengembalian->update([
+            'status' => 'rejected'
+        ]);
 
-    return redirect()->route('admin.pengembalian')
-        ->with('success', 'Pengembalian ditolak.');
-}
+        return redirect()->route('admin.pengembalian')
+            ->with('success', 'Pengembalian ditolak.');
+    }
 
 
     /**
@@ -382,8 +413,8 @@ public function rejectPengembalian($id)
     {
         $request->validate([
             'tanggal' => 'required|date',
-            'ruang' => 'required|string|max:100',
-            'proyektor' => 'required|boolean',
+            'ruangan_id' => 'required|exists:ruangan,id',
+            'projector_id' => 'nullable|exists:projectors,id',
             'keperluan' => 'required|string|max:500',
             'status' => 'required|in:pending,disetujui,berlangsung,ditolak,selesai',
             'status_pengembalian' => 'required|in:belum dikembalikan,sudah dikembalikan',
@@ -392,7 +423,7 @@ public function rejectPengembalian($id)
 
         $peminjaman = Peminjaman::findOrFail($id);
 
-        $data = $request->only(['tanggal', 'ruang', 'proyektor', 'keperluan', 'catatan']);
+        $data = $request->only(['tanggal', 'ruangan_id', 'projector_id', 'keperluan', 'catatan']);
 
         // Handle status peminjaman
         // Jika status adalah "berlangsung", simpan sebagai "disetujui"

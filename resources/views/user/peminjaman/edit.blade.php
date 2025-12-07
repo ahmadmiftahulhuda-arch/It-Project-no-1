@@ -840,35 +840,64 @@
                                 @enderror
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Waktu Mulai</label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-clock"></i>
+                                        <input type="time" name="waktu_mulai" class="form-control" value="{{ old('waktu_mulai', $peminjaman->waktu_mulai) }}" 
+                                               {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                    </div>
+                                    @error('waktu_mulai')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Waktu Selesai</label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-clock"></i>
+                                        <input type="time" name="waktu_selesai" class="form-control" value="{{ old('waktu_selesai', $peminjaman->waktu_selesai) }}" 
+                                               {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                    </div>
+                                    @error('waktu_selesai')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="mb-4">
                                 <label class="form-label">Ruang</label>
                                 <div class="input-icon">
                                     <i class="fas fa-door-open"></i>
-                                    <select name="ruang" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                    <select name="ruangan_id" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
                                         <option value="">-- Pilih Ruang --</option>
-                                        <option value="Lab A" {{ old('ruang', $peminjaman->ruang) == 'Lab A' ? 'selected' : '' }}>Lab A</option>
-                                        <option value="Lab B" {{ old('ruang', $peminjaman->ruang) == 'Lab B' ? 'selected' : '' }}>Lab B</option>
-                                        <option value="Lab C" {{ old('ruang', $peminjaman->ruang) == 'Lab C' ? 'selected' : '' }}>Lab C</option>
-                                        <option value="Ruang Meeting" {{ old('ruang', $peminjaman->ruang) == 'Ruang Meeting' ? 'selected' : '' }}>Ruang Meeting</option>
-                                        <option value="Ruang Seminar" {{ old('ruang', $peminjaman->ruang) == 'Ruang Seminar' ? 'selected' : '' }}>Ruang Seminar</option>
+                                        @foreach($ruangan as $r)
+                                            <option value="{{ $r->id }}" {{ old('ruangan_id', $peminjaman->ruangan_id) == $r->id ? 'selected' : '' }}>
+                                                {{ $r->nama_ruangan }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                @error('ruang')
+                                @error('ruangan_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label">Proyektor</label>
+                                <label class="form-label">Proyektor (Opsional)</label>
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
-                                    <select name="proyektor" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
-                                        <option value="">-- Pilih Ketersediaan --</option>
-                                        <option value="1" {{ old('proyektor', $peminjaman->proyektor) == '1' ? 'selected' : '' }}>Ya, butuh proyektor</option>
-                                        <option value="0" {{ old('proyektor', $peminjaman->proyektor) == '0' ? 'selected' : '' }}>Tidak butuh proyektor</option>
+                                    <select name="projector_id" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
+                                        <option value="">-- Tidak Ada Proyektor --</option>
+                                        @foreach($projectors as $p)
+                                            <option value="{{ $p->id }}" {{ old('projector_id', $peminjaman->projector_id) == $p->id ? 'selected' : '' }}>
+                                                {{ $p->kode_proyektor }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                @error('proyektor')
+                                @error('projector_id')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>

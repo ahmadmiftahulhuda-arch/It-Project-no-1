@@ -18,6 +18,8 @@ class Peminjaman extends Model
         'tanggal',
         'ruang',
         'proyektor',
+        'ruangan_id',
+        'projector_id',
         'keperluan',
         'status',
         'waktu_mulai',
@@ -58,7 +60,7 @@ class Peminjaman extends Model
      */
     public function ruangan()
     {
-        return $this->belongsTo(Ruangan::class, 'ruang');
+        return $this->belongsTo(Ruangan::class, 'ruangan_id');
     }
 
     /**
@@ -67,7 +69,7 @@ class Peminjaman extends Model
      */
     public function projector()
     {
-        return $this->belongsTo(Projector::class, 'proyektor');
+        return $this->belongsTo(Projector::class, 'projector_id');
     }
 
     // Scope untuk riwayat
