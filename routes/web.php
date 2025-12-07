@@ -142,6 +142,9 @@ Route::prefix('admin')->group(function () {
     Route::resource('mata_kuliah', MataKuliahController::class);
     Route::resource('slotwaktu', SlotWaktuController::class);
 
+    Route::get('/settings', [App\Http\Controllers\Admin\PengaturanController::class, 'index'])->name('admin.settings.index');
+    Route::put('/settings/profile', [App\Http\Controllers\Admin\PengaturanController::class, 'updateProfile'])->name('admin.settings.profile.update');
+
     // Kelas & Mahasiswa
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('kelas', KelasController::class);
