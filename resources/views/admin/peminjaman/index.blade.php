@@ -1074,13 +1074,39 @@
             <form id="filterForm" method="GET" action="{{ route('admin.peminjaman.index') }}">
                 <div class="filter-grid">
                     <div class="filter-group">
-                        <label for="search">Cari Peminjam/Keperluan/Ruang</label>
-                        <input type="text" id="search" name="search" placeholder="Cari..."
-                            value="{{ request('search') }}">
+                        <label for="ruang_filter">Ruang</label>
+                        <select id="ruang_filter" name="ruangan_id" class="form-select">
+                            <option value="">Semua Ruang</option>
+                            @foreach ($ruangan as $r)
+                                <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                    {{ $r->nama_ruangan }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
+
+                    <div class="filter-group">
+                        <label for="projector_filter">Proyektor</label>
+                        <select id="projector_filter" name="projector_id" class="form-select">
+                            <option value="">Semua Proyektor</option>
+                            @if(isset($projectors) && $projectors->count())
+                                @foreach ($projectors as $p)
+                                    <option value="{{ $p->id }}" {{ request('projector_id') == $p->id ? 'selected' : '' }}>
+                                        {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="date_filter">Tanggal Peminjaman</label>
+                        <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
+                    </div>
+
                     <div class="filter-group">
                         <label for="status_filter">Status Peminjaman</label>
-                        <select id="status_filter" name="status">
+                        <select id="status_filter" name="status" class="form-select">
                             <option value="">Semua Status</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
                             </option>
@@ -1091,23 +1117,6 @@
                             <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
                             </option>
                         </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="date_filter">Tanggal Peminjaman</label>
-                        <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
-                    </div>
-                    <div class="filter-group">
-                        <label for="ruang_filter">Ruang</label>
-                        <select id="ruang_filter" name="ruangan_id">
-                            <option value="">Semua Ruang</option>
-                            @foreach ($ruangan as $r)
-                                <option value="{{ $r->id }}"
-                                    {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
-                                    {{ $r->nama_ruangan }}
-                                </option>
-                            @endforeach
-                        </select>
-
                     </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
@@ -1451,7 +1460,7 @@
                                     <label for="projector_id" class="form-label">Proyektor</label>
                                     <select name="projector_id" class="form-select" id="projector_id">
                                         <option value="">-- Tidak Ada Proyektor --</option>
-                                        @if (isset($projectors) && $projectors->count())
+                                        @if(isset($projectors) && $projectors->count())
                                             @foreach ($projectors as $p)
                                                 <option value="{{ $p->id }}">
                                                     {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
@@ -1541,7 +1550,7 @@
                                     <label for="projector_id" class="form-label">Proyektor</label>
                                     <select name="projector_id" class="form-select" id="projector_id">
                                         <option value="">-- Tidak Ada Proyektor --</option>
-                                        @if (isset($projectors) && $projectors->count())
+                                        @if(isset($projectors) && $projectors->count())
                                             @foreach ($projectors as $p)
                                                 <option value="{{ $p->id }}">
                                                     {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
@@ -1612,7 +1621,7 @@
 
             // Auto-submit form search ketika mengetik (dengan debounce)
             let searchTimeout;
-            const searchInputs = document.querySelectorAll('input[name="search"]');
+            const searchInputs = document.querySelectorAll('.search-bar input[name="search"]');
 
             searchInputs.forEach(input => {
                 input.addEventListener('input', function() {
