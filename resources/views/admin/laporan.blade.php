@@ -3,204 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan - Lab TIK</title>
+    <title>Laporan & Statistik - Admin Lab TI</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <style>
         :root {
-            --primary: #3498db;
-            --primary-dark: #2980b9;
-            --secondary: #2c3e50;
-            --accent: #e74c3c;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --info: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --background: #f9f9f9;
-            --sidebar: #2c3e50;
-            --card: #ffffff;
-            --text: #333333;
-            --text-light: #777777;
-            --border: #dddddd;
-        }
-
-        .dark-mode {
-            --background: #1e272e;
-            --sidebar: #1a2530;
-            --card: #2d3436;
-            --text: #f5f6fa;
-            --text-light: #dcdde1;
-            --border: #353b48;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --primary: #3b5998;
+            --secondary: #6d84b4;
+            --success: #4caf50;
+            --info: #2196f3;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --sidebar-width: 250px;
+            --text-light: #6c757d;
+            --text-dark: #495057;
+            --bg-light: #f5f8fa;
+            --bg-card: #ffffff;
+            --border-light: #e9ecef;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--text);
-            transition: all 0.3s ease;
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
         /* Sidebar Styles */
         .sidebar {
-            width: 260px;
-            background-color: var(--sidebar);
-            color: white;
-            transition: all 0.3s ease;
-            overflow-y: auto;
-            height: 100vh;
             position: fixed;
-            left: 0;
             top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .sidebar-header {
             padding: 20px;
-            display: flex;
-            align-items: center;
+            text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h2 {
-            margin-left: 10px;
-            font-size: 1.5rem;
-            font-weight: 600;
+            flex-shrink: 0;
         }
 
         .sidebar-logo {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(45deg, var(--primary), var(--info));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
         }
 
         .sidebar-menu {
-            padding: 15px 0;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .menu-section {
+            padding: 0 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
         }
 
         .menu-item {
-            padding: 12px 20px;
             display: flex;
             align-items: center;
-            color: var(--text-light);
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item:hover,
+        .menu-item.active {
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid white;
         }
 
         .menu-item i {
-            margin-right: 12px;
-            font-size: 18px;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            opacity: 0.8;
+            flex-shrink: 0;
         }
 
-        /* Main Content Styles */
-        .main-content {
+        .menu-item span {
             flex: 1;
-            margin-left: 260px;
-            padding: 20px;
-            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Header Styles */
+        /* Dropdown Menu Styles */
+        .dropdown-custom {
+            margin-bottom: 5px;
+        }
+
+        .dropdown-toggle-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .dropdown-toggle-custom:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dropdown-toggle-custom i:last-child {
+            transition: transform 0.3s;
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid white;
+        }
+
+        .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-items.show {
+            max-height: 500px;
+        }
+
+        .dropdown-items .dropdown-item {
+            padding: 10px 20px 10px 40px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .dropdown-items .dropdown-item:hover,
+        .dropdown-items .dropdown-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .dropdown-items .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            transition: all 0.3s;
+            min-height: 100vh;
+        }
+
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
-            background-color: var(--card);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
+            background: var(--bg-card);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
         }
 
         .search-bar {
-            display: flex;
-            align-items: center;
-            background-color: var(--background);
-            border-radius: 20px;
-            padding: 8px 15px;
+            position: relative;
             width: 300px;
         }
 
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
         .search-bar input {
-            border: none;
-            background: transparent;
-            outline: none;
-            color: var(--text);
             width: 100%;
-            margin-left: 10px;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
         }
 
         .user-actions {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
-        .notification-btn, .theme-toggle {
+        .notification-btn,
+        .theme-toggle {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--background);
-            margin-left: 10px;
+            background: var(--bg-light);
+            border-radius: 50%;
             cursor: pointer;
-            position: relative;
+            transition: all 0.3s;
+            color: var(--text-dark);
         }
 
-        .notification-btn::after {
-            content: '3';
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 18px;
-            height: 18px;
-            background-color: var(--accent);
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .notification-btn:hover,
+        .theme-toggle:hover {
+            background: #e4e6eb;
+            color: var(--primary);
         }
 
         .user-profile {
             display: flex;
             align-items: center;
-            margin-left: 15px;
+            gap: 10px;
         }
 
         .user-avatar {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--info));
+            background: var(--primary);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            margin-right: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         /* Page Title */
@@ -212,86 +329,75 @@
         }
 
         .page-title h1 {
-            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 5px;
             font-weight: 600;
+            font-size: 1.8rem;
         }
 
         .page-title p {
             color: var(--text-light);
-            margin-top: 5px;
+            margin: 0;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-            border: none;
-        }
-
+        /* Button Styles */
         .btn-primary {
-            background-color: var(--primary);
+            background: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-dark);
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
         }
 
         .btn-outline {
-            background-color: transparent;
             border: 1px solid var(--primary);
             color: var(--primary);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
 
         .btn-outline:hover {
-            background-color: var(--primary);
+            background: var(--primary);
             color: white;
         }
 
         .btn-success {
-            background-color: var(--success);
+            background: var(--success);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(76, 175, 80, 0.2);
             color: white;
         }
 
         .btn-success:hover {
-            background-color: #27ae60;
-        }
-
-        .btn-warning {
-            background-color: var(--warning);
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background-color: #e67e22;
-        }
-
-        .btn-danger {
-            background-color: var(--accent);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c0392b;
+            background: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
         }
 
         /* Filter Section */
         .filter-section {
-            background-color: var(--card);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
         }
 
         .filter-grid {
@@ -300,89 +406,94 @@
             gap: 15px;
         }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
         .filter-group label {
-            margin-bottom: 8px;
+            display: block;
+            margin-bottom: 5px;
             font-weight: 500;
-            color: var(--text-light);
+            color: var(--dark);
             font-size: 0.9rem;
         }
 
-        .filter-group select, .filter-group input {
-            padding: 10px 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background-color: var(--background);
-            color: var(--text);
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
         }
 
         /* Stats Cards */
-        .stats-grid {
+        .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
-            background-color: var(--card);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 1px solid var(--border-light);
         }
 
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-right: 15px;
             font-size: 1.5rem;
+            color: white;
+            opacity: 0.9;
         }
 
-        .stat-icon.blue {
-            background-color: rgba(52, 152, 219, 0.15);
-            color: var(--primary);
+        .stat-icon.primary {
+            background: var(--primary);
         }
 
-        .stat-icon.green {
-            background-color: rgba(46, 204, 113, 0.15);
-            color: var(--success);
+        .stat-icon.success {
+            background: var(--success);
         }
 
-        .stat-icon.orange {
-            background-color: rgba(243, 156, 18, 0.15);
-            color: var(--warning);
+        .stat-icon.warning {
+            background: var(--warning);
         }
 
-        .stat-icon.red {
-            background-color: rgba(231, 76, 60, 0.15);
-            color: var(--accent);
+        .stat-icon.danger {
+            background: var(--danger);
         }
 
-        .stat-title {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
+        .stat-info h3 {
+            margin: 0;
             font-size: 1.8rem;
             font-weight: 700;
+        }
+
+        .stat-info p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
             margin-bottom: 5px;
         }
 
@@ -390,6 +501,7 @@
             display: flex;
             align-items: center;
             font-size: 0.85rem;
+            margin-top: 5px;
         }
 
         .stat-change.positive {
@@ -397,7 +509,7 @@
         }
 
         .stat-change.negative {
-            color: var(--accent);
+            color: var(--danger);
         }
 
         /* Charts Section */
@@ -405,14 +517,15 @@
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .chart-card {
-            background-color: var(--card);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
         }
 
         .chart-header {
@@ -422,33 +535,50 @@
             margin-bottom: 20px;
         }
 
-        .chart-header h3 {
+        .section-title {
             font-size: 1.2rem;
             font-weight: 600;
+            color: var(--dark);
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
         }
 
         .chart-container {
             position: relative;
             height: 300px;
+            width: 100%;
         }
 
         /* Recent Activity */
-        .activity-card {
-            background-color: var(--card);
-            border-radius: 12px;
+        .activity-container {
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
         }
 
         .activity-list {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .activity-item {
             display: flex;
+            align-items: flex-start;
             padding: 15px 0;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .activity-item:last-child {
@@ -458,32 +588,30 @@
         .activity-icon {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             flex-shrink: 0;
+            color: white;
+            font-size: 1rem;
         }
 
-        .activity-icon.blue {
-            background-color: rgba(52, 152, 219, 0.15);
-            color: var(--primary);
+        .activity-icon.primary {
+            background: var(--primary);
         }
 
-        .activity-icon.green {
-            background-color: rgba(46, 204, 113, 0.15);
-            color: var(--success);
+        .activity-icon.success {
+            background: var(--success);
         }
 
-        .activity-icon.orange {
-            background-color: rgba(243, 156, 18, 0.15);
-            color: var(--warning);
+        .activity-icon.warning {
+            background: var(--warning);
         }
 
         .activity-icon.purple {
-            background-color: rgba(155, 89, 182, 0.15);
-            color: #9b59b6;
+            background: #9b59b6;
         }
 
         .activity-content {
@@ -503,32 +631,11 @@
 
         .activity-time {
             color: var(--text-light);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 992px) {
-            .sidebar {
-                width: 80px;
-            }
-            
-            .sidebar-header h2, .menu-item span {
-                display: none;
-            }
-            
-            .menu-item {
-                justify-content: center;
-                padding: 15px;
-            }
-            
-            .menu-item i {
-                margin-right: 0;
-            }
-            
-            .main-content {
-                margin-left: 80px;
-            }
-            
             .charts-grid {
                 grid-template-columns: 1fr;
             }
@@ -536,343 +643,577 @@
 
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-100%);
-                z-index: 1000;
+                width: 70px;
+                overflow: hidden;
             }
-            
-            .sidebar.active {
-                transform: translateX(0);
+
+            .sidebar-header h2,
+            .menu-item span,
+            .dropdown-toggle-custom span {
+                display: none;
             }
-            
+
+            .menu-item {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .menu-item i,
+            .dropdown-toggle-custom i:first-child {
+                margin-right: 0;
+            }
+
+            .dropdown-toggle-custom {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .dropdown-toggle-custom i:last-child {
+                display: none;
+            }
+
+            .dropdown-items .dropdown-item {
+                padding: 10px 15px;
+                justify-content: center;
+            }
+
+            .dropdown-items .dropdown-item span {
+                display: none;
+            }
+
+            .dropdown-items .dropdown-item i {
+                margin-right: 0;
+            }
+
             .main-content {
-                margin-left: 0;
+                margin-left: 70px;
             }
-            
+
             .header {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 15px;
             }
-            
+
             .search-bar {
                 width: 100%;
-                margin-bottom: 15px;
             }
-            
-            .user-actions {
-                width: 100%;
-                justify-content: space-between;
+
+            .stats-container {
+                grid-template-columns: 1fr;
             }
-            
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
             .page-title {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .menu-toggle {
-                display: block;
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1100;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                background-color: var(--primary);
-                color: white;
+
+            .action-buttons {
+                width: 100%;
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                gap: 10px;
+            }
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --bg-light: #121212;
+            --bg-card: #1e1e1e;
+            --text-dark: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border-light: #333;
+            --dark: #f0f0f0;
+        }
+
+        body.dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .header,
+        body.dark-mode .filter-section,
+        body.dark-mode .stat-card,
+        body.dark-mode .chart-card,
+        body.dark-mode .activity-container {
+            background: var(--bg-card);
+            color: var(--text-dark);
+            border-color: var(--border-light);
+        }
+
+        body.dark-mode .search-bar input,
+        body.dark-mode .filter-group select {
+            background: #2a2a2a;
+            border-color: var(--border-light);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .notification-btn,
+        body.dark-mode .theme-toggle {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .page-title h1 {
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .section-title {
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .filter-group label {
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .activity-desc {
+            color: var(--text-light);
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: var(--bg-card);
+            border-color: var(--border-light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .dropdown-menu .dropdown-item {
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .dropdown-menu .dropdown-item:hover,
+        body.dark-mode .dropdown-menu .dropdown-item:focus {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        body.dark-mode .dropdown-menu .dropdown-divider {
+            border-color: var(--border-light);
+        }
+
+        .menu-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <i class="fas fa-laptop-code"></i>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <h2>Admin TI</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <!-- Menu Utama -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                    <span>Menu Utama</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="menuUtama">
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
                 </div>
-                <h2>Lab TIK</h2>
             </div>
             
-            <div class="sidebar-menu">
-                <a href="/admin/dashboard" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/admin/item" class="menu-item">
-                    <i class="fas fa-box"></i>
-                    <span>Inventaris Barang</span>
-                </a>
-                <a href="/admin/peminjaman" class="menu-item">
-                    <i class="fas fa-hand-holding"></i>
-                    <span>Peminjaman</span>
-                </a>
-                <a href="/admin/pengembalian" class="menu-item">
-                    <i class="fas fa-undo"></i>
-                    <span>Pengembalian</span>
-                <a href="/admin/feedback" class="menu-item">
-                    <i class="fas fa-comment-dots"></i>
-                    <span>Feedback</span>
-                </a>
-                </a>
-                <a href="/admin/mata_kuliah" class="menu-item">
-                <i class="fas fa-book"></i>
-                <span>Matakuliah</span>
-            </a>
-            <a href="/admin/kelas" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Kelas</span>
-            </a>
-                <a href="/admin/pengguna" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Pengguna</span>
-                </a>
-                <a href="/admin/laporan" class="menu-item active">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Laporan</span>
-                </a>
-                <a href="/admin/pengaturan" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
+            <!-- Manajemen Peminjaman -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                    <span>Manajemen Peminjaman</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="peminjamanMenu">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
+                        <i class="fas fa-hand-holding"></i>
+                        <span>Peminjaman</span>
+                    </a>
+                    <a href="{{ route('admin.pengembalian') }}" class="dropdown-item">
+                        <i class="fas fa-undo"></i>
+                        <span>Pengembalian</span>
+                    </a>
+                    <a href="{{ route('admin.riwayat') }}" class="dropdown-item">
+                        <i class="fas fa-history"></i>
+                        <span>Riwayat Peminjaman</span>
+                    </a>
+                    <a href="{{ route('admin.feedback.index') }}" class="dropdown-item">
+                        <i class="fas fa-comment"></i>
+                        <span>Feedback</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Aset -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                    <span>Manajemen Aset</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="asetMenu">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        <span>Proyektor</span>
+                    </a>
+                    <a href="{{ route('admin.ruangan.index') }}" class="dropdown-item">
+                        <i class="fas fa-door-open"></i>
+                        <span>Ruangan</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Akademik -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                    <span>Manajemen Akademik</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="akademikMenu">
+                    <a href="{{ route('jadwal-perkuliahan.index') }}" class="dropdown-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jadwal Perkuliahan</span>
+                    </a>
+                    <a href="{{ route('admin.slotwaktu.index') }}" class="dropdown-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Slot Waktu</span>
+                    </a>
+                    <a href="{{ route('mata_kuliah.index') }}" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                    <a href="{{ route('admin.kelas.index') }}" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Pengguna -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                    <span>Manajemen Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="penggunaMenu">
+                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Laporan & Pengaturan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="true" aria-controls="laporanMenu">
+                    <span>Laporan & Pengaturan</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse show" id="laporanMenu">
+                    <a href="{{ route('admin.laporan') }}" class="dropdown-item active">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Statistik</span>
+                    </a>
+                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sistem Pendukung Keputusan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                    <span>Sistem TPK</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="spkMenu">
+                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Pengaturan AHP</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <form class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari laporan...">
+            </form>
+
+            <div class="user-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                </div>
+
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+
+                <div class="dropdown">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                        <div class="user-avatar">
+                            @auth
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            @else
+                                A
+                            @endauth
+                        </div>
+                        <div>
+                            <div style="color: var(--text-dark);">
+                                @auth
+                                    {{ auth()->user()->name }}
+                                @else
+                                    Administrator
+                                @endauth
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">
+                                @auth
+                                    {{ auth()->user()->peran ?? 'Admin' }}
+                                @else
+                                    Admin
+                                @endauth
+                            </div>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari laporan...">
-                </div>
-                
-                <div class="user-actions">
-                    <div class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    
-                    <div class="theme-toggle" id="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                    
-                    <div class="user-profile">
-                        <div class="user-avatar">AD</div>
-                        <div>
-                            <div>Admin Lab</div>
-                            <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Page Title -->
+        <div class="page-title">
+            <div>
+                <h1>Laporan & Statistik</h1>
+                <p>Analisis data dan statistik penggunaan Laboratorium Teknologi Informasi</p>
             </div>
+            <div class="action-buttons">
+                <button class="btn btn-outline" id="printBtn">
+                    <i class="fas fa-print me-1"></i> Cetak
+                </button>
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-file-export me-1"></i> Ekspor
+                </button>
+            </div>
+        </div>
 
-            <!-- Page Title -->
-            <div class="page-title">
-                <div>
-                    <h1>Laporan Lab TIK</h1>
-                    <p>Analisis data dan statistik penggunaan laboratorium</p>
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="report-type">Jenis Laporan</label>
+                    <select id="report-type">
+                        <option value="peminjaman">Laporan Peminjaman</option>
+                        <option value="penggunaan">Laporan Penggunaan</option>
+                        <option value="inventaris">Laporan Inventaris</option>
+                        <option value="pengguna">Laporan Pengguna</option>
+                    </select>
                 </div>
-                <div class="action-buttons">
-                    <button class="btn btn-outline">
-                        <i class="fas fa-print"></i> Cetak
+                <div class="filter-group">
+                    <label for="date-range">Rentang Waktu</label>
+                    <select id="date-range">
+                        <option value="week">Minggu Ini</option>
+                        <option value="month" selected>Bulan Ini</option>
+                        <option value="quarter">Kuartal Ini</option>
+                        <option value="year">Tahun Ini</option>
+                        <option value="custom">Kustom</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="department">Jurusan</label>
+                    <select id="department">
+                        <option value="">Semua Jurusan</option>
+                        <option value="ti">Teknik Informatika</option>
+                        <option value="si">Sistem Informasi</option>
+                        <option value="tk">Teknik Komputer</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="generate-btn">&nbsp;</label>
+                    <button class="btn btn-success" id="generateBtn" style="width: 100%; height: 41px;">
+                        <i class="fas fa-sync-alt me-1"></i> Generate Laporan
                     </button>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-file-export"></i> Ekspor
-                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Filter Section -->
-            <div class="filter-section">
-                <div class="filter-grid">
-                    <div class="filter-group">
-                        <label for="report-type">Jenis Laporan</label>
-                        <select id="report-type">
-                            <option value="peminjaman">Laporan Peminjaman</option>
-                            <option value="penggunaan">Laporan Penggunaan</option>
-                            <option value="inventaris">Laporan Inventaris</option>
-                            <option value="pengguna">Laporan Pengguna</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="date-range">Rentang Waktu</label>
-                        <select id="date-range">
-                            <option value="week">Minggu Ini</option>
-                            <option value="month" selected>Bulan Ini</option>
-                            <option value="quarter">Kuartal Ini</option>
-                            <option value="year">Tahun Ini</option>
-                            <option value="custom">Kustom</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="department">Jurusan</label>
-                        <select id="department">
-                            <option value="">Semua Jurusan</option>
-                            <option value="ti">Teknik Informatika</option>
-                            <option value="si">Sistem Informasi</option>
-                            <option value="tk">Teknik Komputer</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="generate-btn">&nbsp;</label>
-                        <button class="btn btn-primary" style="height: 41px;">
-                            <i class="fas fa-sync-alt"></i> Generate Laporan
-                        </button>
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <i class="fas fa-hand-holding"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>248</h3>
+                    <p>Total Peminjaman</p>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i> 12.5% dari bulan lalu
                     </div>
                 </div>
             </div>
-
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Total Peminjaman</div>
-                            <div class="stat-value">248</div>
-                        </div>
-                        <div class="stat-icon blue">
-                            <i class="fas fa-hand-holding"></i>
-                        </div>
-                    </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>563</h3>
+                    <p>Barang Dipinjam</p>
                     <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i> 12.5% dari bulan lalu
+                        <i class="fas fa-arrow-up me-1"></i> 8.3% dari bulan lalu
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Barang Dipinjam</div>
-                            <div class="stat-value">563</div>
-                        </div>
-                        <div class="stat-icon green">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                    </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>184</h3>
+                    <p>Pengguna Aktif</p>
                     <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i> 8.3% dari bulan lalu
+                        <i class="fas fa-arrow-up me-1"></i> 5.2% dari bulan lalu
                     </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Pengguna Aktif</div>
-                            <div class="stat-value">184</div>
-                        </div>
-                        <div class="stat-icon orange">
-                            <i class="fas fa-users"></i>
-                        </div>
-                    </div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i> 5.2% dari bulan lalu
-                    </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon danger">
+                    <i class="fas fa-times-circle"></i>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Barang Rusak</div>
-                            <div class="stat-value">12</div>
-                        </div>
-                        <div class="stat-icon red">
-                            <i class="fas fa-times-circle"></i>
-                        </div>
-                    </div>
+                <div class="stat-info">
+                    <h3>12</h3>
+                    <p>Barang Rusak</p>
                     <div class="stat-change negative">
-                        <i class="fas fa-arrow-down"></i> 3.7% dari bulan lalu
+                        <i class="fas fa-arrow-down me-1"></i> 3.7% dari bulan lalu
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Charts Section -->
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3>Statistik Peminjaman Bulanan</h3>
-                        <select style="padding: 8px; border-radius: 6px; background: var(--background); color: var(--text); border: 1px solid var(--border);">
-                            <option>2023</option>
-                            <option>2022</option>
-                        </select>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="monthlyChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3>Distribusi Peminjaman</h3>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="distributionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="activity-card">
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <div class="chart-card">
                 <div class="chart-header">
-                    <h3>Aktivitas Terbaru</h3>
-                    <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 500;">Lihat Semua</a>
+                    <div class="section-title">Statistik Peminjaman Bulanan</div>
+                    <select id="yearSelect" style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                    </select>
                 </div>
-                
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-icon blue">
-                            <i class="fas fa-hand-holding"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Peminjaman Baru</div>
-                            <div class="activity-desc">Ahmad Surya meminjam 2 laptop dan 1 projector</div>
-                            <div class="activity-time">2 jam yang lalu</div>
-                        </div>
-                    </li>
-                    
-                    <li class="activity-item">
-                        <div class="activity-icon green">
-                            <i class="fas fa-undo"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Pengembalian Barang</div>
-                            <div class="activity-desc">Rina Susanti mengembalikan 3 unit laptop</div>
-                            <div class="activity-time">5 jam yang lalu</div>
-                        </div>
-                    </li>
-                    
-                    <li class="activity-item">
-                        <div class="activity-icon orange">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Pengguna Baru</div>
-                            <div class="activity-desc">Dewi Wulandari terdaftar sebagai pengguna lab</div>
-                            <div class="activity-time">Kemarin, 15:32</div>
-                        </div>
-                    </li>
-                    
-                    <li class="activity-item">
-                        <div class="activity-icon purple">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Laporan Kerusakan</div>
-                            <div class="activity-desc">Keyboard pada workstation 05 tidak berfungsi</div>
-                            <div class="activity-time">12 Sep 2023, 10:45</div>
-                        </div>
-                    </li>
-                </ul>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
             </div>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="section-title">Distribusi Peminjaman</div>
+                    <a href="#" class="view-all">Detail</a>
+                </div>
+                <div class="chart-container">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-container">
+            <div class="chart-header">
+                <div class="section-title">Aktivitas Terbaru</div>
+                <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
+            </div>
+            
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon primary">
+                        <i class="fas fa-hand-holding"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Peminjaman Baru</div>
+                        <div class="activity-desc">Ahmad Surya meminjam 2 laptop dan 1 projector</div>
+                        <div class="activity-time">2 jam yang lalu</div>
+                    </div>
+                </li>
+                
+                <li class="activity-item">
+                    <div class="activity-icon success">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Pengembalian Barang</div>
+                        <div class="activity-desc">Rina Susanti mengembalikan 3 unit laptop</div>
+                        <div class="activity-time">5 jam yang lalu</div>
+                    </div>
+                </li>
+                
+                <li class="activity-item">
+                    <div class="activity-icon warning">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Pengguna Baru</div>
+                        <div class="activity-desc">Dewi Wulandari terdaftar sebagai pengguna lab</div>
+                        <div class="activity-time">Kemarin, 15:32</div>
+                    </div>
+                </li>
+                
+                <li class="activity-item">
+                    <div class="activity-icon purple">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Laporan Kerusakan</div>
+                        <div class="activity-desc">Keyboard pada workstation 05 tidak berfungsi</div>
+                        <div class="activity-time">12 Sep 2023, 10:45</div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -880,43 +1221,103 @@
         <i class="fas fa-bars"></i>
     </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Toggle theme
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('darkMode', 'disabled');
+        // Initialize when document is ready
+        $(document).ready(function() {
+            initializeTheme();
+            initializeEventListeners();
+            initializeCharts();
+        });
+
+        function initializeEventListeners() {
+            $('#theme-toggle').on('click', function() {
+                toggleTheme();
+            });
+
+            $('#menu-toggle').on('click', function() {
+                toggleSidebar();
+            });
+
+            $('#printBtn').on('click', function() {
+                window.print();
+            });
+
+            $('#exportBtn').on('click', function() {
+                exportReport();
+            });
+
+            $('#generateBtn').on('click', function() {
+                generateReport();
+            });
+
+            $('#yearSelect').on('change', function() {
+                updateMonthlyChart(this.value);
+            });
+
+            // Initialize Bootstrap dropdowns
+            const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+            const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl));
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme === 'enabled') {
+                document.body.classList.add('dark-mode');
+                $('#theme-toggle').html('<i class="fas fa-sun"></i>');
             }
-        });
-        
-        // Toggle sidebar on mobile
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-        
-        // Charts
-        document.addEventListener('DOMContentLoaded', function() {
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            let theme = 'disabled';
+            let icon = '<i class="fas fa-moon"></i>';
+            if (document.body.classList.contains('dark-mode')) {
+                theme = 'enabled';
+                icon = '<i class="fas fa-sun"></i>';
+            }
+            localStorage.setItem('darkMode', theme);
+            $('#theme-toggle').html(icon);
+            
+            // Update chart colors for dark mode
+            updateChartColors();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.style.transform = 'translateX(0)';
+                } else {
+                    sidebar.style.transform = 'translateX(-100%)';
+                }
+            }
+        }
+
+        let monthlyChart, distributionChart;
+
+        function initializeCharts() {
             // Monthly Chart
             const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-            const monthlyChart = new Chart(monthlyCtx, {
+            monthlyChart = new Chart(monthlyCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
                     datasets: [{
                         label: 'Jumlah Peminjaman',
                         data: [45, 62, 58, 72, 85, 93, 100, 112, 95, 78, 65, 52],
-                        backgroundColor: '#3498db',
-                        borderColor: '#2980b9',
-                        borderWidth: 1
+                        backgroundColor: document.body.classList.contains('dark-mode') ? 
+                            'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)',
+                        borderColor: document.body.classList.contains('dark-mode') ? 
+                            'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false,
                     }]
                 },
                 options: {
@@ -926,18 +1327,38 @@
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
+                                color: document.body.classList.contains('dark-mode') ? 
+                                    'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: document.body.classList.contains('dark-mode') ? 
+                                    '#a0a0a0' : '#495057'
                             }
                         },
                         x: {
                             grid: {
                                 display: false
+                            },
+                            ticks: {
+                                color: document.body.classList.contains('dark-mode') ? 
+                                    '#a0a0a0' : '#495057'
                             }
                         }
                     },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: document.body.classList.contains('dark-mode') ? 
+                                'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                            titleColor: document.body.classList.contains('dark-mode') ? 
+                                '#fff' : '#000',
+                            bodyColor: document.body.classList.contains('dark-mode') ? 
+                                '#fff' : '#000',
+                            borderColor: document.body.classList.contains('dark-mode') ? 
+                                '#333' : '#ddd',
+                            borderWidth: 1
                         }
                     }
                 }
@@ -945,20 +1366,23 @@
             
             // Distribution Chart
             const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-            const distributionChart = new Chart(distributionCtx, {
+            distributionChart = new Chart(distributionCtx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Laptop', 'Projector', 'Tablet', 'VR Headset', 'Lainnya'],
                     datasets: [{
                         data: [45, 20, 15, 10, 10],
                         backgroundColor: [
-                            '#3498db',
-                            '#2ecc71',
-                            '#f39c12',
-                            '#9b59b6',
-                            '#e74c3c'
+                            'rgba(59, 89, 152, 0.8)',
+                            'rgba(76, 175, 80, 0.8)',
+                            'rgba(255, 152, 0, 0.8)',
+                            'rgba(155, 89, 182, 0.8)',
+                            'rgba(244, 67, 54, 0.8)'
                         ],
-                        borderWidth: 0
+                        borderColor: document.body.classList.contains('dark-mode') ? 
+                            'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+                        borderWidth: 2,
+                        hoverOffset: 15
                     }]
                 },
                 options: {
@@ -966,17 +1390,161 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: document.body.classList.contains('dark-mode') ? 
+                                    '#a0a0a0' : '#495057',
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: document.body.classList.contains('dark-mode') ? 
+                                'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                            titleColor: document.body.classList.contains('dark-mode') ? 
+                                '#fff' : '#000',
+                            bodyColor: document.body.classList.contains('dark-mode') ? 
+                                '#fff' : '#000',
+                            borderColor: document.body.classList.contains('dark-mode') ? 
+                                '#333' : '#ddd',
+                            borderWidth: 1
                         }
                     }
                 }
             });
+        }
+
+        function updateChartColors() {
+            if (monthlyChart) {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                
+                // Update monthly chart colors
+                monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 
+                    'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)';
+                monthlyChart.data.datasets[0].borderColor = isDarkMode ? 
+                    'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
+                
+                monthlyChart.options.scales.y.grid.color = isDarkMode ? 
+                    'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                monthlyChart.options.scales.y.ticks.color = isDarkMode ? 
+                    '#a0a0a0' : '#495057';
+                monthlyChart.options.scales.x.ticks.color = isDarkMode ? 
+                    '#a0a0a0' : '#495057';
+                
+                monthlyChart.options.plugins.tooltip.backgroundColor = isDarkMode ? 
+                    'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+                monthlyChart.options.plugins.tooltip.titleColor = isDarkMode ? 
+                    '#fff' : '#000';
+                monthlyChart.options.plugins.tooltip.bodyColor = isDarkMode ? 
+                    '#fff' : '#000';
+                monthlyChart.options.plugins.tooltip.borderColor = isDarkMode ? 
+                    '#333' : '#ddd';
+                
+                monthlyChart.update();
+            }
+            
+            if (distributionChart) {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                
+                distributionChart.data.datasets[0].borderColor = isDarkMode ? 
+                    'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+                
+                distributionChart.options.plugins.legend.labels.color = isDarkMode ? 
+                    '#a0a0a0' : '#495057';
+                
+                distributionChart.options.plugins.tooltip.backgroundColor = isDarkMode ? 
+                    'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+                distributionChart.options.plugins.tooltip.titleColor = isDarkMode ? 
+                    '#fff' : '#000';
+                distributionChart.options.plugins.tooltip.bodyColor = isDarkMode ? 
+                    '#fff' : '#000';
+                distributionChart.options.plugins.tooltip.borderColor = isDarkMode ? 
+                    '#333' : '#ddd';
+                
+                distributionChart.update();
+            }
+        }
+
+        function updateMonthlyChart(year) {
+            // Simulate data change based on year
+            let data;
+            if (year === '2022') {
+                data = [35, 48, 52, 65, 72, 80, 88, 95, 82, 70, 58, 45];
+            } else if (year === '2021') {
+                data = [28, 40, 45, 55, 62, 70, 75, 80, 72, 60, 50, 38];
+            } else {
+                data = [45, 62, 58, 72, 85, 93, 100, 112, 95, 78, 65, 52];
+            }
+            
+            monthlyChart.data.datasets[0].data = data;
+            monthlyChart.update();
+        }
+
+        function exportReport() {
+            const reportType = $('#report-type').val();
+            const dateRange = $('#date-range').val();
+            const department = $('#department').val();
+            
+            // Simulate export process
+            alert(`Mengekspor laporan:\nJenis: ${reportType}\nRentang: ${dateRange}\nJurusan: ${department || 'Semua'}`);
+            
+            // In real implementation, this would make an AJAX call
+            // $.ajax({
+            //     url: '', // Placeholder for export URL
+            //     method: 'POST',
+            //     data: {
+            //         report_type: reportType,
+            //         date_range: dateRange,
+            //         department: department
+            //     },
+            //     success: function(response) {
+            //         // Handle export success
+            //     }
+            // });
+        }
+
+        function generateReport() {
+            const reportType = $('#report-type').val();
+            const dateRange = $('#date-range').val();
+            const department = $('#department').val();
+            
+            // Show loading state
+            const btn = $('#generateBtn');
+            const originalHtml = btn.html();
+            btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
+            btn.prop('disabled', true);
+            
+            // Simulate API call
+            setTimeout(() => {
+                btn.html(originalHtml);
+                btn.prop('disabled', false);
+                
+                // Update charts with new data
+                updateMonthlyChart($('#yearSelect').val());
+                
+                alert(`Laporan berhasil digenerate!\nJenis: ${reportType}\nRentang: ${dateRange}\nJurusan: ${department || 'Semua'}`);
+            }, 1500);
+        }
+
+        // Handle responsive sidebar
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth > 768) {
+                sidebar.style.transform = 'translateX(0)';
+                mainContent.style.marginLeft = 'var(--sidebar-width)';
+            } else {
+                sidebar.style.transform = 'translateX(-100%)';
+                mainContent.style.marginLeft = '0';
+            }
         });
-        
+
         // Terapkan dark mode jika sebelumnya diaktifkan
         if (localStorage.getItem('darkMode') === 'enabled') {
             document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            $('#theme-toggle').html('<i class="fas fa-sun"></i>');
         }
     </script>
 </body>

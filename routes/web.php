@@ -188,6 +188,9 @@ Route::prefix('admin')->group(function () {
             ->name('admin.pengembalian.destroy');
     });
 
+    // Laporan
+    Route::get('/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
+
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');
         Route::put('/{id}', [AdminController::class, 'updateRiwayat'])->name('admin.riwayat.update');
