@@ -179,7 +179,7 @@ class AdminController extends Controller
      */
     public function riwayat(Request $request)
     {
-        $query = Peminjaman::with('user');
+        $query = Peminjaman::with(['user', 'ruangan', 'projector']);
 
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
@@ -218,12 +218,18 @@ class AdminController extends Controller
 
         $riwayat = $query->orderBy('created_at', 'desc')->paginate(15);
 
+        // Ambil data ruangan dan projector untuk dropdown di modal edit
+        $ruangans = \App\Models\Ruangan::orderBy('nama_ruangan')->get();
+        $projectors = \App\Models\Projector::orderBy('kode_proyektor')->get();
+
         return view('admin.riwayat.index', compact(
             'riwayat',
             'completedCount',
             'cancelledCount',
             'ongoingCount',
-            'totalCount'
+            'totalCount',
+            'ruangans',
+            'projectors'
         ));
     }
 
@@ -462,6 +468,29 @@ class AdminController extends Controller
             ->with('success', 'Pengembalian ditolak.');
     }
 
+    /**
+     * Update pengembalian (kondisi dan catatan)
+     */
+    public function updatePengembalian(Request $request, $id)
+    {
+        $request->validate([
+            'kondisi_ruang' => 'required|string',
+            'kondisi_proyektor' => 'required|string',
+            'catatan' => 'nullable|string|max:500',
+        ]);
+
+        $pengembalian = \App\Models\Pengembalian::findOrFail($id);
+
+        $pengembalian->update([
+            'kondisi_ruang' => $request->kondisi_ruang,
+            'kondisi_proyektor' => $request->kondisi_proyektor,
+            'catatan' => $request->catatan,
+        ]);
+
+        return redirect()->route('admin.pengembalian')
+            ->with('success', 'Pengembalian berhasil diperbarui.');
+    }
+
 
     /**
      * Update riwayat peminjaman
@@ -474,13 +503,22 @@ class AdminController extends Controller
             'projector_id' => 'nullable|exists:projectors,id',
             'keperluan' => 'required|string|max:500',
             'status' => 'required|in:pending,disetujui,berlangsung,ditolak,selesai',
-            'status_pengembalian' => 'required|in:belum dikembalikan,sudah dikembalikan',
+            'waktu_mulai' => 'nullable|date_format:H:i',
+            'waktu_selesai' => 'nullable|date_format:H:i',
             'catatan' => 'nullable|string|max:500',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($id);
 
-        $data = $request->only(['tanggal', 'ruangan_id', 'projector_id', 'keperluan', 'catatan']);
+        $data = [
+            'tanggal' => $request->tanggal,
+            'ruangan_id' => $request->ruangan_id,
+            'projector_id' => $request->projector_id ?? null,
+            'keperluan' => $request->keperluan,
+            'catatan' => $request->catatan,
+            'waktu_mulai' => $request->waktu_mulai ?? '08:00:00',
+            'waktu_selesai' => $request->waktu_selesai ?? '17:00:00',
+        ];
 
         // Handle status peminjaman
         // Jika status adalah "berlangsung", simpan sebagai "disetujui"
@@ -489,16 +527,6 @@ class AdminController extends Controller
         } else {
             $data['status'] = $request->status;
         }
-
-        // Handle status pengembalian
-        if ($request->status_pengembalian == 'sudah dikembalikan') {
-            $data['tanggal_kembali'] = Carbon::now();
-            $data['status_pengembalian'] = 'sudah dikembalikan';
-        } else {
-            $data['tanggal_kembali'] = null;
-            $data['status_pengembalian'] = 'belum dikembalikan';
-        }
-
         $peminjaman->update($data);
 
         return redirect()->route('admin.riwayat')

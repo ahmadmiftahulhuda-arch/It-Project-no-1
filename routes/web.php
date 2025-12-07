@@ -177,6 +177,7 @@ Route::prefix('admin')->group(function () {
     Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
         Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
+        Route::put('/{id}', [AdminController::class, 'updatePengembalian'])->name('admin.pengembalian.update');
         Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])
             ->name('admin.pengembalian.kembalikan');
         Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])

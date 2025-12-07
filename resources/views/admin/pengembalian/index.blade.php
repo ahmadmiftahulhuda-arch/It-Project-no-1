@@ -1016,8 +1016,8 @@
                         <label for="status_filter">Status Pengembalian</label>
                         <select id="status_filter" name="status">
                             <option value="">Semua Status</option>
-                            <option value="pending"
-                                {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu Verifikasi
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
+                                Verifikasi
                             </option>
                             <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>
                                 Disetujui</option>
@@ -1087,8 +1087,8 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <strong>{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? $pengembalian->peminjaman->ruang ?? 'N/A' }}</strong><br>
-                                        @if($pengembalian->peminjaman->projector)
+                                        <strong>{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? ($pengembalian->peminjaman->ruang ?? 'N/A') }}</strong><br>
+                                        @if ($pengembalian->peminjaman->projector)
                                             <small class="text-muted">
                                                 <i class="fas fa-video me-1"></i>
                                                 {{ $pengembalian->peminjaman->projector->kode_proyektor ?? 'Proyektor ID: ' . $pengembalian->peminjaman->projector_id }}
@@ -1124,26 +1124,18 @@
                                                 <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                             </span>
                                         @else
-                                            <span class="badge bg-secondary">{{ ucfirst($pengembalian->status) }}</span>
+                                            <span
+                                                class="badge bg-secondary">{{ ucfirst($pengembalian->status) }}</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @php
-                                            $kondisi = '';
-                                            if (str_contains($pengembalian->catatan ?? '', 'Kondisi: Baik')) {
-                                                $kondisi = 'Baik';
-                                            } elseif (
-                                                str_contains($pengembalian->catatan ?? '', 'Kondisi: Rusak Ringan')
-                                            ) {
-                                                $kondisi = 'Rusak Ringan';
-                                            } elseif (
-                                                str_contains($pengembalian->catatan ?? '', 'Kondisi: Rusak Berat')
-                                            ) {
-                                                $kondisi = 'Rusak Berat';
-                                            }
-                                        @endphp
-                                        @if ($kondisi)
-                                            <span class="badge bg-success">{{ $kondisi }}</span>
+                                        @if ($pengembalian->kondisi_ruang)
+                                            <div class="d-flex flex-column gap-1">
+                                                <small><strong>Ruang:</strong>
+                                                    {{ $pengembalian->kondisi_ruang }}</small>
+                                                <small><strong>Proyektor:</strong>
+                                                    {{ $pengembalian->kondisi_proyektor ?? '-' }}</small>
+                                            </div>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -1179,8 +1171,9 @@
                                             {{-- Tombol Edit --}}
                                             <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#editModal" data-id="{{ $pengembalian->id }}"
-                                                data-kondisi="{{ $kondisi }}"
-                                                data-keterangan="{{ $pengembalian->catatan ?? '' }}">
+                                                data-kondisi-ruang="{{ $pengembalian->kondisi_ruang ?? '' }}"
+                                                data-kondisi-proyektor="{{ $pengembalian->kondisi_proyektor ?? '' }}"
+                                                data-catatan="{{ $pengembalian->catatan ?? '' }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
 
@@ -1188,11 +1181,11 @@
                                             <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $pengembalian->id }}"
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
-                                                data-barang="{{ $pengembalian->peminjaman->ruang ?? 'N/A' }}"
+                                                data-barang="{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? 'N/A' }}"
                                                 data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal ?? '' }}"
                                                 data-tanggal-kembali="{{ $pengembalian->tanggal_kembali ?? '' }}"
-                                                data-kondisi="{{ $kondisi }}"
-                                                data-keterangan="{{ $pengembalian->catatan ?? '' }}"
+                                                data-kondisi="Ruang: {{ $pengembalian->kondisi_ruang ?? '-' }} | Proyektor: {{ $pengembalian->kondisi_proyektor ?? '-' }}"
+                                                data-keterangan="{{ $pengembalian->catatan ?? '-' }}"
                                                 data-status="{{ $pengembalian->status }}">
                                                 <i class="fas fa-eye"></i> Detail
                                             </button>
@@ -1363,6 +1356,53 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Tutup</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit Pengembalian -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel"><i class="fas fa-edit me-2"></i> Edit
+                            Pengembalian</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form id="editForm" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="edit_kondisi_ruang" class="form-label">Kondisi Ruangan</label>
+                                <select class="form-select" id="edit_kondisi_ruang" name="kondisi_ruang" required>
+                                    <option value="">-- Pilih Kondisi --</option>
+                                    <option value="Baik">Baik</option>
+                                    <option value="Rusak Ringan">Rusak Ringan</option>
+                                    <option value="Rusak Berat">Rusak Berat</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_kondisi_proyektor" class="form-label">Kondisi Proyektor</label>
+                                <select class="form-select" id="edit_kondisi_proyektor" name="kondisi_proyektor"
+                                    required>
+                                    <option value="">-- Pilih Kondisi --</option>
+                                    <option value="Baik">Baik</option>
+                                    <option value="Rusak Ringan">Rusak Ringan</option>
+                                    <option value="Rusak Berat">Rusak Berat</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_catatan" class="form-label">Catatan</label>
+                                <textarea class="form-control" id="edit_catatan" name="catatan" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1542,6 +1582,25 @@
                         statusText = '<span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>';
                     }
                     document.getElementById('detail_status').innerHTML = statusText;
+                });
+            }
+            // Handle Edit Modal
+            const editModal = document.getElementById('editModal');
+            if (editModal) {
+                editModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const kondisiRuang = button.getAttribute('data-kondisi-ruang');
+                    const kondisiProyektor = button.getAttribute('data-kondisi-proyektor');
+                    const catatan = button.getAttribute('data-catatan');
+
+                    // Set form action
+                    document.getElementById('editForm').action = `/admin/pengembalian/${id}`;
+
+                    // Set values
+                    document.getElementById('edit_kondisi_ruang').value = kondisiRuang || '';
+                    document.getElementById('edit_kondisi_proyektor').value = kondisiProyektor || '';
+                    document.getElementById('edit_catatan').value = catatan || '';
                 });
             }
 

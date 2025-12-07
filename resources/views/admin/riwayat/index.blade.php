@@ -1238,13 +1238,11 @@
                                                     data-bs-target="#editModal" data-id="{{ $item->id }}"
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                     data-tanggal="{{ $item->tanggal }}"
-                                                    data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
-                                                    data-projector-id="{{ $item->projector->id ?? '' }}"
-                                                    data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : '0' }}"
+                                                    data-ruangan-id="{{ $item->ruangan_id }}"
+                                                    data-projector-id="{{ $item->projector_id ?? '' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
-                                                    data-status-pengembalian="{{ $item->status_pengembalian ?? 'belum dikembalikan' }}"
-                                                    data-keterangan="{{ $item->catatan ?? '' }}">
+                                                    data-catatan="{{ $item->catatan ?? '' }}">
                                                     <i class="fas fa-edit me-1"></i> Edit
                                                 </button>
 
@@ -1520,15 +1518,21 @@
                                         required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Ruang</label>
-                                    <input type="text" class="form-control" id="edit_ruang" name="ruang"
-                                        required>
+                                    <label class="form-label fw-bold">Ruangan</label>
+                                    <select class="form-select" id="edit_ruangan_id" name="ruangan_id" required>
+                                        <option value="">-- Pilih Ruangan --</option>
+                                        @foreach($ruangans as $ruangan)
+                                            <option value="{{ $ruangan->id }}">{{ $ruangan->nama_ruangan }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Proyektor</label>
-                                    <select class="form-control" id="edit_proyektor" name="proyektor" required>
-                                        <option value="0">Tidak</option>
-                                        <option value="1">Ya</option>
+                                    <select class="form-select" id="edit_projector_id" name="projector_id">
+                                        <option value="">-- Tidak Ada --</option>
+                                        @foreach($projectors as $projector)
+                                            <option value="{{ $projector->id }}">{{ $projector->kode_proyektor }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-12 mb-3">
@@ -1537,7 +1541,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Status Peminjaman</label>
-                                    <select class="form-control" id="edit_status" name="status" required>
+                                    <select class="form-select" id="edit_status" name="status" required>
                                         <option value="pending">Menunggu</option>
                                         <option value="disetujui">Disetujui</option>
                                         <option value="berlangsung">Berlangsung</option>
@@ -1546,16 +1550,16 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Status Pengembalian</label>
-                                    <select class="form-control" id="edit_status_pengembalian"
-                                        name="status_pengembalian" required>
-                                        <option value="belum dikembalikan">Belum Dikembalikan</option>
-                                        <option value="sudah dikembalikan">Sudah Dikembalikan</option>
-                                    </select>
+                                    <label class="form-label fw-bold">Waktu Mulai</label>
+                                    <input type="time" class="form-control" id="edit_waktu_mulai" name="waktu_mulai">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Waktu Selesai</label>
+                                    <input type="time" class="form-control" id="edit_waktu_selesai" name="waktu_selesai">
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label class="form-label fw-bold">Keterangan</label>
-                                    <textarea class="form-control" id="edit_keterangan" name="catatan" rows="3"></textarea>
+                                    <label class="form-label fw-bold">Catatan</label>
+                                    <textarea class="form-control" id="edit_catatan" name="catatan" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1722,13 +1726,11 @@
                     const id = button.getAttribute('data-id');
                     const peminjam = button.getAttribute('data-peminjam');
                     const tanggal = button.getAttribute('data-tanggal');
-                    const ruang = button.getAttribute('data-ruang');
+                    const ruanganId = button.getAttribute('data-ruangan-id');
                     const projectorId = button.getAttribute('data-projector-id');
-                    const proyektor = (projectorId && projectorId !== '') ? '1' : '0';
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
-                    const statusPengembalian = button.getAttribute('data-status-pengembalian');
-                    const keterangan = button.getAttribute('data-keterangan');
+                    const catatan = button.getAttribute('data-catatan');
 
                     // Update form action URL
                     const form = document.getElementById('editForm');
@@ -1737,12 +1739,12 @@
                     // Isi data form
                     document.getElementById('edit_peminjam').value = peminjam;
                     document.getElementById('edit_tanggal').value = tanggal;
-                    document.getElementById('edit_ruang').value = ruang;
-                    document.getElementById('edit_proyektor').value = proyektor;
+                    document.getElementById('edit_ruangan_id').value = ruanganId || '';
+                    document.getElementById('edit_projector_id').value = projectorId || '';
                     document.getElementById('edit_keperluan').value = keperluan;
-                    document.getElementById('edit_keterangan').value = keterangan || '';
+                    document.getElementById('edit_catatan').value = catatan || '';
 
-                    // Handle status peminjaman - konversi dari status database ke nilai dropdown
+                    // Handle status peminjaman
                     let statusValue = status;
                     const today = new Date().toISOString().split('T')[0];
 
@@ -1752,21 +1754,16 @@
                     }
                     document.getElementById('edit_status').value = statusValue;
 
-                    // Handle status pengembalian
-                    let statusPengembalianValue = statusPengembalian || 'belum dikembalikan';
-                    document.getElementById('edit_status_pengembalian').value = statusPengembalianValue;
-
                     // Debug log
                     console.log('Data yang akan diisi:', {
                         id,
                         peminjam,
                         tanggal,
-                        ruang,
-                        proyektor,
+                        ruanganId,
+                        projectorId,
                         keperluan,
                         status,
-                        statusPengembalian,
-                        keterangan,
+                        catatan,
                         selectedStatus: statusValue
                     });
                 });
