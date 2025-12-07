@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan AHP - Sistem Manajemen Peminjaman</title>
+    <title>SPK Peminjaman - AHP & SAW</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -92,17 +92,6 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
-        .menu-section {
-            padding: 0 15px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 600;
-        }
-
         .menu-item {
             display: flex;
             align-items: center;
@@ -131,13 +120,6 @@
             flex-shrink: 0;
         }
 
-        .menu-item span {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -206,13 +188,6 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             border-left: 4px solid white;
-        }
-
-        .dropdown-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-            opacity: 0.8;
         }
 
         /* Main Content */
@@ -309,7 +284,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Page Title */
         .page-title {
             display: flex;
             justify-content: space-between;
@@ -345,23 +319,9 @@
             box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
         }
 
-        .btn-outline {
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            background: transparent;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* AHP Container */
-        .ahp-container {
+        .ahp-container,
+        .spk-container,
+        .ranking-container {
             background: var(--bg-card);
             border-radius: 8px;
             padding: 30px;
@@ -370,7 +330,7 @@
             margin-bottom: 30px;
         }
 
-        .ahp-title {
+        .section-title {
             color: var(--dark);
             font-weight: 600;
             margin-bottom: 25px;
@@ -381,11 +341,10 @@
             gap: 10px;
         }
 
-        .ahp-title i {
+        .section-title i {
             color: var(--primary);
         }
 
-        /* Matrix Table */
         .matrix-container {
             overflow-x: auto;
             margin-bottom: 30px;
@@ -440,7 +399,6 @@
             outline: none;
         }
 
-        /* Result Cards */
         .result-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -481,7 +439,6 @@
             color: var(--danger);
         }
 
-        /* Eigenvector List */
         .eigenvector-container {
             background: white;
             border-radius: 8px;
@@ -532,7 +489,16 @@
             font-size: 1.1rem;
         }
 
-        /* Responsive */
+        .table-spk th {
+            background-color: var(--primary);
+            color: #fff;
+            text-align: center;
+        }
+
+        .badge-priority {
+            font-size: 0.8rem;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -540,18 +506,15 @@
             }
 
             .sidebar-header h2,
-            .menu-item span,
             .dropdown-toggle-custom span {
                 display: none;
             }
 
-            .menu-item,
             .dropdown-toggle-custom {
                 justify-content: center;
                 padding: 15px;
             }
 
-            .menu-item i,
             .dropdown-toggle-custom i {
                 margin-right: 0;
             }
@@ -586,7 +549,6 @@
             }
         }
 
-        /* Dark Mode */
         body.dark-mode {
             --bg-light: #121212;
             --bg-card: #1e1e1e;
@@ -602,6 +564,8 @@
 
         body.dark-mode .header,
         body.dark-mode .ahp-container,
+        body.dark-mode .spk-container,
+        body.dark-mode .ranking-container,
         body.dark-mode .result-card,
         body.dark-mode .eigenvector-container {
             background: var(--bg-card);
@@ -647,38 +611,6 @@
         body.dark-mode .theme-toggle {
             background: #2a2a2a;
             color: var(--text-dark);
-        }
-
-        body.dark-mode .page-title h1 {
-            color: var(--text-dark);
-        }
-
-        body.dark-mode .page-title p {
-            color: var(--text-light);
-        }
-
-        .menu-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-            }
         }
     </style>
 </head>
@@ -807,17 +739,18 @@
                     </a>
                 </div>
             </div>
-            <!-- Sistem Pendukung Keputusan -->
+
+            <!-- Sistem TPK (SPK) -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                    data-bs-target="#spkMenu" aria-expanded="true" aria-controls="spkMenu">
                     <span>Sistem TPK</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item active">
+                <div class="dropdown-items collapse show" id="spkMenu">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item active">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW Peminjaman</span>
                     </a>
                 </div>
             </div>
@@ -855,17 +788,37 @@
         <!-- Page Title -->
         <div class="page-title">
             <div>
-                <h1>Pengaturan AHP</h1>
-                <p>Analytic Hierarchy Process - Pairwise Comparison untuk Sistem Pendukung Keputusan</p>
+                <h1>SPK Peminjaman Ruang & Proyektor</h1>
+                <p>Integrasi AHP (Bobot Kriteria) & SAW (Perankingan Peminjaman)</p>
             </div>
         </div>
 
-        <!-- AHP Container -->
+        {{-- ALERT SUCCESS / ERROR --}}
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        <!-- BAGIAN A: AHP – Bobot Kriteria -->
         <div class="ahp-container">
-            <h2 class="ahp-title">
+            <h2 class="section-title">
                 <i class="fas fa-sliders-h"></i>
-                Pairwise Comparison Matrix
+                A. Pengaturan Bobot Kriteria (AHP)
             </h2>
+
+            <p class="text-muted mb-3">
+                Lengkapi matriks perbandingan berpasangan antar kriteria. Nilai akan digunakan sebagai bobot
+                pada metode SAW untuk menentukan prioritas peminjaman.
+            </p>
 
             <form method="POST" action="{{ route('admin.ahp.settings.save') }}">
                 @csrf
@@ -875,49 +828,59 @@
                         <thead>
                             <tr>
                                 <th>Kriteria</th>
-                                <th>K1</th>
-                                <th>K2</th>
-                                <th>K3</th>
+                                @foreach($criteria as $c)
+                                    <th>{{ $c->kode ?? $c->code ?? ('K'.$loop->iteration) }}</th>
+                                @endforeach
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < 3; $i++)
+                            @foreach($criteria as $i => $rowCriteria)
                                 <tr>
-                                    <td class="criteria-header">K{{ $i + 1 }}</td>
-                                    @for ($j = 0; $j < 3; $j++)
+                                    <td class="criteria-header">
+                                        {{ $rowCriteria->kode ?? $rowCriteria->code ?? ('K'.($i+1)) }}
+                                        - {{ $rowCriteria->nama ?? $rowCriteria->name ?? '' }}
+                                    </td>
+                                    @foreach($criteria as $j => $colCriteria)
                                         <td>
-                                            @if ($i == $j)
-                                                <input type="number"
+                                            @if ($i === $j)
+                                                <input
+                                                    type="number"
                                                     name="matrix[{{ $i }}][{{ $j }}]"
-                                                    value="1.00" step="0.01" readonly
+                                                    value="1.00"
+                                                    step="0.01"
+                                                    readonly
                                                     style="background-color: #f0f0f0;">
                                             @else
-                                                <input type="number"
+                                                <input
+                                                    type="number"
                                                     name="matrix[{{ $i }}][{{ $j }}]"
-                                                    step="0.01" required placeholder="0.00">
+                                                    step="0.01"
+                                                    required
+                                                    placeholder="0.00"
+                                                    value="{{ old("matrix.$i.$j") }}">
                                             @endif
                                         </td>
-                                    @endfor
+                                    @endforeach
                                 </tr>
-                            @endfor
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-calculator me-2"></i>Hitung AHP
+                        <i class="fas fa-calculator me-2"></i>Hitung AHP & Simpan Bobot
                     </button>
                 </div>
             </form>
 
-            <!-- Hasil Perhitungan -->
+            <!-- Hasil Perhitungan AHP -->
             @if (session('matrix'))
                 <div class="mt-5">
-                    <h2 class="ahp-title">
+                    <h3 class="section-title">
                         <i class="fas fa-chart-bar"></i>
                         Hasil Perhitungan AHP
-                    </h2>
+                    </h3>
 
                     <!-- Result Cards -->
                     <div class="result-container">
@@ -945,10 +908,10 @@
                             <small class="text-muted">Nilai Eigen Maksimum</small>
                         </div>
 
-                        <div class="result-card {{ session('status') == 'Konsisten' ? 'success' : 'danger' }}">
+                        <div class="result-card {{ session('status') == 'KONSISTEN' ? 'success' : 'danger' }}">
                             <div class="result-label">Status</div>
                             <div class="result-value">
-                                @if (session('status') == 'Konsisten')
+                                @if (session('status') == 'KONSISTEN')
                                     <i class="fas fa-check-circle"></i>
                                 @else
                                     <i class="fas fa-exclamation-circle"></i>
@@ -959,42 +922,51 @@
                     </div>
 
                     <!-- Eigenvector -->
-                    <div class="eigenvector-container">
-                        <h3 class="eigenvector-title">
-                            <i class="fas fa-weight-hanging me-2"></i>
-                            Eigenvector (Bobot Prioritas)
-                        </h3>
-                        <ul class="eigenvector-list">
-                            @foreach (session('eigenvector') as $index => $ev)
-                                <li class="eigenvector-item">
-                                    <span class="eigenvector-label">K{{ $index + 1 }}</span>
-                                    <span class="eigenvector-value">{{ number_format($ev, 4) }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    @if(session('eigenvector'))
+                        <div class="eigenvector-container">
+                            <h4 class="eigenvector-title">
+                                <i class="fas fa-weight-hanging me-2"></i>
+                                Eigenvector (Bobot Prioritas Kriteria)
+                            </h4>
+                            <ul class="eigenvector-list">
+                                @foreach (session('eigenvector') as $index => $ev)
+                                    <li class="eigenvector-item">
+                                        <span class="eigenvector-label">
+                                            {{ $criteria[$index]->kode ?? $criteria[$index]->code ?? ('K'.($index+1)) }}
+                                            - {{ $criteria[$index]->nama ?? $criteria[$index]->name ?? '' }}
+                                        </span>
+                                        <span class="eigenvector-value">{{ number_format($ev, 4) }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <!-- Matrix yang diinput -->
                     <div class="mt-4">
                         <h5 class="mb-3">
                             <i class="fas fa-table me-2"></i>
-                            Matrix yang Diinput
+                            Matrix Perbandingan yang Diinput
                         </h5>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        @for ($i = 0; $i < 3; $i++)
-                                            <th class="text-center">K{{ $i + 1 }}</th>
-                                        @endfor
+                                        <th>Kriteria</th>
+                                        @foreach($criteria as $c)
+                                            <th class="text-center">
+                                                {{ $c->kode ?? $c->code ?? ('K'.$loop->iteration) }}
+                                            </th>
+                                        @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (session('matrix') as $i => $row)
+                                    @foreach(session('matrix') as $i => $row)
                                         <tr>
-                                            <th class="text-center">K{{ $i + 1 }}</th>
-                                            @foreach ($row as $value)
+                                            <th class="text-center">
+                                                {{ $criteria[$i]->kode ?? $criteria[$i]->code ?? ('K'.($i+1)) }}
+                                            </th>
+                                            @foreach($row as $value)
                                                 <td class="text-center">{{ number_format($value, 4) }}</td>
                                             @endforeach
                                         </tr>
@@ -1005,109 +977,261 @@
                     </div>
                 </div>
             @endif
+
+            {{-- Tooltip Petunjuk Pengisian --}}
+            <div class="mt-3 p-3 bg-light border rounded">
+                <h6><i class="fas fa-info-circle me-2 text-primary"></i>Petunjuk Pengisian Nilai AHP:</h6>
+                <small class="text-muted d-block mb-1">• Nilai 1: Kedua kriteria sama penting</small>
+                <small class="text-muted d-block mb-1">• Nilai 3: Kriteria baris sedikit lebih penting dari kolom</small>
+                <small class="text-muted d-block mb-1">• Nilai 5: Kriteria baris lebih penting</small>
+                <small class="text-muted d-block mb-1">• Nilai 7: Kriteria baris sangat lebih penting</small>
+                <small class="text-muted d-block mb-1">• Nilai 9: Kriteria baris mutlak lebih penting</small>
+                <small class="text-muted">• Nilai genap (2,4,6,8): nilai kompromi antara skala di atas</small>
+            </div>
         </div>
 
-        <div class="menu-toggle" id="menu-toggle">
-            <i class="fas fa-bars"></i>
+        <!-- BAGIAN B: INPUT PENILAIAN PEMINJAMAN (SPK) -->
+        <div class="spk-container">
+            <h2 class="section-title">
+                <i class="fas fa-list-check"></i>
+                B. Penilaian Alternatif Peminjaman (SPK)
+            </h2>
+
+            <p class="text-muted mb-3">
+                Berikan nilai setiap peminjaman berdasarkan kriteria yang ada.
+                Nilai ini akan dinormalisasi dan dikalikan bobot (hasil AHP) untuk perankingan SAW.
+            </p>
+
+            <form action="{{ route('admin.spk.scores.save') }}" method="POST">
+                @csrf
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-spk align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Peminjaman</th>
+                                <th>Ruang / Proyektor</th>
+                                <th>Tanggal & Jam</th>
+                                @foreach($criteria as $c)
+                                    <th class="text-center">
+                                        {{ $c->kode ?? $c->code ?? ('K'.$loop->iteration) }}<br>
+                                        <small>{{ $c->nama ?? $c->name ?? '' }}</small>
+                                    </th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($peminjamans as $p)
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td>
+                                        <strong>Kode:</strong> {{ $p->kode_peminjaman ?? ('PMJ-'.$p->id) }}<br>
+                                        <strong>Peminjam:</strong> {{ $p->user->name ?? $p->nama_peminjam ?? '-' }}<br>
+                                        <strong>Keperluan:</strong> {{ $p->keperluan ?? '-' }}
+                                    </td>
+                                    <td>
+                                        <strong>Ruang:</strong> {{ $p->ruang ?? $p->ruangan->nama ?? '-' }}<br>
+                                        <strong>Proyektor:</strong> {{ $p->projector->kode ?? $p->kode_proyektor ?? '-' }}
+                                    </td>
+                                    <td>
+                                        <strong>Tanggal:</strong> {{ $p->tanggal_peminjaman ?? $p->tanggal ?? '-' }}<br>
+                                        <strong>Jam:</strong>
+                                        {{ ($p->jam_mulai ?? $p->jam_peminjaman ?? '-') }}
+                                        @if(!empty($p->jam_selesai))
+                                            - {{ $p->jam_selesai }}
+                                        @endif
+                                    </td>
+
+                                    @foreach($criteria as $c)
+                                        @php
+                                            $existing = $scores[$p->id][$c->id] ?? null;
+                                        @endphp
+                                        <td class="text-center">
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                min="0"
+                                                name="scores[{{ $p->id }}][{{ $c->id }}]"
+                                                class="form-control form-control-sm text-center"
+                                                value="{{ old('scores.'.$p->id.'.'.$c->id, $existing) }}"
+                                                required>
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="{{ 4 + count($criteria) }}" class="text-center text-muted">
+                                        Belum ada data peminjaman yang dapat dinilai.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                @if(count($peminjamans))
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Simpan Penilaian & Hitung SAW
+                        </button>
+                    </div>
+                @endif
+            </form>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Toggle theme
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
+        <!-- BAGIAN C: HASIL RANKING SAW -->
+        <div class="ranking-container">
+            <h2 class="section-title">
+                <i class="fas fa-ranking-star"></i>
+                C. Hasil Perankingan Peminjaman (SAW)
+            </h2>
 
-                if (document.body.classList.contains('dark-mode')) {
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                    localStorage.setItem('darkMode', 'enabled');
-                } else {
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                    localStorage.setItem('darkMode', 'disabled');
-                }
-            });
+            <p class="text-muted mb-3">
+                Tabel berikut menampilkan nilai preferensi dan urutan prioritas peminjaman
+                berdasarkan metode SAW dengan bobot dari AHP.
+            </p>
 
-            // Toggle sidebar on mobile
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.querySelector('.sidebar');
+            @if(isset($rankings) && count($rankings))
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Peringkat</th>
+                                <th>Kode Peminjaman</th>
+                                <th>Peminjam</th>
+                                <th>Ruang / Proyektor</th>
+                                <th>Tanggal & Jam</th>
+                                <th class="text-center">Nilai Preferensi</th>
+                                <th class="text-center">Status Prioritas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($rankings as $idx => $item)
+                                @php
+                                    // $item diasumsikan punya: peminjaman (relasi) dan nilai_preferensi
+                                    $p = $item->peminjaman ?? $item;
+                                    $nilai = $item->nilai_preferensi ?? $item->nilai ?? 0;
+                                @endphp
+                                <tr>
+                                    <td class="text-center fw-bold">{{ $idx + 1 }}</td>
+                                    <td>{{ $p->kode_peminjaman ?? ('PMJ-'.$p->id) }}</td>
+                                    <td>{{ $p->user->name ?? $p->nama_peminjam ?? '-' }}</td>
+                                    <td>
+                                        <strong>Ruang:</strong> {{ $p->ruang ?? $p->ruangan->nama ?? '-' }}<br>
+                                        <strong>Proyektor:</strong> {{ $p->projector->kode ?? $p->kode_proyektor ?? '-' }}
+                                    </td>
+                                    <td>
+                                        <strong>Tanggal:</strong> {{ $p->tanggal_peminjaman ?? $p->tanggal ?? '-' }}<br>
+                                        <strong>Jam:</strong>
+                                        {{ ($p->jam_mulai ?? $p->jam_peminjaman ?? '-') }}
+                                        @if(!empty($p->jam_selesai))
+                                            - {{ $p->jam_selesai }}
+                                        @endif
+                                    </td>
+                                    <td class="text-center fw-bold">
+                                        {{ number_format($nilai, 4) }}
+                                    </td>
+                                    <td class="text-center">
+                                        @if($idx === 0)
+                                            <span class="badge bg-success badge-priority">
+                                                Prioritas Utama
+                                            </span>
+                                        @elseif($idx < 3)
+                                            <span class="badge bg-info badge-priority">
+                                                Prioritas Tinggi
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary badge-priority">
+                                                Prioritas Normal
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Belum ada hasil perankingan. Silakan isi penilaian pada bagian B dan klik
+                    <strong>"Simpan Penilaian & Hitung SAW"</strong>.
+                </div>
+            @endif
+        </div>
+    </div>
 
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-            });
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle theme
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
 
-            // Auto-fill reciprocal values
-            const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
 
-            matrixInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const name = this.name;
-                    const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
+        // Terapkan dark mode jika sebelumnya diaktifkan
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
 
-                    if (matches) {
-                        const row = parseInt(matches[1]);
-                        const col = parseInt(matches[2]);
+        // Auto-fill reciprocal values untuk matrix AHP
+        const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
 
-                        // Skip diagonal
-                        if (row !== col) {
-                            const reciprocalInput = document.querySelector(
-                                `input[name="matrix[${col}][${row}]"]`);
-                            if (reciprocalInput && this.value !== '') {
-                                const value = parseFloat(this.value);
-                                if (value > 0) {
-                                    reciprocalInput.value = (1 / value).toFixed(2);
-                                }
+        matrixInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const name = this.name;
+                const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
+
+                if (matches) {
+                    const row = parseInt(matches[1]);
+                    const col = parseInt(matches[2]);
+
+                    if (row !== col) {
+                        const reciprocalInput = document.querySelector(
+                            `input[name="matrix[${col}][${row}]"]`
+                        );
+                        if (reciprocalInput && this.value !== '') {
+                            const value = parseFloat(this.value);
+                            if (value > 0) {
+                                reciprocalInput.value = (1 / value).toFixed(2);
                             }
                         }
                     }
-                });
+                }
             });
+        });
 
-            // Validate matrix values on submit
-            document.querySelector('form').addEventListener('submit', function(e) {
-                let isValid = true;
-                const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
+        // Validasi AHP matrix
+        const ahpForm = document.querySelector('.ahp-container form');
+        ahpForm.addEventListener('submit', function(e) {
+            let isValid = true;
+            const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
 
-                inputs.forEach(input => {
-                    if (input.value === '' || isNaN(parseFloat(input.value))) {
-                        isValid = false;
-                        input.style.borderColor = 'var(--danger)';
-                    } else {
-                        input.style.borderColor = '';
-                    }
-                });
-
-                if (!isValid) {
-                    e.preventDefault();
-                    alert('Harap isi semua nilai perbandingan!');
+            inputs.forEach(input => {
+                if (input.value === '' || isNaN(parseFloat(input.value))) {
+                    isValid = false;
+                    input.style.borderColor = 'var(--danger)';
+                } else {
+                    input.style.borderColor = '';
                 }
             });
 
-            // Terapkan dark mode jika sebelumnya diaktifkan
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            if (!isValid) {
+                e.preventDefault();
+                alert('Harap isi semua nilai perbandingan matriks AHP!');
             }
-
-            // Tooltip untuk nilai perbandingan
-            const tooltipInfo = `
-                <div class="mt-3 p-3 bg-light border rounded">
-                    <h6><i class="fas fa-info-circle me-2 text-primary"></i>Petunjuk Pengisian:</h6>
-                    <small class="text-muted d-block mb-1">• Nilai 1: Kedua kriteria sama penting</small>
-                    <small class="text-muted d-block mb-1">• Nilai 3: Kriteria sedikit lebih penting</small>
-                    <small class="text-muted d-block mb-1">• Nilai 5: Kriteria lebih penting</small>
-                    <small class="text-muted d-block mb-1">• Nilai 7: Kriteria sangat penting</small>
-                    <small class="text-muted d-block mb-1">• Nilai 9: Kriteria mutlak lebih penting</small>
-                    <small class="text-muted">• Nilai genap (2,4,6,8): Nilai antara</small>
-                </div>
-            `;
-
-            // Add tooltip after matrix table
-            const matrixContainer = document.querySelector('.matrix-container');
-            if (matrixContainer) {
-                matrixContainer.insertAdjacentHTML('afterend', tooltipInfo);
-            }
-        </script>
-    </div>
+        });
+    </script>
 </body>
 
 </html>

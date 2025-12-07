@@ -159,13 +159,16 @@ class PeminjamanController extends Controller
         $activeQuery = Peminjaman::where('user_id', $userId)
             ->where('status', 'disetujui')
             ->whereDoesntHave('pengembalian')
-            ->whereDate('tanggal', '<=', Carbon::now());
+            ->whereDate('tanggal', '<=', Carbon::now())
+            ->with(['ruangan', 'projector', 'user']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $activeQuery->where(function ($q) use ($search) {
                 $q->where('keperluan', 'like', "%{$search}%")
-                  ->orWhere('ruang', 'like', "%{$search}%");
+                  ->orWhereHas('ruangan', function($r) use ($search) {
+                    $r->where('nama_ruangan', 'like', "%{$search}%");
+                  });
             });
         }
 
@@ -174,25 +177,34 @@ class PeminjamanController extends Controller
         $pengembalians = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
             $q->where('user_id', $userId);
         })
-        ->with('peminjaman')
+        ->with(['peminjaman.ruangan', 'peminjaman.projector', 'user'])
         ->orderBy('created_at', 'desc')
         ->get();
 
-        $pendingReturns = $peminjamans->count();
-        $returnedCount = $pengembalians->count();
+        // Hitung statistik untuk user
+        $totalReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->count();
 
-        $overdueCount = Peminjaman::where('user_id', $userId)
-            ->where('status', 'disetujui')
-            ->whereDoesntHave('pengembalian')
-            ->whereDate('tanggal', '<', Carbon::now())
-            ->count();
+        $approvedReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->where('status', 'verified')->count();
+
+        $pendingReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->where('status', 'pending')->count();
+
+        $rejectedReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })->where('status', 'rejected')->count();
 
         return view('user.pengembalian.index', compact(
             'peminjamans',
             'pengembalians',
+            'totalReturns',
+            'approvedReturns',
             'pendingReturns',
-            'returnedCount',
-            'overdueCount'
+            'rejectedReturns'
         ));
     }
 

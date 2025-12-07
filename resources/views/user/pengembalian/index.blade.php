@@ -1188,7 +1188,7 @@
                 <div class="card card-custom text-center">
                     <div class="card-body">
                         <i class="fas fa-list-alt fa-2x text-primary mb-2"></i>
-                        <h4 class="mb-1">3</h4>
+                        <h4 class="mb-1">{{ $totalReturns ?? 0 }}</h4>
                         <p class="text-muted mb-0">Total Pengembalian</p>
                     </div>
                 </div>
@@ -1197,7 +1197,7 @@
                 <div class="card card-custom text-center">
                     <div class="card-body">
                         <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                        <h4 class="mb-1">0</h4>
+                        <h4 class="mb-1">{{ $approvedReturns ?? 0 }}</h4>
                         <p class="text-muted mb-0">Disetujui</p>
                     </div>
                 </div>
@@ -1206,7 +1206,7 @@
                 <div class="card card-custom text-center">
                     <div class="card-body">
                         <i class="fas fa-clock fa-2x text-warning mb-2"></i>
-                        <h4 class="mb-1">2</h4>
+                        <h4 class="mb-1">{{ $pendingReturns ?? 0 }}</h4>
                         <p class="text-muted mb-0">Menunggu</p>
                     </div>
                 </div>
@@ -1215,7 +1215,7 @@
                 <div class="card card-custom text-center">
                     <div class="card-body">
                         <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
-                        <h4 class="mb-1">1</h4>
+                        <h4 class="mb-1">{{ $rejectedReturns ?? 0 }}</h4>
                         <p class="text-muted mb-0">Ditolak</p>
                     </div>
                 </div>

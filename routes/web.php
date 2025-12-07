@@ -273,5 +273,20 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    // INDEX SPK (AHP + SAW)
+    Route::get('/spk', [SpkController::class, 'index'])->name('spk.index');
+
+    // SIMPAN MATRIX AHP
+    Route::post('/spk/ahp', [SpkController::class, 'saveAhpMatrix'])->name('spk.ahp.save');
+
+    // SIMPAN NILAI PENILAIAN
+    Route::post('/spk/scores', [SpkController::class, 'storeScores'])->name('spk.scores.save');
+
+    // HALAMAN SAW
+    Route::get('/spk/saw', [SpkController::class, 'saw'])->name('spk.saw');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);
 });

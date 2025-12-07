@@ -901,6 +901,21 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Sistem Pendukung Keputusan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                    <span>Sistem TPK</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="spkMenu">
+                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Pengaturan AHP</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
