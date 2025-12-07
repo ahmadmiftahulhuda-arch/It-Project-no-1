@@ -729,6 +729,10 @@
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
+                    <a href="/admin/feedback" class="dropdown-item">
+                        <i class="fas fa-comment"></i>
+                        <span>Feedback</span>
+                    </a>
                 </div>
             </div>
 
@@ -879,17 +883,18 @@
                         <tbody>
                             @for ($i = 0; $i < 3; $i++)
                                 <tr>
-                                    <td class="criteria-header">K{{ $i+1 }}</td>
+                                    <td class="criteria-header">K{{ $i + 1 }}</td>
                                     @for ($j = 0; $j < 3; $j++)
                                         <td>
                                             @if ($i == $j)
-                                                <input type="number" name="matrix[{{$i}}][{{$j}}]" 
-                                                       value="1.00" step="0.01" readonly 
-                                                       style="background-color: #f0f0f0;">
+                                                <input type="number"
+                                                    name="matrix[{{ $i }}][{{ $j }}]"
+                                                    value="1.00" step="0.01" readonly
+                                                    style="background-color: #f0f0f0;">
                                             @else
-                                                <input type="number" name="matrix[{{$i}}][{{$j}}]" 
-                                                       step="0.01" required 
-                                                       placeholder="0.00">
+                                                <input type="number"
+                                                    name="matrix[{{ $i }}][{{ $j }}]"
+                                                    step="0.01" required placeholder="0.00">
                                             @endif
                                         </td>
                                     @endfor
@@ -920,7 +925,7 @@
                             <div class="result-label">Consistency Ratio (CR)</div>
                             <div class="result-value">{{ number_format(session('CR'), 4) }}</div>
                             <small class="text-muted">
-                                @if(session('CR') < 0.1)
+                                @if (session('CR') < 0.1)
                                     <span class="text-success">✓ Konsisten</span>
                                 @else
                                     <span class="text-danger">✗ Tidak Konsisten</span>
@@ -943,7 +948,7 @@
                         <div class="result-card {{ session('status') == 'Konsisten' ? 'success' : 'danger' }}">
                             <div class="result-label">Status</div>
                             <div class="result-value">
-                                @if(session('status') == 'Konsisten')
+                                @if (session('status') == 'Konsisten')
                                     <i class="fas fa-check-circle"></i>
                                 @else
                                     <i class="fas fa-exclamation-circle"></i>
@@ -981,15 +986,15 @@
                                     <tr>
                                         <th></th>
                                         @for ($i = 0; $i < 3; $i++)
-                                            <th class="text-center">K{{ $i+1 }}</th>
+                                            <th class="text-center">K{{ $i + 1 }}</th>
                                         @endfor
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach(session('matrix') as $i => $row)
+                                    @foreach (session('matrix') as $i => $row)
                                         <tr>
-                                            <th class="text-center">K{{ $i+1 }}</th>
-                                            @foreach($row as $value)
+                                            <th class="text-center">K{{ $i + 1 }}</th>
+                                            @foreach ($row as $value)
                                                 <td class="text-center">{{ number_format($value, 4) }}</td>
                                             @endforeach
                                         </tr>
@@ -1032,19 +1037,20 @@
 
             // Auto-fill reciprocal values
             const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
-            
+
             matrixInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const name = this.name;
                     const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
-                    
+
                     if (matches) {
                         const row = parseInt(matches[1]);
                         const col = parseInt(matches[2]);
-                        
+
                         // Skip diagonal
                         if (row !== col) {
-                            const reciprocalInput = document.querySelector(`input[name="matrix[${col}][${row}]"]`);
+                            const reciprocalInput = document.querySelector(
+                                `input[name="matrix[${col}][${row}]"]`);
                             if (reciprocalInput && this.value !== '') {
                                 const value = parseFloat(this.value);
                                 if (value > 0) {
@@ -1060,7 +1066,7 @@
             document.querySelector('form').addEventListener('submit', function(e) {
                 let isValid = true;
                 const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
-                
+
                 inputs.forEach(input => {
                     if (input.value === '' || isNaN(parseFloat(input.value))) {
                         isValid = false;
@@ -1069,7 +1075,7 @@
                         input.style.borderColor = '';
                     }
                 });
-                
+
                 if (!isValid) {
                     e.preventDefault();
                     alert('Harap isi semua nilai perbandingan!');
@@ -1103,4 +1109,5 @@
         </script>
     </div>
 </body>
+
 </html>
