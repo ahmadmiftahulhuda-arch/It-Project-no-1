@@ -238,7 +238,20 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->peminjaman($request);
+        $ruangan = Ruangan::all();
+        $projectors = Projector::all();
+        $peminjamans = Peminjaman::with(['ruangan','projector'])->paginate(15);
+
+        // juga hitung statistik jika dipakai di view
+        $pendingCount = Peminjaman::where('status','pending')->count();
+        $approvedCount = Peminjaman::where('status','disetujui')->count();
+        $rejectedCount = Peminjaman::where('status','ditolak')->count();
+        $totalCount = Peminjaman::count();
+
+        return view('admin.peminjaman.index', compact(
+            'peminjamans','ruangan','projectors',
+            'pendingCount','approvedCount','rejectedCount','totalCount'
+        ));
     }
 
     /**
