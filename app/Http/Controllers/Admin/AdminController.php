@@ -539,6 +539,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Statistik untuk dashboard
+        $totalBarang = Projector::count(); // Total proyektor
         $totalPeminjaman = Peminjaman::count();
         $peminjamanPending = Peminjaman::where('status', 'pending')->count();
         $peminjamanDisetujui = Peminjaman::where('status', 'disetujui')->count();
@@ -552,6 +553,7 @@ class AdminController extends Controller
             ->get();
 
         return view('admin.dashboard', compact(
+            'totalBarang',
             'totalPeminjaman',
             'peminjamanPending',
             'peminjamanDisetujui',
