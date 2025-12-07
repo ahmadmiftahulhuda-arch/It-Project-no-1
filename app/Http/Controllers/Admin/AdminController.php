@@ -562,4 +562,13 @@ class AdminController extends Controller
             'peminjamanTerbaru'
         ));
     }
+
+    /**
+     * Display laporan admin
+     */
+    public function laporan(Request $request)
+    {
+        // For now, just return the view. Data fetching logic will be added later.
+        return view('admin.laporan');
+    }
 }
