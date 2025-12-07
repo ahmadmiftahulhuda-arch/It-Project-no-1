@@ -960,7 +960,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -986,11 +988,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1288,7 +1301,6 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger-custom btn-sm">
                                                 <i class="fas fa-trash me-1"></i> Hapus
-                                            </button>
                                         </form>
                                     </div>
                                 </td>
@@ -1437,29 +1449,30 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="projector_id" class="form-label">Proyektor</label>
-                                    <select class="form-select" id="projector_id" name="projector_id">
+                                    <select name="projector_id" class="form-select" id="projector_id">
                                         <option value="">-- Tidak Ada Proyektor --</option>
-                                        @if(isset($projectors))
+                                        @if (isset($projectors) && $projectors->count())
                                             @foreach ($projectors as $p)
                                                 <option value="{{ $p->id }}">
-                                                    {{ $p->kode_proyektor }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                                    {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
+                                                    {{ $p->model ?? '' }}
                                                 </option>
                                             @endforeach
                                         @endif
                                     </select>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <label for="keperluan" class="form-label">Keperluan</label>
-                                    <textarea class="form-control" id="keperluan" name="keperluan" rows="3" required></textarea>
-                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" name="status" required>
-                                        <option value="pending">Menunggu</option>
+                                    <select name="status" class="form-select" id="status">
+                                        <option value="pending" selected>Menunggu</option>
                                         <option value="disetujui">Disetujui</option>
                                         <option value="ditolak">Ditolak</option>
                                         <option value="selesai">Selesai</option>
                                     </select>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="keperluan" class="form-label">Keperluan</label>
+                                    <textarea class="form-control" id="keperluan" name="keperluan" rows="3" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1520,6 +1533,33 @@
                                         @foreach ($ruangan as $r)
                                             <option value="{{ $r->id }}">{{ $r->nama_ruangan }}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- PROYEKTOR -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="projector_id" class="form-label">Proyektor</label>
+                                    <select name="projector_id" class="form-select" id="projector_id">
+                                        <option value="">-- Tidak Ada Proyektor --</option>
+                                        @if (isset($projectors) && $projectors->count())
+                                            @foreach ($projectors as $p)
+                                                <option value="{{ $p->id }}">
+                                                    {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
+                                                    {{ $p->model ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <!-- STATUS -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select name="status" class="form-select" id="status">
+                                        <option value="pending" selected>Menunggu</option>
+                                        <option value="disetujui">Disetujui</option>
+                                        <option value="ditolak">Ditolak</option>
+                                        <option value="selesai">Selesai</option>
                                     </select>
                                 </div>
 
@@ -1711,13 +1751,13 @@
                     document.getElementById('tanggal').value = tanggal;
                     document.getElementById('waktu_mulai').value = waktuMulai;
                     document.getElementById('waktu_selesai').value = waktuSelesai;
-                    
+
                     // Set ruangan_id langsung dari data attribute
                     const ruanganSelect = document.getElementById('ruangan_id');
                     if (ruanganId && ruanganId !== '') {
                         ruanganSelect.value = ruanganId;
                     }
-                    
+
                     document.getElementById('keperluan').value = keperluan;
                     document.getElementById('status').value = status;
 
