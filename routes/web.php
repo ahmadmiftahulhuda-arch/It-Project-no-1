@@ -27,6 +27,7 @@ use App\Models\Ruangan;
 use App\Models\SlotWaktu;
 use App\Models\Projector;
 use App\Http\Controllers\Admin\AHPController;
+use App\Http\Controllers\Admin\SPKController;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -121,7 +122,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/feedback/export', function () {
         return Excel::download(new FeedbackExport(), 'feedback.xlsx');
     })->name('admin.feedback.export');
-    
+
     // Feedback
     Route::resource('feedback', FeedbackController::class)->names('admin.feedback');
 
@@ -150,7 +151,6 @@ Route::prefix('admin')->group(function () {
         Route::resource('kelas', KelasController::class);
         Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
         Route::get('/kelas/{kela}/mahasiswa/export', [KelasController::class, 'exportMahasiswa'])->name('kelas.mahasiswa.export');
-        
     });
     Route::resource('kelas', KelasController::class);
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
@@ -257,6 +257,8 @@ Route::prefix('pengembalian')->middleware('auth')->group(function () {
         ->name('admin.pengembalian.reject');
 });
 
+
+// PENGATURAN TPK ADMIN
 Route::prefix('admin')->group(function () {
 
     Route::get('/ahp-settings', [AHPController::class, 'index'])
@@ -264,6 +266,21 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/ahp-settings', [AHPController::class, 'store'])
         ->name('admin.ahp.settings.save');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // INDEX SPK (AHP + SAW)
+    Route::get('/spk', [SpkController::class, 'index'])->name('spk.index');
+
+    // SIMPAN MATRIX AHP
+    Route::post('/spk/ahp', [SpkController::class, 'saveAhpMatrix'])->name('spk.ahp.save');
+
+    // SIMPAN NILAI PENILAIAN
+    Route::post('/spk/scores', [SpkController::class, 'storeScores'])->name('spk.scores.save');
+
+    // HALAMAN SAW
+    Route::get('/spk/saw', [SpkController::class, 'saw'])->name('spk.saw');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

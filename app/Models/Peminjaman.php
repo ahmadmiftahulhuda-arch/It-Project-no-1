@@ -30,6 +30,11 @@ class Peminjaman extends Model
         'keterangan_kembali'    // <-- Ditambahkan
     ];
 
+    public function spkPenilaian()
+    {
+        return $this->hasMany(SpkPenilaian::class, 'peminjaman_id');
+    }
+
     /**
      * Relasi ke Pengembalian
      * Setiap peminjaman memiliki satu proses pengembalian.
@@ -76,14 +81,14 @@ class Peminjaman extends Model
     public function scopeRiwayat($query)
     {
         return $query->whereHas('pengembalian')
-                    ->orWhereIn('status', ['ditolak', 'selesai', 'proses-pengembalian']);
+            ->orWhereIn('status', ['ditolak', 'selesai', 'proses-pengembalian']);
     }
 
     // Scope untuk peminjaman aktif
     public function scopeAktif($query)
     {
         return $query->where('status', 'disetujui')
-                    ->whereDoesntHave('pengembalian');
+            ->whereDoesntHave('pengembalian');
     }
 
     /**
