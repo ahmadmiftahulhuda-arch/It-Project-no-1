@@ -950,7 +950,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     <small class="form-text-profile">
-                                        <i class="fas fa-info-circle"></i> Opsional, untuk notifikasi WhatsApp
+                                        <i class="fas fa-info-circle"></i> Wajib, untuk notifikasi WhatsApp
                                     </small>
                                 </div>
                             </div>

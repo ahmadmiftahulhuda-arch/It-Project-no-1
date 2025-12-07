@@ -326,7 +326,7 @@
             max-height: 500px;
         }
 
-        .dropdown-item {
+        .dropdown-items .dropdown-item {
             padding: 10px 20px 10px 40px;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -336,14 +336,14 @@
             position: relative;
         }
 
-        .dropdown-item:hover,
-        .dropdown-item.active {
+        .dropdown-items .dropdown-item:hover,
+        .dropdown-items .dropdown-item.active {
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             border-left: 4px solid white;
         }
 
-        .dropdown-item i {
+        .dropdown-items .dropdown-item i {
             margin-right: 10px;
             width: 20px;
             text-align: center;
@@ -468,6 +468,27 @@
             justify-content: center;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* PERBAIKAN: Dark Mode for Header Dropdown */
+        .dark-mode .dropdown-menu {
+            background-color: var(--bg-card);
+            border-color: var(--border-light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .dropdown-menu .dropdown-item {
+            color: var(--text-dark);
+        }
+
+        .dark-mode .dropdown-menu .dropdown-item:hover,
+        .dark-mode .dropdown-menu .dropdown-item:focus {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .dark-mode .dropdown-menu .dropdown-divider {
+            border-color: var(--border-light);
         }
 
         /* Page Title */
@@ -803,12 +824,47 @@
                     <i class="fas fa-moon"></i>
                 </div>
 
-                <div class="user-profile">
-                    <div class="user-avatar">A</div>
-                    <div>
-                        <div>Admin Lab</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
-                    </div>
+                <div class="dropdown">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                        <div class="user-avatar">
+                            @auth
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            @else
+                                A
+                            @endauth
+                        </div>
+                        <div>
+                            <div style="color: var(--text-dark);">
+                                @auth
+                                    {{ auth()->user()->name }}
+                                @else
+                                    Administrator
+                                @endauth
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">
+                                @auth
+                                    {{ auth()->user()->peran ?? 'Admin' }}
+                                @else
+                                    Admin
+                                @endauth
+                            </div>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

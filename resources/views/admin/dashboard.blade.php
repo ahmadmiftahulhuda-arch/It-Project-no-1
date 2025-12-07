@@ -3,57 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Peminjaman Barang - Lab TIK</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Dashboard Peminjaman - Admin Lab TI</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <style>
         :root {
             --primary: #3b5998;
             --secondary: #6d84b4;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --info: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --background: #f9f9f9;
-            --sidebar: #2c3e50;
-            --card: #ffffff;
-            --text: #333333;
-            --text-light: #777777;
-            --border: #dddddd;
-            --sidebar-width: 260px;
-        }
-
-        .dark-mode {
-            --primary: #4a6fa5;
-            --secondary: #5d7ba6;
-            --background: #1e272e;
-            --sidebar: #1a2530;
-            --card: #2d3436;
-            --text: #f5f6fa;
-            --text-light: #dcdde1;
-            --border: #353b48;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --success: #4caf50;
+            --info: #2196f3;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --sidebar-width: 250px;
+            --text-light: #6c757d;
+            --text-dark: #495057;
+            --bg-light: #f5f8fa;
+            --bg-card: #ffffff;
+            --border-light: #e9ecef;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--text);
-            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -155,7 +145,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -209,7 +199,7 @@
             max-height: 500px;
         }
 
-        .dropdown-item {
+        .dropdown-items .dropdown-item {
             padding: 10px 20px 10px 40px;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -219,173 +209,212 @@
             position: relative;
         }
 
-        .dropdown-item:hover,
-        .dropdown-item.active {
+        .dropdown-items .dropdown-item:hover,
+        .dropdown-items .dropdown-item.active {
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             border-left: 4px solid white;
         }
 
-        .dropdown-item i {
+        .dropdown-items .dropdown-item i {
             margin-right: 10px;
             width: 20px;
             text-align: center;
             opacity: 0.8;
         }
 
-        /* Main Content Styles */
+        /* Main Content */
         .main-content {
-            flex: 1;
             margin-left: var(--sidebar-width);
             padding: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             min-height: 100vh;
         }
 
-        /* Header Styles */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
-            background-color: var(--card);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
+            background: var(--bg-card);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
         }
 
         .search-bar {
-            display: flex;
-            align-items: center;
-            background-color: var(--background);
-            border-radius: 20px;
-            padding: 8px 15px;
+            position: relative;
             width: 300px;
         }
 
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
         .search-bar input {
-            border: none;
-            background: transparent;
-            outline: none;
-            color: var(--text);
             width: 100%;
-            margin-left: 10px;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
         }
 
         .user-actions {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
-        .notification-btn, .theme-toggle {
+        .notification-btn,
+        .theme-toggle {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--background);
-            margin-left: 10px;
+            background: var(--bg-light);
+            border-radius: 50%;
             cursor: pointer;
-            position: relative;
+            transition: all 0.3s;
+            color: var(--text-dark);
         }
 
-        .notification-btn::after {
-            content: '3';
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 18px;
-            height: 18px;
-            background-color: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .notification-btn:hover,
+        .theme-toggle:hover {
+            background: #e4e6eb;
+            color: var(--primary);
         }
 
         .user-profile {
             display: flex;
             align-items: center;
-            margin-left: 15px;
+            gap: 10px;
         }
 
         .user-avatar {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--info));
+            background: var(--primary);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            margin-right: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Dashboard Content */
-        .dashboard-title {
-            margin-bottom: 20px;
-        }
-
-        .dashboard-title h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        .dashboard-title p {
-            color: var(--text-light);
-            margin-top: 5px;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background-color: var(--card);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-header {
+        /* Page Title */
+        .page-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .page-title h1 {
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        .page-title p {
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0.9;
         }
 
-        .bg-primary { background-color: rgba(52, 152, 219, 0.15); color: var(--primary); }
-        .bg-success { background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; }
-        .bg-warning { background-color: rgba(241, 196, 15, 0.15); color: #f39c12; }
-        .bg-danger { background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        .stat-icon.total {
+            background: var(--primary);
+        }
 
-        .stat-value {
+        .stat-icon.borrowed {
+            background: var(--warning);
+        }
+
+        .stat-icon.pending {
+            background: var(--danger);
+        }
+
+        .stat-icon.available {
+            background: var(--success);
+        }
+
+        .stat-info h3 {
+            margin: 0;
             font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 5px;
         }
 
-        .stat-label {
+        .stat-info p {
+            margin: 0;
             color: var(--text-light);
             font-size: 0.9rem;
         }
@@ -393,26 +422,33 @@
         .stat-change {
             display: flex;
             align-items: center;
-            margin-top: 10px;
             font-size: 0.85rem;
+            margin-top: 5px;
         }
 
-        .positive { color: #2ecc71; }
-        .negative { color: #e74c3c; }
+        .stat-change.positive {
+            color: var(--success);
+        }
 
-        /* Charts and Tables */
-        .charts-tables {
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Content Grid */
+        .content-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .chart-container, .table-container {
-            background-color: var(--card);
-            border-radius: 12px;
+        .chart-container,
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
         }
 
         .section-header {
@@ -425,6 +461,7 @@
         .section-title {
             font-size: 1.2rem;
             font-weight: 600;
+            color: var(--dark);
         }
 
         .view-all {
@@ -434,84 +471,120 @@
             font-weight: 500;
         }
 
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
         /* Chart Placeholder */
         .chart-placeholder {
             height: 250px;
-            background: linear-gradient(45deg, var(--background), var(--card));
+            background: var(--bg-light);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-light);
+            flex-direction: column;
         }
 
-        /* Table Styles */
-        .data-table {
+        .chart-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            margin: 0;
             width: 100%;
-            border-collapse: collapse;
         }
 
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .data-table th {
-            color: var(--text-light);
+        .table thead th {
+            background: #f8f9fa;
+            border-bottom: 2px solid var(--border-light);
             font-weight: 600;
-            font-size: 0.9rem;
+            color: var(--dark);
+            padding: 12px 15px;
         }
 
-        .data-table tr:last-child td {
-            border-bottom: none;
+        .table tbody td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-color: var(--border-light);
+        }
+
+        .table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
         }
 
         .status {
-            padding: 5px 10px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
         }
 
-        .status-available { background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; }
-        .status-pending { background-color: rgba(241, 196, 15, 0.15); color: #f39c12; }
-        .status-borrowed { background-color: rgba(52, 152, 219, 0.15); color: var(--primary); }
+        .status-borrowed {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .status-pending {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger);
+        }
+
+        .status-available {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
 
         /* Recent Activity */
         .activity-container {
-            background-color: var(--card);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
         }
 
         .activity-list {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .activity-item {
             display: flex;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-light);
         }
 
         .activity-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
             border-bottom: none;
         }
 
         .activity-icon {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             flex-shrink: 0;
+            color: white;
+            font-size: 1rem;
         }
 
         .activity-content {
@@ -528,364 +601,470 @@
             font-size: 0.85rem;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 992px) {
-            .sidebar {
-                width: 80px;
-            }
-            
-            .sidebar-header h2, .menu-item span, .menu-section {
-                display: none;
-            }
-            
-            .menu-item {
-                justify-content: center;
-                padding: 15px;
-            }
-            
-            .menu-item i {
-                margin-right: 0;
-            }
-            
-            .main-content {
-                margin-left: 80px;
-            }
-            
-            .charts-tables {
+            .content-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-100%);
-                z-index: 1000;
+                width: 70px;
+                overflow: hidden;
             }
-            
-            .sidebar.active {
-                transform: translateX(0);
+
+            .sidebar-header h2,
+            .menu-item span,
+            .dropdown-toggle-custom span {
+                display: none;
             }
-            
-            .main-content {
-                margin-left: 0;
+
+            .menu-item {
+                justify-content: center;
                 padding: 15px;
             }
-            
+
+            .menu-item i,
+            .dropdown-toggle-custom i:first-child {
+                margin-right: 0;
+            }
+
+            .dropdown-toggle-custom {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .dropdown-toggle-custom i:last-child {
+                display: none;
+            }
+
+            .dropdown-items .dropdown-item {
+                padding: 10px 15px;
+                justify-content: center;
+            }
+
+            .dropdown-items .dropdown-item span {
+                display: none;
+            }
+
+            .dropdown-items .dropdown-item i {
+                margin-right: 0;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
             .header {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 15px;
             }
-            
+
             .search-bar {
                 width: 100%;
-                margin-bottom: 15px;
             }
-            
-            .user-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .stats-grid {
+
+            .stats-container {
                 grid-template-columns: 1fr;
             }
-            
-            .menu-toggle {
-                display: block;
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1100;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                background-color: var(--primary);
-                color: white;
+
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                justify-content: flex-end;
             }
         }
 
-        /* Dark Mode Transition */
-        body,
-        .header,
-        .chart-container,
-        .table-container,
-        .activity-container,
-        .stat-card,
-        .search-bar input {
-            transition: all 0.3s ease;
+        /* Dark Mode */
+        body.dark-mode {
+            --bg-light: #121212;
+            --bg-card: #1e1e1e;
+            --text-dark: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border-light: #333;
+            --dark: #f0f0f0;
+        }
+
+        body.dark-mode .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .header,
+        body.dark-mode .stat-card,
+        body.dark-mode .chart-container,
+        body.dark-mode .table-container,
+        body.dark-mode .activity-container {
+            background: var(--bg-card);
+            color: var(--text-dark);
+            border-color: var(--border-light);
+        }
+
+        body.dark-mode .table thead th {
+            background: #252525;
+            color: var(--text-dark);
+            border-color: var(--border-light);
+        }
+
+        body.dark-mode .table tbody tr {
+            border-color: var(--border-light);
+        }
+
+        body.dark-mode .table tbody tr:hover {
+            background: #2a2a2a;
+        }
+
+        body.dark-mode .search-bar input,
+        body.dark-mode .chart-placeholder {
+            background: #2a2a2a;
+            border-color: var(--border-light);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .notification-btn,
+        body.dark-mode .theme-toggle {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .page-title h1 {
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .section-title {
+            color: var(--text-dark);
+        }
+
+        .menu-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <i class="fas fa-laptop-code"></i>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <h2>Admin TI</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <!-- Menu Utama -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="true" aria-controls="menuUtama">
+                    <span>Menu Utama</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse show" id="menuUtama">
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
                 </div>
-                <h2>Admin TI</h2>
+            </div>
+            
+            <!-- Manajemen Peminjaman -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                    <span>Manajemen Peminjaman</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="peminjamanMenu">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
+                        <i class="fas fa-hand-holding"></i>
+                        <span>Peminjaman</span>
+                    </a>
+                    <a href="{{ route('admin.pengembalian') }}" class="dropdown-item">
+                        <i class="fas fa-undo"></i>
+                        <span>Pengembalian</span>
+                    </a>
+                    <a href="{{ route('admin.riwayat') }}" class="dropdown-item">
+                        <i class="fas fa-history"></i>
+                        <span>Riwayat Peminjaman</span>
+                    </a>
+                    <a href="{{ route('admin.feedback.index') }}" class="dropdown-item">
+                        <i class="fas fa-comment"></i>
+                        <span>Feedback</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Aset -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                    <span>Manajemen Aset</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="asetMenu">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        <span>Proyektor</span>
+                    </a>
+                    <a href="{{ route('admin.ruangan.index') }}" class="dropdown-item">
+                        <i class="fas fa-door-open"></i>
+                        <span>Ruangan</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Akademik -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                    <span>Manajemen Akademik</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="akademikMenu">
+                    <a href="{{ route('jadwal-perkuliahan.index') }}" class="dropdown-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jadwal Perkuliahan</span>
+                    </a>
+                    <a href="{{ route('admin.slotwaktu.index') }}" class="dropdown-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Slot Waktu</span>
+                    </a>
+                    <a href="{{ route('mata_kuliah.index') }}" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                    <a href="{{ route('admin.kelas.index') }}" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Manajemen Pengguna -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                    <span>Manajemen Pengguna</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="penggunaMenu">
+                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Laporan & Pengaturan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                    <span>Laporan & Pengaturan</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="laporanMenu">
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Statistik</span>
+                    </a>
+                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
             </div>
 
-            <div class="sidebar-menu">
-                <!-- Menu Utama - DIPERBAIKI -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
-                        <span>Menu Utama</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-items collapse" id="menuUtama">
-                        <a href="/admin/dashboard" class="dropdown-item active">
-                            <i class="fas fa-home"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </div>
+            <!-- Sistem Pendukung Keputusan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                    <span>Sistem TPK</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="spkMenu">
+                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Pengaturan AHP</span>
+                    </a>
                 </div>
-                
-                <!-- Manajemen Peminjaman - DROPDOWN -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
-                        <span>Manajemen Peminjaman</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-items collapse" id="peminjamanMenu">
-                        <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
-                            <i class="fas fa-hand-holding"></i>
-                            <span>Peminjaman</span>
-                        </a>
-                        <a href="/admin/pengembalian" class="dropdown-item">
-                            <i class="fas fa-undo"></i>
-                            <span>Pengembalian</span>
-                        </a>
-                        <a href="/admin/riwayat" class="dropdown-item">
-                            <i class="fas fa-history"></i>
-                            <span>Riwayat Peminjaman</span>
-                        </a>
-                        <a href="/admin/feedback" class="dropdown-item">
-                            <i class="fas fa-comment"></i>
-                            <span>Feedback</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Manajemen Aset - DROPDOWN -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
-                        <span>Manajemen Aset</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-items collapse" id="asetMenu">
-                        <a href="{{ route('projectors.index') }}" class="dropdown-item">
-                            <i class="fas fa-video"></i>
-                            <span>Proyektor</span>
-                        </a>
-                        <a href="/admin/ruangan" class="dropdown-item">
-                            <i class="fas fa-door-open"></i>
-                            <span>Ruangan</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Manajemen Akademik - DROPDOWN -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
-                        <span>Manajemen Akademik</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-items collapse" id="akademikMenu">
-                        <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>Jadwal Perkuliahan</span>
-                        </a>
-                        <a href="/admin/slotwaktu" class="dropdown-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Slot Waktu</span>
-                        </a>
-                        <a href="/admin/mata_kuliah" class="dropdown-item">
-                            <i class="fas fa-book"></i>
-                            <span>Matakuliah</span>
-                        </a>
-                        <a href="/admin/kelas" class="dropdown-item">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                            <span>Kelas</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Manajemen Pengguna - DROPDOWN -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
-                        <span>Manajemen Pengguna</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-items collapse" id="penggunaMenu">
-                        <a href="/admin/pengguna" class="dropdown-item">
-                            <i class="fas fa-users"></i>
-                            <span>Pengguna</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Laporan & Pengaturan - DROPDOWN -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
-                        <span>Laporan & Pengaturan</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-items collapse" id="laporanMenu">
-                        <a href="/admin/laporan" class="dropdown-item">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Statistik</span>
-                        </a>
-                        <a href="/admin/pengaturan" class="dropdown-item">
-                            <i class="fas fa-cog"></i>
-                            <span>Pengaturan</span>
-                        </a>
-                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <form class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari peminjaman, barang, atau pengguna...">
+            </form>
+
+            <div class="user-actions">
+                <div class="notification-btn">
+                    <i class="fas fa-bell"></i>
                 </div>
 
-                <!-- Sistem Pendukung Keputusan -->
-                <div class="dropdown-custom">
-                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
-                        <span>Sistem TPK</span>
-                        <i class="fas fa-chevron-down"></i>
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+
+                <div class="dropdown">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                        <div class="user-avatar">
+                            @auth
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            @else
+                                A
+                            @endauth
+                        </div>
+                        <div>
+                            <div style="color: var(--text-dark);">
+                                @auth
+                                    {{ auth()->user()->name }}
+                                @else
+                                    Administrator
+                                @endauth
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">
+                                @auth
+                                    {{ auth()->user()->peran ?? 'Admin' }}
+                                @else
+                                    Admin
+                                @endauth
+                            </div>
+                        </div>
                     </button>
-                    <div class="dropdown-items collapse" id="spkMenu">
-                        <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
-                            <i class="fas fa-sliders-h"></i>
-                            <span>Pengaturan AHP</span>
-                        </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <div>
+                <h1>Dashboard Peminjaman Barang</h1>
+                <p>Selamat datang! Kelola peminjaman barang di Lab Teknologi Informasi dengan mudah.</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-primary">
+                    <i class="fas fa-hand-holding me-1"></i> Lihat Peminjaman
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>142</h3>
+                    <p>Total Barang</p>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>
+                        <span>12 barang baru bulan ini</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon borrowed">
+                    <i class="fas fa-hand-holding"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>38</h3>
+                    <p>Sedang Dipinjam</p>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>
+                        <span>5% dari minggu lalu</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>24</h3>
+                    <p>Permintaan Peminjaman</p>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-up me-1"></i>
+                        <span>3 menunggu persetujuan</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon available">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>97%</h3>
+                    <p>Barang Tersedia</p>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>
+                        <span>2% lebih baik dari bulan lalu</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari barang, peminjam, atau lainnya...">
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <div class="chart-container">
+                <div class="section-header">
+                    <div class="section-title">Statistik Peminjaman</div>
+                    <a href="/admin/laporan" class="view-all">Lihat Laporan</a>
                 </div>
-                
-                <div class="user-actions">
-                    <div class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    
-                    <div class="theme-toggle" id="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                    
-                    <div class="user-profile">
-                        <div class="user-avatar">AD</div>
-                        <div>
-                            <div>Admin Lab</div>
-                            <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
-                        </div>
-                    </div>
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-bar"></i>
+                    Grafik Statistik Peminjaman Barang
                 </div>
             </div>
-
-            <!-- Dashboard Title -->
-            <div class="dashboard-title">
-                <h1>Dashboard Peminjaman Barang</h1>
-                <p>Selamat datang! Kelola peminjaman barang di Lab Teknologi Informasi dengan mudah.</p>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">142</div>
-                            <div class="stat-label">Total Barang</div>
-                        </div>
-                        <div class="stat-icon bg-primary">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                    </div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>12 barang baru bulan ini</span>
-                    </div>
+            
+            <div class="table-container">
+                <div class="section-header">
+                    <div class="section-title">Peminjaman Terbaru</div>
+                    <a href="{{ route('admin.peminjaman.index') }}" class="view-all">Lihat Semua</a>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">38</div>
-                            <div class="stat-label">Sedang Dipinjam</div>
-                        </div>
-                        <div class="stat-icon bg-warning">
-                            <i class="fas fa-hand-holding"></i>
-                        </div>
-                    </div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>5% dari minggu lalu</span>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">24</div>
-                            <div class="stat-label">Permintaan Peminjaman</div>
-                        </div>
-                        <div class="stat-icon bg-danger">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <div class="stat-change negative">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>3 menunggu persetujuan</span>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-value">97%</div>
-                            <div class="stat-label">Barang Tersedia</div>
-                        </div>
-                        <div class="stat-icon bg-success">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                    </div>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>2% lebih baik dari bulan lalu</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts and Tables -->
-            <div class="charts-tables">
-                <div class="chart-container">
-                    <div class="section-header">
-                        <div class="section-title">Statistik Peminjaman</div>
-                        <a href="#" class="view-all">Lihat Laporan</a>
-                    </div>
-                    <div class="chart-placeholder">
-                        <i class="fas fa-chart-bar" style="font-size: 2rem; margin-right: 10px;"></i>
-                        Grafik Statistik Peminjaman Barang
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <div class="section-header">
-                        <div class="section-title">Peminjaman Terbaru</div>
-                        <a href="#" class="view-all">Lihat Semua</a>
-                    </div>
-                    <table class="data-table">
+                <div class="table-responsive">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Peminjam</th>
@@ -929,56 +1108,56 @@
                     </table>
                 </div>
             </div>
+        </div>
 
-            <!-- Recent Activity -->
-            <div class="activity-container">
-                <div class="section-header">
-                    <div class="section-title">Aktivitas Terkini</div>
-                    <a href="#" class="view-all">Lihat Semua</a>
-                </div>
-                
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-icon bg-primary">
-                            <i class="fas fa-hand-holding"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Rina Dewi meminjam Laptop Gaming</div>
-                            <div class="activity-time">2 menit yang lalu</div>
-                        </div>
-                    </li>
-                    
-                    <li class="activity-item">
-                        <div class="activity-icon bg-success">
-                            <i class="fas fa-undo"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Maya Januari mengembalikan Raspberry Pi 4</div>
-                            <div class="activity-time">45 menit yang lalu</div>
-                        </div>
-                    </li>
-                    
-                    <li class="activity-item">
-                        <div class="activity-icon bg-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Stok Laptop Gaming hampir habis</div>
-                            <div class="activity-time">3 jam yang lalu</div>
-                        </div>
-                    </li>
-                    
-                    <li class="activity-item">
-                        <div class="activity-icon bg-danger">
-                            <i class="fas fa-plus-circle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Barang baru ditambahkan: Drone DJI Mavic</div>
-                            <div class="activity-time">5 jam yang lalu</div>
-                        </div>
-                    </li>
-                </ul>
+        <!-- Recent Activity -->
+        <div class="activity-container">
+            <div class="section-header">
+                <div class="section-title">Aktivitas Terkini</div>
+                <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
             </div>
+            
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon" style="background: var(--primary);">
+                        <i class="fas fa-hand-holding"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Rina Dewi meminjam Laptop Gaming</div>
+                        <div class="activity-time">2 menit yang lalu</div>
+                    </div>
+                </li>
+                
+                <li class="activity-item">
+                    <div class="activity-icon" style="background: var(--success);">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Maya Januari mengembalikan Raspberry Pi 4</div>
+                        <div class="activity-time">45 menit yang lalu</div>
+                    </div>
+                </li>
+                
+                <li class="activity-item">
+                    <div class="activity-icon" style="background: var(--warning);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Stok Laptop Gaming hampir habis</div>
+                        <div class="activity-time">3 jam yang lalu</div>
+                    </div>
+                </li>
+                
+                <li class="activity-item">
+                    <div class="activity-icon" style="background: var(--danger);">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Barang baru ditambahkan: Drone DJI Mavic</div>
+                        <div class="activity-time">5 jam yang lalu</div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -986,35 +1165,77 @@
         <i class="fas fa-bars"></i>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Toggle theme
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
+        // Initialize when document is ready
+        $(document).ready(function() {
+            initializeTheme();
+            initializeEventListeners();
+        });
+
+        function initializeEventListeners() {
+            $('#theme-toggle').on('click', function() {
+                toggleTheme();
+            });
+
+            $('#menu-toggle').on('click', function() {
+                toggleSidebar();
+            });
+
+            // Initialize Bootstrap dropdowns
+            const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+            const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl));
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme === 'enabled') {
+                document.body.classList.add('dark-mode');
+                $('#theme-toggle').html('<i class="fas fa-sun"></i>');
+            }
+        }
+
+        function toggleTheme() {
             document.body.classList.toggle('dark-mode');
-            
+            let theme = 'disabled';
+            let icon = '<i class="fas fa-moon"></i>';
             if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('darkMode', 'enabled');
+                theme = 'enabled';
+                icon = '<i class="fas fa-sun"></i>';
+            }
+            localStorage.setItem('darkMode', theme);
+            $('#theme-toggle').html(icon);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.style.transform = 'translateX(0)';
+                } else {
+                    sidebar.style.transform = 'translateX(-100%)';
+                }
+            }
+        }
+
+        // Handle responsive sidebar
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth > 768) {
+                sidebar.style.transform = 'translateX(0)';
+                mainContent.style.marginLeft = 'var(--sidebar-width)';
             } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('darkMode', 'disabled');
+                sidebar.style.transform = 'translateX(-100%)';
+                mainContent.style.marginLeft = '0';
             }
         });
-        
-        // Toggle sidebar on mobile
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-        
-        // Terapkan dark mode jika sebelumnya diaktifkan
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
     </script>
 </body>
 </html>
