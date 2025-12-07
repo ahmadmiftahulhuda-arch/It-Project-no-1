@@ -57,22 +57,14 @@ class AuthController extends Controller
         $user = Auth::user();
 
         // Invalidate semua session lain untuk user ini (1 akun 1 device)
-        // Query tabel sessions dan hapus session lain yang memiliki user_id yang sama
         DB::table('sessions')
             ->where('user_id', $user->id)
             ->where('id', '!=', $request->session()->getId())
             ->delete();
 
-        // Pastikan akun memiliki akses admin (cek beberapa kemungkinan kolom)
+        // Pastikan akun memiliki akses admin (cek kolom 'peran')
         $isAdmin = false;
-        // Jika kolom peran mengandung kata 'admin' (mis. 'Admin Lab')
         if (isset($user->peran) && str_contains(strtolower($user->peran), 'admin')) {
-            $isAdmin = true;
-        } elseif (isset($user->role) && str_contains(strtolower($user->role), 'admin')) {
-            $isAdmin = true;
-        } elseif (isset($user->type) && str_contains(strtolower($user->type), 'admin')) {
-            $isAdmin = true;
-        } elseif (isset($user->is_admin) && $user->is_admin == 1) {
             $isAdmin = true;
         }
 

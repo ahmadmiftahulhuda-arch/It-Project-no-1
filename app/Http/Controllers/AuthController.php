@@ -63,8 +63,14 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = Auth::user();
+        $isAdmin = false;
+
+        // Check if the user is an admin before logging out
+        if ($user && isset($user->peran) && str_contains(strtolower($user->peran), 'admin')) {
+            $isAdmin = true;
+        }
         
-        // Log aktivitas logout (jika package activity sudah install)
+        // Log activity if available
         if (function_exists('activity') && $user) {
             activity()
                 ->performedOn($user)
@@ -77,6 +83,11 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Redirect based on the role
+        if ($isAdmin) {
+            return redirect()->route('admin.login')->with('success', 'Anda telah berhasil logout.');
+        }
 
         return redirect('/login');
     }

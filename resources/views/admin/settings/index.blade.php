@@ -49,7 +49,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles - SAMA PERSIS */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -237,7 +237,7 @@
             min-height: 100vh;
         }
 
-        /* Header - SAMA PERSIS DENGAN REFERENSI */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -349,7 +349,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Page Title - SAMA PERSIS DENGAN REFERENSI */
+        /* Page Title */
         .page-title {
             display: flex;
             justify-content: space-between;
@@ -514,18 +514,30 @@
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
         }
 
+        /* PERBAIKAN: Settings Panel Visibility */
         .settings-panel {
             display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .settings-panel.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
             animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Settings Section */
@@ -754,6 +766,37 @@
             margin-top: 20px;
         }
 
+        /* Notification Styles */
+        .fixed-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .settings-container {
@@ -858,7 +901,7 @@
 </head>
 
 <body>
-    <!-- Sidebar - SAMA PERSIS DENGAN REFERENSI -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -891,19 +934,19 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="peminjamanMenu">
-                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-hand-holding"></i>
                         <span>Peminjaman</span>
                     </a>
-                    <a href="/admin/pengembalian" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="/admin/riwayat" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
-                    <a href="/admin/feedback" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-comment"></i>
                         <span>Feedback</span>
                     </a>
@@ -918,11 +961,11 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="asetMenu">
-                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                    <a href="/admin/ruangan" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
                     </a>
@@ -937,19 +980,19 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
                     </a>
-                    <a href="/admin/slotwaktu" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-book"></i>
                         <span>Matakuliah</span>
                     </a>
-                    <a href="/admin/kelas" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
@@ -964,7 +1007,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="penggunaMenu">
-                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
@@ -979,11 +1022,11 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse show" id="laporanMenu">
-                    <a href="/admin/laporan" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item active">
+                    <a href="#" class="dropdown-item active">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan Sistem</span>
                     </a>
@@ -994,7 +1037,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header - SAMA PERSIS DENGAN REFERENSI -->
+        <!-- Header -->
         <div class="header">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
@@ -1010,17 +1053,42 @@
                     <i class="fas fa-moon"></i>
                 </div>
 
+                <!-- FIXED: User Profile dengan null safety -->
                 <div class="user-profile">
-                    <div class="user-avatar">A</div>
+                    <div class="user-avatar">
+                        @auth
+                            {{ substr(auth()->user()->name, 0, 1) }}
+                        @elseif(isset($user) && $user)
+                            {{ substr($user->name, 0, 1) }}
+                        @else
+                            A
+                        @endauth
+                    </div>
                     <div>
-                        <div>Admin Lab</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
+                        <div>
+                            @auth
+                                {{ auth()->user()->name }}
+                            @elseif(isset($user) && $user)
+                                {{ $user->name }}
+                            @else
+                                Administrator
+                            @endauth
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">
+                            @auth
+                                {{ auth()->user()->peran ?? auth()->user()->role ?? 'Admin' }}
+                            @elseif(isset($user) && $user)
+                                {{ $user->peran ?? $user->role ?? 'Admin' }}
+                            @else
+                                Admin
+                            @endauth
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Page Title - SAMA PERSIS DENGAN REFERENSI -->
+        <!-- Page Title -->
         <div class="page-title">
             <div>
                 <h1>Pengaturan Sistem</h1>
@@ -1050,116 +1118,123 @@
                     <li class="settings-nav-item" data-target="notifications">
                         <i class="fas fa-bell"></i> Notifikasi
                     </li>
-                    <li class="settings-nav-item" data-target="appearance">
-                        <i class="fas fa-palette"></i> Tampilan
-                    </li>
                 </ul>
             </div>
 
             <!-- Settings Content -->
             <div class="settings-content">
+                @if(session('success_system'))
+                    <div class="alert alert-success">
+                        {{ session('success_system') }}
+                    </div>
+                @endif
+
                 <!-- Profile Settings Panel -->
                 <div id="profile-settings" class="settings-panel active">
-                    @if (session('success'))
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i> {{ session('success') }}
-                    </div>
-                    @endif
-
-                    <form action="{{ route('admin.settings.profile.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        
-                        <div class="settings-section">
-                            <h3>Informasi Profil</h3>
+                    <div class="settings-section">
+                        <h3>Informasi Profil</h3>
+                        @if(session('success_profile'))
+                            <div class="alert alert-success">
+                                {{ session('success_profile') }}
+                            </div>
+                        @endif
+                        <!-- FIXED: Form dengan null safety -->
+                        <form action="{{ route('admin.settings.profile') }}" method="POST">
+                            @csrf
                             <div class="form-group">
                                 <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" required>
-                                @error('name')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <input type="text" id="name" name="name" class="form-control" 
+                                       value="{{ old('name', isset($user) ? $user->name : '') }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email <span class="text-danger">*</span></label>
-                                <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $user->email) }}" required>
-                                @error('email')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <input type="email" id="email" name="email" class="form-control" 
+                                       value="{{ old('email', isset($user) ? $user->email : '') }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Nomor Telepon</label>
-                                <input type="tel" id="phone" name="phone" class="form-control" value="{{ old('phone', $user->phone ?? '') }}">
+                                <input type="tel" id="phone" name="no_hp" class="form-control" 
+                                       value="{{ old('no_hp', isset($user) && isset($user->no_hp) ? $user->no_hp : '') }}">
                             </div>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Simpan Perubahan Profil
                             </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- System Settings Panel -->
                 <div id="system-settings" class="settings-panel">
-                    <div class="settings-section">
-                        <h3>Pengaturan Umum Sistem</h3>
-                        
-                        <div class="form-group">
-                            <label for="system-name">Nama Sistem <span class="text-danger">*</span></label>
-                            <input type="text" id="system-name" class="form-control" value="Sistem Manajemen Lab TIK" required>
-                        </div>
-                        
-                        <div class="form-row">
+                    <form action="{{ route('admin.settings.system') }}" method="POST">
+                        @csrf
+                        <div class="settings-section">
+                            <h3>Pengaturan Umum Sistem</h3>
+                            
                             <div class="form-group">
-                                <label for="max-loan">Maksimal Peminjaman (hari)</label>
-                                <input type="number" id="max-loan" class="form-control" value="7" min="1" max="30">
+                                <label for="system-name">Nama Sistem <span class="text-danger">*</span></label>
+                                <input type="text" id="system-name" name="system_name" class="form-control" value="{{ old('system_name', $user->system_settings['system_name'] ?? 'Sistem Manajemen Lab TIK') }}" required>
                             </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="max-loan">Maksimal Peminjaman (hari)</label>
+                                    <input type="number" id="max-loan" name="max_loan_days" class="form-control" value="{{ old('max_loan_days', $user->system_settings['max_loan_days'] ?? '7') }}" min="1" max="30">
+                                </div>
+                                <div class="form-group">
+                                    <label for="max-items">Maksimal Item per Peminjaman</label>
+                                    <input type="number" id="max-items" name="max_items_per_loan" class="form-control" value="{{ old('max_items_per_loan', $user->system_settings['max_items_per_loan'] ?? '5') }}" min="1" max="20">
+                                </div>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Maintenance Mode</span>
+                                    <span>Nonaktifkan akses pengguna ke sistem</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="hidden" name="maintenance_mode" value="0">
+                                    <input type="checkbox" id="maintenance-mode" name="maintenance_mode" value="1" {{ old('maintenance_mode', $user->system_settings['maintenance_mode'] ?? false) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Pengaturan Peminjaman</h3>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Persetujuan Otomatis</span>
+                                    <span>Izinkan peminjaman disetujui secara otomatis</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="hidden" name="auto_approval" value="0">
+                                    <input type="checkbox" id="auto-approval" name="auto_approval" value="1" {{ old('auto_approval', $user->system_settings['auto_approval'] ?? true) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Notifikasi Denda</span>
+                                    <span>Kirim notifikasi ketika peminjaman terlambat</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="hidden" name="late_fine_notification" value="0">
+                                    <input type="checkbox" id="late-notification" name="late_fine_notification" value="1" {{ old('late_fine_notification', $user->system_settings['late_fine_notification'] ?? true) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
                             <div class="form-group">
-                                <label for="max-items">Maksimal Item per Peminjaman</label>
-                                <input type="number" id="max-items" class="form-control" value="5" min="1" max="20">
+                                <label for="fine-amount">Jumlah Denda per Hari (Rp)</label>
+                                <input type="number" id="fine-amount" name="fine_amount_per_day" class="form-control" value="{{ old('fine_amount_per_day', $user->system_settings['fine_amount_per_day'] ?? '5000') }}" min="0">
                             </div>
                         </div>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Maintenance Mode</span>
-                                <span>Nonaktifkan akses pengguna ke sistem</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="maintenance-mode">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-section">
-                        <h3>Pengaturan Peminjaman</h3>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Persetujuan Otomatis</span>
-                                <span>Izinkan peminjaman disetujui secara otomatis</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="auto-approval" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Notifikasi Denda</span>
-                                <span>Kirim notifikasi ketika peminjaman terlambat</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="late-notification" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="fine-amount">Jumlah Denda per Hari (Rp)</label>
-                            <input type="number" id="fine-amount" class="form-control" value="5000" min="0">
-                        </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Simpan Pengaturan Sistem
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Security Settings Panel -->
@@ -1167,123 +1242,151 @@
                     <div class="settings-section">
                         <h3>Keamanan Akun</h3>
                         
-                        <div class="form-group">
-                            <label for="current-password">Password Saat Ini <span class="text-danger">*</span></label>
-                            <input type="password" id="current-password" class="form-control" required>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            Update password Anda untuk menjaga keamanan akun
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="new-password">Password Baru <span class="text-danger">*</span></label>
-                                <input type="password" id="new-password" class="form-control" required>
-                                <small class="text-muted">Minimal 8 karakter</small>
+                        @if(session('success_password'))
+                            <div class="alert alert-success">
+                                {{ session('success_password') }}
                             </div>
-                            <div class="form-group">
-                                <label for="confirm-password">Konfirmasi Password <span class="text-danger">*</span></label>
-                                <input type="password" id="confirm-password" class="form-control" required>
+                        @endif
+                        @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        </div>
-                        
-                        <button class="btn btn-primary">
-                            <i class="fas fa-key"></i> Perbarui Password
-                        </button>
+                        @endif
+                        <form id="password-form" method="POST" action="{{ route('admin.settings.password') }}">
+                            @csrf
+                            <div class="form-group">
+                                <label for="current_password">Password Saat Ini <span class="text-danger">*</span></label>
+                                <input type="password" id="current_password" name="current_password" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Password Baru <span class="text-danger">*</span></label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                                <small class="text-muted">Minimal 8 karakter dengan kombinasi huruf, angka, dan simbol</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password_confirmation">Konfirmasi Password Baru <span class="text-danger">*</span></label>
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key"></i> Perbarui Password
+                            </button>
+                        </form>
                     </div>
                     
                     <div class="settings-section">
                         <h3>Sesi Aktif</h3>
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i>
-                            Anda sedang login dari perangkat ini
+                            Anda sedang login dari perangkat ini. Sesi akan berakhir setelah 24 jam inaktif.
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Autentikasi Dua Faktor</h3>
+                        <form action="{{ route('admin.settings.security') }}" method="POST">
+                            @csrf
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>2FA (Two-Factor Authentication)</span>
+                                    <span>Tambahkan lapisan keamanan ekstra dengan kode OTP</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="two_factor_enabled" value="1" {{ old('two_factor_enabled', isset($user) && $user->two_factor_enabled) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">
+                                <i class="fas fa-save"></i> Simpan Pengaturan Keamanan
+                            </button>
+                        </form>
+                        
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle"></i>
+                            Untuk mengaktifkan 2FA, Anda perlu mengunduh aplikasi authenticator seperti Google Authenticator.
                         </div>
                     </div>
                 </div>
 
                 <!-- Notifications Settings Panel -->
                 <div id="notifications-settings" class="settings-panel">
-                    <div class="settings-section">
-                        <h3>Pengaturan Notifikasi</h3>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Notifikasi Email</span>
-                                <span>Terima notifikasi melalui email</span>
+                    <form action="{{ route('admin.settings.notifications') }}" method="POST">
+                        @csrf
+                        <div class="settings-section">
+                            <h3>Pengaturan Notifikasi</h3>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Notifikasi Email</span>
+                                    <span>Terima notifikasi melalui email</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="email_notifications" value="1" {{ old('email_notifications', isset($user) && ($user->notification_preferences['email_notifications'] ?? false)) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="email-notifications" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Notifikasi Peminjaman Baru</span>
-                                <span>Dapatkan pemberitahuan untuk peminjaman baru</span>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Notifikasi Peminjaman Baru</span>
+                                    <span>Dapatkan pemberitahuan untuk peminjaman baru</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="new_loan_notifications" value="1" {{ old('new_loan_notifications', isset($user) && ($user->notification_preferences['new_loan_notifications'] ?? false)) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="new-loan-notifications" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Notifikasi Pengembalian</span>
-                                <span>Dapatkan pemberitahuan saat item dikembalikan</span>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Notifikasi Pengembalian</span>
+                                    <span>Dapatkan pemberitahuan saat item dikembalikan</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="return_notifications" value="1" {{ old('return_notifications', isset($user) && ($user->notification_preferences['return_notifications'] ?? false)) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="return-notifications" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Appearance Settings Panel -->
-                <div id="appearance-settings" class="settings-panel">
-                    <div class="settings-section">
-                        <h3>Preferensi Tampilan</h3>
-                        
-                        <div class="toggle-container">
-                            <div class="toggle-label">
-                                <span>Mode Gelap</span>
-                                <span>Aktifkan tema gelap untuk aplikasi</span>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">
+                                    <span>Notifikasi Jadwal Perkuliahan</span>
+                                    <span>Dapatkan pemberitahuan untuk jadwal perkuliahan baru</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="schedule_notifications" value="1" {{ old('schedule_notifications', isset($user) && ($user->notification_preferences['schedule_notifications'] ?? false)) ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="dark-mode-toggle-pref">
-                                <span class="toggle-slider"></span>
-                            </label>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="theme-color">Warna Tema</label>
-                            <select id="theme-color" class="form-control">
-                                <option value="blue" selected>Biru (Default)</option>
-                                <option value="green">Hijau</option>
-                                <option value="purple">Ungu</option>
-                                <option value="red">Merah</option>
-                            </select>
+                        <div class="settings-section">
+                            <h3>Frekuensi Notifikasi</h3>
+                            <div class="form-group">
+                                <label for="notification-frequency">Frekuensi Email Notifikasi</label>
+                                <select id="notification-frequency" name="notification_frequency" class="form-control">
+                                    <option value="realtime" {{ old('notification_frequency', isset($user) ? ($user->notification_preferences['notification_frequency'] ?? '') : '') == 'realtime' ? 'selected' : '' }}>Realtime (langsung)</option>
+                                    <option value="hourly" {{ old('notification_frequency', isset($user) ? ($user->notification_preferences['notification_frequency'] ?? '') : '') == 'hourly' ? 'selected' : '' }}>Setiap Jam</option>
+                                    <option value="daily" {{ old('notification_frequency', isset($user) ? ($user->notification_preferences['notification_frequency'] ?? '') : '') == 'daily' ? 'selected' : '' }}>Setiap Hari</option>
+                                    <option value="weekly" {{ old('notification_frequency', isset($user) ? ($user->notification_preferences['notification_frequency'] ?? '') : '') == 'weekly' ? 'selected' : '' }}>Setiap Minggu</option>
+                                </select>
+                            </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="font-size">Ukuran Font</label>
-                            <select id="font-size" class="form-control">
-                                <option value="small">Kecil</option>
-                                <option value="medium" selected>Sedang</option>
-                                <option value="large">Besar</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="danger-zone">
-                        <h4>
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Zona Berbahaya
-                        </h4>
-                        <p>Reset semua pengaturan ke nilai default. Tindakan ini tidak dapat dibatalkan.</p>
-                        <button class="btn btn-outline" onclick="confirmResetSettings()">
-                            <i class="fas fa-undo"></i> Reset Pengaturan
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Simpan Pengaturan Notifikasi
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1292,7 +1395,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle - SAMA PERSIS DENGAN REFERENSI
+            // Theme toggle
             const themeToggle = document.getElementById('theme-toggle');
             const darkModeTogglePref = document.getElementById('dark-mode-toggle-pref');
 
@@ -1315,15 +1418,35 @@
             };
 
             themeToggle.addEventListener('click', toggleTheme);
-            if(darkModeTogglePref) darkModeTogglePref.addEventListener('change', toggleTheme);
+            if(darkModeTogglePref) {
+                darkModeTogglePref.addEventListener('change', function() {
+                    const isDarkMode = this.checked;
+                    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+                    applyTheme(isDarkMode ? 'enabled' : 'disabled');
+                });
+            }
             
             // Load saved theme preference
             applyTheme(localStorage.getItem('darkMode') || 'disabled');
 
-            // Settings navigation - KOREKSI DI SINI
+            // ========== PERBAIKAN UTAMA: Settings Navigation ==========
             const navItems = document.querySelectorAll('.settings-nav-item');
             const panels = document.querySelectorAll('.settings-panel');
             
+            function switchSettingsPanel(targetId) {
+                // Hide all panels
+                panels.forEach(panel => {
+                    panel.classList.remove('active');
+                });
+                
+                // Show target panel
+                const targetPanel = document.getElementById(targetId);
+                if (targetPanel) {
+                    targetPanel.classList.add('active');
+                }
+            }
+            
+            // Add click event to navigation items
             navItems.forEach(item => {
                 item.addEventListener('click', function() {
                     const target = this.getAttribute('data-target');
@@ -1332,19 +1455,22 @@
                     navItems.forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Show corresponding panel
-                    panels.forEach(p => {
-                        p.classList.remove('active');
-                    });
-                    
-                    const targetPanel = document.getElementById(`${target}-settings`);
-                    if (targetPanel) {
-                        targetPanel.classList.add('active');
-                    }
+                    // Switch to target panel
+                    switchSettingsPanel(`${target}-settings`);
                 });
             });
+            
+            // Check URL hash on load
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const targetNavItem = document.querySelector(`.settings-nav-item[data-target="${hash}"]`);
+                if (targetNavItem) {
+                    targetNavItem.click();
+                }
+            }
+            // ========== END PERBAIKAN UTAMA ==========
 
-            // Dropdown toggle - SAMA PERSIS DENGAN REFERENSI
+            // Dropdown toggle
             document.querySelectorAll('.dropdown-toggle-custom').forEach(item => {
                 item.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-bs-target');
@@ -1376,21 +1502,62 @@
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 
-                // Filter navigation items
-                navItems.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
+                if (searchTerm) {
+                    // Search mode: show all panels and highlight matches
+                    panels.forEach(panel => {
+                        panel.classList.add('active');
+                        
+                        // Highlight search terms in panel content
+                        const textElements = panel.querySelectorAll('h3, p, label, span:not(.toggle-slider)');
+                        textElements.forEach(el => {
+                            const originalText = el.getAttribute('data-original') || el.textContent;
+                            el.setAttribute('data-original', originalText);
+                            
+                            if (searchTerm && originalText.toLowerCase().includes(searchTerm)) {
+                                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                                el.innerHTML = originalText.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
+                            } else if (!searchTerm) {
+                                el.innerHTML = originalText;
+                            }
+                        });
+                    });
+                    
+                    // Filter navigation items
+                    navItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                } else {
+                    // Exit search mode: restore normal view
+                    const activeNavItem = document.querySelector('.settings-nav-item.active');
+                    if (activeNavItem) {
+                        const target = activeNavItem.getAttribute('data-target');
+                        switchSettingsPanel(`${target}-settings`);
                     }
-                });
+                    
+                    // Show all nav items
+                    navItems.forEach(item => {
+                        item.style.display = 'flex';
+                    });
+                    
+                    // Remove highlighting
+                    panels.forEach(panel => {
+                        const textElements = panel.querySelectorAll('[data-original]');
+                        textElements.forEach(el => {
+                            const originalText = el.getAttribute('data-original');
+                            el.innerHTML = originalText;
+                        });
+                    });
+                }
             });
         });
 
         // Save all settings
         function saveAllSettings() {
-            // Collect all settings data
             const settings = {
                 systemName: document.getElementById('system-name').value,
                 maxLoanDays: document.getElementById('max-loan').value,
@@ -1402,32 +1569,38 @@
                 emailNotifications: document.getElementById('email-notifications').checked,
                 newLoanNotifications: document.getElementById('new-loan-notifications').checked,
                 returnNotifications: document.getElementById('return-notifications').checked,
+                scheduleNotifications: document.getElementById('schedule-notifications')?.checked || false,
+                notificationFrequency: document.getElementById('notification-frequency').value,
+                twoFactorAuth: document.getElementById('two-factor-auth')?.checked || false,
                 themeColor: document.getElementById('theme-color').value,
-                fontSize: document.getElementById('font-size').value
+                fontSize: document.getElementById('font-size').value,
+                pageAnimations: document.getElementById('page-animations')?.checked || false
             };
 
-            // Here you would typically send this to your backend
             console.log('Saving settings:', settings);
             
-            // Show success message
-            alert('Pengaturan berhasil disimpan!');
+            showNotification('Pengaturan berhasil disimpan!', 'success');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.fixed-notification');
+            existingNotifications.forEach(notification => notification.remove());
             
-            // You can add actual AJAX call here
-            // fetch('/api/settings/save', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(settings)
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     alert('Pengaturan berhasil disimpan!');
-            // })
-            // .catch(error => {
-            //     console.error('Error:', error);
-            //     alert('Gagal menyimpan pengaturan');
-            // });
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} fixed-notification`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         // Confirm reset settings
@@ -1444,10 +1617,20 @@
                 document.getElementById('email-notifications').checked = true;
                 document.getElementById('new-loan-notifications').checked = true;
                 document.getElementById('return-notifications').checked = true;
+                if (document.getElementById('schedule-notifications')) {
+                    document.getElementById('schedule-notifications').checked = true;
+                }
+                document.getElementById('notification-frequency').value = 'realtime';
+                if (document.getElementById('two-factor-auth')) {
+                    document.getElementById('two-factor-auth').checked = false;
+                }
                 document.getElementById('theme-color').value = 'blue';
                 document.getElementById('font-size').value = 'medium';
+                if (document.getElementById('page-animations')) {
+                    document.getElementById('page-animations').checked = true;
+                }
                 
-                alert('Semua pengaturan telah direset ke nilai default.');
+                showNotification('Semua pengaturan telah direset ke nilai default.', 'success');
             }
         }
     </script>

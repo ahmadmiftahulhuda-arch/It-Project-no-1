@@ -30,6 +30,8 @@ class User extends Authenticatable
         'jurusan',
         'status',
         'tanggal_bergabung',
+        'two_factor_enabled',
+        'notification_preferences',
     ];
 
     /**
@@ -40,6 +42,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     /**
@@ -50,6 +54,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'two_factor_enabled' => 'boolean',
+        'notification_preferences' => 'array',
     ];
 
     public function peminjaman()

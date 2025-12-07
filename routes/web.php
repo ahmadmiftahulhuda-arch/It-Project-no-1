@@ -27,6 +27,7 @@ use App\Models\Ruangan;
 use App\Models\SlotWaktu;
 use App\Models\Projector;
 use App\Http\Controllers\Admin\AHPController;
+use App\Http\Controllers\Admin\SPKController;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -121,7 +122,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/feedback/export', function () {
         return Excel::download(new FeedbackExport(), 'feedback.xlsx');
     })->name('admin.feedback.export');
-    
+
     // Feedback
     Route::resource('feedback', FeedbackController::class)->names('admin.feedback');
 
@@ -143,14 +144,17 @@ Route::prefix('admin')->group(function () {
     Route::resource('slotwaktu', SlotWaktuController::class);
 
     Route::get('/settings', [App\Http\Controllers\Admin\PengaturanController::class, 'index'])->name('admin.settings.index');
-    Route::put('/settings/profile', [App\Http\Controllers\Admin\PengaturanController::class, 'updateProfile'])->name('admin.settings.profile.update');
+    Route::post('/settings/profile', [App\Http\Controllers\Admin\PengaturanController::class, 'updateProfile'])->name('admin.settings.profile');
+    Route::post('/settings/password', [App\Http\Controllers\Admin\PengaturanController::class, 'updatePassword'])->name('admin.settings.password');
+    Route::post('/settings/security', [App\Http\Controllers\Admin\PengaturanController::class, 'updateSecurity'])->name('admin.settings.security');
+    Route::post('/settings/notifications', [App\Http\Controllers\Admin\PengaturanController::class, 'updateNotifications'])->name('admin.settings.notifications');
+    Route::post('/settings/system', [App\Http\Controllers\Admin\PengaturanController::class, 'updateSystemSettings'])->name('admin.settings.system');
 
     // Kelas & Mahasiswa
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('kelas', KelasController::class);
         Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
         Route::get('/kelas/{kela}/mahasiswa/export', [KelasController::class, 'exportMahasiswa'])->name('kelas.mahasiswa.export');
-        
     });
     Route::resource('kelas', KelasController::class);
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
@@ -177,6 +181,7 @@ Route::prefix('admin')->group(function () {
     Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
         Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
+        Route::put('/{id}', [AdminController::class, 'updatePengembalian'])->name('admin.pengembalian.update');
         Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])
             ->name('admin.pengembalian.kembalikan');
         Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])
@@ -256,6 +261,8 @@ Route::prefix('pengembalian')->middleware('auth')->group(function () {
         ->name('admin.pengembalian.reject');
 });
 
+
+// PENGATURAN TPK ADMIN
 Route::prefix('admin')->group(function () {
 
     Route::get('/ahp-settings', [AHPController::class, 'index'])
