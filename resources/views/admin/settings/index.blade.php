@@ -940,7 +940,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="menuUtama">
-                    <a href="/admin/dashboard" class="dropdown-item">
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -955,19 +955,19 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="peminjamanMenu">
-                    <a href="#" class="dropdown-item">
+                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
                         <i class="fas fa-hand-holding"></i>
                         <span>Peminjaman</span>
                     </a>
-                    <a href="#" class="dropdown-item">
+                    <a href="{{ route('admin.pengembalian') }}" class="dropdown-item">
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="#" class="dropdown-item">
+                    <a href="{{ route('admin.riwayat') }}" class="dropdown-item">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
-                    <a href="#" class="dropdown-item">
+                    <a href="{{ route('admin.feedback.index') }}" class="dropdown-item">
                         <i class="fas fa-comment"></i>
                         <span>Feedback</span>
                     </a>
@@ -982,14 +982,8 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="asetMenu">
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-video"></i>
-                        <span>Proyektor</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-door-open"></i>
-                        <span>Ruangan</span>
-                    </a>
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                    <a href="{{ route('admin.ruangan.index') }}" class="dropdown-item">
                 </div>
             </div>
 
@@ -1001,22 +995,12 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Jadwal Perkuliahan</span>
+                    <a href="{{ route('jadwal-perkuliahan.index') }}" class="dropdown-item">
+                    <a href="{{ route('admin.slotwaktu.index') }}" class="dropdown-item">
                     </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-clock"></i>
-                        <span>Slot Waktu</span>
+                    <a href="{{ route('mata_kuliah.index') }}" class="dropdown-item">
                     </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-book"></i>
-                        <span>Matakuliah</span>
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <span>Kelas</span>
-                    </a>
+                    <a href="{{ route('admin.kelas.index') }}" class="dropdown-item">
                 </div>
             </div>
 
@@ -1028,7 +1012,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="penggunaMenu">
-                    <a href="#" class="dropdown-item">
+                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
@@ -1043,11 +1027,11 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse show" id="laporanMenu">
-                    <a href="#" class="dropdown-item">
+                    <a href="/admin/laporan" class="dropdown-item">
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="#" class="dropdown-item active">
+                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item active">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan Sistem</span>
                     </a>
@@ -1522,33 +1506,6 @@
                 }
             }
             // ========== END PERBAIKAN UTAMA ==========
-
-            // Dropdown toggle
-            document.querySelectorAll('.dropdown-toggle-custom').forEach(item => {
-                item.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-bs-target');
-                    const target = document.querySelector(targetId);
-                    const isExpanded = target.classList.contains('show');
-                    
-                    // Close all other dropdowns
-                    document.querySelectorAll('.dropdown-items').forEach(dropdown => {
-                        if (dropdown !== target) {
-                            dropdown.classList.remove('show');
-                        }
-                    });
-                    
-                    // Toggle current dropdown
-                    if (isExpanded) {
-                        target.classList.remove('show');
-                        this.setAttribute('aria-expanded', 'false');
-                        this.querySelector('i:last-child').style.transform = 'rotate(0deg)';
-                    } else {
-                        target.classList.add('show');
-                        this.setAttribute('aria-expanded', 'true');
-                        this.querySelector('i:last-child').style.transform = 'rotate(180deg)';
-                    }
-                });
-            });
 
             // Search settings
             const searchInput = document.getElementById('searchSettings');

@@ -547,6 +547,32 @@
             color: var(--success);
         }
 
+        /* Status Badges Tambahan */
+        .status-menunggu {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .status-disetujui {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-ditolak {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-selesai {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .status-berlangsung {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
         /* Recent Activity */
         .activity-container {
             background: var(--bg-card);
@@ -993,11 +1019,11 @@
                     <i class="fas fa-laptop"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>142</h3>
+                    <h3>{{ $totalBarang }}</h3>
                     <p>Total Barang</p>
                     <div class="stat-change positive">
                         <i class="fas fa-arrow-up me-1"></i>
-                        <span>12 barang baru bulan ini</span>
+                        <span>{{ $totalBarang }} barang baru bulan ini</span>
                     </div>
                 </div>
             </div>
@@ -1021,11 +1047,11 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>24</h3>
+                    <h3>{{ $peminjamanPending }}</h3>
                     <p>Permintaan Peminjaman</p>
                     <div class="stat-change negative">
                         <i class="fas fa-arrow-up me-1"></i>
-                        <span>3 menunggu persetujuan</span>
+                        <span>{{ $peminjamanPending }} menunggu persetujuan</span>
                     </div>
                 </div>
             </div>
@@ -1074,36 +1100,58 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($peminjamanTerbaru as $peminjaman)
                             <tr>
-                                <td>Rina Dewi</td>
-                                <td>Laptop Gaming</td>
-                                <td>12 Nov 2023</td>
-                                <td><span class="status status-borrowed">Dipinjam</span></td>
+                                <td>{{ $peminjaman->user->name ?? 'Guest' }}</td>
+                                <td>
+                                    @if($peminjaman->ruangan)
+                                        {{ $peminjaman->ruangan->nama_ruangan }}
+                                    @else
+                                        -
+                                    @endif
+                                    @if($peminjaman->projector)
+                                        <br><small>{{ $peminjaman->projector->kode_proyektor }}</small>
+                                    @endif
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}</td>
+                                <td>
+                                    @php
+                                        $statusClass = '';
+                                        $statusText = '';
+                                        switch ($peminjaman->status) {
+                                            case 'pending':
+                                                $statusClass = 'status-menunggu';
+                                                $statusText = 'Menunggu';
+                                                break;
+                                            case 'disetujui':
+                                                $statusClass = 'status-disetujui';
+                                                $statusText = 'Disetujui';
+                                                break;
+                                            case 'ditolak':
+                                                $statusClass = 'status-ditolak';
+                                                $statusText = 'Ditolak';
+                                                break;
+                                            case 'selesai':
+                                                $statusClass = 'status-selesai';
+                                                $statusText = 'Selesai';
+                                                break;
+                                            case 'berlangsung':
+                                                $statusClass = 'status-berlangsung';
+                                                $statusText = 'Berlangsung';
+                                                break;
+                                            default:
+                                                $statusClass = '';
+                                                $statusText = ucfirst($peminjaman->status);
+                                        }
+                                    @endphp
+                                    <span class="status {{ $statusClass }}">{{ $statusText }}</span>
+                                </td>
                             </tr>
+                            @empty
                             <tr>
-                                <td>Ahmad Surya</td>
-                                <td>Oculus Quest 2</td>
-                                <td>11 Nov 2023</td>
-                                <td><span class="status status-pending">Menunggu</span></td>
+                                <td colspan="4" class="text-center text-muted">Tidak ada peminjaman terbaru.</td>
                             </tr>
-                            <tr>
-                                <td>Maya Januari</td>
-                                <td>Raspberry Pi 4</td>
-                                <td>10 Nov 2023</td>
-                                <td><span class="status status-available">Dikembalikan</span></td>
-                            </tr>
-                            <tr>
-                                <td>David Kim</td>
-                                <td>Kamera DSLR</td>
-                                <td>9 Nov 2023</td>
-                                <td><span class="status status-borrowed">Dipinjam</span></td>
-                            </tr>
-                            <tr>
-                                <td>Sarah Johnson</td>
-                                <td>Tablet Graphic</td>
-                                <td>8 Nov 2023</td>
-                                <td><span class="status status-available">Dikembalikan</span></td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -1118,45 +1166,46 @@
             </div>
             
             <ul class="activity-list">
-                <li class="activity-item">
-                    <div class="activity-icon" style="background: var(--primary);">
-                        <i class="fas fa-hand-holding"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Rina Dewi meminjam Laptop Gaming</div>
-                        <div class="activity-time">2 menit yang lalu</div>
-                    </div>
-                </li>
-                
-                <li class="activity-item">
-                    <div class="activity-icon" style="background: var(--success);">
-                        <i class="fas fa-undo"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Maya Januari mengembalikan Raspberry Pi 4</div>
-                        <div class="activity-time">45 menit yang lalu</div>
-                    </div>
-                </li>
-                
-                <li class="activity-item">
-                    <div class="activity-icon" style="background: var(--warning);">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Stok Laptop Gaming hampir habis</div>
-                        <div class="activity-time">3 jam yang lalu</div>
-                    </div>
-                </li>
-                
-                <li class="activity-item">
-                    <div class="activity-icon" style="background: var(--danger);">
-                        <i class="fas fa-plus-circle"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Barang baru ditambahkan: Drone DJI Mavic</div>
-                        <div class="activity-time">5 jam yang lalu</div>
-                    </div>
-                </li>
+                @forelse($peminjamanTerbaru as $peminjaman)
+                    @php
+                        $activity = [
+                            'icon' => 'fa-clock',
+                            'color' => 'var(--warning)',
+                            'title' => ($peminjaman->user->name ?? 'Seseorang') . ' mengajukan peminjaman untuk ' . ($peminjaman->ruangan->nama_ruangan ?? ($peminjaman->projector->kode_proyektor ?? 'item')),
+                        ];
+
+                        switch ($peminjaman->status) {
+                            case 'disetujui':
+                                $activity['icon'] = 'fa-check-circle';
+                                $activity['color'] = 'var(--success)';
+                                $activity['title'] = 'Peminjaman oleh ' . ($peminjaman->user->name ?? 'seseorang') . ' telah disetujui.';
+                                break;
+                            case 'ditolak':
+                                $activity['icon'] = 'fa-times-circle';
+                                $activity['color'] = 'var(--danger)';
+                                $activity['title'] = 'Peminjaman oleh ' . ($peminjaman->user->name ?? 'seseorang') . ' ditolak.';
+                                break;
+                            case 'selesai':
+                                $activity['icon'] = 'fa-undo';
+                                $activity['color'] = 'var(--info)';
+                                $activity['title'] = ($peminjaman->user->name ?? 'Seseorang') . ' telah menyelesaikan peminjaman.';
+                                break;
+                        }
+                    @endphp
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: {{ $activity['color'] }};">
+                            <i class="fas {{ $activity['icon'] }}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ $activity['title'] }}</div>
+                            <div class="activity-time">{{ $peminjaman->created_at->diffForHumans() }}</div>
+                        </div>
+                    </li>
+                @empty
+                    <li class="text-center text-muted p-4">
+                        Tidak ada aktivitas terkini.
+                    </li>
+                @endforelse
             </ul>
         </div>
     </div>
