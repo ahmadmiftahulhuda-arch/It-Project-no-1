@@ -1118,42 +1118,64 @@
         <div class="filter-section">
             <form id="filterForm" method="GET" action="{{ route('admin.riwayat') }}">
                 <div class="filter-grid">
-                    <div class="filter-group">
-                        <label for="search">Cari Peminjam/Keperluan</label>
-                        <input type="text" id="search" name="search" placeholder="Cari..."
-                            value="{{ request('search') }}">
-                    </div>
+
                     <div class="filter-group">
                         <label for="status_filter">Status Peminjaman</label>
-                        <select id="status_filter" name="status">
+                        <select id="status_filter" name="status" class="form-select">
                             <option value="">Semua Status</option>
-                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
                             </option>
                             <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>
                                 Disetujui</option>
                             <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak
                             </option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
                             </option>
                         </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="date_from">Dari Tanggal</label>
-                        <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}">
+                        <label for="ruang_filter">Ruang</label>
+                        <select id="ruang_filter" name="ruangan_id" class="form-select">
+                            <option value="">Semua Ruang</option>
+                            @if(isset($ruangans) && $ruangans->count())
+                                @foreach ($ruangans as $r)
+                                    <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                        {{ $r->nama_ruangan }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="date_to">Sampai Tanggal</label>
-                        <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}">
+                        <label for="projector_filter">Proyektor</label>
+                        <select id="projector_filter" name="projector_id" class="form-select">
+                            <option value="">Semua Proyektor</option>
+                            @if(isset($projectors) && $projectors->count())
+                                @foreach ($projectors as $p)
+                                    <option value="{{ $p->id }}" {{ request('projector_id') == $p->id ? 'selected' : '' }}>
+                                        {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
                     </div>
+
+                    <div class="filter-group">
+                        <label for="date_filter">Tanggal Peminjaman</label>
+                        <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
+                    </div>
+
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary btn-sm">
                             <i class="fas fa-filter me-1"></i> Terapkan Filter
                         </button>
 
-                        <a href="{{ route('admin.riwayat') }}" class="btn btn-outline">
+                        <a href="{{ route('admin.riwayat') }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-refresh me-1"></i> Reset
                         </a>
                     </div>
