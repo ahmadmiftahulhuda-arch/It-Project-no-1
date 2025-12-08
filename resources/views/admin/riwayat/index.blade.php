@@ -1230,6 +1230,22 @@
                                         // Tentukan apakah peminjaman sedang berlangsung
                                         $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
                                         $isOngoing = $isToday && $item->status == 'disetujui';
+                                        // Tentukan pengembalian dan keterlambatan lebih awal untuk dipakai di beberapa kolom
+                                        $pj = $item->pengembalian ?? null;
+                                        $isLate = false;
+                                        if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
+                                            try {
+                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($item->tanggal));
+                                            } catch (\Exception $e) {
+                                                $isLate = false;
+                                            }
+                                        }
+                                        $duePassed = false;
+                                        try {
+                                            $duePassed = !$pj && \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui';
+                                        } catch (\Exception $e) {
+                                            $duePassed = false;
+                                        }
                                     @endphp
 
                                     <tr data-status="{{ $item->status }}" data-id="{{ $item->id }}"
@@ -1271,9 +1287,15 @@
                                                     <i class="fas fa-check-double me-1"></i> Selesai
                                                 </span>
                                             @elseif($item->status == 'disetujui')
-                                                <span class="badge status-badge status-disetujui">
-                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
-                                                </span>
+                                                @if($duePassed)
+                                                    <span class="badge status-badge status-terlambat">
+                                                        <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                                    </span>
+                                                @else
+                                                    <span class="badge status-badge status-disetujui">
+                                                        <i class="fas fa-check-circle me-1"></i> Disetujui
+                                                    </span>
+                                                @endif
                                             @elseif($item->status == 'ditolak')
                                                 <span class="badge status-badge status-ditolak">
                                                     <i class="fas fa-times-circle me-1"></i> Ditolak
@@ -1285,18 +1307,6 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @php
-                                                $pj = $item->pengembalian ?? null;
-                                                $isLate = false;
-                                                if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
-                                                    try {
-                                                        $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($item->tanggal));
-                                                    } catch (\Exception $e) {
-                                                        $isLate = false;
-                                                    }
-                                                }
-                                            @endphp
-
                                             @if ($pj)
                                                 @if ($isLate)
                                                     <span class="badge status-badge status-terlambat">
@@ -1313,14 +1323,6 @@
                                                 @endif
                                             @else
                                                 {{-- Tidak ada pengembalian yang tercatat untuk peminjaman ini --}}
-                                                @php
-                                                    $duePassed = false;
-                                                    try {
-                                                        $duePassed = \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui';
-                                                    } catch (\Exception $e) {
-                                                        $duePassed = false;
-                                                    }
-                                                @endphp
                                                 @if ($duePassed)
                                                     <span class="badge status-badge status-terlambat">Terlambat</span>
                                                 @elseif($item->status == 'selesai')
@@ -1354,6 +1356,8 @@
                                                     data-tanggal="{{ $item->tanggal }}"
                                                     data-ruangan-id="{{ $item->ruangan_id }}"
                                                     data-projector-id="{{ $item->projector_id ?? '' }}"
+                                                    data-waktu_mulai="{{ $item->waktu_mulai ?? '' }}"
+                                                    data-waktu_selesai="{{ $item->waktu_selesai ?? '' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
                                                     data-catatan="{{ $item->catatan ?? '' }}">
@@ -1504,7 +1508,10 @@
                                                 data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                 data-tanggal="{{ $item->tanggal }}"
                                                 data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
+                                                data-ruangan-id="{{ $item->ruangan_id }}"
                                                 data-projector-id="{{ $item->projector->id ?? '' }}"
+                                                data-waktu_mulai="{{ $item->waktu_mulai ?? '' }}"
+                                                data-waktu_selesai="{{ $item->waktu_selesai ?? '' }}"
                                                 data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : 'Tidak' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
@@ -1842,6 +1849,8 @@
                     const tanggal = button.getAttribute('data-tanggal');
                     const ruanganId = button.getAttribute('data-ruangan-id');
                     const projectorId = button.getAttribute('data-projector-id');
+                    const waktuMulai = button.getAttribute('data-waktu_mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu_selesai');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
                     const catatan = button.getAttribute('data-catatan');
@@ -1855,6 +1864,8 @@
                     document.getElementById('edit_tanggal').value = tanggal;
                     document.getElementById('edit_ruangan_id').value = ruanganId || '';
                     document.getElementById('edit_projector_id').value = projectorId || '';
+                    document.getElementById('edit_waktu_mulai').value = waktuMulai || '';
+                    document.getElementById('edit_waktu_selesai').value = waktuSelesai || '';
                     document.getElementById('edit_keperluan').value = keperluan;
                     document.getElementById('edit_catatan').value = catatan || '';
 
