@@ -1118,42 +1118,64 @@
         <div class="filter-section">
             <form id="filterForm" method="GET" action="{{ route('admin.riwayat') }}">
                 <div class="filter-grid">
-                    <div class="filter-group">
-                        <label for="search">Cari Peminjam/Keperluan</label>
-                        <input type="text" id="search" name="search" placeholder="Cari..."
-                            value="{{ request('search') }}">
-                    </div>
+
                     <div class="filter-group">
                         <label for="status_filter">Status Peminjaman</label>
-                        <select id="status_filter" name="status">
+                        <select id="status_filter" name="status" class="form-select">
                             <option value="">Semua Status</option>
-                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
                             </option>
                             <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>
                                 Disetujui</option>
                             <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak
                             </option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
                             </option>
                         </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="date_from">Dari Tanggal</label>
-                        <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}">
+                        <label for="ruang_filter">Ruang</label>
+                        <select id="ruang_filter" name="ruangan_id" class="form-select">
+                            <option value="">Semua Ruang</option>
+                            @if(isset($ruangans) && $ruangans->count())
+                                @foreach ($ruangans as $r)
+                                    <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                        {{ $r->nama_ruangan }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="date_to">Sampai Tanggal</label>
-                        <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}">
+                        <label for="projector_filter">Proyektor</label>
+                        <select id="projector_filter" name="projector_id" class="form-select">
+                            <option value="">Semua Proyektor</option>
+                            @if(isset($projectors) && $projectors->count())
+                                @foreach ($projectors as $p)
+                                    <option value="{{ $p->id }}" {{ request('projector_id') == $p->id ? 'selected' : '' }}>
+                                        {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
                     </div>
+
+                    <div class="filter-group">
+                        <label for="date_filter">Tanggal Peminjaman</label>
+                        <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
+                    </div>
+
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary btn-sm">
                             <i class="fas fa-filter me-1"></i> Terapkan Filter
                         </button>
 
-                        <a href="{{ route('admin.riwayat') }}" class="btn btn-outline">
+                        <a href="{{ route('admin.riwayat') }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-refresh me-1"></i> Reset
                         </a>
                     </div>
@@ -1208,6 +1230,22 @@
                                         // Tentukan apakah peminjaman sedang berlangsung
                                         $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
                                         $isOngoing = $isToday && $item->status == 'disetujui';
+                                        // Tentukan pengembalian dan keterlambatan lebih awal untuk dipakai di beberapa kolom
+                                        $pj = $item->pengembalian ?? null;
+                                        $isLate = false;
+                                        if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
+                                            try {
+                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($item->tanggal));
+                                            } catch (\Exception $e) {
+                                                $isLate = false;
+                                            }
+                                        }
+                                        $duePassed = false;
+                                        try {
+                                            $duePassed = !$pj && \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui';
+                                        } catch (\Exception $e) {
+                                            $duePassed = false;
+                                        }
                                     @endphp
 
                                     <tr data-status="{{ $item->status }}" data-id="{{ $item->id }}"
@@ -1249,9 +1287,15 @@
                                                     <i class="fas fa-check-double me-1"></i> Selesai
                                                 </span>
                                             @elseif($item->status == 'disetujui')
-                                                <span class="badge status-badge status-disetujui">
-                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
-                                                </span>
+                                                @if($duePassed)
+                                                    <span class="badge status-badge status-terlambat">
+                                                        <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                                    </span>
+                                                @else
+                                                    <span class="badge status-badge status-disetujui">
+                                                        <i class="fas fa-check-circle me-1"></i> Disetujui
+                                                    </span>
+                                                @endif
                                             @elseif($item->status == 'ditolak')
                                                 <span class="badge status-badge status-ditolak">
                                                     <i class="fas fa-times-circle me-1"></i> Ditolak
@@ -1263,18 +1307,6 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @php
-                                                $pj = $item->pengembalian ?? null;
-                                                $isLate = false;
-                                                if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
-                                                    try {
-                                                        $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($item->tanggal));
-                                                    } catch (\Exception $e) {
-                                                        $isLate = false;
-                                                    }
-                                                }
-                                            @endphp
-
                                             @if ($pj)
                                                 @if ($isLate)
                                                     <span class="badge status-badge status-terlambat">
@@ -1291,14 +1323,6 @@
                                                 @endif
                                             @else
                                                 {{-- Tidak ada pengembalian yang tercatat untuk peminjaman ini --}}
-                                                @php
-                                                    $duePassed = false;
-                                                    try {
-                                                        $duePassed = \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui';
-                                                    } catch (\Exception $e) {
-                                                        $duePassed = false;
-                                                    }
-                                                @endphp
                                                 @if ($duePassed)
                                                     <span class="badge status-badge status-terlambat">Terlambat</span>
                                                 @elseif($item->status == 'selesai')
@@ -1332,6 +1356,8 @@
                                                     data-tanggal="{{ $item->tanggal }}"
                                                     data-ruangan-id="{{ $item->ruangan_id }}"
                                                     data-projector-id="{{ $item->projector_id ?? '' }}"
+                                                    data-waktu_mulai="{{ $item->waktu_mulai ?? '' }}"
+                                                    data-waktu_selesai="{{ $item->waktu_selesai ?? '' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
                                                     data-catatan="{{ $item->catatan ?? '' }}">
@@ -1482,7 +1508,10 @@
                                                 data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                 data-tanggal="{{ $item->tanggal }}"
                                                 data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
+                                                data-ruangan-id="{{ $item->ruangan_id }}"
                                                 data-projector-id="{{ $item->projector->id ?? '' }}"
+                                                data-waktu_mulai="{{ $item->waktu_mulai ?? '' }}"
+                                                data-waktu_selesai="{{ $item->waktu_selesai ?? '' }}"
                                                 data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : 'Tidak' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
@@ -1820,6 +1849,8 @@
                     const tanggal = button.getAttribute('data-tanggal');
                     const ruanganId = button.getAttribute('data-ruangan-id');
                     const projectorId = button.getAttribute('data-projector-id');
+                    const waktuMulai = button.getAttribute('data-waktu_mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu_selesai');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
                     const catatan = button.getAttribute('data-catatan');
@@ -1833,6 +1864,8 @@
                     document.getElementById('edit_tanggal').value = tanggal;
                     document.getElementById('edit_ruangan_id').value = ruanganId || '';
                     document.getElementById('edit_projector_id').value = projectorId || '';
+                    document.getElementById('edit_waktu_mulai').value = waktuMulai || '';
+                    document.getElementById('edit_waktu_selesai').value = waktuSelesai || '';
                     document.getElementById('edit_keperluan').value = keperluan;
                     document.getElementById('edit_catatan').value = catatan || '';
 

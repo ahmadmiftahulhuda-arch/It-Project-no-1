@@ -966,7 +966,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -992,11 +994,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1077,20 +1090,39 @@
                                 Terlambat</option>
                         </select>
                     </div>
+
+                    <div class="filter-group">
+                        <label for="ruang_filter">Ruang</label>
+                        <select id="ruang_filter" name="ruangan_id" class="form-select">
+                            <option value="">Semua Ruang</option>
+                            @foreach ($ruangans as $r)
+                                <option value="{{ $r->id }}"
+                                    {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                    {{ $r->nama_ruangan }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="projector_filter">Proyektor</label>
+                        <select id="projector_filter" name="projector_id" class="form-select">
+                            <option value="">Semua Proyektor</option>
+                            @if (isset($projectors) && $projectors->count())
+                                @foreach ($projectors as $p)
+                                    <option value="{{ $p->id }}"
+                                        {{ request('projector_id') == $p->id ? 'selected' : '' }}>
+                                        {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
+                                        {{ $p->model ?? '' }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
                     <div class="filter-group">
                         <label for="date_filter">Tanggal Pengembalian</label>
                         <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
-                    </div>
-                    <div class="filter-group">
-                        <label for="sort_filter">Urutkan</label>
-                        <select id="sort_filter" name="sort">
-                            <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>
-                                Terbaru</option>
-                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama
-                            </option>
-                            <option value="due_date" {{ request('sort') == 'due_date' ? 'selected' : '' }}>Tanggal
-                                Jatuh Tempo</option>
-                        </select>
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
@@ -1127,8 +1159,14 @@
                                 @php
                                     $isLate = false;
                                     try {
-                                        if ($pengembalian->tanggal_pengembalian && $pengembalian->peminjaman && $pengembalian->peminjaman->tanggal) {
-                                            $isLate = \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($pengembalian->peminjaman->tanggal));
+                                        if (
+                                            $pengembalian->tanggal_pengembalian &&
+                                            $pengembalian->peminjaman &&
+                                            $pengembalian->peminjaman->tanggal
+                                        ) {
+                                            $isLate = \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->gt(
+                                                \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal),
+                                            );
                                         }
                                     } catch (\Exception $e) {
                                         $isLate = false;
@@ -1152,8 +1190,9 @@
                                             <small class="text-muted">
                                                 <i class="fas fa-video me-1"></i>
                                                 {{ $pengembalian->peminjaman->projector->kode_proyektor ?? 'Proyektor ID: ' . $pengembalian->peminjaman->projector_id }}
-                                                @if($pengembalian->peminjaman->projector->merk || $pengembalian->peminjaman->projector->model)
-                                                    - {{ trim(($pengembalian->peminjaman->projector->merk ?? '') . ' ' . ($pengembalian->peminjaman->projector->model ?? '')) }}
+                                                @if ($pengembalian->peminjaman->projector->merk || $pengembalian->peminjaman->projector->model)
+                                                    -
+                                                    {{ trim(($pengembalian->peminjaman->projector->merk ?? '') . ' ' . ($pengembalian->peminjaman->projector->model ?? '')) }}
                                                 @endif
                                             </small>
                                         @else
@@ -1366,6 +1405,17 @@
                                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
                             </div>
                         </div>
+                    <div class="filter-group">
+                        <label for="ruang_filter">Ruang</label>
+                        <select id="ruang_filter" name="ruangan_id" class="form-select">
+                            <option value="">Semua Ruang</option>
+                            @if(isset($ruangans) && $ruangans->count())
+                                @foreach($ruangans as $r)
+                                    <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>{{ $r->nama_ruangan }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary">Simpan Pengembalian</button>
@@ -1464,7 +1514,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="edit_tanggal_pengembalian" class="form-label">Tanggal Pengembalian</label>
-                                <input type="date" id="edit_tanggal_pengembalian" name="tanggal_pengembalian" class="form-control">
+                                <input type="date" id="edit_tanggal_pengembalian" name="tanggal_pengembalian"
+                                    class="form-control">
                             </div>
                             <div class="mb-3">
                                 <label for="edit_status" class="form-label">Status</label>
@@ -1657,14 +1708,17 @@
                     let statusText = '';
                     switch (status) {
                         case 'verified':
-                            statusText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                            statusText =
+                                '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
                             break;
                         case 'rejected':
-                            statusText = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
+                            statusText =
+                                '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
                             break;
                         case 'pending':
                         default:
-                            statusText = '<span class="badge status-pending"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>';
+                            statusText =
+                                '<span class="badge status-pending"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>';
                             break;
                     }
                     document.getElementById('detail_status').innerHTML = statusText;
@@ -1690,7 +1744,8 @@
                     document.getElementById('edit_kondisi_proyektor').value = kondisiProyektor || '';
                     document.getElementById('edit_catatan').value = catatan || '';
                     if (document.getElementById('edit_tanggal_pengembalian')) {
-                        document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian ? tanggalPengembalian.split(' ')[0] : '';
+                        document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian ?
+                            tanggalPengembalian.split(' ')[0] : '';
                     }
                     if (document.getElementById('edit_status')) {
                         document.getElementById('edit_status').value = status || 'pending';

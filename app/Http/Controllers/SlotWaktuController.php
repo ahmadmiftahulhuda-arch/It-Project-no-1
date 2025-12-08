@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\SlotWaktu;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\SlotWaktuImport;
 
 class SlotWaktuController extends Controller
 {
@@ -107,5 +109,19 @@ class SlotWaktuController extends Controller
         $slot->delete();
 
         return redirect()->route('admin.slotwaktu.index')->with('success', 'Slot waktu berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new SlotWaktuImport, $request->file('file'));
+            return redirect()->route('admin.slotwaktu.index')->with('import_success', 'Data slot waktu berhasil diimport.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.slotwaktu.index')->with('import_error', 'Import gagal: ' . $e->getMessage());
+        }
     }
 }

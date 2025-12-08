@@ -126,6 +126,14 @@ class AdminController extends Controller
         // 2. Pengembalian yang diajukan user - dengan filter
         $query = \App\Models\Pengembalian::with(['peminjaman', 'user', 'peminjaman.ruangan', 'peminjaman.projector']);
 
+        // Filter ruangan (optional)
+        if ($request->has('ruangan_id') && $request->ruangan_id != '') {
+            $ruanganId = $request->ruangan_id;
+            $query->whereHas('peminjaman', function($q) use ($ruanganId) {
+                $q->where('ruangan_id', $ruanganId);
+            });
+        }
+
         // Filter pencarian (user, catatan, tanggal_pengembalian, peminjaman fields like keperluan/ruangan/projector)
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -187,6 +195,9 @@ class AdminController extends Controller
 
         $pengembalians = $query->paginate(10);   // <-- WAJIB paginate
 
+        // Ambil daftar ruang untuk filter dropdown
+        $ruangans = Ruangan::orderBy('nama_ruangan')->get();
+
         // Hitung statistik
         $pendingReturns = Peminjaman::where('status', 'disetujui')
             ->whereDoesntHave('pengembalian')
@@ -208,6 +219,7 @@ class AdminController extends Controller
             'returnedCount',
             'overdueCount',
             'totalReturns'
+            ,'ruangans'
         ));
     }
 
