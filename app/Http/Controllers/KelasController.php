@@ -6,6 +6,7 @@ use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Imports\MahasiswaImport;
 use App\Exports\MahasiswaExport;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
 class KelasController extends Controller
@@ -29,7 +30,7 @@ class KelasController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:50'
+            'nama_kelas' => 'required|string|max:50|unique:kelas,nama_kelas'
         ]);
 
         Kelas::create($request->all());
@@ -39,7 +40,12 @@ class KelasController extends Controller
     public function update(Request $request, Kelas $kela)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:50'
+            'nama_kelas' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('kelas')->ignore($kela->id),
+            ],
         ]);
 
         $kela->update($request->all());
