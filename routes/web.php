@@ -46,9 +46,7 @@ Route::get('/', function () {
     // Statistik
     $totalRuangan = Ruangan::count();
     $availableRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->count();
-    // hitung maintenance / perbaikan
     $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance','perbaikan'])->count();
-    // hitung terpakai sebagai sisa dari total setelah mengurangi tersedia dan maintenance
     $occupiedRuangan = max(0, $totalRuangan - $availableRuangan - $maintenanceRuangan);
     $totalProjectors = Projector::count();
 
@@ -162,6 +160,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('slotwaktu', App\Http\Controllers\SlotWaktuController::class);
     });
     Route::resource('ruangan', RuanganController::class);
+    Route::post('/ruangan/import', [RuanganController::class, 'import'])->name('ruangan.import');
+    Route::post('/slotwaktu/import', [SlotWaktuController::class, 'import'])->name('slotwaktu.import');
     Route::resource('mata_kuliah', MataKuliahController::class);
     Route::resource('slotwaktu', SlotWaktuController::class);
 
