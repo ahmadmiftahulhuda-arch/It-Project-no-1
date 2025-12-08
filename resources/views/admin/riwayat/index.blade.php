@@ -527,6 +527,11 @@
             color: #1565c0;
         }
 
+        .status-terlambat {
+            background: #ffebee;
+            color: #c62828;
+        }
+
         .status-menunggu {
             background: #fff3cd;
             color: #856404;
@@ -981,7 +986,7 @@
                 </div>
             </div>
 
-             <!-- Sistem Pendukung Keputusan -->
+            <!-- Sistem Pendukung Keputusan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
@@ -1019,7 +1024,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -1045,11 +1052,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1138,9 +1156,10 @@
                         <label for="ruang_filter">Ruang</label>
                         <select id="ruang_filter" name="ruangan_id" class="form-select">
                             <option value="">Semua Ruang</option>
-                            @if(isset($ruangans) && $ruangans->count())
+                            @if (isset($ruangans) && $ruangans->count())
                                 @foreach ($ruangans as $r)
-                                    <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                    <option value="{{ $r->id }}"
+                                        {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
                                         {{ $r->nama_ruangan }}
                                     </option>
                                 @endforeach
@@ -1152,10 +1171,12 @@
                         <label for="projector_filter">Proyektor</label>
                         <select id="projector_filter" name="projector_id" class="form-select">
                             <option value="">Semua Proyektor</option>
-                            @if(isset($projectors) && $projectors->count())
+                            @if (isset($projectors) && $projectors->count())
                                 @foreach ($projectors as $p)
-                                    <option value="{{ $p->id }}" {{ request('projector_id') == $p->id ? 'selected' : '' }}>
-                                        {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
+                                    <option value="{{ $p->id }}"
+                                        {{ request('projector_id') == $p->id ? 'selected' : '' }}>
+                                        {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
+                                        {{ $p->model ?? '' }}
                                     </option>
                                 @endforeach
                             @endif
@@ -1235,14 +1256,19 @@
                                         $isLate = false;
                                         if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
                                             try {
-                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($item->tanggal));
+                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(
+                                                    \Carbon\Carbon::parse($item->tanggal),
+                                                );
                                             } catch (\Exception $e) {
                                                 $isLate = false;
                                             }
                                         }
                                         $duePassed = false;
                                         try {
-                                            $duePassed = !$pj && \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui';
+                                            $duePassed =
+                                                !$pj &&
+                                                \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) &&
+                                                $item->status == 'disetujui';
                                         } catch (\Exception $e) {
                                             $duePassed = false;
                                         }
@@ -1287,7 +1313,7 @@
                                                     <i class="fas fa-check-double me-1"></i> Selesai
                                                 </span>
                                             @elseif($item->status == 'disetujui')
-                                                @if($duePassed)
+                                                @if ($duePassed)
                                                     <span class="badge status-badge status-terlambat">
                                                         <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                                     </span>
@@ -1313,12 +1339,14 @@
                                                         <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                                     </span>
                                                 @elseif ($pj->status == 'verified')
-                                                    <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                    <span
+                                                        class="badge status-badge status-dikembalikan">Dikembalikan</span>
                                                 @elseif ($pj->status == 'pending')
-                                                    <span class="badge status-badge status-menunggu">Menunggu Verifikasi</span>
+                                                    <span class="badge status-badge status-menunggu">Menunggu
+                                                        Verifikasi</span>
                                                 @elseif ($pj->status == 'rejected')
                                                     <span class="badge status-badge status-ditolak">Ditolak</span>
-                                                @elseif (in_array($pj->status, ['overdue','terlambat']))
+                                                @elseif (in_array($pj->status, ['overdue', 'terlambat']))
                                                     <span class="badge status-badge status-terlambat">Terlambat</span>
                                                 @else
                                                     <span class="badge status-badge">{{ ucfirst($pj->status) }}</span>
@@ -1328,9 +1356,11 @@
                                                 @if ($duePassed)
                                                     <span class="badge status-badge status-terlambat">Terlambat</span>
                                                 @elseif($item->status == 'selesai')
-                                                    <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                    <span
+                                                        class="badge status-badge status-dikembalikan">Dikembalikan</span>
                                                 @else
-                                                    <span class="badge status-badge status-belum-dikembalikan">Belum Dikembalikan</span>
+                                                    <span class="badge status-badge status-belum-dikembalikan">Belum
+                                                        Dikembalikan</span>
                                                 @endif
                                             @endif
                                         </td>
@@ -1358,12 +1388,14 @@
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                     data-tanggal="{{ $item->tanggal }}"
                                                     data-ruangan-id="{{ $item->ruangan_id }}"
-                                                    data-projector-id="{{ $item->projector_id ?? '' }}"
-                                                    data-waktu_mulai="{{ $item->waktu_mulai ?? '' }}"
-                                                    data-waktu_selesai="{{ $item->waktu_selesai ?? '' }}"
+                                                    data-projector-id="{{ $item->projector_id }}"
+                                                    data-waktu_mulai="{{ $item->waktu_mulai }}"
+                                                    data-waktu_selesai="{{ $item->waktu_selesai }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
-                                                    data-catatan="{{ $item->catatan ?? '' }}">
+                                                    data-status-pengembalian="{{ optional($item->pengembalian)->status }}"
+                                                    data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian }}"
+                                                    data-catatan="{{ $item->catatan }}">
                                                     <i class="fas fa-edit me-1"></i> Edit
                                                 </button>
 
@@ -1527,14 +1559,15 @@
                                                 data-bs-target="#editModal" data-id="{{ $item->id }}"
                                                 data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                 data-tanggal="{{ $item->tanggal }}"
-                                                data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
-                                                data-projector-id="{{ $item->projector->id ?? '' }}"
-                                                data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : '0' }}"
+                                                data-ruangan-id="{{ $item->ruangan_id }}"
+                                                data-projector-id="{{ $item->projector_id }}"
+                                                data-waktu_mulai="{{ $item->waktu_mulai }}"
+                                                data-waktu_selesai="{{ $item->waktu_selesai }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
-                                                data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '' }}"
-                                                data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '' }}"
-                                                data-keterangan="{{ $item->catatan ?? '' }}">
+                                                data-status-pengembalian="{{ optional($item->pengembalian)->status }}"
+                                                data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian }}"
+                                                data-catatan="{{ $item->catatan }}">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </button>
                                             <button class="btn btn-danger-custom btn-sm" data-bs-toggle="modal"
@@ -1647,8 +1680,9 @@
                                     <label class="form-label fw-bold">Ruangan</label>
                                     <select class="form-select" id="edit_ruangan_id" name="ruangan_id" required>
                                         <option value="">-- Pilih Ruangan --</option>
-                                        @foreach($ruangans as $ruangan)
-                                            <option value="{{ $ruangan->id }}">{{ $ruangan->nama_ruangan }}</option>
+                                        @foreach ($ruangans as $ruangan)
+                                            <option value="{{ $ruangan->id }}">{{ $ruangan->nama_ruangan }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -1656,8 +1690,9 @@
                                     <label class="form-label fw-bold">Proyektor</label>
                                     <select class="form-select" id="edit_projector_id" name="projector_id">
                                         <option value="">-- Tidak Ada --</option>
-                                        @foreach($projectors as $projector)
-                                            <option value="{{ $projector->id }}">{{ $projector->kode_proyektor }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}</option>
+                                        @foreach ($projectors as $projector)
+                                            <option value="{{ $projector->id }}">{{ $projector->kode_proyektor }} -
+                                                {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -1667,7 +1702,8 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Status Pengembalian</label>
-                                    <select class="form-select" id="edit_pengembalian_status" name="pengembalian_status">
+                                    <select class="form-select" id="edit_pengembalian_status"
+                                        name="pengembalian_status">
                                         <option value="">-- Tidak Ada Pengembalian --</option>
                                         <option value="pending">Menunggu</option>
                                         <option value="verified">Disetujui</option>
@@ -1677,7 +1713,8 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Tanggal Pengembalian</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_pengembalian" name="tanggal_pengembalian">
+                                    <input type="date" class="form-control" id="edit_tanggal_pengembalian"
+                                        name="tanggal_pengembalian">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Status Peminjaman</label>
@@ -1691,11 +1728,13 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_mulai" name="waktu_mulai">
+                                    <input type="time" class="form-control" id="edit_waktu_mulai"
+                                        name="waktu_mulai">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_selesai" name="waktu_selesai">
+                                    <input type="time" class="form-control" id="edit_waktu_selesai"
+                                        name="waktu_selesai">
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label fw-bold">Catatan</label>
