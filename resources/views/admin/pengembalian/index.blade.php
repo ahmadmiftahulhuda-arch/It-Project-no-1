@@ -1073,7 +1073,7 @@
                                 Disetujui</option>
                             <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak
                             </option>
-                            <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>
+                            <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>
                                 Terlambat</option>
                         </select>
                     </div>
@@ -1124,6 +1124,16 @@
                     <tbody id="pengembalian-table-body">
                         @if ($pengembalians->count() > 0)
                             @foreach ($pengembalians as $pengembalian)
+                                @php
+                                    $isLate = false;
+                                    try {
+                                        if ($pengembalian->tanggal_pengembalian && $pengembalian->peminjaman && $pengembalian->peminjaman->tanggal) {
+                                            $isLate = \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($pengembalian->peminjaman->tanggal));
+                                        }
+                                    } catch (\Exception $e) {
+                                        $isLate = false;
+                                    }
+                                @endphp
                                 <tr data-status="{{ $pengembalian->status }}" data-id="{{ $pengembalian->id }}">
                                     <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
                                     </td>
@@ -1160,7 +1170,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($pengembalian->status == 'verified')
+                                        @if ($isLate)
+                                            <span class="badge status-badge status-terlambat">
+                                                <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                            </span>
+                                        @elseif ($pengembalian->status == 'verified')
                                             <span class="badge status-badge status-disetujui">
                                                 <i class="fas fa-check-circle me-1"></i> Disetujui
                                             </span>

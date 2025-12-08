@@ -66,9 +66,14 @@ class AdminController extends Controller
             });
         }
 
-        // Filter status
+        // Filter status (support 'terlambat' as derived status)
         if ($request->has('status') && $request->status != '') {
-            $query->where('status', $request->status);
+            if ($request->status === 'terlambat') {
+                // pengembalians where tanggal_pengembalian > peminjaman.tanggal
+                $query->whereRaw("DATE(tanggal_pengembalian) > (select DATE(tanggal) from peminjamans where peminjamans.id = pengembalians.peminjaman_id)");
+            } else {
+                $query->where('status', $request->status);
+            }
         }
 
         // Filter tanggal
@@ -210,7 +215,7 @@ class AdminController extends Controller
      */
     public function riwayat(Request $request)
     {
-        $query = Peminjaman::with(['user', 'ruangan', 'projector']);
+        $query = Peminjaman::with(['user', 'ruangan', 'projector', 'pengembalian']);
 
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {

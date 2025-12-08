@@ -1263,12 +1263,49 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($item->status_pengembalian == 'sudah dikembalikan' || $item->tanggal_kembali)
-                                                <span
-                                                    class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                            @php
+                                                $pj = $item->pengembalian ?? null;
+                                                $isLate = false;
+                                                if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
+                                                    try {
+                                                        $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(\Carbon\Carbon::parse($item->tanggal));
+                                                    } catch (\Exception $e) {
+                                                        $isLate = false;
+                                                    }
+                                                }
+                                            @endphp
+
+                                            @if ($pj)
+                                                @if ($isLate)
+                                                    <span class="badge status-badge status-terlambat">
+                                                        <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                                    </span>
+                                                @elseif ($pj->status == 'verified')
+                                                    <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                @elseif ($pj->status == 'pending')
+                                                    <span class="badge status-badge status-menunggu">Menunggu Verifikasi</span>
+                                                @elseif ($pj->status == 'rejected')
+                                                    <span class="badge status-badge status-ditolak">Ditolak</span>
+                                                @else
+                                                    <span class="badge status-badge">{{ ucfirst($pj->status) }}</span>
+                                                @endif
                                             @else
-                                                <span class="badge status-badge status-belum-dikembalikan">Belum
-                                                    Dikembalikan</span>
+                                                {{-- Tidak ada pengembalian yang tercatat untuk peminjaman ini --}}
+                                                @php
+                                                    $duePassed = false;
+                                                    try {
+                                                        $duePassed = \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui';
+                                                    } catch (\Exception $e) {
+                                                        $duePassed = false;
+                                                    }
+                                                @endphp
+                                                @if ($duePassed)
+                                                    <span class="badge status-badge status-terlambat">Terlambat</span>
+                                                @elseif($item->status == 'selesai')
+                                                    <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                @else
+                                                    <span class="badge status-badge status-belum-dikembalikan">Belum Dikembalikan</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>
