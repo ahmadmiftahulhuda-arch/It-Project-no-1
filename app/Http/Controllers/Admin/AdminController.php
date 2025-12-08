@@ -487,18 +487,27 @@ class AdminController extends Controller
     public function updatePengembalian(Request $request, $id)
     {
         $request->validate([
-            'kondisi_ruang' => 'required|string',
-            'kondisi_proyektor' => 'required|string',
+            'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
+            'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
             'catatan' => 'nullable|string|max:500',
+            'tanggal_pengembalian' => 'nullable|date',
+            'status' => 'required|in:pending,verified,rejected',
         ]);
 
         $pengembalian = \App\Models\Pengembalian::findOrFail($id);
 
-        $pengembalian->update([
+        $data = [
             'kondisi_ruang' => $request->kondisi_ruang,
-            'kondisi_proyektor' => $request->kondisi_proyektor,
+            'kondisi_proyektor' => $request->kondisi_proyektor ?? null,
             'catatan' => $request->catatan,
-        ]);
+            'status' => $request->status,
+        ];
+
+        if ($request->filled('tanggal_pengembalian')) {
+            $data['tanggal_pengembalian'] = $request->tanggal_pengembalian;
+        }
+
+        $pengembalian->update($data);
 
         return redirect()->route('admin.pengembalian')
             ->with('success', 'Pengembalian berhasil diperbarui.');

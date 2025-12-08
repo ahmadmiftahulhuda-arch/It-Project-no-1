@@ -217,6 +217,7 @@ class PeminjamanController extends Controller
                 'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
                 'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
                 'catatan' => 'nullable|string|max:500',
+                'tanggal_pengembalian' => 'required|date',
             ]);
 
             $peminjaman = Peminjaman::where('user_id', $userId)
@@ -224,10 +225,13 @@ class PeminjamanController extends Controller
                 ->whereDoesntHave('pengembalian')
                 ->findOrFail($id);
 
+            // Use the tanggal_pengembalian submitted by the user
+            $tanggalPengembalian = $request->tanggal_pengembalian;
+
             Pengembalian::create([
                 'peminjaman_id' => $peminjaman->id,
                 'user_id' => $userId,
-                'tanggal_pengembalian' => now(),
+                'tanggal_pengembalian' => $tanggalPengembalian,
                 'kondisi_ruang' => $request->kondisi_ruang,
                 'kondisi_proyektor' => $request->kondisi_proyektor,
                 'catatan' => $request->catatan,

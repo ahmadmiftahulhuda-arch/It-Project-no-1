@@ -1147,6 +1147,9 @@
                                             <small class="text-muted">
                                                 <i class="fas fa-video me-1"></i>
                                                 {{ $pengembalian->peminjaman->projector->kode_proyektor ?? 'Proyektor ID: ' . $pengembalian->peminjaman->projector_id }}
+                                                @if($pengembalian->peminjaman->projector->merk || $pengembalian->peminjaman->projector->model)
+                                                    - {{ trim(($pengembalian->peminjaman->projector->merk ?? '') . ' ' . ($pengembalian->peminjaman->projector->model ?? '')) }}
+                                                @endif
                                             </small>
                                         @else
                                             <small class="text-muted">Tanpa Proyektor</small>
@@ -1155,8 +1158,8 @@
                                     <td>{{ $pengembalian->peminjaman->tanggal ? \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') : 'N/A' }}
                                     </td>
                                     <td>
-                                        @if ($pengembalian->tanggal_kembali)
-                                            {{ \Carbon\Carbon::parse($pengembalian->tanggal_kembali)->format('d M Y') }}
+                                        @if ($pengembalian->tanggal_pengembalian)
+                                            {{ \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('d M Y') }}
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -1228,7 +1231,9 @@
                                                 data-bs-target="#editModal" data-id="{{ $pengembalian->id }}"
                                                 data-kondisi-ruang="{{ $pengembalian->kondisi_ruang ?? '' }}"
                                                 data-kondisi-proyektor="{{ $pengembalian->kondisi_proyektor ?? '' }}"
-                                                data-catatan="{{ $pengembalian->catatan ?? '' }}">
+                                                data-catatan="{{ $pengembalian->catatan ?? '' }}"
+                                                data-tanggal-pengembalian="{{ $pengembalian->tanggal_pengembalian ?? '' }}"
+                                                data-status="{{ $pengembalian->status }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
 
@@ -1238,7 +1243,7 @@
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
                                                 data-barang="{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? 'N/A' }}"
                                                 data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal ?? '' }}"
-                                                data-tanggal-kembali="{{ $pengembalian->tanggal_kembali ?? '' }}"
+                                                data-tanggal-pengembalian="{{ $pengembalian->tanggal_pengembalian ?? '' }}"
                                                 data-kondisi="Ruang: {{ $pengembalian->kondisi_ruang ?? '-' }} | Proyektor: {{ $pengembalian->kondisi_proyektor ?? '-' }}"
                                                 data-keterangan="{{ $pengembalian->catatan ?? '-' }}"
                                                 data-status="{{ $pengembalian->status }}">
@@ -1433,9 +1438,9 @@
                                 <label for="edit_kondisi_ruang" class="form-label">Kondisi Ruangan</label>
                                 <select class="form-select" id="edit_kondisi_ruang" name="kondisi_ruang" required>
                                     <option value="">-- Pilih Kondisi --</option>
-                                    <option value="Baik">Baik</option>
-                                    <option value="Rusak Ringan">Rusak Ringan</option>
-                                    <option value="Rusak Berat">Rusak Berat</option>
+                                    <option value="baik">Baik</option>
+                                    <option value="rusak_ringan">Rusak Ringan</option>
+                                    <option value="rusak_berat">Rusak Berat</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -1443,9 +1448,21 @@
                                 <select class="form-select" id="edit_kondisi_proyektor" name="kondisi_proyektor"
                                     required>
                                     <option value="">-- Pilih Kondisi --</option>
-                                    <option value="Baik">Baik</option>
-                                    <option value="Rusak Ringan">Rusak Ringan</option>
-                                    <option value="Rusak Berat">Rusak Berat</option>
+                                    <option value="baik">Baik</option>
+                                    <option value="rusak_ringan">Rusak Ringan</option>
+                                    <option value="rusak_berat">Rusak Berat</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_tanggal_pengembalian" class="form-label">Tanggal Pengembalian</label>
+                                <input type="date" id="edit_tanggal_pengembalian" name="tanggal_pengembalian" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_status" class="form-label">Status</label>
+                                <select id="edit_status" name="status" class="form-select" required>
+                                    <option value="pending">Menunggu</option>
+                                    <option value="verified">Disetujui</option>
+                                    <option value="rejected">Ditolak</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -1612,7 +1629,7 @@
                     const barang = button.getAttribute('data-barang');
                     const tanggalPinjam = button.getAttribute('data-tanggal-pinjam');
                     const tanggalJatuhTempo = button.getAttribute('data-tanggal-jatuh-tempo');
-                    const tanggalKembali = button.getAttribute('data-tanggal-kembali');
+                    const tanggalKembali = button.getAttribute('data-tanggal-pengembalian');
                     const kondisi = button.getAttribute('data-kondisi');
                     const keterangan = button.getAttribute('data-keterangan');
                     const status = button.getAttribute('data-status');
@@ -1627,14 +1644,19 @@
                     document.getElementById('detail_kondisi').textContent = kondisi || '-';
                     document.getElementById('detail_keterangan').textContent = keterangan || '-';
 
-                    // Format status
+                    // Map status values to labels
                     let statusText = '';
-                    if (status === 'dikembalikan') {
-                        statusText = '<span class="badge status-dikembalikan">Dikembalikan</span>';
-                    } else if (status === 'terlambat') {
-                        statusText = '<span class="badge status-terlambat">Terlambat</span>';
-                    } else {
-                        statusText = '<span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>';
+                    switch (status) {
+                        case 'verified':
+                            statusText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                            break;
+                        case 'rejected':
+                            statusText = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
+                            break;
+                        case 'pending':
+                        default:
+                            statusText = '<span class="badge status-pending"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>';
+                            break;
                     }
                     document.getElementById('detail_status').innerHTML = statusText;
                 });
@@ -1648,6 +1670,8 @@
                     const kondisiRuang = button.getAttribute('data-kondisi-ruang');
                     const kondisiProyektor = button.getAttribute('data-kondisi-proyektor');
                     const catatan = button.getAttribute('data-catatan');
+                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
+                    const status = button.getAttribute('data-status');
 
                     // Set form action
                     document.getElementById('editForm').action = `/admin/pengembalian/${id}`;
@@ -1656,6 +1680,12 @@
                     document.getElementById('edit_kondisi_ruang').value = kondisiRuang || '';
                     document.getElementById('edit_kondisi_proyektor').value = kondisiProyektor || '';
                     document.getElementById('edit_catatan').value = catatan || '';
+                    if (document.getElementById('edit_tanggal_pengembalian')) {
+                        document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian ? tanggalPengembalian.split(' ')[0] : '';
+                    }
+                    if (document.getElementById('edit_status')) {
+                        document.getElementById('edit_status').value = status || 'pending';
+                    }
                 });
             }
 
