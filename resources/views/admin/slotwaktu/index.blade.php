@@ -798,6 +798,62 @@
                 display: flex;
             }
         }
+        /* Import Form Styles */
+        .import-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .import-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .import-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .import-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: inline-block;
+            padding: 6px 8px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            background: transparent;
+        }
+
+        @media (max-width: 600px) {
+            .import-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .import-actions {
+                justify-content: flex-start;
+            }
+        }
     </style>
 </head>
 
@@ -1021,6 +1077,48 @@
                 </button>
             </div>
         </div>
+        <!-- Import Excel Form -->
+        <form action="{{ route('slotwaktu.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
+            @csrf
+            <div class="import-header">
+                <h3 class="import-title">
+                    <i class="fas fa-file-import me-2"></i>Import Data Slot Waktu dari Excel
+                </h3>
+                <div class="import-actions">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                    </div>
+                    <button class="btn btn-success" type="submit">
+                        <i class="fas fa-upload me-1"></i> Import Excel
+                    </button>
+                </div>
+            </div>
+            @if (session('import_success'))
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('import_success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if (session('import_error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('import_error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </form>
         
         <!-- Filter Section -->
         <div class="filter-section">
