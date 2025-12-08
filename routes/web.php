@@ -43,7 +43,19 @@ Route::get('/', function () {
     $slotwaktu = SlotWaktu::all();
     $projectors = Projector::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->get();
 
-    return view('home', compact('ruangan', 'slotwaktu', 'projectors'));
+    // Statistik
+    $totalRuangan = Ruangan::count();
+    $availableRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->count();
+    // hitung maintenance / perbaikan
+    $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance','perbaikan'])->count();
+    // hitung terpakai sebagai sisa dari total setelah mengurangi tersedia dan maintenance
+    $occupiedRuangan = max(0, $totalRuangan - $availableRuangan - $maintenanceRuangan);
+    $totalProjectors = Projector::count();
+
+    return view('home', compact(
+        'ruangan', 'slotwaktu', 'projectors',
+        'totalRuangan', 'availableRuangan', 'occupiedRuangan', 'totalProjectors'
+    ));
 })->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/kalender', 'kalender');
@@ -60,8 +72,18 @@ Route::get('/home', function () {
     $slotwaktu = SlotWaktu::all();
 
     $projectors = Projector::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->get();
+    // Statistik
+    $totalRuangan = Ruangan::count();
+    $availableRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->count();
+    // hitung maintenance / perbaikan
+    $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance','perbaikan'])->count();
+    $occupiedRuangan = max(0, $totalRuangan - $availableRuangan - $maintenanceRuangan);
+    $totalProjectors = Projector::count();
 
-    return view('home', compact('ruangan', 'slotwaktu', 'projectors'));
+    return view('home', compact(
+        'ruangan', 'slotwaktu', 'projectors',
+        'totalRuangan', 'availableRuangan', 'occupiedRuangan', 'totalProjectors'
+    ));
 });
 
 

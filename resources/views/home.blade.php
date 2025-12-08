@@ -1221,28 +1221,28 @@
                     <div class="stat-icon">
                         <i class="fas fa-door-open"></i>
                     </div>
-                    <div class="stat-number">12</div>
+                    <div class="stat-number">{{ $totalRuangan ?? 0 }}</div>
                     <div class="stat-label">Total Ruangan</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="stat-number">8</div>
+                    <div class="stat-number">{{ $availableRuangan ?? 0 }}</div>
                     <div class="stat-label">Ruangan Tersedia</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-times-circle"></i>
                     </div>
-                    <div class="stat-number">4</div>
-                    <div class="stat-label">Ruangan Terpakai</div>
+                    <div class="stat-number">{{ $occupiedRuangan ?? 0 }}</div>
+                    <div class="stat-label">Ruangan Sedang digunakan</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-video"></i>
                     </div>
-                    <div class="stat-number">15</div>
+                    <div class="stat-number">{{ $totalProjectors ?? 0 }}</div>
                     <div class="stat-label">Total Proyektor</div>
                 </div>
             </div>
