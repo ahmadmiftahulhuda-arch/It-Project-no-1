@@ -31,30 +31,38 @@ class AdminController extends Controller
         // Eager load related models so views can show names/details
         $query = Peminjaman::with(['user', 'projector', 'ruangan']);
 
-        // Filter pencarian
+        // Filter pencarian (lebih luas: nama, nim, email, no_hp, keperluan, ruangan, proyektor, tanggal)
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
-
-                // Cari berdasarkan nama peminjam
+                // Cari berdasarkan user (nama, nim, email, no_hp)
                 $q->whereHas('user', function ($userQuery) use ($search) {
-                    $userQuery->where('name', 'like', "%{$search}%");
+                    $userQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('nim', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('no_hp', 'like', "%{$search}%");
                 })
+                // atau keperluan
+                ->orWhere('keperluan', 'like', "%{$search}%")
+                // atau nama ruangan
+                ->orWhereHas('ruangan', function ($r) use ($search) {
+                    $r->where('nama_ruangan', 'like', "%{$search}%");
+                })
+                // atau proyektor (kode/merk/model)
+                ->orWhereHas('projector', function ($p) use ($search) {
+                    $p->where('kode_proyektor', 'like', "%{$search}%")
+                        ->orWhere('merk', 'like', "%{$search}%")
+                        ->orWhere('model', 'like', "%{$search}%");
+                });
 
-                    // Cari berdasarkan keperluan
-                    ->orWhere('keperluan', 'like', "%{$search}%")
-
-                    // Cari berdasarkan nama ruangan
-                    ->orWhereHas('ruangan', function ($r) use ($search) {
-                        $r->where('nama_ruangan', 'like', "%{$search}%");
-                    })
-
-                    // Cari berdasarkan kode proyektor / merk
-                    ->orWhereHas('projector', function ($p) use ($search) {
-                        $p->where('kode_proyektor', 'like', "%{$search}%")
-                            ->orWhere('merk', 'like', "%{$search}%");
-                    });
+                // Jika user memasukkan tanggal yang valid, juga cari berdasarkan tanggal peminjaman
+                try {
+                    $date = Carbon::parse($search)->format('Y-m-d');
+                    $q->orWhereDate('tanggal', $date);
+                } catch (\Exception $e) {
+                    // bukan tanggal — abaikan
+                }
             });
         }
 
@@ -112,16 +120,39 @@ class AdminController extends Controller
         // 2. Pengembalian yang diajukan user - dengan filter
         $query = \App\Models\Pengembalian::with(['peminjaman', 'user', 'peminjaman.ruangan', 'peminjaman.projector']);
 
-        // Filter pencarian
+        // Filter pencarian (user, catatan, tanggal_pengembalian, peminjaman fields like keperluan/ruangan/projector)
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
+
             $query->where(function($q) use ($search) {
+                // user fields
                 $q->whereHas('user', function($userQuery) use ($search) {
-                    $userQuery->where('name', 'like', "%{$search}%");
+                    $userQuery->where('name', 'like', "%{$search}%")
+                              ->orWhere('nim', 'like', "%{$search}%")
+                              ->orWhere('email', 'like', "%{$search}%");
                 })
+                // catatan pada pengembalian
+                ->orWhere('catatan', 'like', "%{$search}%")
+                // peminjaman related fields
                 ->orWhereHas('peminjaman', function($peminjamanQuery) use ($search) {
-                    $peminjamanQuery->where('keperluan', 'like', "%{$search}%");
+                    $peminjamanQuery->where('keperluan', 'like', "%{$search}%")
+                        ->orWhereHas('ruangan', function($r) use ($search) {
+                            $r->where('nama_ruangan', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('projector', function($p) use ($search) {
+                            $p->where('kode_proyektor', 'like', "%{$search}%")
+                              ->orWhere('merk', 'like', "%{$search}%")
+                              ->orWhere('model', 'like', "%{$search}%");
+                        });
                 });
+
+                // Jika input adalah tanggal, cari juga berdasarkan tanggal_pengembalian
+                try {
+                    $date = Carbon::parse($search)->format('Y-m-d');
+                    $q->orWhereDate('tanggal_pengembalian', $date);
+                } catch (\Exception $e) {
+                    // ignore
+                }
             });
         }
 

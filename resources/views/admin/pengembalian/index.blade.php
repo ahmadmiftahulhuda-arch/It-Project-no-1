@@ -1063,11 +1063,6 @@
             <form id="filterForm" method="GET" action="{{ route('admin.pengembalian') }}">
                 <div class="filter-grid">
                     <div class="filter-group">
-                        <label for="search">Cari Peminjam/Barang</label>
-                        <input type="text" id="search" name="search" placeholder="Cari..."
-                            value="{{ request('search') }}">
-                    </div>
-                    <div class="filter-group">
                         <label for="status_filter">Status Pengembalian</label>
                         <select id="status_filter" name="status">
                             <option value="">Semua Status</option>
