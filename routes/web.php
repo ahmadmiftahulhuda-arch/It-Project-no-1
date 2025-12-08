@@ -212,6 +212,7 @@ Route::prefix('admin')->group(function () {
 
     // Laporan
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
+Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->name('admin.laporan.data');
 
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');

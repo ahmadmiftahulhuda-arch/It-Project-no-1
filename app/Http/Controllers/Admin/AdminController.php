@@ -12,7 +12,8 @@ use App\Models\Projector;
 use Carbon\Carbon;
 use App\Exports\PeminjamanExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Log; // <-- Ditambahkan
+use App\Models\Pengembalian;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -627,6 +628,108 @@ class AdminController extends Controller
     public function laporan(Request $request)
     {
         // For now, just return the view. Data fetching logic will be added later.
-        return view('admin.laporan');
+        $years = Peminjaman::select(DB::raw('YEAR(tanggal) as year'))
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        return view('admin.laporan', compact('years'));
+    }
+
+    public function getReportData(Request $request)
+    {
+        $dateRange = $request->input('date_range', 'month');
+        $year = $request->input('year', Carbon::now()->year);
+        $today = Carbon::now();
+        
+        $startDate = $today->copy()->startOfMonth();
+        $endDate = $today->copy()->endOfMonth();
+
+        switch ($dateRange) {
+            case 'week':
+                $startDate = $today->copy()->startOfWeek();
+                $endDate = $today->copy()->endOfWeek();
+                break;
+            case 'month':
+                // default
+                break;
+            case 'quarter':
+                $startDate = $today->copy()->startOfQuarter();
+                $endDate = $today->copy()->endOfQuarter();
+                break;
+            case 'year':
+                $startDate = $today->copy()->startOfYear();
+                $endDate = $today->copy()->endOfYear();
+                break;
+        }
+
+        // Main query for the selected date range
+        $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
+
+        // Stats Cards
+        $totalPeminjaman = $peminjamanQuery->count();
+        $barangDipinjam = $peminjamanQuery->whereIn('status', ['disetujui', 'selesai'])->count();
+        $penggunaAktif = $peminjamanQuery->distinct('user_id')->count('user_id');
+        $barangRusak = Pengembalian::whereBetween('created_at', [$startDate, $endDate])
+            ->where(function ($query) {
+                $query->where('kondisi_ruang', 'like', 'rusak%')
+                      ->orWhere('kondisi_proyektor', 'like', 'rusak%');
+            })->count();
+
+        // Monthly Chart Data (for the selected year)
+        $monthlyData = Peminjaman::select(
+                DB::raw('MONTH(tanggal) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('tanggal', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->all();
+
+        $monthlyChartData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyChartData[] = $monthlyData[$m] ?? 0;
+        }
+
+        // Distribution Chart Data (example: by projector vs room only)
+        $distribusiData = $peminjamanQuery->select(
+            DB::raw('SUM(CASE WHEN projector_id IS NOT NULL THEN 1 ELSE 0 END) as proyektor'),
+            DB::raw('SUM(CASE WHEN projector_id IS NULL THEN 1 ELSE 0 END) as ruangan_saja')
+        )->first();
+
+        $distributionChartData = [
+            'labels' => ['Dengan Proyektor', 'Ruangan Saja'],
+            'data' => [
+                $distribusiData->proyektor ?? 0,
+                $distribusiData->ruangan_saja ?? 0
+            ]
+        ];
+
+        // Recent Activity
+        $recentActivity = Peminjaman::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'title' => 'Peminjaman ' . $item->status,
+                    'description' => ($item->user->name ?? 'User') . ' meminjam ' . ($item->ruangan->nama_ruangan ?? 'ruangan'),
+                    'time' => $item->created_at->diffForHumans(),
+                    'status' => $item->status
+                ];
+            });
+
+        return response()->json([
+            'stats' => [
+                'totalPeminjaman' => $totalPeminjaman,
+                'barangDipinjam' => $barangDipinjam,
+                'penggunaAktif' => $penggunaAktif,
+                'barangRusak' => $barangRusak,
+            ],
+            'monthlyChart' => $monthlyChartData,
+            'distributionChart' => $distributionChartData,
+            'recentActivity' => $recentActivity,
+        ]);
     }
 }

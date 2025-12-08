@@ -1081,471 +1081,532 @@
         </div>
 
         <!-- Stats Cards -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon primary">
-                    <i class="fas fa-hand-holding"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>248</h3>
-                    <p>Total Peminjaman</p>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up me-1"></i> 12.5% dari bulan lalu
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-hand-holding"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPeminjaman">-</h3>
+                            <p>Total Peminjaman</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="barangDipinjam">-</h3>
+                            <p>Barang Dipinjam</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="penggunaAktif">-</h3>
+                            <p>Pengguna Aktif</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="barangRusak">-</h3>
+                            <p>Barang Rusak</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon success">
-                    <i class="fas fa-laptop"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>563</h3>
-                    <p>Barang Dipinjam</p>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up me-1"></i> 8.3% dari bulan lalu
+                <!-- Charts Section -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="section-title">Statistik Peminjaman Bulanan</div>
+                            <select id="yearSelect" style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
+                                @foreach($years as $year)
+                                    <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="section-title">Distribusi Peminjaman</div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="distributionChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon warning">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>184</h3>
-                    <p>Pengguna Aktif</p>
-                    <div class="stat-change positive">
-                        <i class="fas fa-arrow-up me-1"></i> 5.2% dari bulan lalu
+        
+                <!-- Recent Activity -->
+                <div class="activity-container">
+                    <div class="chart-header">
+                        <div class="section-title">Aktivitas Terbaru</div>
+                        <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
                     </div>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon danger">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>12</h3>
-                    <p>Barang Rusak</p>
-                    <div class="stat-change negative">
-                        <i class="fas fa-arrow-down me-1"></i> 3.7% dari bulan lalu
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div class="charts-grid">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div class="section-title">Statistik Peminjaman Bulanan</div>
-                    <select id="yearSelect" style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                    </select>
-                </div>
-                <div class="chart-container">
-                    <canvas id="monthlyChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div class="section-title">Distribusi Peminjaman</div>
-                    <a href="#" class="view-all">Detail</a>
-                </div>
-                <div class="chart-container">
-                    <canvas id="distributionChart"></canvas>
+                    <ul class="activity-list" id="recentActivityList">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </ul>
                 </div>
             </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="activity-container">
-            <div class="chart-header">
-                <div class="section-title">Aktivitas Terbaru</div>
-                <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
             </div>
-            
-            <ul class="activity-list">
-                <li class="activity-item">
-                    <div class="activity-icon primary">
-                        <i class="fas fa-hand-holding"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Peminjaman Baru</div>
-                        <div class="activity-desc">Ahmad Surya meminjam 2 laptop dan 1 projector</div>
-                        <div class="activity-time">2 jam yang lalu</div>
-                    </div>
-                </li>
-                
-                <li class="activity-item">
-                    <div class="activity-icon success">
-                        <i class="fas fa-undo"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Pengembalian Barang</div>
-                        <div class="activity-desc">Rina Susanti mengembalikan 3 unit laptop</div>
-                        <div class="activity-time">5 jam yang lalu</div>
-                    </div>
-                </li>
-                
-                <li class="activity-item">
-                    <div class="activity-icon warning">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Pengguna Baru</div>
-                        <div class="activity-desc">Dewi Wulandari terdaftar sebagai pengguna lab</div>
-                        <div class="activity-time">Kemarin, 15:32</div>
-                    </div>
-                </li>
-                
-                <li class="activity-item">
-                    <div class="activity-icon purple">
-                        <i class="fas fa-exclamation-circle"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Laporan Kerusakan</div>
-                        <div class="activity-desc">Keyboard pada workstation 05 tidak berfungsi</div>
-                        <div class="activity-time">12 Sep 2023, 10:45</div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Initialize when document is ready
-        $(document).ready(function() {
-            initializeTheme();
-            initializeEventListeners();
-            initializeCharts();
-        });
-
-        function initializeEventListeners() {
-            $('#theme-toggle').on('click', function() {
-                toggleTheme();
-            });
-
-            $('#menu-toggle').on('click', function() {
-                toggleSidebar();
-            });
-
-            $('#printBtn').on('click', function() {
-                window.print();
-            });
-
-            $('#exportBtn').on('click', function() {
-                exportReport();
-            });
-
-            $('#generateBtn').on('click', function() {
-                generateReport();
-            });
-
-            $('#yearSelect').on('change', function() {
-                updateMonthlyChart(this.value);
-            });
-
-            // Initialize Bootstrap dropdowns
-            const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
-            const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl));
-        }
-
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('darkMode');
-            if (savedTheme === 'enabled') {
-                document.body.classList.add('dark-mode');
-                $('#theme-toggle').html('<i class="fas fa-sun"></i>');
-            }
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            let theme = 'disabled';
-            let icon = '<i class="fas fa-moon"></i>';
-            if (document.body.classList.contains('dark-mode')) {
-                theme = 'enabled';
-                icon = '<i class="fas fa-sun"></i>';
-            }
-            localStorage.setItem('darkMode', theme);
-            $('#theme-toggle').html(icon);
-            
-            // Update chart colors for dark mode
-            updateChartColors();
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('active');
-                if (sidebar.classList.contains('active')) {
-                    sidebar.style.transform = 'translateX(0)';
-                } else {
-                    sidebar.style.transform = 'translateX(-100%)';
+            <!-- Bootstrap JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                let monthlyChart, distributionChart;
+                // Initialize when document is ready
+                $(document).ready(function() {
+                    initializeEventListeners();
+                    initializeTheme();
+                    // Generate report on page load
+                    generateReport();
+                });
+                function initializeEventListeners() {
+                    $('#theme-toggle').on('click', toggleTheme);
+                    $('#menu-toggle').on('click', toggleSidebar);
+                    $('#printBtn').on('click', () => window.print());
+                    $('#exportBtn').on('click', exportReport);
+                    $('#generateBtn').on('click', generateReport);
+                    $('#yearSelect').on('change', generateReport);
                 }
-            }
-        }
-
-        let monthlyChart, distributionChart;
-
-        function initializeCharts() {
-            // Monthly Chart
-            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-            monthlyChart = new Chart(monthlyCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-                    datasets: [{
-                        label: 'Jumlah Peminjaman',
-                        data: [45, 62, 58, 72, 85, 93, 100, 112, 95, 78, 65, 52],
-                        backgroundColor: document.body.classList.contains('dark-mode') ? 
-                            'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)',
-                        borderColor: document.body.classList.contains('dark-mode') ? 
-                            'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)',
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: document.body.classList.contains('dark-mode') ? 
-                                    'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? 
-                                    '#a0a0a0' : '#495057'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: document.body.classList.contains('dark-mode') ? 
-                                    '#a0a0a0' : '#495057'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: document.body.classList.contains('dark-mode') ? 
-                                'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                            titleColor: document.body.classList.contains('dark-mode') ? 
-                                '#fff' : '#000',
-                            bodyColor: document.body.classList.contains('dark-mode') ? 
-                                '#fff' : '#000',
-                            borderColor: document.body.classList.contains('dark-mode') ? 
-                                '#333' : '#ddd',
-                            borderWidth: 1
-                        }
+                function initializeTheme() {
+                    if (localStorage.getItem('darkMode') === 'enabled') {
+                        document.body.classList.add('dark-mode');
+                        $('#theme-toggle').html('<i class="fas fa-sun"></i>');
                     }
                 }
-            });
-            
-            // Distribution Chart
-            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-            distributionChart = new Chart(distributionCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Laptop', 'Projector', 'Tablet', 'VR Headset', 'Lainnya'],
-                    datasets: [{
-                        data: [45, 20, 15, 10, 10],
-                        backgroundColor: [
-                            'rgba(59, 89, 152, 0.8)',
-                            'rgba(76, 175, 80, 0.8)',
-                            'rgba(255, 152, 0, 0.8)',
-                            'rgba(155, 89, 182, 0.8)',
-                            'rgba(244, 67, 54, 0.8)'
-                        ],
-                        borderColor: document.body.classList.contains('dark-mode') ? 
-                            'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-                        borderWidth: 2,
-                        hoverOffset: 15
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: document.body.classList.contains('dark-mode') ? 
-                                    '#a0a0a0' : '#495057',
-                                padding: 20,
-                                usePointStyle: true,
-                                pointStyle: 'circle'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: document.body.classList.contains('dark-mode') ? 
-                                'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                            titleColor: document.body.classList.contains('dark-mode') ? 
-                                '#fff' : '#000',
-                            bodyColor: document.body.classList.contains('dark-mode') ? 
-                                '#fff' : '#000',
-                            borderColor: document.body.classList.contains('dark-mode') ? 
-                                '#333' : '#ddd',
-                            borderWidth: 1
-                        }
-                    }
+        
+                function toggleTheme() {
+                    document.body.classList.toggle('dark-mode');
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+                    $('#theme-toggle').html(isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
+                    updateChartColors();
                 }
-            });
-        }
 
-        function updateChartColors() {
-            if (monthlyChart) {
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                
-                // Update monthly chart colors
-                monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 
-                    'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)';
-                monthlyChart.data.datasets[0].borderColor = isDarkMode ? 
-                    'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
-                
-                monthlyChart.options.scales.y.grid.color = isDarkMode ? 
-                    'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-                monthlyChart.options.scales.y.ticks.color = isDarkMode ? 
-                    '#a0a0a0' : '#495057';
-                monthlyChart.options.scales.x.ticks.color = isDarkMode ? 
-                    '#a0a0a0' : '#495057';
-                
-                monthlyChart.options.plugins.tooltip.backgroundColor = isDarkMode ? 
-                    'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)';
-                monthlyChart.options.plugins.tooltip.titleColor = isDarkMode ? 
-                    '#fff' : '#000';
-                monthlyChart.options.plugins.tooltip.bodyColor = isDarkMode ? 
-                    '#fff' : '#000';
-                monthlyChart.options.plugins.tooltip.borderColor = isDarkMode ? 
-                    '#333' : '#ddd';
-                
-                monthlyChart.update();
-            }
-            
-            if (distributionChart) {
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                
-                distributionChart.data.datasets[0].borderColor = isDarkMode ? 
-                    'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)';
-                
-                distributionChart.options.plugins.legend.labels.color = isDarkMode ? 
-                    '#a0a0a0' : '#495057';
-                
-                distributionChart.options.plugins.tooltip.backgroundColor = isDarkMode ? 
-                    'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)';
-                distributionChart.options.plugins.tooltip.titleColor = isDarkMode ? 
-                    '#fff' : '#000';
-                distributionChart.options.plugins.tooltip.bodyColor = isDarkMode ? 
-                    '#fff' : '#000';
-                distributionChart.options.plugins.tooltip.borderColor = isDarkMode ? 
-                    '#333' : '#ddd';
-                
-                distributionChart.update();
-            }
-        }
+                function toggleSidebar() {
+                    // Implement sidebar toggle logic if needed, especially for mobile
+                }
+                function updateUI(data) {
+                    // 1. Update Stats Cards
+                    $('#totalPeminjaman').text(data.stats.totalPeminjaman);
+                    $('#barangDipinjam').text(data.stats.barangDipinjam);
+                    $('#penggunaAktif').text(data.stats.penggunaAktif);
+                    $('#barangRusak').text(data.stats.barangRusak);
 
-        function updateMonthlyChart(year) {
-            // Simulate data change based on year
-            let data;
-            if (year === '2022') {
-                data = [35, 48, 52, 65, 72, 80, 88, 95, 82, 70, 58, 45];
-            } else if (year === '2021') {
-                data = [28, 40, 45, 55, 62, 70, 75, 80, 72, 60, 50, 38];
-            } else {
-                data = [45, 62, 58, 72, 85, 93, 100, 112, 95, 78, 65, 52];
-            }
-            
-            monthlyChart.data.datasets[0].data = data;
-            monthlyChart.update();
-        }
+                    // 2. Update Recent Activity
 
-        function exportReport() {
-            const reportType = $('#report-type').val();
-            const dateRange = $('#date-range').val();
-            const department = $('#department').val();
-            
-            // Simulate export process
-            alert(`Mengekspor laporan:\nJenis: ${reportType}\nRentang: ${dateRange}\nJurusan: ${department || 'Semua'}`);
-            
-            // In real implementation, this would make an AJAX call
-            // $.ajax({
-            //     url: '', // Placeholder for export URL
-            //     method: 'POST',
-            //     data: {
-            //         report_type: reportType,
-            //         date_range: dateRange,
-            //         department: department
-            //     },
-            //     success: function(response) {
-            //         // Handle export success
-            //     }
-            // });
-        }
+                    const activityList = $('#recentActivityList');
 
-        function generateReport() {
-            const reportType = $('#report-type').val();
-            const dateRange = $('#date-range').val();
-            const department = $('#department').val();
-            
-            // Show loading state
-            const btn = $('#generateBtn');
-            const originalHtml = btn.html();
-            btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
-            btn.prop('disabled', true);
-            
-            // Simulate API call
-            setTimeout(() => {
-                btn.html(originalHtml);
-                btn.prop('disabled', false);
+                    activityList.empty(); // Clear existing items
+
+                    if (data.recentActivity && data.recentActivity.length > 0) {
+                        data.recentActivity.forEach(item => {
+
+                            let iconClass = 'primary';
+
+                            if (item.status === 'selesai' || item.status === 'disetujui') iconClass = 'success';
+
+                            if (item.status === 'ditolak') iconClass = 'danger';
+
+                            if (item.status === 'pending') iconClass = 'warning';
+
+        
+
+                            const activityHtml = `
+
+                                <li class="activity-item">
+
+                                    <div class="activity-icon ${iconClass}">
+
+                                        <i class="fas fa-hand-holding"></i>
+
+                                    </div>
+
+                                    <div class="activity-content">
+
+                                        <div class="activity-title">${item.title}</div>
+
+                                        <div class="activity-desc">${item.description}</div>
+
+                                        <div class="activity-time">${item.time}</div>
+
+                                    </div>
+
+                                </li>`;
+
+                            activityList.append(activityHtml);
+
+                        });
+
+                    } else {
+
+                        activityList.append('<li class="text-center p-3 text-muted">Tidak ada aktivitas terbaru.</li>');
+
+                    }
+
+        
+
+                    // 3. Update Charts
+
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+
+                    
+
+                    // Monthly Chart
+
+                    const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+
+                    if (monthlyChart) {
+
+                        monthlyChart.destroy();
+
+                    }
+
+                    monthlyChart = new Chart(monthlyCtx, {
+
+                        type: 'bar',
+
+                        data: {
+
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+
+                            datasets: [{
+
+                                label: 'Jumlah Peminjaman',
+
+                                data: data.monthlyChart,
+
+                                backgroundColor: isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)',
+
+                                borderColor: isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)',
+
+                                borderWidth: 1,
+
+                                borderRadius: 4
+
+                            }]
+
+                        },
+
+                        options: getChartOptions()
+
+                    });
+
+        
+
+                    // Distribution Chart
+
+                    const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+
+                    if (distributionChart) {
+
+                        distributionChart.destroy();
+
+                    }
+
+                    distributionChart = new Chart(distributionCtx, {
+
+                        type: 'doughnut',
+
+                        data: {
+
+                            labels: data.distributionChart.labels,
+
+                            datasets: [{
+
+                                data: data.distributionChart.data,
+
+                                backgroundColor: [
+
+                                    'rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)',
+
+                                    'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'
+
+                                ],
+
+                                borderColor: isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+
+                                borderWidth: 2,
+
+                                hoverOffset: 15
+
+                            }]
+
+                        },
+
+                        options: getDoughnutChartOptions()
+
+                    });
+
+        
+
+                    updateChartColors();
+
+                }
+
+        
+
+                function getChartOptions() {
+
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+
+                    return {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                grid: { color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' },
+
+                                ticks: { color: isDarkMode ? '#a0a0a0' : '#495057' }
+
+                            },
+
+                            x: {
+
+                                grid: { display: false },
+
+                                ticks: { color: isDarkMode ? '#a0a0a0' : '#495057' }
+
+                            }
+
+                        },
+
+                        plugins: {
+
+                            legend: { display: false },
+
+                            tooltip: getTooltipOptions()
+
+                        }
+
+                    };
+
+                }
+
+        
+
+                function getDoughnutChartOptions() {
+
+                     const isDarkMode = document.body.classList.contains('dark-mode');
+
+                    return {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: 'bottom',
+
+                                labels: {
+
+                                    color: isDarkMode ? '#a0a0a0' : '#495057',
+
+                                    padding: 20,
+
+                                    usePointStyle: true,
+
+                                    pointStyle: 'circle'
+
+                                }
+
+                            },
+
+                            tooltip: getTooltipOptions()
+
+                        }
+
+                    };
+
+                }
+
+        
+
+                function getTooltipOptions() {
+
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+
+                    return {
+
+                        backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+
+                        titleColor: isDarkMode ? '#fff' : '#000',
+
+                        bodyColor: isDarkMode ? '#fff' : '#000',
+
+                        borderColor: isDarkMode ? '#333' : '#ddd',
+
+                        borderWidth: 1
+
+                    };
+
+                }
+
+        
+
+                function updateChartColors() {
+
+                    const chartOptions = getChartOptions();
+
+                    const doughnutOptions = getDoughnutChartOptions();
+
+        
+
+                    if (monthlyChart) {
+
+                        const isDarkMode = document.body.classList.contains('dark-mode');
+
+                        monthlyChart.options = chartOptions;
+
+                        monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)';
+
+                        monthlyChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
+
+                        monthlyChart.update();
+
+                    }
+
+                    if (distributionChart) {
+
+                         const isDarkMode = document.body.classList.contains('dark-mode');
+
+                        distributionChart.options = doughnutOptions;
+
+                        distributionChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+
+                        distributionChart.update();
+
+                    }
+
+                }
+
                 
-                // Update charts with new data
-                updateMonthlyChart($('#yearSelect').val());
+
+                function generateReport() {
+
+                    const reportType = $('#report-type').val();
+
+                    const dateRange = $('#date-range').val();
+
+                    const department = $('#department').val();
+
+                    const year = $('#yearSelect').val();
+
+        
+
+                    const btn = $('#generateBtn');
+
+                    const originalHtml = btn.html();
+
+                    btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
+
+                    btn.prop('disabled', true);
+
+        
+
+                    const url = `{{ route('admin.laporan.data') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
+
+                    
+
+                    fetch(url, {
+
+                        headers: {
+
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+
+                            'Accept': 'application/json'
+
+                        }
+
+                    })
+
+                    .then(response => {
+
+                        if (!response.ok) {
+
+                            throw new Error('Network response was not ok');
+
+                        }
+
+                        return response.json();
+
+                    })
+
+                    .then(data => {
+
+                        updateUI(data);
+
+                        btn.html(originalHtml);
+
+                        btn.prop('disabled', false);
+
+                    })
+
+                    .catch(error => {
+
+                        console.error('Error fetching report data:', error);
+
+                        alert('Gagal memuat data laporan. Silakan coba lagi.');
+
+                        btn.html(originalHtml);
+
+                        btn.prop('disabled', false);
+
+                    });
+
+                }
+
                 
-                alert(`Laporan berhasil digenerate!\nJenis: ${reportType}\nRentang: ${dateRange}\nJurusan: ${department || 'Semua'}`);
-            }, 1500);
-        }
 
-        // Handle responsive sidebar
-        window.addEventListener('resize', function() {
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            
-            if (window.innerWidth > 768) {
-                sidebar.style.transform = 'translateX(0)';
-                mainContent.style.marginLeft = 'var(--sidebar-width)';
-            } else {
-                sidebar.style.transform = 'translateX(-100%)';
-                mainContent.style.marginLeft = '0';
-            }
-        });
+                function exportReport() {
 
-        // Terapkan dark mode jika sebelumnya diaktifkan
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            $('#theme-toggle').html('<i class="fas fa-sun"></i>');
-        }
-    </script>
-</body>
-</html>
+                    const reportType = $('#report-type').val();
+
+                    const dateRange = $('#date-range').val();
+
+                    const department = $('#department').val();
+
+                    const year = $('#yearSelect').val();
+
+                    
+
+                    // Note: You need to create a route and controller method for this export.
+
+                    // For example: Route::get('/admin/laporan/export', [AdminController::class, 'exportReport'])->name('admin.laporan.export');
+
+                    const exportUrl = `{{ route('admin.laporan') }}/export?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
+
+                    
+
+                    alert(`Fungsi ekspor belum diimplementasikan di backend. URL yang akan digunakan: ${exportUrl}`);
+
+                    // window.location.href = exportUrl; // Uncomment this line when backend is ready
+
+                }
+
+                        </script>
+
+                    </body>
+
+            </html>
+
+        
