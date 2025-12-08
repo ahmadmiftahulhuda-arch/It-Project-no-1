@@ -45,18 +45,18 @@ class AdminController extends Controller
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhere('no_hp', 'like', "%{$search}%");
                 })
-                // atau keperluan
-                ->orWhere('keperluan', 'like', "%{$search}%")
-                // atau nama ruangan
-                ->orWhereHas('ruangan', function ($r) use ($search) {
-                    $r->where('nama_ruangan', 'like', "%{$search}%");
-                })
-                // atau proyektor (kode/merk/model)
-                ->orWhereHas('projector', function ($p) use ($search) {
-                    $p->where('kode_proyektor', 'like', "%{$search}%")
-                        ->orWhere('merk', 'like', "%{$search}%")
-                        ->orWhere('model', 'like', "%{$search}%");
-                });
+                    // atau keperluan
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    // atau nama ruangan
+                    ->orWhereHas('ruangan', function ($r) use ($search) {
+                        $r->where('nama_ruangan', 'like', "%{$search}%");
+                    })
+                    // atau proyektor (kode/merk/model)
+                    ->orWhereHas('projector', function ($p) use ($search) {
+                        $p->where('kode_proyektor', 'like', "%{$search}%")
+                            ->orWhere('merk', 'like', "%{$search}%")
+                            ->orWhere('model', 'like', "%{$search}%");
+                    });
 
                 // Jika user memasukkan tanggal yang valid, juga cari berdasarkan tanggal peminjaman
                 try {
@@ -131,7 +131,7 @@ class AdminController extends Controller
         // Filter ruangan (optional)
         if ($request->has('ruangan_id') && $request->ruangan_id != '') {
             $ruanganId = $request->ruangan_id;
-            $query->whereHas('peminjaman', function($q) use ($ruanganId) {
+            $query->whereHas('peminjaman', function ($q) use ($ruanganId) {
                 $q->where('ruangan_id', $ruanganId);
             });
         }
@@ -140,27 +140,27 @@ class AdminController extends Controller
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
 
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 // user fields
-                $q->whereHas('user', function($userQuery) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
                     $userQuery->where('name', 'like', "%{$search}%")
-                              ->orWhere('nim', 'like', "%{$search}%")
-                              ->orWhere('email', 'like', "%{$search}%");
+                        ->orWhere('nim', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
                 })
-                // catatan pada pengembalian
-                ->orWhere('catatan', 'like', "%{$search}%")
-                // peminjaman related fields
-                ->orWhereHas('peminjaman', function($peminjamanQuery) use ($search) {
-                    $peminjamanQuery->where('keperluan', 'like', "%{$search}%")
-                        ->orWhereHas('ruangan', function($r) use ($search) {
-                            $r->where('nama_ruangan', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('projector', function($p) use ($search) {
-                            $p->where('kode_proyektor', 'like', "%{$search}%")
-                              ->orWhere('merk', 'like', "%{$search}%")
-                              ->orWhere('model', 'like', "%{$search}%");
-                        });
-                });
+                    // catatan pada pengembalian
+                    ->orWhere('catatan', 'like', "%{$search}%")
+                    // peminjaman related fields
+                    ->orWhereHas('peminjaman', function ($peminjamanQuery) use ($search) {
+                        $peminjamanQuery->where('keperluan', 'like', "%{$search}%")
+                            ->orWhereHas('ruangan', function ($r) use ($search) {
+                                $r->where('nama_ruangan', 'like', "%{$search}%");
+                            })
+                            ->orWhereHas('projector', function ($p) use ($search) {
+                                $p->where('kode_proyektor', 'like', "%{$search}%")
+                                    ->orWhere('merk', 'like', "%{$search}%")
+                                    ->orWhere('model', 'like', "%{$search}%");
+                            });
+                    });
 
                 // Jika input adalah tanggal, cari juga berdasarkan tanggal_pengembalian
                 try {
@@ -201,16 +201,10 @@ class AdminController extends Controller
         $ruangans = Ruangan::orderBy('nama_ruangan')->get();
 
         // Hitung statistik
-        $pendingReturns = Peminjaman::where('status', 'disetujui')
-            ->whereDoesntHave('pengembalian')
-            ->count();
-
-        $returnedCount = \App\Models\Pengembalian::where('status', 'verified')->count();
-
-        $overdueCount = Peminjaman::where('status', 'disetujui')
-            ->whereDoesntHave('pengembalian')
-            ->whereDate('tanggal', '<', Carbon::now())
-            ->count();
+        $pendingReturns = Pengembalian::where('status', 'pending')->count();
+        $returnedCount = Pengembalian::where('status', 'verified')->count();
+        $overdueCount  = Pengembalian::where('status', 'overdue')->count();
+        $totalReturns  = Pengembalian::count();
 
         $totalReturns = \App\Models\Pengembalian::count();
 
@@ -220,8 +214,8 @@ class AdminController extends Controller
             'pendingReturns',
             'returnedCount',
             'overdueCount',
-            'totalReturns'
-            ,'ruangans'
+            'totalReturns',
+            'ruangans'
         ));
     }
 
@@ -291,17 +285,22 @@ class AdminController extends Controller
     {
         $ruangan = Ruangan::all();
         $projectors = Projector::all();
-        $peminjamans = Peminjaman::with(['ruangan','projector'])->paginate(15);
+        $peminjamans = Peminjaman::with(['ruangan', 'projector'])->paginate(15);
 
         // juga hitung statistik jika dipakai di view
-        $pendingCount = Peminjaman::where('status','pending')->count();
-        $approvedCount = Peminjaman::where('status','disetujui')->count();
-        $rejectedCount = Peminjaman::where('status','ditolak')->count();
+        $pendingCount = Peminjaman::where('status', 'pending')->count();
+        $approvedCount = Peminjaman::where('status', 'disetujui')->count();
+        $rejectedCount = Peminjaman::where('status', 'ditolak')->count();
         $totalCount = Peminjaman::count();
 
         return view('admin.peminjaman.index', compact(
-            'peminjamans','ruangan','projectors',
-            'pendingCount','approvedCount','rejectedCount','totalCount'
+            'peminjamans',
+            'ruangan',
+            'projectors',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount',
+            'totalCount'
         ));
     }
 
@@ -569,7 +568,7 @@ class AdminController extends Controller
         // propagate to peminjaman: if pengembalian is verified or terlambat, mark peminjaman as selesai
         try {
             $peminjaman = $pengembalian->peminjaman;
-            if ($peminjaman && in_array($pengembalian->status, ['verified','overdue','terlambat']) ) {
+            if ($peminjaman && in_array($pengembalian->status, ['verified', 'overdue', 'terlambat'])) {
                 $peminjaman->update([
                     'status' => 'selesai',
                     'tanggal_kembali' => $pengembalian->tanggal_pengembalian ?? Carbon::now(),
@@ -702,7 +701,7 @@ class AdminController extends Controller
         $dateRange = $request->input('date_range', 'month');
         $year = $request->input('year', Carbon::now()->year);
         $today = Carbon::now();
-        
+
         $startDate = $today->copy()->startOfMonth();
         $endDate = $today->copy()->endOfMonth();
 
@@ -734,14 +733,14 @@ class AdminController extends Controller
         $barangRusak = Pengembalian::whereBetween('created_at', [$startDate, $endDate])
             ->where(function ($query) {
                 $query->where('kondisi_ruang', 'like', 'rusak%')
-                      ->orWhere('kondisi_proyektor', 'like', 'rusak%');
+                    ->orWhere('kondisi_proyektor', 'like', 'rusak%');
             })->count();
 
         // Monthly Chart Data (for the selected year)
         $monthlyData = Peminjaman::select(
-                DB::raw('MONTH(tanggal) as month'),
-                DB::raw('COUNT(*) as count')
-            )
+            DB::raw('MONTH(tanggal) as month'),
+            DB::raw('COUNT(*) as count')
+        )
             ->whereYear('tanggal', $year)
             ->groupBy('month')
             ->orderBy('month')
