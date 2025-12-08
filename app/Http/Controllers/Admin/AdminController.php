@@ -14,6 +14,7 @@ use App\Exports\PeminjamanExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Pengembalian;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -69,7 +70,8 @@ class AdminController extends Controller
 
         // Filter status (support 'terlambat' as derived status)
         if ($request->has('status') && $request->status != '') {
-            if ($request->status === 'terlambat') {
+            // Accept either the display value 'terlambat' or the DB-safe 'overdue'
+            if ($request->status === 'terlambat' || $request->status === 'overdue') {
                 // pengembalians where tanggal_pengembalian > peminjaman.tanggal
                 $query->whereRaw("DATE(tanggal_pengembalian) > (select DATE(tanggal) from peminjamans where peminjamans.id = pengembalians.peminjaman_id)");
             } else {
@@ -540,7 +542,8 @@ class AdminController extends Controller
             'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
             'catatan' => 'nullable|string|max:500',
             'tanggal_pengembalian' => 'nullable|date',
-            'status' => 'required|in:pending,verified,rejected',
+            // saveable statuses use 'pending','verified','rejected','overdue' in DB
+            'status' => 'required|in:pending,verified,rejected,overdue',
         ]);
 
         $pengembalian = \App\Models\Pengembalian::findOrFail($id);
@@ -556,8 +559,26 @@ class AdminController extends Controller
             $data['tanggal_pengembalian'] = $request->tanggal_pengembalian;
         }
 
+        // If admin marks as 'overdue' (Terlambat) and no tanggal_pengembalian provided, set it to today
+        if ($request->status === 'overdue' && empty($data['tanggal_pengembalian'])) {
+            $data['tanggal_pengembalian'] = Carbon::now()->toDateString();
+        }
+
         $pengembalian->update($data);
 
+        // propagate to peminjaman: if pengembalian is verified or terlambat, mark peminjaman as selesai
+        try {
+            $peminjaman = $pengembalian->peminjaman;
+            if ($peminjaman && in_array($pengembalian->status, ['verified','overdue','terlambat']) ) {
+                $peminjaman->update([
+                    'status' => 'selesai',
+                    'tanggal_kembali' => $pengembalian->tanggal_pengembalian ?? Carbon::now(),
+                    'status_pengembalian' => 'sudah dikembalikan'
+                ]);
+            }
+        } catch (\Exception $e) {
+            // ignore, not critical
+        }
         return redirect()->route('admin.pengembalian')
             ->with('success', 'Pengembalian berhasil diperbarui.');
     }
@@ -577,6 +598,9 @@ class AdminController extends Controller
             'waktu_mulai' => 'nullable|date_format:H:i',
             'waktu_selesai' => 'nullable|date_format:H:i',
             'catatan' => 'nullable|string|max:500',
+            // optional pengembalian fields
+            'pengembalian_status' => 'nullable|in:pending,verified,rejected,overdue,terlambat',
+            'tanggal_pengembalian' => 'nullable|date',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($id);
@@ -599,6 +623,31 @@ class AdminController extends Controller
             $data['status'] = $request->status;
         }
         $peminjaman->update($data);
+
+        // Handle pengembalian data if admin provided it in edit modal
+        if ($request->filled('pengembalian_status') || $request->filled('tanggal_pengembalian')) {
+            $pj = \App\Models\Pengembalian::where('peminjaman_id', $peminjaman->id)->first();
+            $pjData = [];
+            if ($request->filled('pengembalian_status')) {
+                // map 'terlambat' input to DB value 'overdue' to avoid enum truncation
+                $pjStatus = $request->pengembalian_status;
+                if ($pjStatus === 'terlambat') {
+                    $pjStatus = 'overdue';
+                }
+                $pjData['status'] = $pjStatus;
+            }
+            if ($request->filled('tanggal_pengembalian')) {
+                $pjData['tanggal_pengembalian'] = $request->tanggal_pengembalian;
+            }
+
+            if ($pj) {
+                $pj->update($pjData);
+            } else {
+                $pjData['peminjaman_id'] = $peminjaman->id;
+                $pjData['user_id'] = $peminjaman->user_id;
+                \App\Models\Pengembalian::create($pjData);
+            }
+        }
 
         return redirect()->route('admin.riwayat')
             ->with('success', 'Riwayat peminjaman berhasil diperbarui.');

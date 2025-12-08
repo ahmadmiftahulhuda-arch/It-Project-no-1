@@ -1318,6 +1318,8 @@
                                                     <span class="badge status-badge status-menunggu">Menunggu Verifikasi</span>
                                                 @elseif ($pj->status == 'rejected')
                                                     <span class="badge status-badge status-ditolak">Ditolak</span>
+                                                @elseif (in_array($pj->status, ['overdue','terlambat']))
+                                                    <span class="badge status-badge status-terlambat">Terlambat</span>
                                                 @else
                                                     <span class="badge status-badge">{{ ucfirst($pj->status) }}</span>
                                                 @endif
@@ -1344,7 +1346,8 @@
                                                     data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : 'Tidak' }}"
                                                     data-keperluan="{{ $item->keperluan }}"
                                                     data-status="{{ $item->status }}"
-                                                    data-status-pengembalian="{{ $item->status_pengembalian }}"
+                                                    data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '' }}"
+                                                    data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '' }}"
                                                     data-keterangan="{{ $item->catatan ?? '-' }}">
                                                     <i class="fas fa-eye me-1"></i> Detail
                                                 </button>
@@ -1515,7 +1518,8 @@
                                                 data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : 'Tidak' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
-                                                data-status-pengembalian="{{ $item->status_pengembalian }}"
+                                                data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '' }}"
+                                                data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '' }}"
                                                 data-keterangan="{{ $item->catatan ?? '-' }}">
                                                 <i class="fas fa-eye me-1"></i> Detail
                                             </button>
@@ -1528,7 +1532,8 @@
                                                 data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : '0' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
-                                                data-status-pengembalian="{{ $item->status_pengembalian ?? 'belum dikembalikan' }}"
+                                                data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '' }}"
+                                                data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '' }}"
                                                 data-keterangan="{{ $item->catatan ?? '' }}">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </button>
@@ -1659,6 +1664,20 @@
                                 <div class="col-12 mb-3">
                                     <label class="form-label fw-bold">Keperluan</label>
                                     <textarea class="form-control" id="edit_keperluan" name="keperluan" rows="3" required></textarea>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Status Pengembalian</label>
+                                    <select class="form-select" id="edit_pengembalian_status" name="pengembalian_status">
+                                        <option value="">-- Tidak Ada Pengembalian --</option>
+                                        <option value="pending">Menunggu</option>
+                                        <option value="verified">Disetujui</option>
+                                        <option value="rejected">Ditolak</option>
+                                        <option value="overdue">Terlambat</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Tanggal Pengembalian</label>
+                                    <input type="date" class="form-control" id="edit_tanggal_pengembalian" name="tanggal_pengembalian">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Status Peminjaman</label>
@@ -1851,6 +1870,8 @@
                     const projectorId = button.getAttribute('data-projector-id');
                     const waktuMulai = button.getAttribute('data-waktu_mulai');
                     const waktuSelesai = button.getAttribute('data-waktu_selesai');
+                    const statusPengembalian = button.getAttribute('data-status-pengembalian');
+                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
                     const catatan = button.getAttribute('data-catatan');
@@ -1866,6 +1887,8 @@
                     document.getElementById('edit_projector_id').value = projectorId || '';
                     document.getElementById('edit_waktu_mulai').value = waktuMulai || '';
                     document.getElementById('edit_waktu_selesai').value = waktuSelesai || '';
+                    document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
+                    document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
                     document.getElementById('edit_keperluan').value = keperluan;
                     document.getElementById('edit_catatan').value = catatan || '';
 

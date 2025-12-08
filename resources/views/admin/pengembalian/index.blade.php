@@ -1086,7 +1086,7 @@
                                 Disetujui</option>
                             <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak
                             </option>
-                            <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>
+                            <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>
                                 Terlambat</option>
                         </select>
                     </div>
@@ -1225,7 +1225,7 @@
                                             <span class="badge status-badge status-ditolak">
                                                 <i class="fas fa-times-circle me-1"></i> Ditolak
                                             </span>
-                                        @elseif ($pengembalian->status == 'overdue')
+                                        @elseif (in_array($pengembalian->status, ['overdue','terlambat']))
                                             <span class="badge status-badge status-terlambat">
                                                 <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                             </span>
@@ -1522,7 +1522,8 @@
                                 <select id="edit_status" name="status" class="form-select" required>
                                     <option value="pending">Menunggu</option>
                                     <option value="verified">Disetujui</option>
-                                    <option value="rejected">Ditolak</option>
+                                        <option value="rejected">Ditolak</option>
+                                        <option value="overdue">Terlambat</option>
                                 </select>
                             </div>
                             <div class="mb-3">
