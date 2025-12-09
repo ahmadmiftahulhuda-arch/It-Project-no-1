@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MataKuliah;
 use Illuminate\Http\Request;
+use App\Imports\MataKuliahImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MataKuliahController extends Controller
 {
@@ -65,5 +67,16 @@ class MataKuliahController extends Controller
     {
         $mata_kuliah->delete();
         return redirect()->route('mata_kuliah.index')->with('success', 'Mata Kuliah berhasil dihapus');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new MataKuliahImport, $request->file('file'));
+
+        return redirect()->route('mata_kuliah.index')->with('success', 'Data mata kuliah berhasil diimport.');
     }
 }

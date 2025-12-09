@@ -163,6 +163,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/ruangan/import', [RuanganController::class, 'import'])->name('ruangan.import');
     Route::post('/slotwaktu/import', [SlotWaktuController::class, 'import'])->name('slotwaktu.import');
     Route::resource('mata_kuliah', MataKuliahController::class);
+    Route::post('/mata_kuliah/import', [MataKuliahController::class, 'import'])->name('mata_kuliah.import');
     Route::resource('slotwaktu', SlotWaktuController::class);
 
     Route::get('/settings', [App\Http\Controllers\Admin\PengaturanController::class, 'index'])->name('admin.settings.index');
