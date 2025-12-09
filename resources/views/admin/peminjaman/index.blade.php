@@ -512,19 +512,34 @@
             font-size: 0.8rem;
         }
 
-        .status-menunggu {
-            background: #fff8e1;
-            color: #ff8f00;
+        .status-badge {
+            padding: 0.45em 0.9em;
+            border-radius: 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
         }
 
-        .status-disetujui {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .status-menunggu {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .status-disetujui,
+        .status-dikembalikan {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
 
         .status-ditolak {
-            background: #ffebee;
-            color: #c62828;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
 
         .status-selesai {
@@ -1416,43 +1431,43 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="peminjam" class="form-label">Nama Peminjam</label>
-                                    <input type="text" class="form-control" id="peminjam" name="peminjam"
+                                    <label for="edit_peminjam" class="form-label">Nama Peminjam</label>
+                                    <input type="text" class="form-control" id="edit_peminjam" name="peminjam"
                                         readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="nim" class="form-label">NIM</label>
-                                    <input type="text" class="form-control" id="nim" name="nim"
+                                    <label for="edit_nim" class="form-label">NIM</label>
+                                    <input type="text" class="form-control" id="edit_nim" name="nim"
                                         readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="prodi" class="form-label">Program Studi</label>
-                                    <input type="text" class="form-control" id="prodi" name="prodi"
+                                    <label for="edit_prodi" class="form-label">Program Studi</label>
+                                    <input type="text" class="form-control" id="edit_prodi" name="prodi"
                                         readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email"
+                                    <label for="edit_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="edit_email" name="email"
                                         readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="tanggal" class="form-label">Tanggal</label>
-                                    <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                    <label for="edit_tanggal" class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control" id="edit_tanggal" name="tanggal"
                                         required>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label for="waktu_mulai" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="waktu_mulai" name="waktu_mulai"
+                                    <label for="edit_waktu_mulai" class="form-label">Waktu Mulai</label>
+                                    <input type="time" class="form-control" id="edit_waktu_mulai" name="waktu_mulai"
                                         required>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label for="waktu_selesai" class="form-label">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="waktu_selesai"
+                                    <label for="edit_waktu_selesai" class="form-label">Waktu Selesai</label>
+                                    <input type="time" class="form-control" id="edit_waktu_selesai"
                                         name="waktu_selesai" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="ruangan_id" class="form-label">Ruang</label>
-                                    <select class="form-select" id="ruangan_id" name="ruangan_id" required>
+                                    <label for="edit_ruangan_id" class="form-label">Ruang</label>
+                                    <select class="form-select" id="edit_ruangan_id" name="ruangan_id" required>
                                         <option value="">-- Pilih Ruang --</option>
                                         @foreach ($ruangan as $r)
                                             <option value="{{ $r->id }}">
@@ -1462,8 +1477,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="projector_id" class="form-label">Proyektor</label>
-                                    <select name="projector_id" class="form-select" id="projector_id">
+                                    <label for="edit_projector_id" class="form-label">Proyektor</label>
+                                    <select name="projector_id" class="form-select" id="edit_projector_id">
                                         <option value="">-- Tidak Ada Proyektor --</option>
                                         @if (isset($projectors) && $projectors->count())
                                             @foreach ($projectors as $p)
@@ -1476,17 +1491,22 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select name="status" class="form-select" id="status">
+                                    <label for="edit_status" class="form-label">Status</label>
+                                    <select name="status" class="form-select" id="edit_status">
                                         <option value="pending" selected>Menunggu</option>
                                         <option value="disetujui">Disetujui</option>
                                         <option value="ditolak">Ditolak</option>
                                         <option value="selesai">Selesai</option>
                                     </select>
+                                    <div id="edit_is_ongoing_container" style="margin-top:8px; display:none;">
+                                        <span id="edit_is_ongoing_badge" class="badge status-badge status-berlangsung">
+                                            <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label for="keperluan" class="form-label">Keperluan</label>
-                                    <textarea class="form-control" id="keperluan" name="keperluan" rows="3" required></textarea>
+                                    <label for="edit_keperluan" class="form-label">Keperluan</label>
+                                    <textarea class="form-control" id="edit_keperluan" name="keperluan" rows="3" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1571,6 +1591,7 @@
                                     <label for="status" class="form-label">Status</label>
                                     <select name="status" class="form-select" id="status">
                                         <option value="pending" selected>Menunggu</option>
+                                        <option value="berlangsung">Berlangsung</option>
                                         <option value="disetujui">Disetujui</option>
                                         <option value="ditolak">Ditolak</option>
                                         <option value="selesai">Selesai</option>
@@ -1737,6 +1758,48 @@
             // Handler untuk modal edit
             const editModal = document.getElementById('editModal');
             if (editModal) {
+                function normalizeDateForInput(dateStr) {
+                    if (!dateStr) return '';
+                    // If already YYYY-MM-DD, return as is
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+                    // Try common formats: DD/MM/YYYY or MM/DD/YYYY or DD-MM-YYYY
+                    let parts;
+                    if (dateStr.indexOf('/') !== -1) parts = dateStr.split('/');
+                    else if (dateStr.indexOf('-') !== -1) parts = dateStr.split('-');
+                    else return '';
+
+                    // If parts[0] is 4 -> already YYYY-MM-DD-like
+                    if (parts[0].length === 4) return parts.join('-');
+
+                    // If ambiguous (MM/DD/YYYY or DD/MM/YYYY), try to detect by value >12
+                    let d = parts[0], m = parts[1], y = parts[2];
+                    if (parseInt(d, 10) > 12) {
+                        // d is day
+                        return `${y.padStart(4,'0')}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+                    }
+                    // else assume MM/DD/YYYY -> convert to YYYY-MM-DD
+                    return `${y.padStart(4,'0')}-${d.padStart(2,'0')}-${m.padStart(2,'0')}`;
+                }
+
+                function normalizeTimeForInput(timeStr) {
+                    if (!timeStr) return '';
+                    // If already HH:MM (24h), return
+                    if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
+                    // Handle formats like 03:00 PM or 3:00 PM
+                    const m = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+                    if (m) {
+                        let hh = parseInt(m[1], 10);
+                        const mm = m[2];
+                        const ampm = m[3].toUpperCase();
+                        if (ampm === 'PM' && hh < 12) hh += 12;
+                        if (ampm === 'AM' && hh === 12) hh = 0;
+                        return `${String(hh).padStart(2,'0')}:${mm}`;
+                    }
+                    // Fallback: try to extract digits
+                    const simple = timeStr.match(/(\d{1,2}):(\d{2})/);
+                    return simple ? `${String(simple[1]).padStart(2,'0')}:${simple[2]}` : '';
+                }
+
                 editModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
                     const id = button.getAttribute('data-id');
@@ -1752,31 +1815,47 @@
                     const projectorId = button.getAttribute('data-projector-id');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
+                    const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
 
                     // Update form action
                     const form = document.getElementById('editForm');
                     form.action = `/admin/peminjaman/${id}`;
 
-                    // Isi form dengan data yang ada
-                    document.getElementById('peminjam').value = peminjam;
-                    document.getElementById('nim').value = nim;
-                    document.getElementById('prodi').value = prodi;
-                    document.getElementById('email').value = email;
-                    document.getElementById('tanggal').value = tanggal;
-                    document.getElementById('waktu_mulai').value = waktuMulai;
-                    document.getElementById('waktu_selesai').value = waktuSelesai;
+                    // Isi form dengan data yang ada (gunakan edit_ prefixed IDs)
+                    document.getElementById('edit_peminjam').value = peminjam;
+                    document.getElementById('edit_nim').value = nim;
+                    document.getElementById('edit_prodi').value = prodi;
+                    document.getElementById('edit_email').value = email;
+                    // Normalize date and time for HTML inputs
+                    try {
+                        document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
+                    } catch (e) {
+                        document.getElementById('edit_tanggal').value = '';
+                    }
+                    document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai);
+                    document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai);
 
                     // Set ruangan_id langsung dari data attribute
-                    const ruanganSelect = document.getElementById('ruangan_id');
+                    const ruanganSelect = document.getElementById('edit_ruangan_id');
                     if (ruanganId && ruanganId !== '') {
                         ruanganSelect.value = ruanganId;
+                    } else {
+                        ruanganSelect.value = '';
                     }
 
-                    document.getElementById('keperluan').value = keperluan;
-                    document.getElementById('status').value = status;
+                    document.getElementById('edit_keperluan').value = keperluan;
+                    document.getElementById('edit_status').value = status;
+
+                    // Toggle 'Berlangsung' badge if this peminjaman is ongoing
+                    const ongoingContainer = document.getElementById('edit_is_ongoing_container');
+                    if (isOngoing) {
+                        ongoingContainer.style.display = 'block';
+                    } else {
+                        ongoingContainer.style.display = 'none';
+                    }
 
                     // Set projector berdasarkan ID
-                    const projectorSelect = document.getElementById('projector_id');
+                    const projectorSelect = document.getElementById('edit_projector_id');
                     if (projectorId && projectorId !== '') {
                         projectorSelect.value = projectorId;
                     } else {

@@ -539,24 +539,62 @@
             color: #c62828;
         }
 
+        .status-badge {
+            padding: 0.45em 0.9em;
+            border-radius: 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
+        }
+
+        /* Make the icon appear inside a small colored circle to the left */
+        .status-badge i {
+            display: inline-flex;
+            width: 20px;
+            height: 20px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: currentColor;
+            color: #fff;
+            font-size: 0.75rem;
+            flex: 0 0 20px;
+            line-height: 1;
+        }
+
+        /* soften the pill background and add a subtle inner shadow to match screenshot */
+        .status-badge {
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+            border-radius: 8px;
+        }
+
         .status-menunggu {
-            background: #fff3cd;
+            background-color: #fff3cd;
             color: #856404;
+            border-color: #ffeaa7;
         }
 
-        .status-disetujui {
-            background: #d1edff;
-            color: #0c5460;
-        }
-
+        .status-disetujui,
         .status-dikembalikan {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
 
-        .status-belum-dikembalikan {
-            background: #fff8e1;
+        .status-ditolak {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .status-belum-dikembalikan,
+        .status-belum_dikembalikan {
+            background-color: #fff8e1;
             color: #ff8f00;
+            border-color: #ffecb5;
         }
 
         /* Action Buttons */
@@ -1343,30 +1381,26 @@
                                             @if ($pj)
                                                 @php $pjStatus = $pj->status; @endphp
                                                 @if (in_array($pjStatus, ['verified','disetujui']))
-                                                    <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                    <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
                                                 @elseif (in_array($pjStatus, ['pending']))
-                                                    <span class="badge status-badge status-menunggu">Menunggu Verifikasi</span>
+                                                    <span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
                                                 @elseif (in_array($pjStatus, ['rejected','ditolak']))
-                                                    <span class="badge status-badge status-ditolak">Ditolak</span>
+                                                    <span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
                                                 @elseif (in_array($pjStatus, ['overdue','terlambat']))
-                                                    <span class="badge status-badge status-terlambat">Terlambat</span>
+                                                    <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                                 @elseif ($isLate)
-                                                    <span class="badge status-badge status-terlambat">
-                                                        <i class="fas fa-exclamation-circle me-1"></i> Terlambat
-                                                    </span>
+                                                    <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                                 @else
                                                     <span class="badge status-badge">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
                                                 @endif
                                             @else
                                                 {{-- Tidak ada pengembalian yang tercatat untuk peminjaman ini --}}
                                                 @if ($duePassed)
-                                                    <span class="badge status-badge status-terlambat">Terlambat</span>
+                                                    <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                                 @elseif($item->status == 'selesai')
-                                                    <span
-                                                        class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                    <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
                                                 @else
-                                                    <span class="badge status-badge status-belum-dikembalikan">Belum
-                                                        Dikembalikan</span>
+                                                    <span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
                                                 @endif
                                             @endif
                                         </td>
@@ -1532,11 +1566,30 @@
                                     </div>
                                     <div class="col-md-6">
                                         <strong>Status Pengembalian:</strong>
-                                        @if ($item->status_pengembalian == 'sudah dikembalikan' || $item->tanggal_kembali)
-                                            <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                        @php $pj = $item->pengembalian ?? null; @endphp
+                                        @if($pj)
+                                            @php $pjStatus = $pj->status; @endphp
+                                            @if(in_array($pjStatus, ['verified','disetujui']))
+                                                <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                            @elseif(in_array($pjStatus, ['pending']))
+                                                <span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
+                                            @elseif(in_array($pjStatus, ['rejected','ditolak']))
+                                                <span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                            @elseif(in_array($pjStatus, ['overdue','terlambat']))
+                                                <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                            @else
+                                                <span class="badge status-badge">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
+                                            @endif
                                         @else
-                                            <span class="badge status-badge status-belum-dikembalikan">Belum
-                                                Dikembalikan</span>
+                                            @if(
+                                                (!optional($item->pengembalian)->status && \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui')
+                                            )
+                                                <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                            @elseif($item->status == 'selesai')
+                                                <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                            @else
+                                                <span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
+                                            @endif
                                         @endif
                                     </div>
                                     <div class="col-12 mt-2">

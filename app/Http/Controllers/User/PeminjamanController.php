@@ -160,10 +160,17 @@ class PeminjamanController extends Controller
     {
         $userId = Auth::id();
 
+        // Active peminjaman that can be returned: include those without pengembalian
+        // or those that have a pengembalian but it's not verified (pending/rejected)
         $activeQuery = Peminjaman::where('user_id', $userId)
             ->where('status', 'disetujui')
-            ->whereDoesntHave('pengembalian')
             ->whereDate('tanggal', '<=', Carbon::now())
+            ->where(function($q) {
+                $q->whereDoesntHave('pengembalian')
+                  ->orWhereHas('pengembalian', function($q2) {
+                      $q2->whereIn('status', ['pending', 'rejected']);
+                  });
+            })
             ->with(['ruangan', 'projector', 'user']);
 
         if ($request->has('search') && $request->search != '') {
@@ -221,26 +228,39 @@ class PeminjamanController extends Controller
                 'kondisi_ruang' => 'required|in:baik,rusak_ringan,rusak_berat',
                 'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
                 'catatan' => 'nullable|string|max:500',
-                'tanggal_pengembalian' => 'required|date',
+                'tanggal_pengembalian' => 'nullable|date',
             ]);
 
+            // Find peminjaman (must belong to user and be approved)
             $peminjaman = Peminjaman::where('user_id', $userId)
                 ->where('status', 'disetujui')
-                ->whereDoesntHave('pengembalian')
                 ->findOrFail($id);
 
-            // Use the tanggal_pengembalian submitted by the user
-            $tanggalPengembalian = $request->tanggal_pengembalian;
+            // Always record tanggal_pengembalian as server time (current date)
+            $tanggalPengembalian = Carbon::now()->toDateString();
 
-            Pengembalian::create([
-                'peminjaman_id' => $peminjaman->id,
-                'user_id' => $userId,
-                'tanggal_pengembalian' => $tanggalPengembalian,
-                'kondisi_ruang' => $request->kondisi_ruang,
-                'kondisi_proyektor' => $request->kondisi_proyektor,
-                'catatan' => $request->catatan,
-                'status' => 'pending',
-            ]);
+            // If a Pengembalian already exists for this peminjaman, update it (allow re-submit)
+            $existing = Pengembalian::where('peminjaman_id', $peminjaman->id)->first();
+
+            if ($existing) {
+                $existing->update([
+                    'tanggal_pengembalian' => $tanggalPengembalian,
+                    'kondisi_ruang' => $request->kondisi_ruang,
+                    'kondisi_proyektor' => $request->kondisi_proyektor,
+                    'catatan' => $request->catatan,
+                    'status' => 'pending',
+                ]);
+            } else {
+                Pengembalian::create([
+                    'peminjaman_id' => $peminjaman->id,
+                    'user_id' => $userId,
+                    'tanggal_pengembalian' => $tanggalPengembalian,
+                    'kondisi_ruang' => $request->kondisi_ruang,
+                    'kondisi_proyektor' => $request->kondisi_proyektor,
+                    'catatan' => $request->catatan,
+                    'status' => 'pending',
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
