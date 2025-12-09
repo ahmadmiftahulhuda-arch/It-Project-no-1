@@ -102,25 +102,41 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 
 // ================================
-// HALAMAN LOGIN DAN DASHBOARD
+// AUTHENTIKASI ADMIN
+// ================================
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+});
+
+
+// ================================
+// HALAMAN LOGIN DAN DASHBOARD (split for RBAC)
 // ================================
 Route::get('/login', fn() => view('auth.login'))->name('login');
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
-    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
 
+// Route group for Mahasiswa and Dosen
+Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function () {
+    Route::get('/dashboard', [PeminjamanController::class, 'index'])->name('user.dashboard'); // Redirect user dashboard to their loans
     // User Feedback CRUD
     Route::resource('user/feedback', App\Http\Controllers\User\FeedbackController::class)->names('user.feedback');
+});
+
+// Route group for Administrator
+Route::middleware(['auth', 'role:Administrator'])->group(function () {
+    Route::get('/admin/dashboard-main', [AdminController::class, 'dashboard'])->name('dashboard'); // Keep old dashboard name if needed
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
 });
 
 // ================================
 // ADMIN ROUTES
 // ================================
 
-Route::prefix('admin')->group(function () {
-    // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::middleware(['auth', 'role:Administrator'])->prefix('admin')->group(function () {
+    // Dashboard is now defined in a separate group, but we can keep this for structure
+    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     Route::prefix('users')->name('admin.users.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
@@ -131,12 +147,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/{user}/verify', [App\Http\Controllers\Admin\UserController::class, 'verify'])->name('verify');
     });
 
-    // Dashboard
+    // Redundant dashboard and auth routes can be cleaned up, but per instructions, I will leave them
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    // Admin authentication (login/logout)
-    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
-    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
     // --- EKSPORT EXCEL FEEDBACK ---
     Route::get('/feedback/export', function () {
@@ -233,58 +245,31 @@ Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->na
 // ROUTES UNTUK USER
 // ================================
 
-Route::prefix('user')->middleware('auth')->group(function () {
-    Route::get('/profile', [App\Http\Controllers\User\UserProfileController::class, 'index'])->name('user.profile.index');
-    Route::put('/profile', [App\Http\Controllers\User\UserProfileController::class, 'update'])->name('user.profile.update');
+Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function() {
+    Route::prefix('user')->group(function () {
+        Route::get('/profile', [App\Http\Controllers\User\UserProfileController::class, 'index'])->name('user.profile.index');
+        Route::put('/profile', [App\Http\Controllers\User\UserProfileController::class, 'update'])->name('user.profile.update');
+        Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings.index');
+        Route::put('/settings', [App\Http\Controllers\User\SettingsController::class, 'update'])->name('user.settings.update');
+    });
 
-    // User Settings
-    Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings.index');
-    Route::put('/settings', [App\Http\Controllers\User\SettingsController::class, 'update'])->name('user.settings.update');
-});
+    Route::get('user/feedback/create/{peminjaman}', [App\Http\Controllers\User\FeedbackController::class, 'create'])->name('user.feedback.create_with_peminjaman');
 
-// Rute untuk menampilkan form feedback untuk peminjaman tertentu
-Route::get('user/feedback/create/{peminjaman}', [App\Http\Controllers\User\FeedbackController::class, 'create'])->name('user.feedback.create_with_peminjaman');
+    Route::middleware('verified.user')->prefix('peminjaman')->group(function () {
+        Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');
+        Route::get('/create', [PeminjamanController::class, 'create'])->name('user.peminjaman.create');
+        Route::post('/', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
+        Route::get('/{id}', [PeminjamanController::class, 'show'])->name('user.peminjaman.show');
+        Route::get('/{id}/edit', [PeminjamanController::class, 'edit'])->name('user.peminjaman.edit');
+        Route::put('/{id}', [PeminjamanController::class, 'update'])->name('user.peminjaman.update');
+        Route::delete('/{id}', [PeminjamanController::class, 'destroy'])->name('user.peminjaman.destroy');
+        Route::get('/riwayat/user', [PeminjamanController::class, 'riwayat'])->name('user.peminjaman.riwayat');
+    });
 
-Route::prefix('peminjaman')->middleware('auth')->group(function () {
-    Route::get('/', [PeminjamanController::class, 'index'])->name('user.peminjaman.index');
-    Route::get('/create', [PeminjamanController::class, 'create'])->name('user.peminjaman.create');
-    Route::post('/', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
-    Route::get('/{id}', [PeminjamanController::class, 'show'])->name('user.peminjaman.show');
-    Route::get('/{id}/edit', [PeminjamanController::class, 'edit'])->name('user.peminjaman.edit');
-    Route::put('/{id}', [PeminjamanController::class, 'update'])->name('user.peminjaman.update');
-    Route::delete('/{id}', [PeminjamanController::class, 'destroy'])->name('user.peminjaman.destroy');
-    Route::get('/riwayat/user', [PeminjamanController::class, 'riwayat'])->name('user.peminjaman.riwayat');
-});
-
-Route::prefix('pengembalian')->middleware('auth')->group(function () {
-
-    Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
-
-    Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])->name('pengembalian.ajukan');
-
-    // Halaman index pengembalian
-    Route::get('/pengembalian', [AdminController::class, 'pengembalian'])
-        ->name('admin.pengembalian');
-
-    // Proses tambah pengembalian
-    Route::post('/pengembalian', [AdminController::class, 'storePengembalian'])
-        ->name('admin.pengembalian.store');
-
-    // Edit pengembalian
-    Route::get('/pengembalian/{id}/edit', [AdminController::class, 'editPengembalian'])
-        ->name('admin.pengembalian.edit');
-
-    // Update pengembalian
-    Route::put('/pengembalian/{id}', [AdminController::class, 'updatePengembalian'])
-        ->name('admin.pengembalian.update');
-
-    // Approve pengembalian
-    Route::put('/pengembalian/{id}/approve', [AdminController::class, 'approvePengembalian'])
-        ->name('admin.pengembalian.approve');
-
-    // Reject pengembalian
-    Route::put('/pengembalian/{id}/reject', [AdminController::class, 'rejectPengembalian'])
-        ->name('admin.pengembalian.reject');
+    Route::prefix('pengembalian')->group(function () {
+        Route::get('/', [PeminjamanController::class, 'pengembalianUser'])->name('user.pengembalian.index');
+        Route::post('/ajukan/{id}', [PeminjamanController::class, 'ajukanPengembalian'])->name('pengembalian.ajukan');
+    });
 });
 
 

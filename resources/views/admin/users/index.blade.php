@@ -1036,7 +1036,33 @@
                 <div class="filter-grid">
                     <div class="filter-group">
                         <label for="search">Cari Berdasarkan Nama atau Email</label>
-                        <input type="text" id="search" name="cari" placeholder="Contoh: Budi atau budi@email.com" value="{{ request('cari') }}">
+                        <input type="text" id="search" name="cari" placeholder="Contoh: Budi atau budi@email.com" 
+                               value="{{ request('cari') }}">
+                    </div>
+                    <div class="filter-group">
+                        <label for="role_filter">Peran Pengguna</label>
+                        <select id="role_filter" name="peran">
+                            <option value="Semua" {{ request('peran') == 'Semua' || !request('peran') ? 'selected' : '' }}>Semua Peran</option>
+                            <option value="Administrator" {{ request('peran') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                            <option value="Mahasiswa" {{ request('peran') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                            <option value="Dosen" {{ request('peran') == 'Dosen' ? 'selected' : '' }}>Dosen</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status_filter">Status Pengguna</label>
+                        <select id="status_filter" name="status">
+                            <option value="Semua" {{ request('status') == 'Semua' || !request('status') ? 'selected' : '' }}>Semua Status</option>
+                            <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="Nonaktif" {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="verifikasi_filter">Status Verifikasi</label>
+                        <select id="verifikasi_filter" name="verifikasi">
+                            <option value="Semua" {{ request('verifikasi') == 'Semua' || !request('verifikasi') ? 'selected' : '' }}>Semua Status</option>
+                            <option value="Terverifikasi" {{ request('verifikasi') == 'Terverifikasi' ? 'selected' : '' }}>Terverifikasi</option>
+                            <option value="Belum" {{ request('verifikasi') == 'Belum' ? 'selected' : '' }}>Belum Terverifikasi</option>
+                        </select>
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
@@ -1073,7 +1099,7 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        <span class="badge {{ $user->peran == 'Admin Lab' ? 'bg-danger' : ($user->peran == 'Asisten' ? 'bg-primary' : 'bg-success') }}">
+                                        <span class="badge {{ $user->peran == 'Administrator' ? 'bg-warning' : ($user->peran == 'Dosen' ? 'bg-info' : 'bg-success') }}">
                                             {{ $user->peran ?? 'N/A' }}
                                         </span>
                                     </td>
@@ -1107,7 +1133,7 @@
                                                     data-no_hp="{{ $user->no_hp }}"
                                                     data-peran="{{ $user->peran }}"
                                                     data-status="{{ $user->status }}"
-                                                    data-tanggal_bergabung="{{ $user->tanggal_bergabung }}"
+                                                    data-tanggal_bergabung="{{ $user->tanggal_bergabung ?? $user->created_at->format('Y-m-d') }}"
                                                     title="Edit">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </button>
@@ -1153,10 +1179,10 @@
                         <div id="formMethod"></div>
                         <div class="modal-body">
                             <div class="form-group mb-3">
-                                <label for="nama" class="form-label">
+                                <label for="name" class="form-label">
                                     <i class="fas fa-user me-1"></i>Nama Lengkap <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="nama" name="name" 
+                                <input type="text" id="name" name="name" 
                                        class="form-control @error('name') is-invalid @enderror" 
                                        value="{{ old('name') }}" required 
                                        placeholder="Masukkan nama lengkap">
@@ -1183,10 +1209,15 @@
                                     <label for="password" class="form-label">
                                         <i class="fas fa-lock me-1"></i>Password <span class="text-danger">*</span>
                                     </label>
-                                    <input type="password" id="password" name="password" 
-                                           class="form-control @error('password') is-invalid @enderror" 
-                                           required 
-                                           placeholder="Masukkan password">
+                                    <div class="input-group">
+                                        <input type="password" id="password" name="password" 
+                                               class="form-control @error('password') is-invalid @enderror" 
+                                               required 
+                                               placeholder="Masukkan password">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
                                     @error('password')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
@@ -1196,10 +1227,15 @@
                                     <label for="password_confirmation" class="form-label">
                                         <i class="fas fa-lock me-1"></i>Konfirmasi Password <span class="text-danger">*</span>
                                     </label>
-                                    <input type="password" id="password_confirmation" name="password_confirmation" 
-                                           class="form-control" 
-                                           required 
-                                           placeholder="Konfirmasi password">
+                                    <div class="input-group">
+                                        <input type="password" id="password_confirmation" name="password_confirmation" 
+                                               class="form-control" 
+                                               required 
+                                               placeholder="Konfirmasi password">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1238,8 +1274,8 @@
                                         required>
                                     <option value="">Pilih Peran</option>
                                     <option value="Administrator" {{ old('peran') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
-                                    <option value="Asisten" {{ old('peran') == 'Asisten' ? 'selected' : '' }}>Asisten</option>
                                     <option value="Mahasiswa" {{ old('peran') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                                    <option value="Dosen" {{ old('peran') == 'Dosen' ? 'selected' : '' }}>Dosen</option>
                                 </select>
                                 @error('peran')
                                     <div class="error-message">{{ $message }}</div>
@@ -1258,6 +1294,29 @@
                                     <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                                 </select>
                                 @error('status')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="verified" class="form-label">
+                                    <i class="fas fa-check-circle me-1"></i>Status Verifikasi
+                                </label>
+                                <select id="verified" name="verified" class="form-control">
+                                    <option value="1">Terverifikasi</option>
+                                    <option value="0">Belum Terverifikasi</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-3" id="tanggalBergabungField">
+                                <label for="tanggal_bergabung" class="form-label">
+                                    <i class="fas fa-calendar-alt me-1"></i>Tanggal Bergabung
+                                </label>
+                                <input type="date" id="tanggal_bergabung" name="tanggal_bergabung" 
+                                       class="form-control @error('tanggal_bergabung') is-invalid @enderror" 
+                                       value="{{ old('tanggal_bergabung') }}" 
+                                       placeholder="Tanggal bergabung">
+                                @error('tanggal_bergabung')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -1285,7 +1344,6 @@
 <script>
     // Global variables
     let currentEditId = null;
-    let deleteUserId = null;
     let userModal = null;
 
     // Initialize when document is ready
@@ -1301,34 +1359,61 @@
             submitUserForm();
         });
 
-        $('#confirmDeleteBtn').on('click', function() {
-            deleteUser(deleteUserId);
+        // Use event delegation for edit buttons since the table content can be dynamic
+        $('#users-table-body').on('click', '.edit-user', function() {
+            const userId = $(this).data('id');
+            openEditModal(userId);
         });
 
-        $('#globalSearchHeader').on('input', function() {
-            // Server-side search is handled by form submission, this can be enhanced later if needed.
+        // Event listeners for filter changes to submit the form
+        $('#role_filter, #status_filter, #verifikasi_filter').on('change', function() {
+            $('#filterForm').submit();
+        });
+
+        // For delete confirmation, ensure it targets the form dynamically if needed
+        $('body').on('submit', '.action-buttons form', function(e) {
+            if (!confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+                e.preventDefault();
+            }
         });
 
         $('#theme-toggle').on('click', function() {
             toggleTheme();
         });
 
-        // Use event delegation for edit buttons since the table content can be dynamic
-        $('#users-table-body').on('click', '.edit-user', function() {
-            const userId = $(this).data('id');
-            openEditModal(userId);
+        // Toggle password visibility
+        $('#togglePassword').on('click', function() {
+            const passwordInput = $('#password');
+            const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+            passwordInput.attr('type', type);
+            $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+        });
+
+        $('#togglePasswordConfirmation').on('click', function() {
+            const passwordConfirmationInput = $('#password_confirmation');
+            const type = passwordConfirmationInput.attr('type') === 'password' ? 'text' : 'password';
+            passwordConfirmationInput.attr('type', type);
+            $(this).find('i').toggleClass('fa-eye fa-eye-slash');
         });
     }
 
     function resetForm() {
         $('#userForm')[0].reset();
         $('#userForm').attr('action', "{{ route('admin.users.store') }}");
-        $('#formMethod').html('');
+        $('#formMethod').html(''); // Clear _method field
         $('#userModalLabel').html('<i class="fas fa-user-plus me-2"></i>Tambah Pengguna Baru');
         $('#passwordFields').show();
         $('#password').prop('required', true);
         $('#password_confirmation').prop('required', true);
+        // Reset eye icon to fa-eye and input type to password
+        $('#togglePassword i').removeClass('fa-eye-slash').addClass('fa-eye');
+        $('#password').attr('type', 'password');
+        $('#togglePasswordConfirmation i').removeClass('fa-eye-slash').addClass('fa-eye');
+        $('#password_confirmation').attr('type', 'password');
         currentEditId = null;
+        // Clear validation errors
+        $('.error-message').text('');
+        $('.is-invalid').removeClass('is-invalid');
     }
 
     function openCreateModal() {
@@ -1338,13 +1423,13 @@
 
     function openEditModal(userId) {
         currentEditId = userId;
-        resetForm();
+        resetForm(); // Reset form first to clear previous data and errors
         
         $('#userModalLabel').html('<i class="fas fa-edit me-2"></i>Edit Pengguna');
-        $('#formMethod').html('@method("PUT")');
         $('#userForm').attr('action', `/admin/users/${userId}`);
+        $('#formMethod').html('<input type="hidden" name="_method" value="PUT">');
         
-        $('#passwordFields').hide();
+        $('#passwordFields').hide(); // Hide password fields for edit by default
         $('#password').prop('required', false);
         $('#password_confirmation').prop('required', false);
         
@@ -1371,13 +1456,22 @@
     }
 
     function populateEditForm(user) {
-        $('#nama').val(user.name || '');
+        $('#name').val(user.name || '');
         $('#email').val(user.email || '');
         $('#nim').val(user.nim || '');
         $('#no_hp').val(user.no_hp || '');
         $('#peran').val(user.peran || '');
         $('#status').val(user.status || '');
-        $('#tanggal_bergabung').val(user.tanggal_bergabung || '');
+        $('#verified').val(user.verified ? '1' : '0');
+        
+        // Populate tanggal_bergabung, format to YYYY-MM-DD for input type="date"
+        if (user.tanggal_bergabung) {
+            $('#tanggal_bergabung').val(user.tanggal_bergabung.substring(0, 10)); 
+        } else if (user.created_at) { // Fallback to created_at if tanggal_bergabung is null
+            $('#tanggal_bergabung').val(user.created_at.substring(0, 10));
+        } else {
+            $('#tanggal_bergabung').val('');
+        }
     }
 
     function submitUserForm() {
@@ -1385,14 +1479,13 @@
         const url = form.attr('action');
         let formData = new FormData(form[0]);
 
-        // Add method spoofing for PUT requests
-        if (currentEditId) {
-            formData.append('_method', 'PUT');
-        }
+        // Clear previous validation errors
+        $('.error-message').text('');
+        $('.is-invalid').removeClass('is-invalid');
 
         $.ajax({
             url: url,
-            type: 'POST',
+            type: 'POST', // Always POST for Laravel AJAX, method spoofing is done via _method
             data: formData,
             processData: false,
             contentType: false,
@@ -1401,43 +1494,28 @@
             },
             success: function(response) {
                 userModal.hide();
+                alert(response.success || 'Operasi berhasil!'); // Show success message
                 window.location.reload();
             },
             error: function(xhr) {
-                if (xhr.status === 422) {
+                if (xhr.status === 422) { // Validation errors
                     let errors = xhr.responseJSON.errors;
-                    // Clear previous errors
-                    $('.error-message').text('');
-                    $('.is-invalid').removeClass('is-invalid');
-                    
-                    // Display new errors
                     $.each(errors, function(key, value) {
-                        $('#' + key.replace(/\./g, '_')).addClass('is-invalid').closest('.form-group').find('.error-message').text(value[0]);
+                        // Dynamically find the input by ID, assuming ID matches name
+                        const inputElement = $('#' + key);
+                        if(inputElement.length === 0) { // Fallback for nested attributes or special cases
+                            inputElement = $('[name="' + key + '"]');
+                        }
+                        inputElement.addClass('is-invalid').closest('.form-group').find('.error-message').text(value[0]);
                     });
+                } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                    alert(xhr.responseJSON.error); // Show general error message from server
                 } else {
-                    alert('An unexpected error occurred.');
+                    console.error('AJAX Error:', xhr.responseText);
+                    alert('Terjadi kesalahan yang tidak terduga. Silakan periksa konsol browser untuk detail.');
                 }
             }
         });
-    }
-
-    function confirmDelete(userId, userName) {
-        deleteUserId = userId;
-        $('#deleteUserName').text(userName);
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-    }
-
-    function deleteUser(userId) {
-        let form = document.createElement('form');
-        form.action = `/admin/users/${userId}`;
-        form.method = 'POST';
-        form.innerHTML = `
-            @csrf
-            @method('DELETE')
-        `;
-        document.body.appendChild(form);
-        form.submit();
     }
 
     function initializeTheme() {
@@ -1460,25 +1538,11 @@
         $('#theme-toggle').html(icon);
     }
 
-    // Debounce helper kept in case it's needed elsewhere
-    function debounce(fn, delay) {
-        let timer = null;
-        return function() {
-            const context = this, args = arguments;
-            clearTimeout(timer);
-            timer = setTimeout(function() {
-                fn.apply(context, args);
-            }, delay);
-        };
-    }
-
     // Submit search only when user presses Enter or Space (keyup so the character is present)
     $(document).ready(function() {
         $('#searchInput').on('keyup', function(e) {
-            const key = e.key || (e.originalEvent && e.originalEvent.key);
-            const isEnter = key === 'Enter';
-            const isSpace = key === ' ' || key === 'Spacebar' || key === 'Space' || e.keyCode === 32;
-            if (isEnter || isSpace) {
+            // Only submit on Enter press for the header search bar
+            if (e.key === 'Enter') {
                 $('#searchForm').submit();
             }
         });

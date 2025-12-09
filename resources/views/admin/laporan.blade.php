@@ -1080,135 +1080,242 @@
             </div>
         </div>
 
-        <!-- Stats Cards -->
+                <!-- Stats Cards -->
+
                 <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-icon primary">
-                            <i class="fas fa-hand-holding"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="totalPeminjaman">-</h3>
-                            <p>Total Peminjaman</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon success">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="barangDipinjam">-</h3>
-                            <p>Barang Dipinjam</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon warning">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="penggunaAktif">-</h3>
-                            <p>Pengguna Aktif</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon danger">
-                            <i class="fas fa-times-circle"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="barangRusak">-</h3>
-                            <p>Barang Rusak</p>
-                        </div>
-                    </div>
+
+                    <!-- Stat cards will be dynamically generated here -->
+
                 </div>
+
                 <!-- Charts Section -->
+
                 <div class="charts-grid">
+
                     <div class="chart-card">
+
                         <div class="chart-header">
-                            <div class="section-title">Statistik Peminjaman Bulanan</div>
+
+                            <div class="section-title" id="monthlyChartTitle">Statistik Peminjaman Bulanan</div>
+
                             <select id="yearSelect" style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
+
                                 @foreach($years as $year)
+
                                     <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}</option>
+
                                 @endforeach
+
                             </select>
+
                         </div>
+
                         <div class="chart-container">
+
                             <canvas id="monthlyChart"></canvas>
+
                         </div>
+
                     </div>
+
                     <div class="chart-card">
+
                         <div class="chart-header">
-                            <div class="section-title">Distribusi Peminjaman</div>
+
+                            <div class="section-title" id="distributionChartTitle">Distribusi Peminjaman</div>
+
                         </div>
+
                         <div class="chart-container">
+
                             <canvas id="distributionChart"></canvas>
+
                         </div>
+
                     </div>
+
                 </div>
+
         
+
                 <!-- Recent Activity -->
+
                 <div class="activity-container">
+
                     <div class="chart-header">
+
                         <div class="section-title">Aktivitas Terbaru</div>
+
                         <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
+
                     </div>
+
                     <ul class="activity-list" id="recentActivityList">
+
                         <!-- Activity items will be populated by JavaScript -->
+
                     </ul>
+
                 </div>
+
             </div>
+
             <div class="menu-toggle" id="menu-toggle">
+
                 <i class="fas fa-bars"></i>
+
             </div>
+
             <!-- Bootstrap JS -->
+
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
             <script>
+
                 let monthlyChart, distributionChart;
+
                 // Initialize when document is ready
+
                 $(document).ready(function() {
+
                     initializeEventListeners();
+
                     initializeTheme();
+
                     // Generate report on page load
+
                     generateReport();
+
                 });
+
                 function initializeEventListeners() {
+
                     $('#theme-toggle').on('click', toggleTheme);
+
                     $('#menu-toggle').on('click', toggleSidebar);
+
                     $('#printBtn').on('click', () => window.print());
+
                     $('#exportBtn').on('click', exportReport);
+
                     $('#generateBtn').on('click', generateReport);
+
                     $('#yearSelect').on('change', generateReport);
+
+                    $('#report-type').on('change', generateReport);
+
                 }
+
                 function initializeTheme() {
+
                     if (localStorage.getItem('darkMode') === 'enabled') {
+
                         document.body.classList.add('dark-mode');
+
                         $('#theme-toggle').html('<i class="fas fa-sun"></i>');
+
                     }
+
                 }
-        
+
                 function toggleTheme() {
+
                     document.body.classList.toggle('dark-mode');
+
                     const isDarkMode = document.body.classList.contains('dark-mode');
+
                     localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+
                     $('#theme-toggle').html(isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
+
                     updateChartColors();
+
                 }
 
                 function toggleSidebar() {
-                    // Implement sidebar toggle logic if needed, especially for mobile
-                }
-                function updateUI(data) {
-                    // 1. Update Stats Cards
-                    $('#totalPeminjaman').text(data.stats.totalPeminjaman);
-                    $('#barangDipinjam').text(data.stats.barangDipinjam);
-                    $('#penggunaAktif').text(data.stats.penggunaAktif);
-                    $('#barangRusak').text(data.stats.barangRusak);
 
-                    // 2. Update Recent Activity
+                    // Implement sidebar toggle logic if needed, especially for mobile
+
+                }
+
+                function updateUI(data) {
+
+                    const uiConfig = data.uiConfig;
+
+                    const stats = data.stats;
+
+        
+
+                    // 1. Update Stats Cards dynamically
+
+                    const statsContainer = $('.stats-container');
+
+                    statsContainer.empty(); // Clear existing cards
+
+                    const icons = ['fa-hand-holding', 'fa-laptop', 'fa-users', 'fa-times-circle'];
+
+                    const colors = ['primary', 'success', 'warning', 'danger'];
+
+                    let i = 0;
+
+                    for (const key in stats) {
+
+                        const title = uiConfig.stat_titles[i] || key;
+
+                        const value = stats[key];
+
+                        const icon = icons[i % icons.length];
+
+                        const color = colors[i % colors.length];
+
+        
+
+                        const statCardHtml = `
+
+                            <div class="stat-card">
+
+                                <div class="stat-icon ${color}">
+
+                                    <i class="fas ${icon}"></i>
+
+                                </div>
+
+                                <div class="stat-info">
+
+                                    <h3>${value}</h3>
+
+                                    <p>${title}</p>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                        statsContainer.append(statCardHtml);
+
+                        i++;
+
+                    }
+
+                     // 2. Update Chart Titles
+
+                    $('#monthlyChartTitle').text(uiConfig.chart_titles[0]);
+
+                    $('#distributionChartTitle').text(uiConfig.chart_titles[1]);
+
+        
+
+        
+
+                    // 3. Update Recent Activity
 
                     const activityList = $('#recentActivityList');
 
-                    activityList.empty(); // Clear existing items
+                    activityList.empty();
 
                     if (data.recentActivity && data.recentActivity.length > 0) {
+
                         data.recentActivity.forEach(item => {
 
                             let iconClass = 'primary';
@@ -1219,17 +1326,11 @@
 
                             if (item.status === 'pending') iconClass = 'warning';
 
-        
-
                             const activityHtml = `
 
                                 <li class="activity-item">
 
-                                    <div class="activity-icon ${iconClass}">
-
-                                        <i class="fas fa-hand-holding"></i>
-
-                                    </div>
+                                    <div class="activity-icon ${iconClass}"><i class="fas fa-hand-holding"></i></div>
 
                                     <div class="activity-content">
 
@@ -1255,13 +1356,9 @@
 
         
 
-                    // 3. Update Charts
+                    // 4. Update Charts
 
                     const isDarkMode = document.body.classList.contains('dark-mode');
-
-                    
-
-                    // Monthly Chart
 
                     const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
 
@@ -1281,7 +1378,7 @@
 
                             datasets: [{
 
-                                label: 'Jumlah Peminjaman',
+                                label: 'Jumlah',
 
                                 data: data.monthlyChart,
 
@@ -1303,8 +1400,6 @@
 
         
 
-                    // Distribution Chart
-
                     const distributionCtx = document.getElementById('distributionChart').getContext('2d');
 
                     if (distributionChart) {
@@ -1325,13 +1420,7 @@
 
                                 data: data.distributionChart.data,
 
-                                backgroundColor: [
-
-                                    'rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)',
-
-                                    'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'
-
-                                ],
+                                backgroundColor: ['rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)', 'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'],
 
                                 borderColor: isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
 
@@ -1399,11 +1488,9 @@
 
                 }
 
-        
-
                 function getDoughnutChartOptions() {
 
-                     const isDarkMode = document.body.classList.contains('dark-mode');
+                    const isDarkMode = document.body.classList.contains('dark-mode');
 
                     return {
 
@@ -1439,8 +1526,6 @@
 
                 }
 
-        
-
                 function getTooltipOptions() {
 
                     const isDarkMode = document.body.classList.contains('dark-mode');
@@ -1461,15 +1546,11 @@
 
                 }
 
-        
-
                 function updateChartColors() {
 
                     const chartOptions = getChartOptions();
 
                     const doughnutOptions = getDoughnutChartOptions();
-
-        
 
                     if (monthlyChart) {
 
@@ -1487,7 +1568,7 @@
 
                     if (distributionChart) {
 
-                         const isDarkMode = document.body.classList.contains('dark-mode');
+                        const isDarkMode = document.body.classList.contains('dark-mode');
 
                         distributionChart.options = doughnutOptions;
 
@@ -1499,8 +1580,6 @@
 
                 }
 
-                
-
                 function generateReport() {
 
                     const reportType = $('#report-type').val();
@@ -1511,8 +1590,6 @@
 
                     const year = $('#yearSelect').val();
 
-        
-
                     const btn = $('#generateBtn');
 
                     const originalHtml = btn.html();
@@ -1521,11 +1598,7 @@
 
                     btn.prop('disabled', true);
 
-        
-
                     const url = `{{ route('admin.laporan.data') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
-
-                    
 
                     fetch(url, {
 
@@ -1575,8 +1648,6 @@
 
                 }
 
-                
-
                 function exportReport() {
 
                     const reportType = $('#report-type').val();
@@ -1603,10 +1674,12 @@
 
                 }
 
-                        </script>
+            </script>
 
-                    </body>
+        </body>
 
-            </html>
+        </html>
+
+        
 
         

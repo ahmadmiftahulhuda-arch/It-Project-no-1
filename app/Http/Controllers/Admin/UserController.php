@@ -17,19 +17,9 @@ class UserController extends Controller
         try {
             $query = User::query();
 
-            $filter = $request->get('filter');
-            $search = $request->get('cari');
-
-            if ($filter == 'borrowers') {
-                $query->whereHas('peminjaman');
-            } elseif ($filter == 'verified') {
-                $query->where('verified', true);
-            } elseif ($filter == 'not_verified') {
-                $query->where('verified', false);
-            }
-
-            // Apply search filter if 'cari' is present
-            if ($search) {
+            // Handle search
+            if ($request->filled('cari')) {
+                $search = $request->cari;
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%')
                       ->orWhere('email', 'like', '%' . $search . '%')
@@ -37,12 +27,29 @@ class UserController extends Controller
                 });
             }
 
-            // Paginate results and preserve query string so search/filter persist across pages
+            // Handle role filter
+            if ($request->filled('peran') && $request->peran != 'Semua') {
+                $query->where('peran', $request->peran);
+            }
+
+            // Handle status filter
+            if ($request->filled('status') && $request->status != 'Semua') {
+                $query->where('status', $request->status);
+            }
+
+            // Handle verification filter
+            if ($request->filled('verifikasi') && $request->verifikasi != 'Semua') {
+                if ($request->verifikasi == 'Terverifikasi') {
+                    $query->where('verified', true);
+                } elseif ($request->verifikasi == 'Belum') {
+                    $query->where('verified', false);
+                }
+            }
+
             $users = $query->latest()->paginate(15)->withQueryString();
             
-            $jurusanList = ['Teknik Informatika', 'Sistem Informasi', 'Teknik Komputer', 'Teknik Elektro', 'Manajemen Informatika'];
+            return view('admin.users.index', compact('users'));
 
-            return view('admin.users.index', compact('users', 'jurusanList', 'filter'));
         } catch (\Exception $e) {
             Log::error('Error in UserController@index: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat data pengguna.');
@@ -57,31 +64,33 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'no_hp' => 'nullable|string|max:20',
             'password' => 'required|string|min:6|confirmed',
-            'peran' => 'nullable|in:Admin Lab,Asisten,Mahasiswa,admin,Administrator',
-            'jurusan' => 'nullable|string|max:255',
-            'status' => 'nullable|in:Aktif,Nonaktif,Non-Aktif',
+            'peran' => 'required|in:Mahasiswa,Dosen,Administrator',
+            'status' => 'required|in:Aktif,Nonaktif',
             'tanggal_bergabung' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('admin.users.index')->withErrors($validator)->withInput()->with('error', 'Terjadi kesalahan validasi.');
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         try {
             $validatedData = $validator->validated();
             $validatedData['password'] = Hash::make($validatedData['password']);
-            
+            $validatedData['verified'] = true; // Automatically verify users created by admin
+
             User::create($validatedData);
 
-            return redirect()->route('admin.users.index')->with('success', 'Pengguna baru berhasil ditambahkan.');
+            return response()->json(['success' => 'Pengguna baru berhasil ditambahkan.']);
+
         } catch (\Exception $e) {
             Log::error('Error storing user: ' . $e->getMessage());
-            return redirect()->route('admin.users.index')->with('error', 'Gagal menambahkan pengguna.');
+            return response()->json(['error' => 'Gagal menambahkan pengguna.'], 500);
         }
     }
 
     public function edit(User $user)
     {
+        // This method is used by the frontend AJAX call to get user data
         return response()->json(['success' => true, 'data' => $user]);
     }
 
@@ -93,14 +102,14 @@ class UserController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'no_hp' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:6|confirmed',
-            'peran' => 'nullable|in:Admin Lab,Asisten,Mahasiswa,admin,Administrator',
-            'jurusan' => 'nullable|string|max:255',
-            'status' => 'nullable|in:Aktif,Nonaktif,Non-Aktif',
+            'peran' => 'required|in:Mahasiswa,Dosen,Administrator',
+            'status' => 'required|in:Aktif,Nonaktif',
+            'verified' => 'required|boolean',
             'tanggal_bergabung' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('admin.users.index')->withErrors($validator)->withInput()->with('error', 'Terjadi kesalahan validasi.');
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         try {
@@ -114,10 +123,11 @@ class UserController extends Controller
             
             $user->update($validatedData);
             
-            return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil diperbarui');
+            return response()->json(['success' => 'Pengguna berhasil diperbarui.']);
+
         } catch (\Exception $e) {
             Log::error('Error updating user: ' . $e->getMessage());
-            return redirect()->route('admin.users.index')->with('error', 'Gagal memperbarui pengguna.');
+            return response()->json(['error' => 'Gagal memperbarui pengguna.'], 500);
         }
     }
 

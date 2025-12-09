@@ -70,7 +70,7 @@ class GoogleAuthController extends Controller
                     'email' => $googleUser->getEmail(),
                     'nim' => $nim, // Simpan NIM yang diekstrak
                     'password' => Hash::make(uniqid()), // Buat password random
-                    'verified' => true, // Langsung set terverifikasi
+                    'verified' => false, // Set terverifikasi ke false secara default
                 ]);
             }
 
