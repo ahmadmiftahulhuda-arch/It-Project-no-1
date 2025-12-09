@@ -517,29 +517,47 @@
             color: #2e7d32;
         }
 
-        .status-belum-dikembalikan {
-            background: #fff8e1;
+        .status-badge {
+            padding: 0.45em 0.9em;
+            border-radius: 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
+        }
+
+        .status-belum-dikembalikan,
+        .status-belum_dikembalikan {
+            background-color: #fff8e1;
             color: #ff8f00;
+            border-color: #ffecb5;
         }
 
         .status-terlambat {
-            background: #ffebee;
-            color: #c62828;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
 
-        .status-disetujui {
-            background: #e3f2fd;
-            color: #1565c0;
+        .status-disetujui,
+        .status-dikembalikan {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
 
         .status-menunggu {
-            background: #fff3e0;
-            color: #e65100;
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
         }
 
         .status-ditolak {
-            background: #ffebee;
-            color: #c62828;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
 
         /* Action Buttons */

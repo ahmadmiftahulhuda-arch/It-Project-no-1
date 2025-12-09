@@ -512,19 +512,34 @@
             font-size: 0.8rem;
         }
 
-        .status-menunggu {
-            background: #fff8e1;
-            color: #ff8f00;
+        .status-badge {
+            padding: 0.45em 0.9em;
+            border-radius: 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
         }
 
-        .status-disetujui {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .status-menunggu {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .status-disetujui,
+        .status-dikembalikan {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
 
         .status-ditolak {
-            background: #ffebee;
-            color: #c62828;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
 
         .status-selesai {
