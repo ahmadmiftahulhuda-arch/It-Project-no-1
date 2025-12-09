@@ -1503,10 +1503,7 @@
                                 <option value="rusak_berat">Rusak Berat</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian</label>
-                            <input type="date" id="tanggal_pengembalian" class="form-control" required>
-                        </div>
+                        <!-- tanggal_pengembalian dihilangkan; dicatat otomatis di server -->
                         <div class="mb-3">
                             <label for="catatan" class="form-label">Catatan (opsional)</label>
                             <textarea id="catatan" class="form-control" rows="3"></textarea>
@@ -1635,12 +1632,7 @@
                     } else {
                         document.getElementById('proyektor-section').style.display = 'none';
                     }
-                    // Set tanggal_pengembalian default to peminjaman date or today
-                    const tanggalInput = document.getElementById('tanggal_pengembalian');
-                    if (tanggalInput) {
-                        // prefer peminjaman date if provided, otherwise today
-                        tanggalInput.value = btn.dataset.tanggal || new Date().toISOString().slice(0,10);
-                    }
+                    // tanggal_pengembalian dicatat otomatis oleh server; tidak perlu diisi di klien
                     modal.show();
                 });
             });
@@ -1650,7 +1642,6 @@
                 const id = document.getElementById('peminjaman_id').value;
                 const kondisi_ruang = document.getElementById('kondisi_ruang').value;
                 const kondisi_proyektor = document.getElementById('kondisi_proyektor').value;
-                const tanggal_pengembalian = document.getElementById('tanggal_pengembalian') ? document.getElementById('tanggal_pengembalian').value : null;
                 const catatan = document.getElementById('catatan').value;
 
                 if (!kondisi_ruang) {
@@ -1670,7 +1661,7 @@
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': csrf
                         },
-                        body: JSON.stringify({ kondisi_ruang, kondisi_proyektor, catatan, tanggal_pengembalian })
+                        body: JSON.stringify({ kondisi_ruang, kondisi_proyektor, catatan })
                     });
                     const data = await res.json();
 
