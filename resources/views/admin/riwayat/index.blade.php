@@ -532,6 +532,13 @@
             color: #c62828;
         }
 
+        /* Ensure Terlambat badge shows red even when combined with other badge classes */
+        .badge.status-terlambat,
+        .status-badge.status-terlambat {
+            background: #ffebee;
+            color: #c62828;
+        }
+
         .status-menunggu {
             background: #fff3cd;
             color: #856404;
@@ -1334,22 +1341,21 @@
                                         </td>
                                         <td>
                                             @if ($pj)
-                                                @if ($isLate)
+                                                @php $pjStatus = $pj->status; @endphp
+                                                @if (in_array($pjStatus, ['verified','disetujui']))
+                                                    <span class="badge status-badge status-dikembalikan">Dikembalikan</span>
+                                                @elseif (in_array($pjStatus, ['pending']))
+                                                    <span class="badge status-badge status-menunggu">Menunggu Verifikasi</span>
+                                                @elseif (in_array($pjStatus, ['rejected','ditolak']))
+                                                    <span class="badge status-badge status-ditolak">Ditolak</span>
+                                                @elseif (in_array($pjStatus, ['overdue','terlambat']))
+                                                    <span class="badge status-badge status-terlambat">Terlambat</span>
+                                                @elseif ($isLate)
                                                     <span class="badge status-badge status-terlambat">
                                                         <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                                     </span>
-                                                @elseif ($pj->status == 'verified')
-                                                    <span
-                                                        class="badge status-badge status-dikembalikan">Dikembalikan</span>
-                                                @elseif ($pj->status == 'pending')
-                                                    <span class="badge status-badge status-menunggu">Menunggu
-                                                        Verifikasi</span>
-                                                @elseif ($pj->status == 'rejected')
-                                                    <span class="badge status-badge status-ditolak">Ditolak</span>
-                                                @elseif (in_array($pj->status, ['overdue', 'terlambat']))
-                                                    <span class="badge status-badge status-terlambat">Terlambat</span>
                                                 @else
-                                                    <span class="badge status-badge">{{ ucfirst($pj->status) }}</span>
+                                                    <span class="badge status-badge">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
                                                 @endif
                                             @else
                                                 {{-- Tidak ada pengembalian yang tercatat untuk peminjaman ini --}}
@@ -1905,27 +1911,79 @@
                     const id = button.getAttribute('data-id');
                     const peminjam = button.getAttribute('data-peminjam');
                     const tanggal = button.getAttribute('data-tanggal');
-                    const ruanganId = button.getAttribute('data-ruangan-id');
-                    const projectorId = button.getAttribute('data-projector-id');
-                    const waktuMulai = button.getAttribute('data-waktu_mulai');
-                    const waktuSelesai = button.getAttribute('data-waktu_selesai');
-                    const statusPengembalian = button.getAttribute('data-status-pengembalian');
-                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
-                    const keperluan = button.getAttribute('data-keperluan');
-                    const status = button.getAttribute('data-status');
-                    const catatan = button.getAttribute('data-catatan');
+                    const ruanganId = button.getAttribute('data-ruangan-id') || button.getAttribute('data-ruang-id') || button.getAttribute('data-ruang');
+                    const projectorId = button.getAttribute('data-projector-id') || button.getAttribute('data-projector') || '';
+                    const waktuMulai = button.getAttribute('data-waktu_mulai') || button.getAttribute('data-waktu-mulai') || '';
+                    const waktuSelesai = button.getAttribute('data-waktu_selesai') || button.getAttribute('data-waktu-selesai') || '';
+                    let statusPengembalian = button.getAttribute('data-status-pengembalian') || button.getAttribute('data-status_pengembalian') || '';
+                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || button.getAttribute('data-tanggal_pengembalian') || '';
+                    const keperluan = button.getAttribute('data-keperluan') || button.getAttribute('data-keperluan') || '';
+                    const status = button.getAttribute('data-status') || '';
+                    const catatan = button.getAttribute('data-catatan') || button.getAttribute('data-keterangan') || '';
+
+                    // Normalize display value 'terlambat' to DB-safe 'overdue' for the select
+                    if (statusPengembalian === 'terlambat') {
+                        statusPengembalian = 'overdue';
+                    }
 
                     // Update form action URL
                     const form = document.getElementById('editForm');
                     form.action = `/admin/riwayat/${id}`;
 
+                    // Normalize date to YYYY-MM-DD for input[type=date]
+                    function normalizeDateForInput(d) {
+                        if (!d) return '';
+                        // If already in YYYY-MM-DD format, return as-is
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+                        // Try parsing with Date
+                        const parsed = new Date(d);
+                        if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
+                        // Fallback: try common US format MM/DD/YYYY
+                        const parts = d.split('/');
+                        if (parts.length === 3) {
+                            const mm = parts[0].padStart(2, '0');
+                            const dd = parts[1].padStart(2, '0');
+                            const yyyy = parts[2];
+                            return `${yyyy}-${mm}-${dd}`;
+                        }
+                        return '';
+                    }
+
+                    // Normalize time to HH:MM (24-hour) for input[type=time]
+                    function normalizeTimeForInput(t) {
+                        if (!t) return '';
+                        t = t.trim();
+                        // If contains AM/PM, convert
+                        const ampmMatch = t.match(/(\d{1,2}:\d{2})(?:[:\d{2}]*)?\s*(AM|PM)/i);
+                        if (ampmMatch) {
+                            let [ , timePart, ampm ] = ampmMatch;
+                            let [hh, mm] = timePart.split(':').map(s => parseInt(s, 10));
+                            if (ampm.toUpperCase() === 'PM' && hh < 12) hh += 12;
+                            if (ampm.toUpperCase() === 'AM' && hh === 12) hh = 0;
+                            return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+                        }
+                        // If time includes seconds like 15:30:00, strip seconds
+                        const secMatch = t.match(/^(\d{1,2}:\d{2}):\d{2}$/);
+                        if (secMatch) return secMatch[1].padStart(5, '0');
+                        // If already HH:MM or H:MM, pad
+                        const simpleMatch = t.match(/^(\d{1,2}:\d{2})$/);
+                        if (simpleMatch) {
+                            const [hh, mm] = simpleMatch[1].split(':').map(s => s.padStart(2,'0'));
+                            return `${hh}:${mm}`;
+                        }
+                        // Last resort: try parsing as Date and extract time
+                        const dt = new Date(`1970-01-01T${t}`);
+                        if (!isNaN(dt)) return dt.toTimeString().slice(0,5);
+                        return '';
+                    }
+
                     // Isi data form
                     document.getElementById('edit_peminjam').value = peminjam;
-                    document.getElementById('edit_tanggal').value = tanggal;
+                    document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
                     document.getElementById('edit_ruangan_id').value = ruanganId || '';
                     document.getElementById('edit_projector_id').value = projectorId || '';
-                    document.getElementById('edit_waktu_mulai').value = waktuMulai || '';
-                    document.getElementById('edit_waktu_selesai').value = waktuSelesai || '';
+                    document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai) || '';
+                    document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai) || '';
                     document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
                     document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
                     document.getElementById('edit_keperluan').value = keperluan;

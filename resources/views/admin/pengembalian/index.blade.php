@@ -1209,29 +1209,29 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($isLate)
-                                            <span class="badge status-badge status-terlambat">
-                                                <i class="fas fa-exclamation-circle me-1"></i> Terlambat
-                                            </span>
-                                        @elseif ($pengembalian->status == 'verified')
+                                        @php $pjStatus = $pengembalian->status; @endphp
+                                        @if (in_array($pjStatus, ['verified','disetujui']))
                                             <span class="badge status-badge status-disetujui">
                                                 <i class="fas fa-check-circle me-1"></i> Disetujui
                                             </span>
-                                        @elseif ($pengembalian->status == 'pending')
+                                        @elseif (in_array($pjStatus, ['pending']))
                                             <span class="badge status-badge status-menunggu">
                                                 <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
                                             </span>
-                                        @elseif ($pengembalian->status == 'rejected')
+                                        @elseif (in_array($pjStatus, ['rejected','ditolak']))
                                             <span class="badge status-badge status-ditolak">
                                                 <i class="fas fa-times-circle me-1"></i> Ditolak
                                             </span>
-                                        @elseif (in_array($pengembalian->status, ['overdue','terlambat']))
+                                        @elseif (in_array($pjStatus, ['overdue','terlambat']))
+                                            <span class="badge status-badge status-terlambat">
+                                                <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                            </span>
+                                        @elseif ($isLate)
                                             <span class="badge status-badge status-terlambat">
                                                 <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                             </span>
                                         @else
-                                            <span
-                                                class="badge bg-secondary">{{ ucfirst($pengembalian->status) }}</span>
+                                            <span class="badge bg-secondary">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
                                         @endif
                                     </td>
                                     <td>

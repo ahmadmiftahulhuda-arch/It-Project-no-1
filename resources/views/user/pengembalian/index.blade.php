@@ -1414,17 +1414,28 @@
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            @if($k->status == 'pending')
+                                            @php
+                                                $status = $k->status;
+                                            @endphp
+                                            @if(in_array($status, ['pending', 'pending']))
                                                 <span class="badge status-pending">
                                                     <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
                                                 </span>
-                                            @elseif($k->status == 'verified')
+                                            @elseif(in_array($status, ['verified', 'disetujui']))
                                                 <span class="badge status-disetujui">
                                                     <i class="fas fa-check-circle me-1"></i> Disetujui
                                                 </span>
-                                            @else
+                                            @elseif(in_array($status, ['overdue','terlambat']))
+                                                <span class="badge status-terlambat">
+                                                    <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                                </span>
+                                            @elseif(in_array($status, ['rejected','ditolak']))
                                                 <span class="badge status-ditolak">
                                                     <i class="fas fa-times-circle me-1"></i> Ditolak
+                                                </span>
+                                            @else
+                                                <span class="badge status-ditolak">
+                                                    {{ ucfirst(str_replace('_', ' ', $status ?? '')) }}
                                                 </span>
                                             @endif
                                         </td>
