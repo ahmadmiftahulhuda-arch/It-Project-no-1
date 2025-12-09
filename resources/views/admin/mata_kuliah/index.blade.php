@@ -911,6 +911,9 @@
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
                     <i class="fas fa-file-excel"></i> Import Excel
                 </button>
+                <a href="{{ route('mata_kuliah.export') }}" class="btn btn-info">
+                    <i class="fas fa-file-export"></i> Export Excel
+                </a>
             </div>
         </div>
 

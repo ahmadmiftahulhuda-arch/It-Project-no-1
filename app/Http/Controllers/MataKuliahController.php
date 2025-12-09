@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MataKuliah;
 use Illuminate\Http\Request;
+use App\Exports\MataKuliahExport;
 use App\Imports\MataKuliahImport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -78,5 +79,10 @@ class MataKuliahController extends Controller
         Excel::import(new MataKuliahImport, $request->file('file'));
 
         return redirect()->route('mata_kuliah.index')->with('success', 'Data mata kuliah berhasil diimport.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new MataKuliahExport, 'mata_kuliah.xlsx');
     }
 }
