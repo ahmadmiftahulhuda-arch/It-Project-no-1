@@ -1359,40 +1359,29 @@
                                     <th width="50">#</th>
                                     <th>Tanggal Pinjam</th>
                                     <th>Ruang</th>
+                                    <th width="180" class="text-center">Proyektor</th>
                                     <th>Tanggal Kembali</th>
-                                    <th width="100" class="text-center">Proyektor</th>
-                                    <th width="120" class="text-center">Kondisi Ruang</th>
-                                    <th width="120" class="text-center">Status</th>
-                                    <th>Catatan</th>
+                                    <th width="140" class="text-center">Status</th>
+                                    <th width="120" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($pengembalians as $k)
-                                    <tr class="table-row-highlight" 
-                                        data-status="{{ $k->status }}" 
-                                        data-ruang="{{ $k->peminjaman->ruangan->nama_ruangan ?? $k->peminjaman->ruang }}" 
-                                        data-tanggal="{{ $k->peminjaman->tanggal }}">
+                                    @php $pj = $k->peminjaman; @endphp
+                                    <tr class="table-row-highlight"
+                                        data-status="{{ $k->status }}"
+                                        data-ruang="{{ $pj->ruangan->nama_ruangan ?? $pj->ruang }}"
+                                        data-tanggal="{{ $pj->tanggal }}">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
-                                            {{ \Carbon\Carbon::parse($k->peminjaman->tanggal)->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($pj->tanggal)->format('d M Y') }}
                                         </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $k->peminjaman->ruangan->nama_ruangan ?? $k->peminjaman->ruang }}
-                                        </td>
-                                        <td>
-                                            @if($k->tanggal_pengembalian)
-                                                <i class="fas fa-calendar-check me-1 text-success"></i>
-                                                {{ \Carbon\Carbon::parse($k->tanggal_pengembalian)->format('d M Y') }}
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
+                                            {{ $pj->ruangan->nama_ruangan ?? $pj->ruang }}
                                         </td>
                                         <td class="text-center">
-                                            @php
-                                                $pj = $k->peminjaman;
-                                            @endphp
                                             @if(isset($pj->projector) && $pj->projector)
                                                 <span class="badge bg-success status-badge">{{ $pj->projector->kode_proyektor }} - {{ $pj->projector->merk }} {{ $pj->projector->model }}</span>
                                             @elseif(!empty($pj->projector_id))
@@ -1405,33 +1394,45 @@
                                                 @endif
                                             @endif
                                         </td>
-                                        <td class="text-center">
-                                            <span class="badge status-badge 
-                                                @if($k->kondisi_ruang == 'baik') condition-baik 
-                                                @elseif($k->kondisi_ruang == 'rusak_ringan') condition-rusak-ringan 
-                                                @else condition-rusak-berat @endif">
-                                                {{ ucfirst(str_replace('_', ' ', $k->kondisi_ruang)) }}
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            @if($k->status == 'pending')
-                                                <span class="badge status-pending">
-                                                    <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
-                                                </span>
-                                            @elseif($k->status == 'verified')
-                                                <span class="badge status-disetujui">
-                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
-                                                </span>
+                                        <td>
+                                            @if($k->tanggal_pengembalian)
+                                                <i class="fas fa-calendar-check me-1 text-success"></i>
+                                                {{ \Carbon\Carbon::parse($k->tanggal_pengembalian)->format('d M Y') }}
                                             @else
-                                                <span class="badge status-ditolak">
-                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
-                                                </span>
+                                                <span class="text-muted">-</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            <div class="text-truncate-custom">
-                                                {{ $k->catatan ?: '-' }}
-                                            </div>
+                                        <td class="text-center">
+                                            @php $status = $k->status; @endphp
+                                            @if(in_array($status, ['pending']))
+                                                <span class="badge status-pending"><i class="fas fa-clock me-1"></i> Menunggu</span>
+                                            @elseif(in_array($status, ['verified','disetujui']))
+                                                <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                            @elseif(in_array($status, ['overdue','terlambat']))
+                                                <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                            @elseif(in_array($status, ['rejected','ditolak']))
+                                                <span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                            @else
+                                                <span class="badge status-ditolak">{{ ucfirst(str_replace('_',' ',$status ?? '')) }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary detail-pengembalian"
+                                                type="button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#detailPengembalianModal"
+                                                data-tanggal-pinjam="{{ \Carbon\Carbon::parse($pj->tanggal)->format('d M Y') }}"
+                                                data-waktu-mulai="{{ $pj->waktu_mulai ?? '' }}"
+                                                data-waktu-selesai="{{ $pj->waktu_selesai ?? '' }}"
+                                                data-ruang="{{ $pj->ruangan->nama_ruangan ?? $pj->ruang }}"
+                                                data-projector-label="{{ isset($pj->projector) && $pj->projector ? ($pj->projector->kode_proyektor . ' - ' . $pj->projector->merk . ' ' . $pj->projector->model) : ($pj->proyektor ? 'Ya' : 'Tidak') }}"
+                                                data-kondisi-ruang="{{ $k->kondisi_ruang }}"
+                                                data-kondisi-proyektor="{{ $k->kondisi_proyektor ?? '-' }}"
+                                                data-catatan="{{ $k->catatan ?? '-' }}"
+                                                data-tanggal-pengembalian="{{ $k->tanggal_pengembalian ? \Carbon\Carbon::parse($k->tanggal_pengembalian)->format('d M Y') : '' }}"
+                                                data-waktu-pengembalian="{{ optional($k->created_at)->format('H:i') ?? '' }}">
+                                                <i class="fas fa-info-circle me-1"></i> Detail
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -1445,6 +1446,45 @@
                         <p class="text-muted">Riwayat pengembalian akan muncul di sini setelah Anda mengajukan pengembalian</p>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        <!-- Modal Detail Pengembalian -->
+        <div class="modal fade" id="detailPengembalianModal" tabindex="-1" aria-labelledby="detailPengembalianLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content modal-custom">
+                    <div class="modal-header modal-header-custom">
+                        <h5 class="modal-title" id="detailPengembalianLabel"><i class="fas fa-info-circle me-2"></i> Detail Pengembalian</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col-md-6"><strong>Tanggal Pinjam:</strong> <span id="detail-tanggal-pinjam">-</span></div>
+                            <div class="col-md-6"><strong>Waktu Pinjam:</strong> <span id="detail-waktu-pinjam">-</span></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-6"><strong>Ruang:</strong> <span id="detail-ruang">-</span></div>
+                            <div class="col-md-6"><strong>Proyektor:</strong> <span id="detail-proyektor">-</span></div>
+                        </div>
+                        <hr/>
+                        <div class="row mb-2">
+                            <div class="col-md-6"><strong>Kondisi Ruang:</strong> <span id="detail-kondisi-ruang">-</span></div>
+                            <div class="col-md-6"><strong>Kondisi Proyektor:</strong> <span id="detail-kondisi-proyektor">-</span></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-6"><strong>Tanggal Kembali:</strong> <span id="detail-tanggal-pengembalian">-</span></div>
+                            <div class="col-md-6"><strong>Waktu Kembali:</strong> <span id="detail-waktu-pengembalian">-</span></div>
+                        </div>
+                        <hr/>
+                        <div class="mb-2">
+                            <strong>Catatan:</strong>
+                            <p id="detail-catatan">-</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1492,10 +1532,7 @@
                                 <option value="rusak_berat">Rusak Berat</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian</label>
-                            <input type="date" id="tanggal_pengembalian" class="form-control" required>
-                        </div>
+                        <!-- tanggal_pengembalian dihilangkan; dicatat otomatis di server -->
                         <div class="mb-3">
                             <label for="catatan" class="form-label">Catatan (opsional)</label>
                             <textarea id="catatan" class="form-control" rows="3"></textarea>
@@ -1624,12 +1661,7 @@
                     } else {
                         document.getElementById('proyektor-section').style.display = 'none';
                     }
-                    // Set tanggal_pengembalian default to peminjaman date or today
-                    const tanggalInput = document.getElementById('tanggal_pengembalian');
-                    if (tanggalInput) {
-                        // prefer peminjaman date if provided, otherwise today
-                        tanggalInput.value = btn.dataset.tanggal || new Date().toISOString().slice(0,10);
-                    }
+                    // tanggal_pengembalian dicatat otomatis oleh server; tidak perlu diisi di klien
                     modal.show();
                 });
             });
@@ -1639,7 +1671,6 @@
                 const id = document.getElementById('peminjaman_id').value;
                 const kondisi_ruang = document.getElementById('kondisi_ruang').value;
                 const kondisi_proyektor = document.getElementById('kondisi_proyektor').value;
-                const tanggal_pengembalian = document.getElementById('tanggal_pengembalian') ? document.getElementById('tanggal_pengembalian').value : null;
                 const catatan = document.getElementById('catatan').value;
 
                 if (!kondisi_ruang) {
@@ -1659,7 +1690,7 @@
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': csrf
                         },
-                        body: JSON.stringify({ kondisi_ruang, kondisi_proyektor, catatan, tanggal_pengembalian })
+                        body: JSON.stringify({ kondisi_ruang, kondisi_proyektor, catatan })
                     });
                     const data = await res.json();
 
@@ -1754,6 +1785,29 @@
             document.getElementById('tanggal-filter').addEventListener('change', filterTable);
 
             // Inisialisasi filter saat halaman dimuat
+            // Setup handler for Detail buttons (isi modal dari data-* pada tombol)
+            const detailModalEl = document.getElementById('detailPengembalianModal');
+            if (detailModalEl) {
+                const detailModal = new bootstrap.Modal(detailModalEl);
+                document.querySelectorAll('.detail-pengembalian').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const d = this.dataset || {};
+                        document.getElementById('detail-tanggal-pinjam').textContent = d.tanggalPinjam || '-';
+                        const waktuMulai = d.waktuMulai || '';
+                        const waktuSelesai = d.waktuSelesai || '';
+                        document.getElementById('detail-waktu-pinjam').textContent = (waktuMulai || '-') + (waktuSelesai ? (' - ' + waktuSelesai) : '');
+                        document.getElementById('detail-ruang').textContent = d.ruang || '-';
+                        document.getElementById('detail-proyektor').textContent = d.projectorLabel || d.projector || '-';
+                        document.getElementById('detail-kondisi-ruang').textContent = d.kondisiRuang ? d.kondisiRuang.replace('_',' ') : '-';
+                        document.getElementById('detail-kondisi-proyektor').textContent = d.kondisiProyektor || '-';
+                        document.getElementById('detail-tanggal-pengembalian').textContent = d.tanggalPengembalian || '-';
+                        document.getElementById('detail-waktu-pengembalian').textContent = d.waktuPengembalian || '-';
+                        document.getElementById('detail-catatan').textContent = d.catatan || '-';
+                        detailModal.show();
+                    });
+                });
+            }
+
             filterTable();
         });
     </script>

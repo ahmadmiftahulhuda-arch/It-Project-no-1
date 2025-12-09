@@ -906,11 +906,11 @@
             
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="true" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse show" id="penggunaMenu">
+                <div class="dropdown-items collapse" id="penggunaMenu">
                     <a href="{{ route('admin.users.index') }}" class="dropdown-item active">
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
@@ -944,9 +944,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>

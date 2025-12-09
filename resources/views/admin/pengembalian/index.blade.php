@@ -517,29 +517,47 @@
             color: #2e7d32;
         }
 
-        .status-belum-dikembalikan {
-            background: #fff8e1;
+        .status-badge {
+            padding: 0.45em 0.9em;
+            border-radius: 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
+        }
+
+        .status-belum-dikembalikan,
+        .status-belum_dikembalikan {
+            background-color: #fff8e1;
             color: #ff8f00;
+            border-color: #ffecb5;
         }
 
         .status-terlambat {
-            background: #ffebee;
-            color: #c62828;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
 
-        .status-disetujui {
-            background: #e3f2fd;
-            color: #1565c0;
+        .status-disetujui,
+        .status-dikembalikan {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
 
         .status-menunggu {
-            background: #fff3e0;
-            color: #e65100;
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
         }
 
         .status-ditolak {
-            background: #ffebee;
-            color: #c62828;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
 
         /* Action Buttons */
@@ -936,9 +954,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>
@@ -1209,29 +1227,29 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($isLate)
-                                            <span class="badge status-badge status-terlambat">
-                                                <i class="fas fa-exclamation-circle me-1"></i> Terlambat
-                                            </span>
-                                        @elseif ($pengembalian->status == 'verified')
+                                        @php $pjStatus = $pengembalian->status; @endphp
+                                        @if (in_array($pjStatus, ['verified','disetujui']))
                                             <span class="badge status-badge status-disetujui">
                                                 <i class="fas fa-check-circle me-1"></i> Disetujui
                                             </span>
-                                        @elseif ($pengembalian->status == 'pending')
+                                        @elseif (in_array($pjStatus, ['pending']))
                                             <span class="badge status-badge status-menunggu">
                                                 <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
                                             </span>
-                                        @elseif ($pengembalian->status == 'rejected')
+                                        @elseif (in_array($pjStatus, ['rejected','ditolak']))
                                             <span class="badge status-badge status-ditolak">
                                                 <i class="fas fa-times-circle me-1"></i> Ditolak
                                             </span>
-                                        @elseif (in_array($pengembalian->status, ['overdue','terlambat']))
+                                        @elseif (in_array($pjStatus, ['overdue','terlambat']))
+                                            <span class="badge status-badge status-terlambat">
+                                                <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                            </span>
+                                        @elseif ($isLate)
                                             <span class="badge status-badge status-terlambat">
                                                 <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                             </span>
                                         @else
-                                            <span
-                                                class="badge bg-secondary">{{ ucfirst($pengembalian->status) }}</span>
+                                            <span class="badge bg-secondary">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
                                         @endif
                                     </td>
                                     <td>

@@ -174,6 +174,8 @@ Route::middleware(['auth', 'role:Administrator'])->prefix('admin')->group(functi
     Route::resource('ruangan', RuanganController::class);
     Route::post('/ruangan/import', [RuanganController::class, 'import'])->name('ruangan.import');
     Route::post('/slotwaktu/import', [SlotWaktuController::class, 'import'])->name('slotwaktu.import');
+    Route::post('/mata_kuliah/import', [MataKuliahController::class, 'import'])->name('mata_kuliah.import');
+    Route::get('/mata_kuliah/export', [MataKuliahController::class, 'export'])->name('mata_kuliah.export');
     Route::resource('mata_kuliah', MataKuliahController::class);
     Route::resource('slotwaktu', SlotWaktuController::class);
 

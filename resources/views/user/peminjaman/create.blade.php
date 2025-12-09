@@ -907,8 +907,12 @@
                                     </label>
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
-                                        <input type="time" name="waktu_mulai" class="form-control @error('waktu_mulai') is-invalid @enderror" 
-                                               value="{{ old('waktu_mulai', '08:00') }}" required>
+                                        <select name="waktu_mulai" class="form-select @error('waktu_mulai') is-invalid @enderror" required>
+                                            <option value="">-- Pilih Waktu Mulai --</option>
+                                            @foreach($slotwaktu as $slot)
+                                                <option value="{{ $slot->waktu }}" {{ old('waktu_mulai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     @error('waktu_mulai')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -922,8 +926,12 @@
                                     </label>
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
-                                        <input type="time" name="waktu_selesai" class="form-control @error('waktu_selesai') is-invalid @enderror" 
-                                               value="{{ old('waktu_selesai', '17:00') }}" required>
+                                        <select name="waktu_selesai" class="form-select @error('waktu_selesai') is-invalid @enderror" required>
+                                            <option value="">-- Pilih Waktu Selesai --</option>
+                                            @foreach($slotwaktu as $slot)
+                                                <option value="{{ $slot->waktu }}" {{ old('waktu_selesai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     @error('waktu_selesai')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -1165,9 +1173,12 @@
             
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    const ruang = document.querySelector('select[name="ruang"]').value;
-                    const keperluan = document.querySelector('textarea[name="keperluan"]').value;
-                    const proyektor = document.querySelector('select[name="proyektor"]').value;
+                    const ruangEl = document.querySelector('select[name="ruangan_id"]');
+                    const ruang = ruangEl ? ruangEl.value : '';
+                    const keperluanEl = document.querySelector('textarea[name="keperluan"]');
+                    const keperluan = keperluanEl ? keperluanEl.value : '';
+                    const projEl = document.querySelector('select[name="projector_id"]');
+                    const proyektor = projEl ? projEl.value : '';
                     
                     let isValid = true;
                     

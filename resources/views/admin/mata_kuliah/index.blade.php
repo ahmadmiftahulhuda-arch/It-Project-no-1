@@ -256,7 +256,8 @@
 
         .search-bar {
             position: relative;
-            width: 300px;
+            width: 100%;
+            max-width: 520px;
         }
 
         .search-bar i {
@@ -374,7 +375,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             padding: 0 5px;
         }
 
@@ -411,6 +412,75 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
             color: white;
+        }
+
+        /* Stat Cards */
+        .stats-row {
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            height: 100%; /* Ensure cards in a row have equal height */
+        }
+
+        .stat-card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-card .label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .icon-primary { background: var(--primary); }
+        .icon-success { background: var(--success); }
+        .icon-info { background: var(--info); }
+
+        /* Filter area in content */
+        .filters-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-card select,
+        .filter-card button {
+            border-radius: 6px;
+            padding: 6px 10px;
         }
 
         /* Table Container */
@@ -614,7 +684,7 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+   <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -626,7 +696,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -637,10 +708,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -663,10 +735,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -681,15 +754,16 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item active">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
                     </a>
@@ -697,7 +771,7 @@
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item active">
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
                         <i class="fas fa-book"></i>
                         <span>Matakuliah</span>
                     </a>
@@ -707,10 +781,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -721,10 +796,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -748,9 +824,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>
@@ -759,7 +835,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
+        <!-- Header (Hanya search di header sekarang) -->
         <div class="header">
             <div class="search-bar">
                 <form action="{{ route('mata_kuliah.index') }}" method="GET" class="flex-grow">
@@ -822,16 +898,93 @@
             </div>
         </div>
 
-        <!-- Page Title -->
+        <!-- PAGE TITLE + BUTTON -->
         <div class="page-title">
             <div>
-                <h1>Manajemen Coba Coba</h1>
+                <h1>Manajemen Mata Kuliah</h1>
                 <p>Platform terpusat untuk mengelola data mata kuliah secara efisien.</p>
             </div>
             <div>
                 <button onclick="openCreateModal()" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah Baru
                 </button>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <i class="fas fa-file-excel"></i> Import Excel
+                </button>
+                <button onclick="exportData()" class="btn btn-info">
+                    <i class="fas fa-file-export"></i> Export Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- STAT CARDS: Total Mata Kuliah | Total Semester | Rata-rata per Semester -->
+        @php
+            $allMataKuliahs = $allMataKuliahs ?? (class_exists(\App\Models\MataKuliah::class) ? \App\Models\MataKuliah::all() : collect([]));
+            $totalMatakuliah = $allMataKuliahs->count();
+            $distinctSemesters = $allMataKuliahs->pluck('semester')->filter()->unique()->sort()->values();
+            $totalSemester = $distinctSemesters->count();
+            $avgPerSemester = $totalSemester > 0 ? round($totalMatakuliah / $totalSemester, 2) : 0;
+        @endphp
+
+        <div class="row stats-row">
+            <div class="col-md-4 mb-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Total Mata Kuliah</div>
+                        <div class="value">{{ $totalMatakuliah }}</div>
+                    </div>
+                    <div class="stat-icon icon-primary">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Total Semester (distinct)</div>
+                        <div class="value">{{ $totalSemester }}</div>
+                        @if($totalSemester > 0)
+                            <div style="font-size:0.8rem; color:var(--text-light); margin-top:4px;">({{ $distinctSemesters->implode(', ') }})</div>
+                        @endif
+                    </div>
+                    <div class="stat-icon icon-success">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Rata-rata per Semester</div>
+                        <div class="value">{{ $avgPerSemester }}</div>
+                    </div>
+                    <div class="stat-icon icon-info">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTERRRR: dipindahkan ke konten, sebelum tabel -->
+        <div class="filters-row">
+            <div class="filter-card">
+                <form id="filterSemesterForm" action="{{ route('mata_kuliah.index') }}" method="GET" class="d-flex align-items-center" style="gap:8px; align-items:center;">
+                    <!-- preserve search value when filtering -->
+                    <input type="hidden" name="search" value="{{ request('search') ?? '' }}">
+                    <label for="filter_semester" style="margin:0; font-weight:600; color:var(--text-dark);">Filter Semester</label>
+                    <select id="filter_semester" name="semester" class="form-select" style="width:180px;">
+                        <option value="">Semua Semester</option>
+                        @for ($i = 1; $i <= 6; $i++)
+                            <option value="{{ $i }}" {{ request('semester') != '' && (int)request('semester') === $i ? 'selected' : '' }}>Semester {{ $i }}</option>
+                        @endfor
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm">Terapkan</button>
+                    @if(request()->has('semester') && request('semester') !== '')
+                        <a href="{{ route('mata_kuliah.index') }}@if(request('search'))?search={{ urlencode(request('search')) }}@endif" class="btn btn-outline-secondary btn-sm">Reset</a>
+                    @endif
+                </form>
             </div>
         </div>
 
@@ -883,7 +1036,7 @@
 
         <!-- Pagination -->
         @if($mataKuliahs->hasPages())
-        <div class="pagination-container">
+        <div class="pagination-container mt-3">
             <nav>
                 <ul class="pagination">
                     {{-- Previous Page Link --}}
@@ -933,8 +1086,7 @@
     </div> {{-- tutup .main-content --}}
 
     <!-- ===================================== -->
-    <!-- MODAL CREATE -->
-    <!-- ===================================== -->
+    <!-- MODAL CREATE / DETAIL / EDIT (tetap sama seperti sebelumnya) -->
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -947,16 +1099,16 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="create_nama" class="form-label">Nama Mata Kuliah</label>
-                            <input type="text" id="create_nama" name="nama" class="form-control" placeholder="Contoh: Pemrograman Web Lanjut" required>
+                            <input type="text" id="create_nama" name="nama" class="form-control" placeholder="Nama Mata Kuliah..." required>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="create_kode" class="form-label">Kode</label>
-                                <input type="text" id="create_kode" name="kode" class="form-control" placeholder="Contoh: IF202" required>
+                                <label for="create_kode" class="form-label">Kode Mata Kuliah</label>
+                                <input type="text" id="create_kode" name="kode" class="form-control" placeholder="Kode Matkul..." required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="create_semester" class="form-label">Semester</label>
-                                <input type="number" id="create_semester" name="semester" class="form-control" placeholder="Contoh: 3" required>
+                                <input type="number" id="create_semester" name="semester" class="form-control" placeholder="Semester..." required min="1" max="12">
                             </div>
                         </div>
                     </div>
@@ -969,9 +1121,7 @@
         </div>
     </div>
 
-    <!-- ===================================== -->
     <!-- MODAL DETAIL -->
-    <!-- ===================================== -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -1004,9 +1154,7 @@
         </div>
     </div>
 
-    <!-- ===================================== -->
     <!-- MODAL EDIT -->
-    <!-- ===================================== -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -1029,13 +1177,39 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="edit_semester" class="form-label">Semester</label>
-                                <input type="number" id="edit_semester" name="semester" class="form-control" required>
+                                <input type="number" id="edit_semester" name="semester" class="form-control" required min="1" max="12">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL IMPORT -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import Mata Kuliah dari Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('mata_kuliah.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Pilih file Excel</label>
+                            <input type="file" name="file" class="form-control" required accept=".xlsx, .xls">
+                            <div class="form-text">File harus berupa .xlsx atau .xls dengan kolom: nama, kode, semester.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
                     </div>
                 </form>
             </div>
@@ -1092,6 +1266,15 @@
             document.getElementById('detail_semester').innerText = 'Semester ' + semester;
             var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
             detailModal.show();
+        }
+
+        function exportData() {
+            let semester = document.getElementById('filter_semester').value;
+            let url = "{{ route('mata_kuliah.export') }}";
+            if (semester) {
+                url += "?semester=" + semester;
+            }
+            window.location.href = url;
         }
     </script>
 

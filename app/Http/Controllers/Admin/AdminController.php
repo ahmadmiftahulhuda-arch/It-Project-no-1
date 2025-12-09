@@ -639,12 +639,34 @@ class AdminController extends Controller
                 $pjData['tanggal_pengembalian'] = $request->tanggal_pengembalian;
             }
 
+            // If admin set status to 'overdue' but didn't provide tanggal_pengembalian, set it to today
+            if (isset($pjData['status']) && in_array($pjData['status'], ['overdue']) && empty($pjData['tanggal_pengembalian'])) {
+                $pjData['tanggal_pengembalian'] = Carbon::now()->toDateString();
+            }
+
             if ($pj) {
                 $pj->update($pjData);
             } else {
                 $pjData['peminjaman_id'] = $peminjaman->id;
                 $pjData['user_id'] = $peminjaman->user_id;
+                // Ensure tanggal_pengembalian has a value because DB column doesn't have a default
+                if (empty($pjData['tanggal_pengembalian'])) {
+                    $pjData['tanggal_pengembalian'] = Carbon::now()->toDateString();
+                }
                 \App\Models\Pengembalian::create($pjData);
+            }
+            // After creating/updating pengembalian, propagate status to peminjaman if needed
+            try {
+                $pjLatest = \App\Models\Pengembalian::where('peminjaman_id', $peminjaman->id)->first();
+                if ($pjLatest && in_array($pjLatest->status, ['verified', 'overdue', 'terlambat'])) {
+                    $peminjaman->update([
+                        'status' => 'selesai',
+                        'tanggal_kembali' => $pjLatest->tanggal_pengembalian ?? now(),
+                        'status_pengembalian' => 'sudah dikembalikan'
+                    ]);
+                }
+            } catch (\Exception $e) {
+                // non-fatal
             }
         }
 
