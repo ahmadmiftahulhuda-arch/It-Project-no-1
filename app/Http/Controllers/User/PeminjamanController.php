@@ -7,6 +7,7 @@ use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Ruangan;
 use App\Models\Projector;
+use App\Models\SlotWaktu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -51,7 +52,10 @@ class PeminjamanController extends Controller
         // Ambil proyektor yang tersedia untuk dipilih (status 'tersedia')
         $projectors = Projector::where('status', 'tersedia')->get();
 
-        return view('user.peminjaman.create', compact('ruangan', 'projectors'));
+        // Ambil slot waktu yang telah didefinisikan admin
+        $slotwaktu = SlotWaktu::all();
+
+        return view('user.peminjaman.create', compact('ruangan', 'projectors', 'slotwaktu'));
     }
 
     public function store(Request $request)

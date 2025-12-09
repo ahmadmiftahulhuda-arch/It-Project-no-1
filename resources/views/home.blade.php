@@ -1279,30 +1279,11 @@
                                 </div>
                             </div>
                             <div class="room-schedule">
-                                @if(isset($slotwaktu) && $slotwaktu->count())
-                                    @foreach($slotwaktu as $slot)
-                                        @php
-                                            // cari jadwal di ruangan ini yang cocok dengan slot waktu
-                                            $match = null;
-                                            if (isset($room->jadwals)) {
-                                                $match = $room->jadwals->first(function($j) use ($slot) {
-                                                    $slotText = trim($slot->waktu);
-                                                    $jadwalText = trim(($j->jam_mulai ?? '') . ' - ' . ($j->jam_selesai ?? ''));
-                                                    return $slotText === $jadwalText;
-                                                });
-                                            }
-
-                                            if ($match) {
-                                                $label = $match->nama_kelas ?? ($match->sebaran_mahasiswa ?? 'Terpakai');
-                                                $textClass = (!empty($match->nama_kelas) || !empty($match->kelas_mahasiswa)) ? 'text-danger' : 'text-success';
-                                            } else {
-                                                $label = 'Kosong';
-                                                $textClass = 'text-success';
-                                            }
-                                        @endphp
+                                @if(isset($room->jadwals) && $room->jadwals->count() > 0)
+                                    @foreach($room->jadwals as $j)
                                         <div class="schedule-item">
-                                            <span>{{ $slot->waktu }}</span>
-                                            <span class="{{ $textClass }}">{{ $label }}</span>
+                                            <span>{{ $j->jam_mulai ?? '-' }} - {{ $j->jam_selesai ?? '-' }}</span>
+                                            <span class="text-danger">Terpakai</span>
                                         </div>
                                     @endforeach
                                 @else
