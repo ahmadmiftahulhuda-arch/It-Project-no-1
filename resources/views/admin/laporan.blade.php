@@ -928,12 +928,12 @@
             
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="true" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse show" id="laporanMenu">
-                    <a href="{{ route('admin.laporan') }}" class="dropdown-item active">
+                <div class="dropdown-items collapse" id="laporanMenu">
+                    <a href="/admin/laporan" class="dropdown-item active">
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
@@ -944,6 +944,7 @@
                 </div>
             </div>
 
+
             <!-- Sistem Pendukung Keputusan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
@@ -952,9 +953,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>

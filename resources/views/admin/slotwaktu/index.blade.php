@@ -928,11 +928,11 @@
             
             <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="true" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse show" id="akademikMenu">
+                <div class="dropdown-items collapse" id="akademikMenu">
                     <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
@@ -951,7 +951,7 @@
                     </a>
                 </div>
             </div>
-            
+                        
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
@@ -992,9 +992,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>

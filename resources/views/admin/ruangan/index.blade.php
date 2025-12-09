@@ -953,13 +953,14 @@
                 </div>
             </div>
             
-            <!-- Manajemen Aset -->
+            <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="true" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse show" id="asetMenu">
+                <div class="dropdown-items collapse" id="asetMenu">
                     <a href="{{ route('projectors.index') }}" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
@@ -970,6 +971,7 @@
                     </a>
                 </div>
             </div>
+
             
             <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
@@ -1037,15 +1039,15 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->

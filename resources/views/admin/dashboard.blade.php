@@ -820,12 +820,13 @@
         <div class="sidebar-menu">
             <!-- Menu Utama -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="true" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse show" id="menuUtama">
-                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item active">
+                <div class="dropdown-items collapse" id="menuUtama">
+                    <a href="/admin/dashboard" class="dropdown-item active">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -942,9 +943,9 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.ahp.settings') }}" class="dropdown-item">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
                         <i class="fas fa-sliders-h"></i>
-                        <span>Pengaturan AHP</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>
