@@ -9,12 +9,25 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class MataKuliahExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $semester;
+
+    public function __construct($semester = null)
+    {
+        $this->semester = $semester;
+    }
+
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        return MataKuliah::all();
+        $query = MataKuliah::query();
+
+        if ($this->semester) {
+            $query->where('semester', $this->semester);
+        }
+
+        return $query->get();
     }
 
     /**

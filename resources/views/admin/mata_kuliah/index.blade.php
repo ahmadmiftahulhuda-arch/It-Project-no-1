@@ -911,9 +911,9 @@
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
                     <i class="fas fa-file-excel"></i> Import Excel
                 </button>
-                <a href="{{ route('mata_kuliah.export') }}" class="btn btn-info">
+                <button onclick="exportData()" class="btn btn-info">
                     <i class="fas fa-file-export"></i> Export Excel
-                </a>
+                </button>
             </div>
         </div>
 
@@ -1266,6 +1266,15 @@
             document.getElementById('detail_semester').innerText = 'Semester ' + semester;
             var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
             detailModal.show();
+        }
+
+        function exportData() {
+            let semester = document.getElementById('filter_semester').value;
+            let url = "{{ route('mata_kuliah.export') }}";
+            if (semester) {
+                url += "?semester=" + semester;
+            }
+            window.location.href = url;
         }
     </script>
 
