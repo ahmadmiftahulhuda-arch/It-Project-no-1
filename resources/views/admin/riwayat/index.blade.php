@@ -550,27 +550,6 @@
             border: 1px solid transparent;
         }
 
-        /* Make the icon appear inside a small colored circle to the left */
-        .status-badge i {
-            display: inline-flex;
-            width: 20px;
-            height: 20px;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: currentColor;
-            color: #fff;
-            font-size: 0.75rem;
-            flex: 0 0 20px;
-            line-height: 1;
-        }
-
-        /* soften the pill background and add a subtle inner shadow to match screenshot */
-        .status-badge {
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
-            border-radius: 8px;
-        }
-
         .status-menunggu {
             background-color: #fff3cd;
             color: #856404;
