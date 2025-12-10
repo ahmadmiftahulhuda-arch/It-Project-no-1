@@ -1303,7 +1303,10 @@
                                     @endphp
 
                                     <tr data-status="{{ $item->status }}" data-id="{{ $item->id }}"
-                                        class="{{ $isOngoing ? 'today-indicator' : '' }}">
+                                        class="{{ $isOngoing ? 'today-indicator' : '' }}"
+                                        data-waktu-mulai="{{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '') }}"
+                                        data-waktu-selesai="{{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '') }}"
+                                        data-waktu-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($item->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}">
                                         <td>{{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                         </td>
                                         <td>
@@ -1315,7 +1318,15 @@
                                                 {{ $item->user->name ?? 'Guest' }}
                                             </div>
                                         </td>
-                                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+                                            <br>
+                                            <small class="text-muted">
+                                                {{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '-') }}
+                                                -
+                                                {{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '-') }}
+                                            </small>
+                                        </td>
                                         <td>{{ $item->ruangan->nama_ruangan ?? $item->ruang }}</td>
                                         <td>
                                             @if ($item->projector)
@@ -1394,6 +1405,8 @@
                                                     data-bs-target="#detailModal" data-id="{{ $item->id }}"
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
                                                     data-tanggal="{{ $item->tanggal }}"
+                                                    data-waktu-mulai="{{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '') }}"
+                                                    data-waktu-selesai="{{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '') }}"
                                                     data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
                                                     data-projector-id="{{ $item->projector->id ?? '' }}"
                                                     data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : 'Tidak' }}"
@@ -1401,6 +1414,7 @@
                                                     data-status="{{ $item->status }}"
                                                     data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '' }}"
                                                     data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '' }}"
+                                                    data-waktu-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($item->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}"
                                                     data-keterangan="{{ $item->catatan ?? '-' }}">
                                                     <i class="fas fa-eye me-1"></i> Detail
                                                 </button>
@@ -1893,17 +1907,29 @@
                     const ruang = button.getAttribute('data-ruang');
                     const proyektor = button.getAttribute('data-projector-label') || button.getAttribute(
                         'data-proyektor');
+                    const waktuMulai = button.getAttribute('data-waktu-mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
+                    const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
                     const statusPengembalian = button.getAttribute('data-status-pengembalian');
                     const keterangan = button.getAttribute('data-keterangan');
 
-                    // Isi data detail
+                    // Isi data detail (tanggal + waktu)
                     document.getElementById('detail_peminjam').textContent = peminjam;
-                    document.getElementById('detail_tanggal').textContent = formatDate(tanggal);
+                    document.getElementById('detail_tanggal').textContent = formatDate(tanggal) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
                     document.getElementById('detail_ruang').textContent = ruang;
                     document.getElementById('detail_proyektor').textContent = proyektor;
                     document.getElementById('detail_keperluan').textContent = keperluan;
+
+                    // Tampilkan juga waktu jatuh tempo / pengembalian jika ada
+                    if (waktuSelesai) {
+                        const el = document.getElementById('detail_tanggal');
+                        el.innerHTML += '<br><small class="text-muted">Slot: ' + formatTime(waktuMulai) + ' - ' + formatTime(waktuSelesai) + '</small>';
+                    }
+                    if (waktuPengembalian) {
+                        document.getElementById('detail_status_pengembalian').innerHTML = (statusPengembalian ? statusPengembalian + ' ' : '') + ' (' + formatTime(waktuPengembalian) + ')';
+                    }
 
                     // Format status peminjaman
                     let statusText = '';
