@@ -517,8 +517,8 @@
         }
 
         .status-selesai {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: #e9ecef;
+            color: #495057;
         }
 
         .status-ditolak {
