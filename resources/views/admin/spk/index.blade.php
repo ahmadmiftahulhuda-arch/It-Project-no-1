@@ -703,6 +703,15 @@
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
+                    <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+
+                    </a>
                 </div>
             </div>
 

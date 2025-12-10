@@ -28,6 +28,7 @@ use App\Models\SlotWaktu;
 use App\Models\Projector;
 use App\Http\Controllers\Admin\AHPController;
 use App\Http\Controllers\Admin\SPKController;
+use App\Http\Controllers\Admin\DosenController;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -126,6 +127,7 @@ Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function () {
 // Route group for Administrator
 Route::middleware(['auth', 'role:Administrator'])->group(function () {
     Route::get('/admin/dashboard-main', [AdminController::class, 'dashboard'])->name('dashboard'); // Keep old dashboard name if needed
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
 });
 
 // ================================
@@ -195,6 +197,11 @@ Route::middleware(['auth', 'role:Administrator'])->prefix('admin')->group(functi
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
     Route::delete('/admin/kelas/{kela_id}/mahasiswa/destroy-all', [MahasiswaController::class, 'destroyAllByKelas'])->name('admin.kelas.mahasiswa.destroyAll');
+
+    // Route Dosen
+    Route::resource('dosen', \App\Http\Controllers\Admin\DosenController::class);
+    Route::post('/dosen/import', [\App\Http\Controllers\Admin\DosenController::class, 'import'])->name('dosen.import');
+    Route::get('/dosen', [\App\Http\Controllers\Admin\DosenController::class, 'index'])->name('dosen.index');
 
     // Admin Peminjaman, Pengembalian, Riwayat
     Route::prefix('peminjaman')->group(function () {
