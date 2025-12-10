@@ -1282,21 +1282,20 @@
                                         // Tentukan pengembalian dan keterlambatan lebih awal untuk dipakai di beberapa kolom
                                         $pj = $item->pengembalian ?? null;
                                         $isLate = false;
-                                        if ($pj && $pj->tanggal_pengembalian && $item->tanggal) {
-                                            try {
-                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->gt(
-                                                    \Carbon\Carbon::parse($item->tanggal),
-                                                );
-                                            } catch (\Exception $e) {
-                                                $isLate = false;
+                                        try {
+                                            // Compute booking end datetime using waktu_selesai when available
+                                            $end = $item->waktu_selesai ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai) : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
+                                            if ($pj && $pj->tanggal_pengembalian) {
+                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->greaterThan($end);
                                             }
+                                        } catch (\Exception $e) {
+                                            $isLate = false;
                                         }
+
                                         $duePassed = false;
                                         try {
-                                            $duePassed =
-                                                !$pj &&
-                                                \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) &&
-                                                $item->status == 'disetujui';
+                                            $end = $item->waktu_selesai ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai) : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
+                                            $duePassed = !$pj && \Carbon\Carbon::now()->greaterThan($end) && $item->status == 'disetujui';
                                         } catch (\Exception $e) {
                                             $duePassed = false;
                                         }
@@ -1373,7 +1372,7 @@
                                         </td>
                                         <td>
                                             @if ($pj)
-                                                @php $pjStatus = $pj->status; @endphp
+                                                @php $pjStatus = strtolower(trim(optional($pj)->status ?? '')); @endphp
                                                 @if (in_array($pjStatus, ['verified','disetujui']))
                                                     <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
                                                 @elseif (in_array($pjStatus, ['pending']))
@@ -1561,7 +1560,7 @@
                                         <strong>Status Pengembalian:</strong>
                                         @php $pj = $item->pengembalian ?? null; @endphp
                                         @if($pj)
-                                            @php $pjStatus = $pj->status; @endphp
+                                                @php $pjStatus = strtolower(trim(optional($pj)->status ?? '')); @endphp
                                             @if(in_array($pjStatus, ['verified','disetujui']))
                                                 <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
                                             @elseif(in_array($pjStatus, ['pending']))
