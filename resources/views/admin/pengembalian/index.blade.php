@@ -1193,7 +1193,10 @@
                                         $isLate = false;
                                     }
                                 @endphp
-                                <tr data-status="{{ $pengembalian->status }}" data-id="{{ $pengembalian->id }}">
+                                <tr data-status="{{ $pengembalian->status }}" data-id="{{ $pengembalian->id }}"
+                                    data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
+                                    data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '') }}"
+                                    data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}">
                                     <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
                                     </td>
                                     <td>
@@ -1220,13 +1223,25 @@
                                             <small class="text-muted">Tanpa Proyektor</small>
                                         @endif
                                     </td>
-                                    <td>{{ $pengembalian->peminjaman->tanggal ? \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') : 'N/A' }}
+                                    <td>
+                                        {{ $pengembalian->peminjaman->tanggal ? \Carbon\Carbon::parse($pengembalian->peminjaman->tanggal)->format('d M Y') : 'N/A' }}
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '-') }}
+                                            -
+                                            {{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '-') }}
+                                        </small>
                                     </td>
                                     <td>
                                         @if ($pengembalian->tanggal_pengembalian)
-                                            {{ \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('d M Y') }}
+                                            @php $tp = \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian); @endphp
+                                            {{ $tp->format('d M Y') }}
+                                            <br>
+                                            <small class="text-muted">{{ $tp->format('H:i') }}</small>
                                         @else
                                             <span class="text-muted">-</span>
+                                            <br>
+                                            <small class="text-muted">Jatuh tempo: {{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '-') }}</small>
                                         @endif
                                     </td>
                                     <td>
@@ -1302,6 +1317,9 @@
                                                 data-kondisi-proyektor="{{ $pengembalian->kondisi_proyektor ?? '' }}"
                                                 data-catatan="{{ $pengembalian->catatan ?? '' }}"
                                                 data-tanggal-pengembalian="{{ $pengembalian->tanggal_pengembalian ?? '' }}"
+                                                data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}"
+                                                data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
+                                                data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '') }}"
                                                 data-status="{{ $pengembalian->status }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
@@ -1312,7 +1330,10 @@
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
                                                 data-barang="{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? 'N/A' }}"
                                                 data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal ?? '' }}"
+                                                data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
+                                                data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '') }}"
                                                 data-tanggal-pengembalian="{{ $pengembalian->tanggal_pengembalian ?? '' }}"
+                                                data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}"
                                                 data-kondisi="Ruang: {{ $pengembalian->kondisi_ruang ?? '-' }} | Proyektor: {{ $pengembalian->kondisi_proyektor ?? '-' }}"
                                                 data-keterangan="{{ $pengembalian->catatan ?? '-' }}"
                                                 data-status="{{ $pengembalian->status }}">
@@ -1688,6 +1709,8 @@
                     const barang = button.getAttribute('data-barang');
                     const tanggalPinjam = button.getAttribute('data-tanggal-pinjam');
                     const tanggalJatuhTempo = button.getAttribute('data-tanggal-jatuh-tempo');
+                    const waktuMulai = button.getAttribute('data-waktu-mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
 
                     // Update form action
                     const form = document.getElementById('returnForm');
@@ -1696,8 +1719,8 @@
                     // Isi form dengan data yang ada
                     document.getElementById('return_peminjam').value = peminjam;
                     document.getElementById('return_barang').value = barang;
-                    document.getElementById('return_tanggal_pinjam').value = formatDate(tanggalPinjam);
-                    document.getElementById('return_tanggal_jatuh_tempo').value = formatDate(tanggalJatuhTempo);
+                    document.getElementById('return_tanggal_pinjam').value = formatDate(tanggalPinjam) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
+                    document.getElementById('return_tanggal_jatuh_tempo').value = formatDate(tanggalJatuhTempo) + (waktuSelesai ? ' ' + formatTime(waktuSelesai) : '');
                 });
             }
 
@@ -1712,6 +1735,9 @@
                     const tanggalPinjam = button.getAttribute('data-tanggal-pinjam');
                     const tanggalJatuhTempo = button.getAttribute('data-tanggal-jatuh-tempo');
                     const tanggalKembali = button.getAttribute('data-tanggal-pengembalian');
+                    const waktuMulai = button.getAttribute('data-waktu-mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
+                    const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
                     const kondisi = button.getAttribute('data-kondisi');
                     const keterangan = button.getAttribute('data-keterangan');
                     const status = button.getAttribute('data-status');
@@ -1719,10 +1745,9 @@
                     // Isi data detail
                     document.getElementById('detail_peminjam').textContent = peminjam;
                     document.getElementById('detail_barang').textContent = barang;
-                    document.getElementById('detail_tanggal_pinjam').textContent = formatDate(tanggalPinjam);
-                    document.getElementById('detail_tanggal_jatuh_tempo').textContent = formatDate(tanggalJatuhTempo);
-                    document.getElementById('detail_tanggal_kembali').textContent = tanggalKembali ? formatDate(
-                        tanggalKembali) : '-';
+                    document.getElementById('detail_tanggal_pinjam').textContent = formatDate(tanggalPinjam) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
+                    document.getElementById('detail_tanggal_jatuh_tempo').textContent = formatDate(tanggalJatuhTempo) + (waktuSelesai ? ' ' + formatTime(waktuSelesai) : '');
+                    document.getElementById('detail_tanggal_kembali').textContent = tanggalKembali ? (formatDate(tanggalKembali) + (waktuPengembalian ? ' ' + formatTime(waktuPengembalian) : '')) : '-';
                     document.getElementById('detail_kondisi').textContent = kondisi || '-';
                     document.getElementById('detail_keterangan').textContent = keterangan || '-';
 
@@ -1804,6 +1829,22 @@
                     month: 'short',
                     year: 'numeric'
                 });
+            }
+
+            // Format waktu sederhana (HH:mm)
+            function formatTime(timeString) {
+                if (!timeString) return '-';
+                if (typeof timeString !== 'string') return String(timeString);
+                if (timeString.indexOf(':') > -1) {
+                    const parts = timeString.split(':');
+                    return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
+                }
+                try {
+                    const d = new Date(timeString);
+                    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                } catch (e) {
+                    return timeString;
+                }
             }
 
             // Tampilkan parameter filter yang aktif

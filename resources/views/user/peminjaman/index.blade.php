@@ -1469,7 +1469,7 @@
                                         <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                     @else
                                         @switch(true)
-                                            @case($isOngoing)
+                                            @case($peminjaman->status === 'disetujui' && $isOngoing)
                                                 <span class="badge status-badge status-berlangsung">
                                                     <span class="pulse-dot"></span>
                                                     <i class="fas fa-play-circle me-1"></i> Berlangsung
@@ -1995,6 +1995,10 @@
                 const end = new Date(y, m - 1, d, e.h, e.min, 59);
 
                 const isOngoing = now >= start && now <= end;
+
+                // Only update to 'Berlangsung' client-side when server status is 'disetujui'
+                const rowStatus = (row.getAttribute('data-status') || '').toLowerCase();
+                if (rowStatus !== 'disetujui') return;
 
                 // Prefer the status column badge to avoid overwriting the time-range badge
                 const badge = row.querySelector('.status-badge') || row.querySelector('span.badge');

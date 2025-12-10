@@ -1285,9 +1285,14 @@
                             </thead>
                             <tbody>
                                 @foreach($peminjamans as $p)
-                                    <tr class="table-row-highlight" 
-                                        data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}" 
-                                        data-tanggal="{{ $p->tanggal }}">
+                                    @php $isOngoing = $p->is_ongoing; @endphp
+                                    <tr class="table-row-highlight"
+                                        data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
+                                        data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                        data-tanggal-iso="{{ $p->tanggal }}"
+                                        data-waktu-mulai="{{ $p->display_waktu_mulai ?? ($p->waktu_mulai ?? '') }}"
+                                        data-waktu-selesai="{{ $p->display_waktu_selesai ?? ($p->waktu_selesai ?? '') }}"
+                                        data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
@@ -1299,7 +1304,7 @@
                                         </td>
                                         <td>
                                             <i class="fas fa-clock me-1 text-success"></i>
-                                            {{ $p->waktu_mulai ?? '08:00' }} - {{ $p->waktu_selesai ?? '17:00' }}
+                                            {{ $p->display_waktu_mulai ?? ($p->waktu_mulai ?? '08:00') }} - {{ $p->display_waktu_selesai ?? ($p->waktu_selesai ?? '17:00') }}
                                         </td>
                                         <td class="text-center">
                                             @if(isset($p->projector) && $p->projector)
@@ -1324,6 +1329,10 @@
                                                 data-id="{{ $p->id }}"
                                                 data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
                                                 data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                data-tanggal-iso="{{ $p->tanggal }}"
+                                                data-waktu-mulai="{{ $p->display_waktu_mulai ?? ($p->waktu_mulai ?? '') }}"
+                                                data-waktu-selesai="{{ $p->display_waktu_selesai ?? ($p->waktu_selesai ?? '') }}"
+                                                data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}"
                                                 data-projector-id="{{ $p->projector->id ?? $p->projector_id ?? '' }}"
                                                 data-projector-label="{{ isset($p->projector) && $p->projector ? ($p->projector->kode_proyektor . ' - ' . $p->projector->merk . ' ' . $p->projector->model) : ($p->proyektor ? 'Ya' : 'Tidak') }}"
                                                 data-proyektor="{{ $p->proyektor ? 'Ya' : 'Tidak' }}">
@@ -1649,6 +1658,36 @@
 
             buttons.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    // Prefer server-side flag, but allow client local-time check as fallback
+                    const isOngoingFlag = btn.dataset.isOngoing === 'true';
+                    const tanggalIso = btn.dataset.tanggalIso || btn.dataset.tanggal || '';
+                    const waktuMulai = btn.dataset.waktuMulai || '';
+                    const waktuSelesai = btn.dataset.waktuSelesai || '';
+
+                    let localOngoing = false;
+                    if (tanggalIso && waktuMulai && waktuSelesai) {
+                        try {
+                            const [y, m, d] = tanggalIso.split('-').map(Number);
+                            const parseTime = t => {
+                                const parts = (t || '').split(':').map(Number);
+                                return { h: parts[0] || 0, min: parts[1] || 0 };
+                            };
+                            const s = parseTime(waktuMulai);
+                            const e = parseTime(waktuSelesai);
+                            const start = new Date(y, m - 1, d, s.h, s.min, 0);
+                            const end = new Date(y, m - 1, d, e.h, e.min, 59);
+                            const now = new Date();
+                            localOngoing = now >= start && now <= end;
+                        } catch (err) {
+                            localOngoing = false;
+                        }
+                    }
+
+                    if (!(isOngoingFlag || localOngoing)) {
+                        alert('Pengembalian hanya dapat diajukan saat peminjaman sedang berlangsung.');
+                        return;
+                    }
+
                     document.getElementById('peminjaman_id').value = btn.dataset.id;
                     document.getElementById('modal-ruang').textContent = btn.dataset.ruang;
                     document.getElementById('modal-tanggal').textContent = btn.dataset.tanggal;
@@ -1661,6 +1700,7 @@
                     } else {
                         document.getElementById('proyektor-section').style.display = 'none';
                     }
+
                     // tanggal_pengembalian dicatat otomatis oleh server; tidak perlu diisi di klien
                     modal.show();
                 });

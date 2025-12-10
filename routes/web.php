@@ -222,6 +222,9 @@ Route::middleware(['auth', 'role:Administrator'])->prefix('admin')->group(functi
     Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
         Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
+        // Approve/reject pengembalian (admin)
+        Route::put('/{id}/approve', [AdminController::class, 'approvePengembalian'])->name('admin.pengembalian.approve');
+        Route::put('/{id}/reject', [AdminController::class, 'rejectPengembalian'])->name('admin.pengembalian.reject');
         Route::put('/{id}', [AdminController::class, 'updatePengembalian'])->name('admin.pengembalian.update');
         Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])
             ->name('admin.pengembalian.kembalikan');

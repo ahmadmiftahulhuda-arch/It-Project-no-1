@@ -1255,7 +1255,7 @@
                                     @if(in_array($pjStatus, ['overdue','terlambat']))
                                         <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                     @else
-                                        @if ($isOngoing)
+                                        @if ($peminjaman->status == 'disetujui' && $isOngoing)
                                             <span class="badge status-badge status-berlangsung">
                                                 <i class="fas fa-play-circle me-1"></i> Berlangsung
                                             </span>
@@ -1968,6 +1968,10 @@
                     const end = new Date(y, m - 1, d, e.h, e.min, 59);
 
                     const isOngoing = now >= start && now <= end;
+
+                    // Only switch to 'Berlangsung' client-side when server status is 'disetujui'
+                    const rowStatus = (row.getAttribute('data-status') || '').toLowerCase();
+                    if (rowStatus !== 'disetujui') return;
 
                     // Prefer the status column badge to avoid overwriting the time-range badge
                     const badge = row.querySelector('.status-badge') || row.querySelector('span.badge');
