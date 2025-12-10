@@ -871,640 +871,2074 @@
             }
         }
         
-        @media (max-width: 576px) {
-            .calendar th, 
-            .calendar td {
-                padding: 0.3rem 0.1rem;
-                font-size: 0.8rem;
-            }
-            
-            .day-number {
-                font-size: 0.8rem;
-            }
-            
-            .event {
-                display: none;
-            }
-            
-            .hero-section {
-                padding: 2.5rem 0;
-            }
-
-            .btn-warning {
-                width: 100%;
-                justify-content: center;
-                margin-top: 0.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="/home">
-                <!-- Logo TI yang diperbesar -->
-                <img src="/img/Logo_TI.png" alt="Logo TI">
-                PINTER
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menu tengah -->
-                <ul class="navbar-nav navbar-nav-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/home">
-                            <i class="fas fa-home me-1"></i> Beranda
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
-                            <span class="custom-arrow">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
-                            <li>
-                                <a class="dropdown-item-custom active" href="/kalender">
-                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-download me-2"></i> Download Kalender
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-clipboard-list me-1"></i> Peminjaman
-                            <span class="custom-arrow">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
-                            <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
-                                    <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
-                                    <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
-                                    <i class="fas fa-undo me-2"></i> Pengembalian
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
-                                    <i class="fas fa-history me-2"></i> Riwayat
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
-                                    <i class="fas fa-comment-dots me-2"></i> Feedback
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">
-                            <i class="fas fa-info-circle me-1"></i> Tentang
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Menu sebelah kanan (login/user) -->
-                <ul class="navbar-nav ms-auto">
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                 <i class="fas fa-user"></i> {{ Auth::user()->display_name }}
-                                <span class="custom-arrow">
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
-                                <li class="dropdown-header-custom">Masuk sebagai</li>
-                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->display_name }}</li>
-                                <li>
-                                    <hr class="dropdown-divider-custom">
-                                </li>
-                                <li>
-                                    <a class="dropdown-item-custom" href="{{ route('user.profile.index') }}">
-                                        <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item-custom" href="#">
-                                        <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item-custom" href="#">
-                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider-custom">
-                                </li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item-custom text-danger">
-                                            <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a href="{{ route('login') }}" class="btn-warning">
-                                <i class="fa-solid fa-right-to-bracket"></i> Login
-                            </a>
-                        </li>
-                    @endauth
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <section class="hero-section">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="display-4 fw-bold">Kalender Perkuliahan</h1>
-                <p class="lead">Lihat jadwal perkuliahan, ujian, dan kegiatan akademik Program Studi Teknologi Informasi</p>
-            </div>
-        </div>
-    </section>
-
-    <div class="container main-content">
-        <div class="page-header">
-            <h1 class="page-title"><i class="fa-solid fa-calendar-days"></i> Kalender Perkuliahan</h1>
-            <p class="page-description">Lihat jadwal perkuliahan, ujian, dan kegiatan akademik lainnya</p>
-        </div>
-
-        <div class="filter-section">
-            <h3 class="filter-title"><i class="fa-solid fa-filter"></i> Filter Jadwal</h3>
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label for="programFilter" class="form-label">Program Studi</label>
-                    <select class="form-select" id="programFilter">
-                        <option selected>Semua Program Studi</option>
-                        <option>Teknologi Informasi</option>
-                        <option>Sistem Informasi</option>
-                        <option>Informatika</option>
-                    </select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="monthFilter" class="form-label">Bulan</label>
-                    <select class="form-select" id="monthFilter">
-                        <option selected>September 2025</option>
-                        <option>Oktober 2025</option>
-                        <option>November 2025</option>
-                        <option>Desember 2025</option>
-                    </select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="eventTypeFilter" class="form-label">Jenis Kegiatan</label>
-                    <select class="form-select" id="eventTypeFilter">
-                        <option selected>Semua Kegiatan</option>
-                        <option>Perkuliahan</option>
-                        <option>Praktikum</option>
-                        <option>Ujian</option>
-                        <option>Rapat</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <div class="month-navigation">
-                    <button class="btn btn-outline-primary">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                    <h2 class="month-title">September 2025</h2>
-                    <button class="btn btn-outline-primary">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="calendar-controls">
-                    <button class="btn btn-outline-primary">
-                        <i class="fa-solid fa-download"></i> Unduh
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="fa-solid fa-print"></i> Cetak
-                    </button>
-                </div>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="calendar table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Senin</th>
-                            <th>Selasa</th>
-                            <th>Rabu</th>
-                            <th>Kamis</th>
-                            <th>Jumat</th>
-                            <th>Sabtu</th>
-                            <th>Minggu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="day-number">1</span>
-                            </td>
-                            <td>
-                                <span class="day-number">2</span>
-                            </td>
-                            <td>
-                                <span class="day-number">3</span>
-                                <span class="event lecture">Pemrograman Web (08:00)</span>
-                                <span class="event lab">Praktikum Jaringan (13:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">4</span>
-                                <span class="event lecture">Basis Data (10:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">5</span>
-                                <span class="event meeting">Rapat Dosen (14:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">6</span>
-                            </td>
-                            <td>
-                                <span class="day-number">7</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="day-number">8</span>
-                                <span class="event lecture">Sistem Operasi (09:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">9</span>
-                                <span class="event exam">UTS - Algoritma (10:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">10</span>
-                                <span class="event lecture">Pemrograman Web (08:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">11</span>
-                                <span class="event lecture">Basis Data (10:00)</span>
-                                <span class="event lab">Praktikum Mobile (13:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">12</span>
-                            </td>
-                            <td>
-                                <span class="day-number">13</span>
-                                <span class="event lecture">Kuliah Umum (09:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">14</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="day-number">15</span>
-                                <span class="event lecture">Sistem Operasi (09:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">16</span>
-                                <span class="event lecture">Jaringan Komputer (11:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">17</span>
-                                <span class="event lecture">Pemrograman Web (08:00)</span>
-                                <span class="event lab">Praktikum Jaringan (13:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">18</span>
-                                <span class="event lecture">Basis Data (10:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">19</span>
-                                <span class="event exam">UAS - Matematika (08:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">20</span>
-                            </td>
-                            <td>
-                                <span class="day-number">21</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="day-number">22</span>
-                                <span class="event lecture">Sistem Operasi (09:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">23</span>
-                                <span class="event lecture">Jaringan Komputer (11:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">24</span>
-                                <span class="event lecture">Pemrograman Web (08:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">25</span>
-                                <span class="event lecture">Basis Data (10:00)</span>
-                                <span class="event lab">Praktikum Mobile (13:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">26</span>
-                                <span class="event exam">UAS - Pemrograman (08:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">27</span>
-                            </td>
-                            <td>
-                                <span class="day-number">28</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="day-number">29</span>
-                                <span class="event lecture">Sistem Operasi (09:00)</span>
-                            </td>
-                            <td>
-                                <span class="day-number">30</span>
-                                <span class="event lecture">Jaringan Komputer (11:00)</span>
-                                <span class="event meeting">Seminar TA (14:00)</span>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color lecture-color"></div>
-                    <span>Perkuliahan</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color lab-color"></div>
-                    <span>Praktikum/Lab</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color exam-color"></div>
-                    <span>Ujian</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color meeting-color"></div>
-                    <span>Rapat/Seminar</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="schedule-list">
-            <h3 class="mb-4"><i class="fa-solid fa-list"></i> Daftar Kegiatan Bulan September 2025</h3>
-            
-            <div class="schedule-item">
-                <div class="schedule-date">
-                    <div class="schedule-day">3</div>
-                    <div class="schedule-month">Sep</div>
-                </div>
-                <div class="schedule-details">
-                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 08:00 - 10:00</div>
-                    <h4 class="schedule-title">Pemrograman Web</h4>
-                    <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Ruang Kelas A, Gedung TI</div>
-                    <span class="schedule-type type-lecture">Perkuliahan</span>
-                </div>
-            </div>
-            
-            <div class="schedule-item">
-                <div class="schedule-date">
-                    <div class="schedule-day">3</div>
-                    <div class="schedule-month">Sep</div>
-                </div>
-                <div class="schedule-details">
-                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 13:00 - 15:00</div>
-                    <h4 class="schedule-title">Praktikum Jaringan Komputer</h4>
-                    <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Lab Jaringan, Gedung TI</div>
-                    <span class="schedule-type type-lab">Praktikum</span>
-                </div>
-            </div>
-            
-            <div class="schedule-item">
-                <div class="schedule-date">
-                    <div class="schedule-day">4</div>
-                    <div class="schedule-month">Sep</div>
-                </div>
-                <div class="schedule-details">
-                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 10:00 - 12:00</div>
-                    <h4 class="schedule-title">Basis Data</h4>
-                    <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Ruang Kelas B, Gedung TI</div>
-                    <span class="schedule-type type-lecture">Perkuliahan</span>
-                </div>
-            </div>
-            
-            <div class="schedule-item">
-                <div class="schedule-date">
-                    <div class="schedule-day">9</div>
-                    <div class="schedule-month">Sep</div>
-                </div>
-                <div class="schedule-details">
-                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 10:00 - 12:00</div>
-                    <h4 class="schedule-title">Ujian Tengah Semester - Algoritma</h4>
-                    <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Ruang Ujian 1, Gedung TI</div>
-                    <span class="schedule-type type-exam">Ujian</span>
-                </div>
-            </div>
-            
-            <div class="schedule-item">
-                <div class="schedule-date">
-                    <div class="schedule-day">13</div>
-                    <div class="schedule-month">Sep</div>
-                </div>
-                <div class="schedule-details">
-                    <div class="schedule-time"><i class="fa-regular fa-clock"></i> 09:00 - 11:00</div>
-                    <h4 class="schedule-title">Kuliah Umum: Tren Teknologi Terkini</h4>
-                    <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Auditorium, Gedung Utama</div>
-                    <span class="schedule-type type-lecture">Kuliah Umum</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="fas fa-arrow-up"></i>
-    </a>
-
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Link Cepat</h3>
-                <ul class="footer-links">
-                    <li><a href="/home">Beranda</a></li>
-                    <li><a href="/kalender">Kalender Perkuliahan</a></li>
-                    <li><a href="/about">Tentang</a></li>
-                    <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
-                    <li><a href="/faq">FAQ</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Kontak Kami</h3>
-                <div class="contact-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
-                </div>
-                <div class="contact-info">
-                    <i class="fas fa-phone"></i>
-                    <span>(0512) 2021065</span>
-                </div>
-                <div class="contact-info">
-                    <i class="fas fa-envelope"></i>
-                    <span>peminjaman@example.ac.id</span>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Jam Operasional</h3>
-                <div class="opening-hours">
-                    <div>
-                        <span>Senin - Kamis:</span>
-                        <span>08:00 - 16:00</span>
-                    </div>
-                    <div>
-                        <span>Jumat:</span>
-                        <span>08:00 - 16:00</span>
-                    </div>
-                    <div>
-                        <span>Sabtu & Minggu:</span>
-                        <span>Tutup</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Back to top button functionality
-        const backToTopButton = document.getElementById('backToTop');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-        
-        backToTopButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        
-        // Navbar scroll effect
-        const navbar = document.getElementById('navbar');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // ===== DROPDOWN ANIMATION =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Handle dropdown toggle animation
-            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
-            dropdownToggles.forEach(toggle => {
-                toggle.addEventListener('click', function() {
-                    // Close other open dropdowns
-                    dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
-                            otherToggle.classList.remove('show');
-                            const otherMenu = otherToggle.nextElementSibling;
-                            if (otherMenu && otherMenu.classList.contains('show')) {
-                                otherMenu.classList.remove('show');
-                            }
-                        }
-                    });
-                });
-            });
-            
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
-                    openDropdowns.forEach(element => {
-                        element.classList.remove('show');
-                    });
-                }
-            });
-        });
-        
-        // Animation on scroll
-        const animateOnScroll = () => {
-            const elements = document.querySelectorAll('.filter-section, .calendar-container, .schedule-list, .schedule-item');
-            
-            elements.forEach(element => {
-                const elementPosition = element.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.3;
                 
-                if (elementPosition < screenPosition) {
-                    element.style.opacity = 1;
-                    element.style.transform = 'translateY(0)';
+        
+                @media (max-width: 576px) {
+        
+                    .calendar th, 
+        
+                    .calendar td {
+        
+                        padding: 0.3rem 0.1rem;
+        
+                        font-size: 0.8rem;
+        
+                    }
+        
+                    
+        
+                    .day-number {
+        
+                        font-size: 0.8rem;
+        
+                    }
+        
+                    
+        
+                    .event {
+        
+                        display: none;
+        
+                    }
+        
+                    
+        
+                    .hero-section {
+        
+                        padding: 2.5rem 0;
+        
+                    }
+        
+        
+        
+                    .btn-warning {
+        
+                        width: 100%;
+        
+                        justify-content: center;
+        
+                        margin-top: 0.5rem;
+        
+                    }
+        
                 }
-            });
-        };
         
-        // Initialize elements for animation
-        document.querySelectorAll('.filter-section, .calendar-container, .schedule-list, .schedule-item').forEach(element => {
-            element.style.opacity = 0;
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        });
+            /* ===== ENHANCED ERROR POPUP STYLES ===== */
         
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
-    </script>
-</body>
-</html>
+                .error-modal .modal-content {
+        
+                    border-radius: 16px;
+        
+                    border: none;
+        
+                    overflow: hidden;
+        
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        
+                    animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        
+                }
+        
+        
+        
+                @keyframes modalAppear {
+        
+                    from {
+        
+                        opacity: 0;
+        
+                        transform: scale(0.8) translateY(20px);
+        
+                    }
+        
+                    to {
+        
+                        opacity: 1;
+        
+                        transform: scale(1) translateY(0);
+        
+                    }
+        
+                }
+        
+        
+        
+                .error-modal .modal-header {
+        
+                    background: linear-gradient(135deg, #dc3545, #c82333);
+        
+                    color: white;
+        
+                    padding: 1.5rem 2rem;
+        
+                    border-bottom: none;
+        
+                    position: relative;
+        
+                }
+        
+        
+        
+                .error-modal .modal-header::after {
+        
+                    content: '';
+        
+                    position: absolute;
+        
+                    bottom: 0;
+        
+                    left: 5%;
+        
+                    width: 90%;
+        
+                    height: 1px;
+        
+                    background: rgba(255, 255, 255, 0.2);
+        
+                }
+        
+        
+        
+                .error-modal .modal-title {
+        
+                    font-size: 1.4rem;
+        
+                    font-weight: 700;
+        
+                    display: flex;
+        
+                    align-items: center;
+        
+                    gap: 12px;
+        
+                }
+        
+        
+        
+                .error-modal .modal-title i {
+        
+                    font-size: 1.6rem;
+        
+                    animation: pulse 2s infinite;
+        
+                }
+        
+        
+        
+                @keyframes pulse {
+        
+                    0% { transform: scale(1); }
+        
+                    50% { transform: scale(1.1); }
+        
+                    100% { transform: scale(1); }
+        
+                }
+        
+        
+        
+                .error-modal .modal-body {
+        
+                    padding: 2.5rem 2rem;
+        
+                    font-size: 1.1rem;
+        
+                    line-height: 1.7;
+        
+                    color: #495057;
+        
+                    text-align: center;
+        
+                }
+        
+        
+        
+                .error-modal .error-icon-container {
+        
+                    margin-bottom: 1.5rem;
+        
+                }
+        
+        
+        
+                .error-modal .error-icon {
+        
+                    font-size: 4rem;
+        
+                    color: #dc3545;
+        
+                    margin-bottom: 1rem;
+        
+                    display: inline-block;
+        
+                    animation: shake 0.5s ease;
+        
+                }
+        
+        
+        
+                @keyframes shake {
+        
+                    0%, 100% { transform: translateX(0); }
+        
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+        
+                }
+        
+        
+        
+                .error-modal .error-message {
+        
+                    background: linear-gradient(135deg, #fff5f5, #ffeaea);
+        
+                    border-left: 4px solid #dc3545;
+        
+                    padding: 1.2rem;
+        
+                    border-radius: 8px;
+        
+                    margin-bottom: 1.5rem;
+        
+                    text-align: left;
+        
+                    font-weight: 500;
+        
+                }
+        
+        
+        
+                .error-modal .error-suggestion {
+        
+                    background-color: #f8f9fa;
+        
+                    padding: 1rem;
+        
+                    border-radius: 8px;
+        
+                    margin-top: 1.5rem;
+        
+                    font-size: 0.95rem;
+        
+                    color: #6c757d;
+        
+                    border-left: 3px solid var(--primary-color);
+        
+                }
+        
+        
+        
+                .error-modal .modal-footer {
+        
+                    border-top: none;
+        
+                    padding: 1.5rem 2rem;
+        
+                    background-color: #f8f9fa;
+        
+                    display: flex;
+        
+                    justify-content: center;
+        
+                    gap: 1rem;
+        
+                }
+        
+        
+        
+                .error-modal .btn-error {
+        
+                    padding: 0.75rem 2rem;
+        
+                    border-radius: 8px;
+        
+                    font-weight: 600;
+        
+                    transition: all 0.3s ease;
+        
+                    display: flex;
+        
+                    align-items: center;
+        
+                    gap: 8px;
+        
+                    border: none;
+        
+                    min-width: 140px;
+        
+                    justify-content: center;
+        
+                }
+        
+        
+        
+                .error-modal .btn-error-primary {
+        
+                    background: linear-gradient(135deg, #dc3545, #c82333);
+        
+                    color: white;
+        
+                    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        
+                }
+        
+        
+        
+                .error-modal .btn-error-primary:hover {
+        
+                    background: linear-gradient(135deg, #c82333, #bd2130);
+        
+                    transform: translateY(-2px);
+        
+                    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        
+                }
+        
+        
+        
+                .error-modal .btn-error-secondary {
+        
+                    background-color: #6c757d;
+        
+                    color: white;
+        
+                    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+        
+                }
+        
+        
+        
+                .error-modal .btn-error-secondary:hover {
+        
+                    background-color: #5a6268;
+        
+                    transform: translateY(-2px);
+        
+                    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+        
+                }
+        
+        
+        
+                .error-modal .btn-error-outline {
+        
+                    background-color: transparent;
+        
+                    color: #dc3545;
+        
+                    border: 2px solid #dc3545;
+        
+                }
+        
+        
+        
+                .error-modal .btn-error-outline:hover {
+        
+                    background-color: #dc3545;
+        
+                    color: white;
+        
+                    transform: translateY(-2px);
+        
+                }
+        
+        
+        
+                /* Responsive adjustments for error modal */
+        
+                @media (max-width: 576px) {
+        
+                    .error-modal .modal-dialog {
+        
+                        margin: 1rem;
+        
+                    }
+        
+        
+        
+                    .error-modal .modal-header,
+        
+                    .error-modal .modal-body,
+        
+                    .error-modal .modal-footer {
+        
+                        padding: 1.25rem;
+        
+                    }
+        
+        
+        
+                    .error-modal .modal-title {
+        
+                        font-size: 1.2rem;
+        
+                    }
+        
+        
+        
+                    .error-modal .error-icon {
+        
+                        font-size: 3rem;
+        
+                    }
+        
+        
+        
+                    .error-modal .modal-footer {
+        
+                        flex-direction: column;
+        
+                    }
+        
+        
+        
+                    .error-modal .btn-error {
+        
+                        width: 100%;
+        
+                    }
+        
+                }
+        
+        
+        
+                /* Auto-hide notification for non-critical errors */
+        
+                .error-toast {
+        
+                    position: fixed;
+        
+                    top: 100px;
+        
+                    right: 20px;
+        
+                    z-index: 9999;
+        
+                    min-width: 300px;
+        
+                    max-width: 400px;
+        
+                    background: white;
+        
+                    border-radius: 12px;
+        
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        
+                    overflow: hidden;
+        
+                    animation: slideInRight 0.5s ease, fadeOut 0.5s ease 4.5s forwards;
+        
+                    border-left: 4px solid #dc3545;
+        
+                }
+        
+        
+        
+                @keyframes slideInRight {
+        
+                    from {
+        
+                        transform: translateX(100%);
+        
+                        opacity: 0;
+        
+                    }
+        
+                    to {
+        
+                        transform: translateX(0);
+        
+                        opacity: 1;
+        
+                    }
+        
+                }
+        
+        
+        
+                @keyframes fadeOut {
+        
+                    to {
+        
+                        opacity: 0;
+        
+                        transform: translateX(100%);
+        
+                    }
+        
+                }
+        
+        
+        
+                .error-toast .toast-header {
+        
+                    background: linear-gradient(135deg, #dc3545, #c82333);
+        
+                    color: white;
+        
+                    padding: 1rem 1.25rem;
+        
+                    border-bottom: none;
+        
+                }
+        
+        
+        
+                .error-toast .toast-body {
+        
+                    padding: 1.25rem;
+        
+                    color: #495057;
+        
+                }
+        
+        
+        
+                /* Success modal for positive feedback */
+        
+                .success-modal .modal-header {
+        
+                    background: linear-gradient(135deg, #28a745, #218838);
+        
+                }
+        
+        
+        
+                .success-modal .btn-error-primary {
+        
+                    background: linear-gradient(135deg, #28a745, #218838);
+        
+                    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        
+                }
+        
+        
+        
+                .success-modal .btn-error-primary:hover {
+        
+                    background: linear-gradient(135deg, #218838, #1e7e34);
+        
+                    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        
+                }
+        
+            </style>
+        
+        </head>
+        
+        <body>
+        
+            <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
+        
+            <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
+        
+                <div class="container">
+        
+                    <a class="navbar-brand" href="/home">
+        
+                        <!-- Logo TI yang diperbesar -->
+        
+                        <img src="/img/Logo_TI.png" alt="Logo TI">
+        
+                        PINTER
+        
+                    </a>
+        
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        
+                        <span class="navbar-toggler-icon"></span>
+        
+                    </button>
+        
+                    <div class="collapse navbar-collapse" id="navbarNav">
+        
+                        <!-- Menu tengah -->
+        
+                        <ul class="navbar-nav navbar-nav-center">
+        
+                            <li class="nav-item">
+        
+                                <a class="nav-link" href="/home">
+        
+                                    <i class="fas fa-home me-1"></i> Beranda
+        
+                                </a>
+        
+                            </li>
+        
+                            <li class="nav-item dropdown">
+        
+                                <a class="nav-link dropdown-toggle" href="#" id="kalenderDropdown" role="button"
+        
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+        
+                                    <i class="fas fa-calendar-alt me-1"></i> Kalender Perkuliahan
+        
+                                    <span class="custom-arrow">
+        
+                                        <i class="fa-solid fa-chevron-down"></i>
+        
+                                    </span>
+        
+                                </a>
+        
+                                <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom active" href="/kalender">
+        
+                                            <i class="fas fa-calendar me-2"></i> Kalender Akademik
+        
+                                        </a>
+        
+                                    </li>
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="#">
+        
+                                            <i class="fas fa-clock me-2"></i> Jadwal Kuliah
+        
+                                        </a>
+        
+                                    </li>
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="#">
+        
+                                            <i class="fas fa-download me-2"></i> Download Kalender
+        
+                                        </a>
+        
+                                    </li>
+        
+                                </ul>
+        
+                            </li>
+        
+                            <li class="nav-item dropdown">
+        
+                                <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
+        
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+        
+                                    <i class="fas fa-clipboard-list me-1"></i> Peminjaman
+        
+                                    <span class="custom-arrow">
+        
+                                        <i class="fa-solid fa-chevron-down"></i>
+        
+                                    </span>
+        
+                                </a>
+        
+                                <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="peminjamanDropdown">
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="{{ route('user.peminjaman.index') }}">
+        
+                                            <i class="fas fa-clipboard-list me-2"></i> Daftar Peminjaman
+        
+                                        </a>
+        
+                                    </li>
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="{{ route('user.peminjaman.create') }}">
+        
+                                            <i class="fas fa-plus-circle me-2"></i> Tambah Peminjaman
+        
+                                        </a>
+        
+                                    </li>
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="{{ route('user.pengembalian.index') }}">
+        
+                                            <i class="fas fa-undo me-2"></i> Pengembalian
+        
+                                        </a>
+        
+                                    </li>
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="{{ route('user.peminjaman.riwayat') }}">
+        
+                                            <i class="fas fa-history me-2"></i> Riwayat
+        
+                                        </a>
+        
+                                    </li>
+        
+                                    <li>
+        
+                                        <a class="dropdown-item-custom" href="{{ route('user.feedback.create') }}">
+        
+                                            <i class="fas fa-comment-dots me-2"></i> Feedback
+        
+                                        </a>
+        
+                                    </li>
+        
+                                </ul>
+        
+                            </li>
+        
+                            <li class="nav-item">
+        
+                                <a class="nav-link" href="/about">
+        
+                                    <i class="fas fa-info-circle me-1"></i> Tentang
+        
+                                </a>
+        
+                            </li>
+        
+                        </ul>
+        
+        
+        
+                        <!-- Menu sebelah kanan (login/user) -->
+        
+                        <ul class="navbar-nav ms-auto">
+        
+                            @auth
+        
+                                <li class="nav-item dropdown">
+        
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+        
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+        
+                                         <i class="fas fa-user"></i> {{ Auth::user()->display_name }}
+        
+                                        <span class="custom-arrow">
+        
+                                            <i class="fa-solid fa-chevron-down"></i>
+        
+                                        </span>
+        
+                                    </a>
+        
+                                    <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+        
+                                        <li class="dropdown-header-custom">Masuk sebagai</li>
+        
+                                        <li class="dropdown-header-custom fw-bold">{{ Auth::user()->display_name }}</li>
+        
+                                        <li>
+        
+                                            <hr class="dropdown-divider-custom">
+        
+                                        </li>
+        
+                                        <li>
+        
+                                            <a class="dropdown-item-custom" href="{{ route('user.profile.index') }}">
+        
+                                                <i class="fas fa-user fa-fw me-2"></i> Pengaturan Profil
+        
+                                            </a>
+        
+                                        </li>
+        
+                                        <li>
+        
+                                            <a class="dropdown-item-custom" href="#">
+        
+                                                <i class="fas fa-history fa-fw me-2"></i> Riwayat Peminjaman
+        
+                                            </a>
+        
+                                        </li>
+        
+                                        <li>
+        
+                                            <a class="dropdown-item-custom" href="#">
+        
+                                                <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
+        
+                                            </a>
+        
+                                        </li>
+        
+                                        <li>
+        
+                                            <hr class="dropdown-divider-custom">
+        
+                                        </li>
+        
+                                        <li>
+        
+                                            <form method="POST" action="{{ route('logout') }}">
+        
+                                                @csrf
+        
+                                                <button type="submit" class="dropdown-item-custom text-danger">
+        
+                                                    <i class="fas fa-sign-out-alt fa-fw me-2"></i> Logout
+        
+                                                </button>
+        
+                                            </form>
+        
+                                        </li>
+        
+                                    </ul>
+        
+                                </li>
+        
+                            @else
+        
+                                <li class="nav-item">
+        
+                                    <a href="{{ route('login') }}" class="btn-warning">
+        
+                                        <i class="fa-solid fa-right-to-bracket"></i> Login
+        
+                                    </a>
+        
+                                </li>
+        
+                            @endauth
+        
+                        </ul>
+        
+                    </div>
+        
+                </div>
+        
+            </nav>
+        
+        
+        
+            <section class="hero-section">
+        
+                <div class="container">
+        
+                    <div class="hero-content">
+        
+                        <h1 class="display-4 fw-bold">Kalender Perkuliahan</h1>
+        
+                        <p class="lead">Lihat jadwal perkuliahan, ujian, dan kegiatan akademik Program Studi Teknologi Informasi</p>
+        
+                    </div>
+        
+                </div>
+        
+            </section>
+        
+        
+        
+            <div class="container main-content">
+        
+                <div class="page-header">
+        
+                    <h1 class="page-title"><i class="fa-solid fa-calendar-days"></i> Kalender Perkuliahan</h1>
+        
+                    <p class="page-description">Lihat jadwal perkuliahan, ujian, dan kegiatan akademik lainnya</p>
+        
+                </div>
+        
+        
+        
+                <div class="filter-section">
+        
+                    <h3 class="filter-title"><i class="fa-solid fa-filter"></i> Filter Jadwal</h3>
+        
+                    <div class="row">
+        
+                        <div class="col-md-4 mb-3">
+        
+                            <label for="programFilter" class="form-label">Program Studi</label>
+        
+                            <select class="form-select" id="programFilter">
+        
+                                <option selected>Semua Program Studi</option>
+        
+                                <option>Teknologi Informasi</option>
+        
+                                <option>Sistem Informasi</option>
+        
+                                <option>Informatika</option>
+        
+                            </select>
+        
+                        </div>
+        
+                        <div class="col-md-4 mb-3">
+        
+                            <label for="monthFilter" class="form-label">Bulan</label>
+        
+                            <select class="form-select" id="monthFilter">
+        
+                                <option selected>September 2025</option>
+        
+                                <option>Oktober 2025</option>
+        
+                                <option>November 2025</option>
+        
+                                <option>Desember 2025</option>
+        
+                            </select>
+        
+                        </div>
+        
+                        <div class="col-md-4 mb-3">
+        
+                            <label for="eventTypeFilter" class="form-label">Jenis Kegiatan</label>
+        
+                            <select class="form-select" id="eventTypeFilter">
+        
+                                <option selected>Semua Kegiatan</option>
+        
+                                <option>Perkuliahan</option>
+        
+                                <option>Praktikum</option>
+        
+                                <option>Ujian</option>
+        
+                                <option>Rapat</option>
+        
+                            </select>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+        
+        
+                <div class="calendar-container">
+        
+                    <div class="calendar-header">
+        
+                        <div class="month-navigation">
+        
+                            <button class="btn btn-outline-primary">
+        
+                                <i class="fa-solid fa-chevron-left"></i>
+        
+                            </button>
+        
+                            <h2 class="month-title">September 2025</h2>
+        
+                            <button class="btn btn-outline-primary">
+        
+                                <i class="fa-solid fa-chevron-right"></i>
+        
+                            </button>
+        
+                        </div>
+        
+                        <div class="calendar-controls">
+        
+                            <button class="btn btn-outline-primary">
+        
+                                <i class="fa-solid fa-download"></i> Unduh
+        
+                            </button>
+        
+                            <button class="btn btn-primary">
+        
+                                <i class="fa-solid fa-print"></i> Cetak
+        
+                            </button>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="table-responsive">
+        
+                        <table class="calendar table table-bordered">
+        
+                            <thead>
+        
+                                <tr>
+        
+                                    <th>Senin</th>
+        
+                                    <th>Selasa</th>
+        
+                                    <th>Rabu</th>
+        
+                                    <th>Kamis</th>
+        
+                                    <th>Jumat</th>
+        
+                                    <th>Sabtu</th>
+        
+                                    <th>Minggu</th>
+        
+                                </tr>
+        
+                            </thead>
+        
+                            <tbody>
+        
+                                <tr>
+        
+                                    <td>
+        
+                                        <span class="day-number">1</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">2</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">3</span>
+        
+                                        <span class="event lecture">Pemrograman Web (08:00)</span>
+        
+                                        <span class="event lab">Praktikum Jaringan (13:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">4</span>
+        
+                                        <span class="event lecture">Basis Data (10:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">5</span>
+        
+                                        <span class="event meeting">Rapat Dosen (14:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">6</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">7</span>
+        
+                                    </td>
+        
+                                </tr>
+        
+                                <tr>
+        
+                                    <td>
+        
+                                        <span class="day-number">8</span>
+        
+                                        <span class="event lecture">Sistem Operasi (09:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">9</span>
+        
+                                        <span class="event exam">UTS - Algoritma (10:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">10</span>
+        
+                                        <span class="event lecture">Pemrograman Web (08:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">11</span>
+        
+                                        <span class="event lecture">Basis Data (10:00)</span>
+        
+                                        <span class="event lab">Praktikum Mobile (13:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">12</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">13</span>
+        
+                                        <span class="event lecture">Kuliah Umum (09:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">14</span>
+        
+                                    </td>
+        
+                                </tr>
+        
+                                <tr>
+        
+                                    <td>
+        
+                                        <span class="day-number">15</span>
+        
+                                        <span class="event lecture">Sistem Operasi (09:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">16</span>
+        
+                                        <span class="event lecture">Jaringan Komputer (11:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">17</span>
+        
+                                        <span class="event lecture">Pemrograman Web (08:00)</span>
+        
+                                        <span class="event lab">Praktikum Jaringan (13:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">18</span>
+        
+                                        <span class="event lecture">Basis Data (10:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">19</span>
+        
+                                        <span class="event exam">UAS - Matematika (08:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">20</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">21</span>
+        
+                                    </td>
+        
+                                </tr>
+        
+                                <tr>
+        
+                                    <td>
+        
+                                        <span class="day-number">22</span>
+        
+                                        <span class="event lecture">Sistem Operasi (09:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">23</span>
+        
+                                        <span class="event lecture">Jaringan Komputer (11:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">24</span>
+        
+                                        <span class="event lecture">Pemrograman Web (08:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">25</span>
+        
+                                        <span class="event lecture">Basis Data (10:00)</span>
+        
+                                        <span class="event lab">Praktikum Mobile (13:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">26</span>
+        
+                                        <span class="event exam">UAS - Pemrograman (08:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">27</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">28</span>
+        
+                                    </td>
+        
+                                </tr>
+        
+                                <tr>
+        
+                                    <td>
+        
+                                        <span class="day-number">29</span>
+        
+                                        <span class="event lecture">Sistem Operasi (09:00)</span>
+        
+                                    </td>
+        
+                                    <td>
+        
+                                        <span class="day-number">30</span>
+        
+                                        <span class="event lecture">Jaringan Komputer (11:00)</span>
+        
+                                        <span class="event meeting">Seminar TA (14:00)</span>
+        
+                                    </td>
+        
+                                    <td></td>
+        
+                                    <td></td>
+        
+                                    <td></td>
+        
+                                    <td></td>
+        
+                                    <td></td>
+        
+                                </tr>
+        
+                            </tbody>
+        
+                        </table>
+        
+                    </div>
+        
+                    
+        
+                    <div class="legend">
+        
+                        <div class="legend-item">
+        
+                            <div class="legend-color lecture-color"></div>
+        
+                            <span>Perkuliahan</span>
+        
+                        </div>
+        
+                        <div class="legend-item">
+        
+                            <div class="legend-color lab-color"></div>
+        
+                            <span>Praktikum/Lab</span>
+        
+                        </div>
+        
+                        <div class="legend-item">
+        
+                            <div class="legend-color exam-color"></div>
+        
+                            <span>Ujian</span>
+        
+                        </div>
+        
+                        <div class="legend-item">
+        
+                            <div class="legend-color meeting-color"></div>
+        
+                            <span>Rapat/Seminar</span>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+        
+        
+                <div class="schedule-list">
+        
+                    <h3 class="mb-4"><i class="fa-solid fa-list"></i> Daftar Kegiatan Bulan September 2025</h3>
+        
+                    
+        
+                    <div class="schedule-item">
+        
+                        <div class="schedule-date">
+        
+                            <div class="schedule-day">3</div>
+        
+                            <div class="schedule-month">Sep</div>
+        
+                        </div>
+        
+                        <div class="schedule-details">
+        
+                            <div class="schedule-time"><i class="fa-regular fa-clock"></i> 08:00 - 10:00</div>
+        
+                            <h4 class="schedule-title">Pemrograman Web</h4>
+        
+                            <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Ruang Kelas A, Gedung TI</div>
+        
+                            <span class="schedule-type type-lecture">Perkuliahan</span>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="schedule-item">
+        
+                        <div class="schedule-date">
+        
+                            <div class="schedule-day">3</div>
+        
+                            <div class="schedule-month">Sep</div>
+        
+                        </div>
+        
+                        <div class="schedule-details">
+        
+                            <div class="schedule-time"><i class="fa-regular fa-clock"></i> 13:00 - 15:00</div>
+        
+                            <h4 class="schedule-title">Praktikum Jaringan Komputer</h4>
+        
+                            <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Lab Jaringan, Gedung TI</div>
+        
+                            <span class="schedule-type type-lab">Praktikum</span>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="schedule-item">
+        
+                        <div class="schedule-date">
+        
+                            <div class="schedule-day">4</div>
+        
+                            <div class="schedule-month">Sep</div>
+        
+                        </div>
+        
+                        <div class="schedule-details">
+        
+                            <div class="schedule-time"><i class="fa-regular fa-clock"></i> 10:00 - 12:00</div>
+        
+                            <h4 class="schedule-title">Basis Data</h4>
+        
+                            <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Ruang Kelas B, Gedung TI</div>
+        
+                            <span class="schedule-type type-lecture">Perkuliahan</span>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="schedule-item">
+        
+                        <div class="schedule-date">
+        
+                            <div class="schedule-day">9</div>
+        
+                            <div class="schedule-month">Sep</div>
+        
+                        </div>
+        
+                        <div class="schedule-details">
+        
+                            <div class="schedule-time"><i class="fa-regular fa-clock"></i> 10:00 - 12:00</div>
+        
+                            <h4 class="schedule-title">Ujian Tengah Semester - Algoritma</h4>
+        
+                            <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Ruang Ujian 1, Gedung TI</div>
+        
+                            <span class="schedule-type type-exam">Ujian</span>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="schedule-item">
+        
+                        <div class="schedule-date">
+        
+                            <div class="schedule-day">13</div>
+        
+                            <div class="schedule-month">Sep</div>
+        
+                        </div>
+        
+                        <div class="schedule-details">
+        
+                            <div class="schedule-time"><i class="fa-regular fa-clock"></i> 09:00 - 11:00</div>
+        
+                            <h4 class="schedule-title">Kuliah Umum: Tren Teknologi Terkini</h4>
+        
+                            <div class="schedule-location"><i class="fa-solid fa-location-dot"></i> Auditorium, Gedung Utama</div>
+        
+                            <span class="schedule-type type-lecture">Kuliah Umum</span>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+            </div>
+        
+        
+        
+            <a href="#" class="back-to-top" id="backToTop">
+        
+                <i class="fas fa-arrow-up"></i>
+        
+            </a>
+        
+        
+        
+            <footer class="footer">
+        
+                <div class="footer-container">
+        
+                    <div class="footer-section">
+        
+                        <h3>Tentang Kami</h3>
+        
+                        <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
+        
+                        <div class="social-icons">
+        
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+        
+                            <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+        
+                            <a href="#"><i class="fab fa-whatsapp"></i></a>
+        
+                            <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="footer-section">
+        
+                        <h3>Link Cepat</h3>
+        
+                        <ul class="footer-links">
+        
+                            <li><a href="/home">Beranda</a></li>
+        
+                            <li><a href="/kalender">Kalender Perkuliahan</a></li>
+        
+                            <li><a href="/about">Tentang</a></li>
+        
+                            <li><a href="/syaratdanketentuan">Syarat & Ketentuan</a></li>
+        
+                            <li><a href="/faq">FAQ</a></li>
+        
+                        </ul>
+        
+                    </div>
+        
+                    
+        
+                    <div class="footer-section">
+        
+                        <h3>Kontak Kami</h3>
+        
+                        <div class="contact-info">
+        
+                            <i class="fas fa-map-marker-alt"></i>
+        
+                            <span>Jl. Ahmad Yani No.Km.06, Kec. Pelaihari, Kabupaten Tanah Laut, Kalimantan Selatan</span>
+        
+                        </div>
+        
+                        <div class="contact-info">
+        
+                            <i class="fas fa-phone"></i>
+        
+                            <span>(0512) 2021065</span>
+        
+                        </div>
+        
+                        <div class="contact-info">
+        
+                            <i class="fas fa-envelope"></i>
+        
+                            <span>peminjaman@example.ac.id</span>
+        
+                        </div>
+        
+                    </div>
+        
+                    
+        
+                    <div class="footer-section">
+        
+                        <h3>Jam Operasional</h3>
+        
+                        <div class="opening-hours">
+        
+                            <div>
+        
+                                <span>Senin - Kamis:</span>
+        
+                                <span>08:00 - 16:00</span>
+        
+                            </div>
+        
+                            <div>
+        
+                                <span>Jumat:</span>
+        
+                                <span>08:00 - 16:00</span>
+        
+                            </div>
+        
+                            <div>
+        
+                                <span>Sabtu & Minggu:</span>
+        
+                                <span>Tutup</span>
+        
+                            </div>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+                
+        
+                <div class="footer-bottom">
+        
+                    <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+        
+                </div>
+        
+            </footer>
+        
+        <!-- Session Error Modal - Enhanced Version -->
+        
+            @if (session('error'))
+        
+            <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1" aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        
+                <div class="modal-dialog modal-dialog-centered">
+        
+                    <div class="modal-content">
+        
+                        <div class="modal-header">
+        
+                            <h5 class="modal-title" id="sessionErrorModalLabel">
+        
+                                <i class="fas fa-exclamation-triangle"></i>
+        
+                                Akses Ditolak
+        
+                            </h5>
+        
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+                        </div>
+        
+                        <div class="modal-body">
+        
+                            <div class="error-icon-container">
+        
+                                <i class="fas fa-ban error-icon"></i>
+        
+                            </div>
+        
+                            
+        
+                            <div class="error-message">
+        
+                                <p class="mb-0">{{ session('error') }}</p>
+        
+                            </div>
+        
+                            
+        
+                            @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+        
+                            <div class="error-suggestion">
+        
+                                <i class="fas fa-lightbulb me-2"></i>
+        
+                                <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+        
+                            </div>
+        
+                            @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
+        
+                            <div class="error-suggestion">
+        
+                                <i class="fas fa-lightbulb me-2"></i>
+        
+                                <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki akses.
+        
+                            </div>
+        
+                            @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
+        
+                            <div class="error-suggestion">
+        
+                                <i class="fas fa-lightbulb me-2"></i>
+        
+                                <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
+        
+                            </div>
+        
+                            @else
+        
+                            <div class="error-suggestion">
+        
+                                <i class="fas fa-lightbulb me-2"></i>
+        
+                                <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
+        
+                            </div>
+        
+                            @endif
+        
+                        </div>
+        
+                        <div class="modal-footer">
+        
+                            @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+        
+                            <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
+        
+                                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+        
+                            </a>
+        
+                            @endif
+        
+                            
+        
+                            <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal" id="closeErrorBtn">
+        
+                                <i class="fas fa-times"></i> Tutup
+        
+                            </button>
+        
+                            
+        
+                            @if(strpos(session('error'), 'login') === false)
+        
+                            <a href="/home" class="btn btn-error btn-error-outline">
+        
+                                <i class="fas fa-home"></i> Kembali ke Beranda
+        
+                            </a>
+        
+                            @endif
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+            </div>
+        
+            @endif
+        
+        
+        
+            <!-- Success Modal Template -->
+        
+            <div class="modal fade success-modal" id="successModal" tabindex="-1" aria-hidden="true">
+        
+                <div class="modal-dialog modal-dialog-centered">
+        
+                    <div class="modal-content">
+        
+                        <div class="modal-header">
+        
+                            <h5 class="modal-title">
+        
+                                <i class="fas fa-check-circle"></i>
+        
+                                Berhasil!
+        
+                            </h5>
+        
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+                        </div>
+        
+                        <div class="modal-body">
+        
+                            <div class="error-icon-container">
+        
+                                <i class="fas fa-check-circle error-icon" style="color: #28a745;"></i>
+        
+                            </div>
+        
+                            
+        
+                            <div class="error-message" style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
+        
+                                <p class="mb-0" id="successMessage">Operasi berhasil diselesaikan.</p>
+        
+                            </div>
+        
+                        </div>
+        
+                        <div class="modal-footer">
+        
+                            <button type="button" class="btn btn-error btn-error-primary" data-bs-dismiss="modal">
+        
+                                <i class="fas fa-check"></i> Oke
+        
+                            </button>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+            </div>
+        
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        
+        
+            <script>
+        
+                // Back to top button functionality
+        
+                const backToTopButton = document.getElementById('backToTop');
+        
+                
+        
+                window.addEventListener('scroll', () => {
+        
+                    if (window.pageYOffset > 300) {
+        
+                        backToTopButton.classList.add('visible');
+        
+                    } else {
+        
+                        backToTopButton.classList.remove('visible');
+        
+                    }
+        
+                });
+        
+                
+        
+                backToTopButton.addEventListener('click', (e) => {
+        
+                    e.preventDefault();
+        
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+                });
+        
+                
+        
+                // Navbar scroll effect
+        
+                const navbar = document.getElementById('navbar');
+        
+                
+        
+                window.addEventListener('scroll', () => {
+        
+                    if (window.pageYOffset > 50) {
+        
+                        navbar.classList.add('scrolled');
+        
+                    } else {
+        
+                        navbar.classList.remove('scrolled');
+        
+                    }
+        
+                });
+        
+        
+        
+                // ===== DROPDOWN ANIMATION =====
+        
+                document.addEventListener('DOMContentLoaded', function() {
+        
+                    // Handle dropdown toggle animation
+        
+                    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        
+                    
+        
+                    dropdownToggles.forEach(toggle => {
+        
+                        toggle.addEventListener('click', function() {
+        
+                            // Close other open dropdowns
+        
+                            dropdownToggles.forEach(otherToggle => {
+        
+                                if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+        
+                                    otherToggle.classList.remove('show');
+        
+                                    const otherMenu = otherToggle.nextElementSibling;
+        
+                                    if (otherMenu && otherMenu.classList.contains('show')) {
+        
+                                        otherMenu.classList.remove('show');
+        
+                                    }
+        
+                                }
+        
+                            });
+        
+                        });
+        
+                    });
+        
+                    
+        
+                    // Close dropdowns when clicking outside
+        
+                    document.addEventListener('click', function(e) {
+        
+                        if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
+        
+                            const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+        
+                            openDropdowns.forEach(element => {
+        
+                                element.classList.remove('show');
+        
+                            });
+        
+                        }
+        
+                    });
+        
+         // Enhanced Error Modal Functionality
+        
+                    @if (session('error'))
+        
+                        var errorModal = new bootstrap.Modal(document.getElementById('sessionErrorModal'));
+        
+                        errorModal.show();
+        
+                        
+        
+                        // Add auto-focus to the most appropriate button
+        
+                        setTimeout(() => {
+        
+                            const primaryBtn = document.querySelector('.error-modal .btn-error-primary');
+        
+                            const closeBtn = document.getElementById('closeErrorBtn');
+        
+                            
+        
+                            if (primaryBtn) {
+        
+                                primaryBtn.focus();
+        
+                            } else if (closeBtn) {
+        
+                                closeBtn.focus();
+        
+                            }
+        
+                        }, 300);
+        
+                        
+        
+                        // Auto-hide modal after 10 seconds if user doesn't interact
+        
+                        let modalTimeout = setTimeout(() => {
+        
+                            if (document.querySelector('#sessionErrorModal.show')) {
+        
+                                errorModal.hide();
+        
+                            }
+        
+                        }, 10000);
+        
+                        
+        
+                        // Clear timeout on user interaction
+        
+                        document.getElementById('sessionErrorModal').addEventListener('click', () => {
+        
+                            clearTimeout(modalTimeout);
+        
+                        });
+        
+                        
+        
+                        // Add keyboard shortcuts
+        
+                        document.addEventListener('keydown', function(e) {
+        
+                            if (e.key === 'Escape') {
+        
+                                clearTimeout(modalTimeout);
+        
+                            }
+        
+                            
+        
+                            if (e.key === 'Enter' && document.querySelector('#sessionErrorModal.show')) {
+        
+                                const activeButton = document.querySelector('#sessionErrorModal .modal-footer .btn-error-primary');
+        
+                                if (activeButton) {
+        
+                                    activeButton.click();
+        
+                                }
+        
+                            }
+        
+                        });
+        
+                    @endif
+        
+                    
+        
+                    // Success Modal function for future use
+        
+                    window.showSuccessModal = function(message) {
+        
+                        const successModalEl = document.getElementById('successModal');
+        
+                        const successMessageEl = document.getElementById('successMessage');
+        
+                        
+        
+                        if (successMessageEl && message) {
+        
+                            successMessageEl.textContent = message;
+        
+                        }
+        
+                        
+        
+                        const successModal = new bootstrap.Modal(successModalEl);
+        
+                        successModal.show();
+        
+                        
+        
+                        // Auto-hide after 3 seconds
+        
+                        setTimeout(() => {
+        
+                            successModal.hide();
+        
+                        }, 3000);
+        
+                    };
+        
+                });
+        
+                
+        
+                // Animation on scroll
+        
+                const animateOnScroll = () => {
+        
+                    const elements = document.querySelectorAll('.filter-section, .calendar-container, .schedule-list, .schedule-item');
+        
+                    
+        
+                    elements.forEach(element => {
+        
+                        const elementPosition = element.getBoundingClientRect().top;
+        
+                        const screenPosition = window.innerHeight / 1.3;
+        
+                        
+        
+                        if (elementPosition < screenPosition) {
+        
+                            element.style.opacity = 1;
+        
+                            element.style.transform = 'translateY(0)';
+        
+                        }
+        
+                    });
+        
+                };
+        
+                
+        
+                // Initialize elements for animation
+        
+                document.querySelectorAll('.filter-section, .calendar-container, .schedule-list, .schedule-item').forEach(element => {
+                    element.style.opacity = 0;
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                });
+        
+                window.addEventListener('scroll', animateOnScroll);
+                window.addEventListener('load', animateOnScroll);
+            </script>
+        </body>
+        </html>

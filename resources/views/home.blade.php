@@ -1019,6 +1019,257 @@
                 padding: 1rem;
             }
         }
+        
+        /* ===== ENHANCED ERROR POPUP STYLES ===== */
+        .error-modal .modal-content {
+            border-radius: 16px;
+            border: none;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .error-modal .modal-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: none;
+            position: relative;
+        }
+
+        .error-modal .modal-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .error-modal .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .error-modal .modal-title i {
+            font-size: 1.6rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .error-modal .modal-body {
+            padding: 2.5rem 2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #495057;
+            text-align: center;
+        }
+
+        .error-modal .error-icon-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .error-modal .error-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .error-modal .error-message {
+            background: linear-gradient(135deg, #fff5f5, #ffeaea);
+            border-left: 4px solid #dc3545;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .error-modal .error-suggestion {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #6c757d;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .error-modal .modal-footer {
+            border-top: none;
+            padding: 1.5rem 2rem;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .error-modal .btn-error {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .error-modal .btn-error-primary {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .error-modal .btn-error-primary:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .error-modal .btn-error-secondary {
+            background-color: #6c757d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+        }
+
+        .error-modal .btn-error-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .error-modal .btn-error-outline {
+            background-color: transparent;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+        }
+
+        .error-modal .btn-error-outline:hover {
+            background-color: #dc3545;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for error modal */
+        @media (max-width: 576px) {
+            .error-modal .modal-dialog {
+                margin: 1rem;
+            }
+
+            .error-modal .modal-header,
+            .error-modal .modal-body,
+            .error-modal .modal-footer {
+                padding: 1.25rem;
+            }
+
+            .error-modal .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .error-modal .error-icon {
+                font-size: 3rem;
+            }
+
+            .error-modal .modal-footer {
+                flex-direction: column;
+            }
+
+            .error-modal .btn-error {
+                width: 100%;
+            }
+        }
+
+        /* Auto-hide notification for non-critical errors */
+        .error-toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: slideInRight 0.5s ease, fadeOut 0.5s ease 4.5s forwards;
+            border-left: 4px solid #dc3545;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .error-toast .toast-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 1rem 1.25rem;
+            border-bottom: none;
+        }
+
+        .error-toast .toast-body {
+            padding: 1.25rem;
+            color: #495057;
+        }
+
+        /* Success modal for positive feedback */
+        .success-modal .modal-header {
+            background: linear-gradient(135deg, #28a745, #218838);
+        }
+
+        .success-modal .btn-error-primary {
+            background: linear-gradient(135deg, #28a745, #218838);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .success-modal .btn-error-primary:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -1550,6 +1801,100 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Session Error Modal - Enhanced Version -->
+    @if (session('error'))
+    <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1" aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sessionErrorModalLabel">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Akses Ditolak
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-icon-container">
+                        <i class="fas fa-ban error-icon"></i>
+                    </div>
+                    
+                    <div class="error-message">
+                        <p class="mb-0">{{ session('error') }}</p>
+                    </div>
+                    
+                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+                    </div>
+                    @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki akses.
+                    </div>
+                    @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
+                    </div>
+                    @else
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
+                    </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                    <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                    </a>
+                    @endif
+                    
+                    <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal" id="closeErrorBtn">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                    
+                    @if(strpos(session('error'), 'login') === false)
+                    <a href="/home" class="btn btn-error btn-error-outline">
+                        <i class="fas fa-home"></i> Kembali ke Beranda
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Success Modal Template -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle"></i>
+                        Berhasil!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-icon-container">
+                        <i class="fas fa-check-circle error-icon" style="color: #28a745;"></i>
+                    </div>
+                    
+                    <div class="error-message" style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
+                        <p class="mb-0" id="successMessage">Operasi berhasil diselesaikan.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-error btn-error-primary" data-bs-dismiss="modal">
+                        <i class="fas fa-check"></i> Oke
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ===== NAVBAR SCROLL EFFECT =====
         const navbar = document.getElementById('navbar');
@@ -1591,6 +1936,118 @@
                     });
                 }
             });
+
+            // Enhanced Error Modal Functionality
+            @if (session('error'))
+                var errorModal = new bootstrap.Modal(document.getElementById('sessionErrorModal'));
+                errorModal.show();
+                
+                // Add auto-focus to the most appropriate button
+                setTimeout(() => {
+                    const primaryBtn = document.querySelector('.error-modal .btn-error-primary');
+                    const closeBtn = document.getElementById('closeErrorBtn');
+                    
+                    if (primaryBtn) {
+                        primaryBtn.focus();
+                    } else if (closeBtn) {
+                        closeBtn.focus();
+                    }
+                }, 300);
+                
+                // Auto-hide modal after 10 seconds if user doesn't interact
+                let modalTimeout = setTimeout(() => {
+                    if (document.querySelector('#sessionErrorModal.show')) {
+                        errorModal.hide();
+                    }
+                }, 10000);
+                
+                // Clear timeout on user interaction
+                document.getElementById('sessionErrorModal').addEventListener('click', () => {
+                    clearTimeout(modalTimeout);
+                });
+                
+                // Add keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        clearTimeout(modalTimeout);
+                    }
+                    
+                    if (e.key === 'Enter' && document.querySelector('#sessionErrorModal.show')) {
+                        const activeButton = document.querySelector('#sessionErrorModal .modal-footer .btn-error-primary');
+                        if (activeButton) {
+                            activeButton.click();
+                        }
+                    }
+                });
+            @endif
+            
+            // Success Modal function for future use
+            window.showSuccessModal = function(message) {
+                const successModalEl = document.getElementById('successModal');
+                const successMessageEl = document.getElementById('successMessage');
+                
+                if (successMessageEl && message) {
+                    successMessageEl.textContent = message;
+                }
+                
+                const successModal = new bootstrap.Modal(successModalEl);
+                successModal.show();
+                
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    successModal.hide();
+                }, 3000);
+            };
+            
+            // Error Toast function for non-critical errors
+            window.showErrorToast = function(message, type = 'error') {
+                const toastId = 'toast-' + Date.now();
+                const toastHtml = `
+                    <div class="error-toast" id="${toastId}">
+                        <div class="toast-header">
+                            <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} me-2"></i>
+                            <strong class="me-auto">${type === 'error' ? 'Error' : 'Informasi'}</strong>
+                            <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('${toastId}').remove()"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                
+                document.body.insertAdjacentHTML('beforeend', toastHtml);
+                
+                // Auto remove after animation
+                setTimeout(() => {
+                    const toast = document.getElementById(toastId);
+                    if (toast) {
+                        toast.remove();
+                    }
+                }, 5000);
+            };
+            
+            // Example of using the toast (for demonstration)
+            // You can call this from anywhere: showErrorToast('Pesan error disini');
+            
+            // Also handle any console errors and show user-friendly messages
+            window.addEventListener('error', function(e) {
+                console.error('Error occurred:', e);
+                
+                // Only show toast for certain errors
+                if (e.message && e.message.includes('Network') || e.message.includes('fetch')) {
+                    showErrorToast('Koneksi jaringan bermasalah. Silakan coba lagi.', 'error');
+                }
+            });
+            
+            // Initialize elements for animation
+            document.querySelectorAll('.stat-card, .room-card, .projector-card, .usage-card, .activity-item').forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Trigger initial animation
+            animateOnScroll();
         });
 
         // Back to top button functionality
@@ -1657,10 +2114,13 @@
                     item.classList.add('active');
                 }
             });
+            
+            // Trigger animation on scroll
+            animateOnScroll();
         });
         
         // Animation on scroll
-        const animateOnScroll = () => {
+        function animateOnScroll() {
             const elements = document.querySelectorAll('.stat-card, .room-card, .projector-card, .usage-card, .activity-item');
             
             elements.forEach(element => {
@@ -1672,17 +2132,7 @@
                     element.style.transform = 'translateY(0)';
                 }
             });
-        };
-        
-        // Initialize elements for animation
-        document.querySelectorAll('.stat-card, .room-card, .projector-card, .usage-card, .activity-item').forEach(element => {
-            element.style.opacity = 0;
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        });
-        
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
+        }
     </script>
 </body>
 </html>

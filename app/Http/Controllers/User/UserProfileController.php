@@ -11,7 +11,7 @@ class UserProfileController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::user()->fresh(); // Refresh user data from the database
         return view('user.profile.index', compact('user'));
     }
 

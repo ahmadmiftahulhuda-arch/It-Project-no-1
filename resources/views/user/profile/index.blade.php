@@ -17,6 +17,7 @@
             --warning-color: #ffc107;
             --danger-color: #dc3545;
             --info-color: #17a2b8;
+            --verification-color: #ff6b35;
         }
         
         * {
@@ -650,7 +651,7 @@
                 gap: 20px;
             }
         }
-
+        
         @media (max-width: 576px) {
             .card-body-profile {
                 padding: 1rem;
@@ -664,6 +665,509 @@
             .section-title {
                 font-size: 1.2rem;
             }
+        }
+        
+        /* ===== VERIFICATION MODAL STYLES ===== */
+        .verification-modal .modal-content {
+            border-radius: 16px;
+            border: none;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(255, 107, 53, 0.25);
+            animation: modalAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .verification-modal .modal-header {
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: white;
+            padding: 2rem;
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .verification-modal .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.15' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,138.7C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .verification-modal .modal-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .verification-modal .modal-title i {
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .verification-modal .modal-body {
+            padding: 3rem 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #495057;
+            text-align: center;
+            background-color: #fffaf8;
+        }
+
+        .verification-modal .verification-icon-container {
+            margin-bottom: 2rem;
+        }
+
+        .verification-modal .verification-icon {
+            font-size: 5rem;
+            color: #ff6b35;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .verification-modal .verification-message {
+            background: linear-gradient(135deg, #fff5f1, #ffe8e0);
+            border-left: 5px solid #ff6b35;
+            padding: 1.8rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: left;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.1);
+            position: relative;
+        }
+
+        .verification-modal .verification-message::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 4rem;
+            color: rgba(255, 107, 53, 0.2);
+            font-family: Georgia, serif;
+        }
+
+        .verification-modal .verification-steps {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 2px dashed #dee2e6;
+        }
+
+        .verification-modal .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .verification-modal .step-item:hover {
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+
+        .verification-modal .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .verification-modal .step-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .verification-modal .step-title {
+            font-weight: 600;
+            color: #ff6b35;
+            margin-bottom: 0.3rem;
+        }
+
+        .verification-modal .step-desc {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .verification-modal .verification-reminder {
+            background: linear-gradient(135deg, rgba(59, 89, 152, 0.08), rgba(108, 117, 125, 0.05));
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .verification-modal .verification-reminder i {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .verification-modal .modal-footer {
+            border-top: none;
+            padding: 2rem 2.5rem;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .verification-modal .btn-verification {
+            padding: 0.9rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            min-width: 180px;
+            justify-content: center;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .verification-modal .btn-verification-primary {
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .verification-modal .btn-verification-primary:hover {
+            background: linear-gradient(135deg, #ff5722, #ff7043);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .verification-modal .btn-verification-secondary {
+            background-color: #6c757d;
+            color: white;
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.2);
+        }
+
+        .verification-modal .btn-verification-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 117, 125, 0.3);
+        }
+
+        .verification-modal .btn-verification-outline {
+            background-color: transparent;
+            color: #ff6b35;
+            border: 3px solid #ff6b35;
+            font-weight: 700;
+        }
+
+        .verification-modal .btn-verification-outline:hover {
+            background-color: #ff6b35;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Responsive adjustments for verification modal */
+        @media (max-width: 768px) {
+            .verification-modal .modal-dialog {
+                margin: 1rem;
+            }
+
+            .verification-modal .modal-header {
+                padding: 1.5rem;
+            }
+
+            .verification-modal .modal-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .verification-modal .modal-footer {
+                padding: 1.5rem;
+                flex-direction: column;
+            }
+
+            .verification-modal .btn-verification {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .verification-modal .verification-icon {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .verification-modal .modal-header {
+                padding: 1.25rem;
+            }
+
+            .verification-modal .modal-body {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .verification-modal .modal-title {
+                font-size: 1.3rem;
+            }
+
+            .verification-modal .verification-icon {
+                font-size: 3.5rem;
+            }
+
+            .verification-modal .verification-message {
+                padding: 1.25rem;
+            }
+
+            .verification-modal .step-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        /* Status indicator for unverified users */
+        .verification-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            animation: statusPulse 2s infinite;
+        }
+
+        .verification-status.unverified {
+            background-color: rgba(255, 107, 53, 0.15);
+            color: #ff6b35;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        @keyframes statusPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+        }
+
+        .verification-status.verified {
+            background-color: rgba(40, 167, 69, 0.15); /* Greenish background */
+            color: #28a745; /* Green text */
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            animation: statusPulseGreen 2s infinite; /* A slightly different pulse */
+        }
+
+        @keyframes statusPulseGreen {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+
+        /* ===== ENHANCED ERROR POPUP STYLES (for other errors) ===== */
+        .error-modal .modal-content {
+            border-radius: 16px;
+            border: none;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .error-modal .modal-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: none;
+            position: relative;
+        }
+
+        .error-modal .modal-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .error-modal .modal-title i {
+            font-size: 1.6rem;
+            animation: pulse 2s infinite;
+        }
+
+        .error-modal .error-icon-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .error-modal .error-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: shake 0.5s ease;
+        }
+
+        .error-modal .error-message {
+            background: linear-gradient(135deg, #fff5f5, #ffeaea);
+            border-left: 4px solid #dc3545;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .error-modal .error-suggestion {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #6c757d;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .error-modal .modal-footer {
+            border-top: none;
+            padding: 1.5rem 2rem;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .error-modal .btn-error {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .error-modal .btn-error-primary {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .error-modal .btn-error-primary:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .error-modal .btn-error-secondary {
+            background-color: #6c757d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+        }
+
+        .error-modal .btn-error-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .error-modal .btn-error-outline {
+            background-color: transparent;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+        }
+
+        .error-modal .btn-error-outline:hover {
+            background-color: #dc3545;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for error modal */
+        @media (max-width: 576px) {
+            .error-modal .modal-dialog {
+                margin: 1rem;
+            }
+
+            .error-modal .modal-header,
+            .error-modal .modal-body,
+            .error-modal .modal-footer {
+                padding: 1.25rem;
+            }
+
+            .error-modal .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .error-modal .error-icon {
+                font-size: 3rem;
+            }
+
+            .error-modal .modal-footer {
+                flex-direction: column;
+            }
+
+            .error-modal .btn-error {
+                width: 100%;
+            }
+        }
+
+        /* Success modal for positive feedback */
+        .success-modal .modal-header {
+            background: linear-gradient(135deg, #28a745, #218838);
+        }
+
+        .success-modal .btn-error-primary {
+            background: linear-gradient(135deg, #28a745, #218838);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .success-modal .btn-error-primary:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
     </style>
 </head>
@@ -762,14 +1266,14 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-circle me-1"></i>
-                                {{ Auth::user()->display_name }}
+                                {{ $user->display_name }}
                                 <span class="custom-arrow">
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
                                 <li class="dropdown-header-custom">Masuk sebagai</li>
-                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->display_name }}</li>
+                                <li class="dropdown-header-custom fw-bold">{{ $user->display_name }}</li>
                                 <li>
                                     <hr class="dropdown-divider-custom">
                                 </li>
@@ -780,11 +1284,6 @@
                                 </li>
                                 <li>
                                     <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
-                                        <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item-custom" href="#">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -838,26 +1337,39 @@
                 <!-- User Info Card -->
                 <div class="user-info-card">
                     <div class="user-avatar">
-                        {{ strtoupper(substr(Auth::user()->display_name, 0, 1)) }}
+                        {{ strtoupper(substr($user->display_name, 0, 1)) }}
                     </div>
                     <div class="user-details">
+                        <!-- Status Verifikasi -->
+                        @if(!$user->verified)
+                        <div class="verification-status unverified">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Akun Belum Diverifikasi
+                        </div>
+                        @else
+                        <div class="verification-status verified">
+                            <i class="fas fa-check-circle"></i>
+                            Akun Telah Diverifikasi
+                        </div>
+                        @endif
+                        
                         <div class="user-detail">
                             <i class="fas fa-user"></i>
-                            <span><strong>Nama:</strong> {{ Auth::user()->display_name }}</span>
+                            <span><strong>Nama:</strong> {{ $user->display_name }}</span>
                         </div>
                         <div class="user-detail">
                             <i class="fas fa-envelope"></i>
-                            <span><strong>Email:</strong> {{ Auth::user()->email }}</span>
+                            <span><strong>Email:</strong> {{ $user->email }}</span>
                         </div>
-                        @if(Auth::user()->no_hp)
+                        @if($user->no_hp)
                         <div class="user-detail">
                             <i class="fas fa-phone"></i>
-                            <span><strong>No. Telepon:</strong> {{ Auth::user()->no_hp }}</span>
+                            <span><strong>No. Telepon:</strong> {{ $user->no_hp }}</span>
                         </div>
                         @endif
                         <div class="user-detail">
                             <i class="fas fa-calendar-alt"></i>
-                            <span><strong>Bergabung:</strong> {{ Auth::user()->created_at->format('d F Y') }}</span>
+                            <span><strong>Bergabung:</strong> {{ $user->created_at->format('d F Y') }}</span>
                         </div>
                     </div>
                 </div>
@@ -886,6 +1398,27 @@
                                     @endforeach
                                 </ul>
                             </div>
+                        @endif
+
+                        <!-- Alert untuk user belum diverifikasi -->
+                        @if(!$user->verified)
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="border-left: 4px solid #ff6b35; background-color: rgba(255, 107, 53, 0.1);">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-clock me-3" style="font-size: 1.5rem; color: #ff6b35;"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-2" style="color: #ff6b35;">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        Akun Anda Belum Diverifikasi
+                                    </h5>
+                                    <p class="mb-0">
+                                        Untuk menggunakan semua fitur sistem, silakan lengkapi verifikasi akun Anda.
+                                        <a href="#" class="alert-link" data-bs-toggle="modal" data-bs-target="#verificationModal">
+                                            Klik di sini untuk petunjuk verifikasi
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                         @endif
 
                         <form action="{{ route('user.profile.update') }}" method="POST">
@@ -931,7 +1464,7 @@
                                         <i class="fas fa-envelope"></i> Alamat Email
                                     </label>
                                     <input type="email" class="form-control form-control-profile @error('email') is-invalid @enderror" 
-                                           id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                           id="email" name="email" value="{{ old('email', $user->email) }}" required readonly>
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1076,6 +1609,176 @@
         </div>
     </footer>
 
+    <!-- ===== VERIFICATION MODAL (User Belum Diverifikasi) ===== -->
+    @if(!$user->verified)
+    <div class="modal fade verification-modal" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="verificationModalLabel">
+                        <i class="fas fa-user-check"></i>
+                        Verifikasi Akun Anda
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="verification-icon-container">
+                        <i class="fas fa-user-clock verification-icon"></i>
+                    </div>
+                    
+                    <div class="verification-message">
+                        <h4 class="mb-3">Halo, {{ $user->display_name }}! 👋</h4>
+                        <p class="mb-2">Akun Anda saat ini <strong>belum diverifikasi</strong>. Untuk dapat menggunakan semua fitur sistem peminjaman, silakan selesaikan proses verifikasi berikut:</p>
+                    </div>
+                    
+                    <div class="verification-steps">
+                        <h5 class="mb-3"><i class="fas fa-list-ol me-2"></i> Langkah-langkah Verifikasi:</h5>
+                        
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">Lengkapi Data Profil</div>
+                                <div class="step-desc">Pastikan semua informasi profil Anda sudah lengkap dan benar, termasuk NIM dan nomor telepon.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">Hubungi Administrator</div>
+                                <div class="step-desc">Kunjungi kantor Program Studi Teknologi Informasi dengan membawa kartu identitas mahasiswa (KTM) asli.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">Verifikasi Dokumen</div>
+                                <div class="step-desc">Administrator akan memverifikasi identitas Anda dan mengaktifkan akun dalam 1-2 hari kerja.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="verification-reminder">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Catatan Penting:</strong> Anda masih dapat mengubah data profil, namun <strong>tidak dapat melakukan peminjaman</strong> sampai akun diverifikasi.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="https://wa.me/6281528438544?text=Halo,%20saya%20{{ urlencode($user->display_name) }}%20ingin%20verifikasi%20akun%20PINTER%20untuk%20keperluan%20(sebutkan%20keperluan%20anda)." 
+                       class="btn btn-verification btn-verification-primary" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp
+                    </a>
+                    
+                    <button type="button" class="btn btn-verification btn-verification-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                    
+                    <button type="button" class="btn btn-verification btn-verification-outline" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Perbarui Status
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- ===== SESSION ERROR MODAL (for other errors) ===== -->
+    @if (session('error') && strpos(session('error'), 'verifikasi') === false)
+    <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1" aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sessionErrorModalLabel">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Akses Ditolak
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-icon-container">
+                        <i class="fas fa-ban error-icon"></i>
+                    </div>
+                    
+                    <div class="error-message">
+                        <p class="mb-0">{{ session('error') }}</p>
+                    </div>
+                    
+                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+                    </div>
+                    @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki akses.
+                    </div>
+                    @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
+                    </div>
+                    @else
+                    <div class="error-suggestion">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
+                    </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                    <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                    </a>
+                    @endif
+                    
+                    <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal" id="closeErrorBtn">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                    
+                    @if(strpos(session('error'), 'login') === false)
+                    <a href="/home" class="btn btn-error btn-error-outline">
+                        <i class="fas fa-home"></i> Kembali ke Beranda
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Success Modal Template -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle"></i>
+                        Berhasil!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-icon-container">
+                        <i class="fas fa-check-circle error-icon" style="color: #28a745;"></i>
+                    </div>
+                    
+                    <div class="error-message" style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
+                        <p class="mb-0" id="successMessage">Operasi berhasil diselesaikan.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-error btn-error-primary" data-bs-dismiss="modal">
+                        <i class="fas fa-check"></i> Oke
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ===== NAVBAR SCROLL EFFECT =====
@@ -1118,6 +1821,111 @@
                     });
                 }
             });
+
+            // Enhanced Verification Modal Functionality
+            @if(!$user->verified)
+                // Show verification modal automatically after 2 seconds
+                setTimeout(() => {
+                    var verificationModal = new bootstrap.Modal(document.getElementById('verificationModal'));
+                    verificationModal.show();
+                    
+                    // Add auto-focus to the most appropriate button
+                    setTimeout(() => {
+                        const primaryBtn = document.querySelector('.verification-modal .btn-verification-primary');
+                        if (primaryBtn) {
+                            primaryBtn.focus();
+                        }
+                    }, 400);
+                    
+                    // Auto-hide modal after 30 seconds if user doesn't interact
+                    let modalTimeout = setTimeout(() => {
+                        if (document.querySelector('#verificationModal.show')) {
+                            verificationModal.hide();
+                        }
+                    }, 30000);
+                    
+                    // Clear timeout on user interaction
+                    document.getElementById('verificationModal').addEventListener('click', () => {
+                        clearTimeout(modalTimeout);
+                    });
+                    
+                    // Add keyboard shortcuts
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            clearTimeout(modalTimeout);
+                        }
+                        
+                        if (e.key === 'Enter' && document.querySelector('#verificationModal.show')) {
+                            const activeButton = document.querySelector('#verificationModal .modal-footer .btn-verification-primary');
+                            if (activeButton) {
+                                activeButton.click();
+                            }
+                        }
+                    });
+                }, 2000);
+            @endif
+
+            // Enhanced Error Modal Functionality (for other errors)
+            @if (session('error') && strpos(session('error'), 'verifikasi') === false)
+                var errorModal = new bootstrap.Modal(document.getElementById('sessionErrorModal'));
+                errorModal.show();
+                
+                // Add auto-focus to the most appropriate button
+                setTimeout(() => {
+                    const primaryBtn = document.querySelector('.error-modal .btn-error-primary');
+                    const closeBtn = document.getElementById('closeErrorBtn');
+                    
+                    if (primaryBtn) {
+                        primaryBtn.focus();
+                    } else if (closeBtn) {
+                        closeBtn.focus();
+                    }
+                }, 300);
+                
+                // Auto-hide modal after 10 seconds if user doesn't interact
+                let modalTimeout = setTimeout(() => {
+                    if (document.querySelector('#sessionErrorModal.show')) {
+                        errorModal.hide();
+                    }
+                }, 10000);
+                
+                // Clear timeout on user interaction
+                document.getElementById('sessionErrorModal').addEventListener('click', () => {
+                    clearTimeout(modalTimeout);
+                });
+                
+                // Add keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        clearTimeout(modalTimeout);
+                    }
+                    
+                    if (e.key === 'Enter' && document.querySelector('#sessionErrorModal.show')) {
+                        const activeButton = document.querySelector('#sessionErrorModal .modal-footer .btn-error-primary');
+                        if (activeButton) {
+                            activeButton.click();
+                        }
+                    }
+                });
+            @endif
+            
+            // Success Modal function for future use
+            window.showSuccessModal = function(message) {
+                const successModalEl = document.getElementById('successModal');
+                const successMessageEl = document.getElementById('successMessage');
+                
+                if (successMessageEl && message) {
+                    successMessageEl.textContent = message;
+                }
+                
+                const successModal = new bootstrap.Modal(successModalEl);
+                successModal.show();
+                
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    successModal.hide();
+                }, 3000);
+            };
         });
 
         // Password visibility toggle
@@ -1162,7 +1970,7 @@
                 if (password.value || confirmPassword.value) {
                     if (password.value !== confirmPassword.value) {
                         e.preventDefault();
-                        alert('Kata sandi dan konfirmasi kata sandi tidak cocok!');
+                        showErrorToast('Kata sandi dan konfirmasi kata sandi tidak cocok!');
                         confirmPassword.focus();
                     }
                 }
@@ -1181,6 +1989,58 @@
                 }, index * 100);
             });
         });
+
+        // Toast notification function
+        function showErrorToast(message, type = 'error') {
+            const toastId = 'toast-' + Date.now();
+            const toastHtml = `
+                <div class="toast align-items-center text-bg-${type === 'error' ? 'danger' : 'success'} border-0" 
+                     id="${toastId}" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                                data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toast = new bootstrap.Toast(document.getElementById(toastId), {
+                autohide: true,
+                delay: 5000
+            });
+            toast.show();
+            
+            // Remove from DOM after hide
+            document.getElementById(toastId).addEventListener('hidden.bs.toast', function() {
+                this.remove();
+            });
+        }
+
+        // Check verification status periodically
+        @if(!$user->verified)
+        function checkVerificationStatus() {
+            fetch('/api/check-verification')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_verified) {
+                        // User is now verified, reload page
+                        showSuccessModal('Selamat! Akun Anda telah diverifikasi. Halaman akan direfresh.');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    }
+                })
+                .catch(error => console.error('Error checking verification:', error));
+        }
+
+        // Check every 30 seconds
+        setInterval(checkVerificationStatus, 30000);
+        @endif
     </script>
 </body>
 </html>
