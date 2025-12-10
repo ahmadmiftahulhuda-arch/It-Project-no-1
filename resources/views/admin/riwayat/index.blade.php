@@ -1444,11 +1444,7 @@
                                                     <i class="fas fa-trash me-1"></i> Hapus
                                                 </button>
 
-                                                <!-- Tombol Cetak -->
-                                                <button class="btn btn-warning-custom btn-sm"
-                                                    onclick="cetakRiwayat({{ $item->id }})">
-                                                    <i class="fas fa-print me-1"></i> Cetak
-                                                </button>
+                                                <!-- Tombol Cetak dihilangkan per baris (dipindah ke modal jika perlu) -->
                                             </div>
                                         </td>
                                     </tr>
@@ -1632,10 +1628,7 @@
                                                 data-tanggal="{{ $item->tanggal }}">
                                                 <i class="fas fa-trash me-1"></i> Hapus
                                             </button>
-                                            <button class="btn btn-warning-custom btn-sm"
-                                                onclick="cetakRiwayat({{ $item->id }})">
-                                                <i class="fas fa-print me-1"></i> Cetak
-                                            </button>
+                                            <!-- Tombol Cetak dihilangkan per item -->
                                         </div>
                                     </div>
                                 </div>
@@ -1927,9 +1920,6 @@
                         const el = document.getElementById('detail_tanggal');
                         el.innerHTML += '<br><small class="text-muted">Slot: ' + formatTime(waktuMulai) + ' - ' + formatTime(waktuSelesai) + '</small>';
                     }
-                    if (waktuPengembalian) {
-                        document.getElementById('detail_status_pengembalian').innerHTML = (statusPengembalian ? statusPengembalian + ' ' : '') + ' (' + formatTime(waktuPengembalian) + ')';
-                    }
 
                     // Format status peminjaman
                     let statusText = '';
@@ -1951,13 +1941,21 @@
                     }
                     document.getElementById('detail_status').innerHTML = statusText;
 
-                    // Format status pengembalian
+                    // Format status pengembalian (gunakan nilai DB canonical)
                     let statusPengembalianText = '';
-                    if (statusPengembalian === 'sudah dikembalikan') {
-                        statusPengembalianText = '<span class="badge status-dikembalikan">Dikembalikan</span>';
+                    const pj = (statusPengembalian || '').toString().toLowerCase();
+                    if (pj === 'verified' || pj === 'disetujui') {
+                        statusPengembalianText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (pj === 'pending' || pj === 'menunggu') {
+                        statusPengembalianText = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (pj === 'rejected' || pj === 'ditolak') {
+                        statusPengembalianText = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (pj === 'overdue' || pj === 'terlambat') {
+                        statusPengembalianText = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (waktuPengembalian) {
+                        statusPengembalianText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + formatTime(waktuPengembalian) + ')</span>';
                     } else {
-                        statusPengembalianText =
-                            '<span class="badge status-belum-dikembalikan">Belum Dikembalikan</span>';
+                        statusPengembalianText = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
                     }
                     document.getElementById('detail_status_pengembalian').innerHTML = statusPengembalianText;
 
@@ -2104,6 +2102,22 @@
                     month: 'long',
                     year: 'numeric'
                 });
+            }
+
+            // Format waktu sederhana (HH:mm)
+            function formatTime(timeString) {
+                if (!timeString) return '-';
+                if (typeof timeString !== 'string') return String(timeString);
+                if (timeString.indexOf(':') > -1) {
+                    const parts = timeString.split(':');
+                    return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
+                }
+                try {
+                    const d = new Date(timeString);
+                    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                } catch (e) {
+                    return timeString;
+                }
             }
 
             // Fungsi cetak riwayat
