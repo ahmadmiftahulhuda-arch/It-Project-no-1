@@ -1664,28 +1664,42 @@
                     const waktuMulai = btn.dataset.waktuMulai || '';
                     const waktuSelesai = btn.dataset.waktuSelesai || '';
 
-                    let localOngoing = false;
-                    if (tanggalIso && waktuMulai && waktuSelesai) {
+                    // Determine if booking has started or ended (allow submit if started; mark as terlambat if past end)
+                    let localStarted = false;
+                    let localPastEnd = false;
+                    if (tanggalIso && waktuMulai) {
                         try {
                             const [y, m, d] = tanggalIso.split('-').map(Number);
                             const parseTime = t => {
-                                const parts = (t || '').split(':').map(Number);
+                                // handle values like '16:30' or '16:30 - 16:40' by taking first part
+                                const raw = (t || '').split('-')[0].trim();
+                                const parts = raw.split(':').map(Number);
                                 return { h: parts[0] || 0, min: parts[1] || 0 };
                             };
                             const s = parseTime(waktuMulai);
-                            const e = parseTime(waktuSelesai);
+                            const e = parseTime(waktuSelesai || waktuMulai);
                             const start = new Date(y, m - 1, d, s.h, s.min, 0);
                             const end = new Date(y, m - 1, d, e.h, e.min, 59);
                             const now = new Date();
-                            localOngoing = now >= start && now <= end;
+                            localStarted = now >= start;
+                            localPastEnd = now > end;
                         } catch (err) {
-                            localOngoing = false;
+                            localStarted = false;
+                            localPastEnd = false;
                         }
                     }
 
-                    if (!(isOngoingFlag || localOngoing)) {
+                    // allow if server indicated ongoing OR booking has started locally
+                    const isOngoingTruthy = (btn.dataset.isOngoing === 'true' || btn.dataset.isOngoing === '1' || btn.dataset.isOngoing === 'True');
+                    if (!(isOngoingTruthy || localStarted)) {
                         alert('Pengembalian hanya dapat diajukan saat peminjaman sedang berlangsung.');
                         return;
+                    }
+
+                    // If booking already ended, warn user that submission will be marked as Terlambat
+                    if (localPastEnd && !isOngoingTruthy) {
+                        const proceed = confirm('Waktu peminjaman sudah berakhir. Pengembalian akan ditandai sebagai TERLAMBAT jika diajukan sekarang. Lanjutkan?');
+                        if (!proceed) return;
                     }
 
                     document.getElementById('peminjaman_id').value = btn.dataset.id;
