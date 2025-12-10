@@ -1021,7 +1021,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
                                     class="fas fa-user-circle me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
                                     class="fas fa-cog me-2"></i> Pengaturan</a></li>

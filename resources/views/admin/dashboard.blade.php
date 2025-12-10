@@ -826,7 +826,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="menuUtama">
-                    <a href="/admin/dashboard" class="dropdown-item active">
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item active">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -999,7 +999,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
@@ -1092,7 +1092,7 @@
             <div class="chart-container">
                 <div class="section-header">
                     <div class="section-title">Statistik Peminjaman</div>
-                    <a href="/admin/laporan" class="view-all">Lihat Laporan</a>
+                    <a href="{{ route('admin.laporan') }}" class="view-all">Lihat Laporan</a>
                 </div>
                 <div class="chart-placeholder">
                     <i class="fas fa-chart-bar"></i>

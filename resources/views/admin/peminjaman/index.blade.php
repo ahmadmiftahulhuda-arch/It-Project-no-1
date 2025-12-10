@@ -823,7 +823,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="menuUtama">
-                    <a href="/admin/dashboard" class="dropdown-item">
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -842,15 +842,15 @@
                         <i class="fas fa-hand-holding"></i>
                         <span>Peminjaman</span>
                     </a>
-                    <a href="/admin/pengembalian" class="dropdown-item">
+                    <a href="{{ route('admin.pengembalian') }}" class="dropdown-item">
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="/admin/riwayat" class="dropdown-item">
+                    <a href="{{ route('admin.riwayat') }}" class="dropdown-item">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
-                    <a href="/admin/feedback" class="dropdown-item">
+                    <a href="{{ route('admin.feedback.index') }}" class="dropdown-item">
                         <i class="fas fa-comment"></i>
                         <span>Feedback</span>
                     </a>
@@ -869,7 +869,7 @@
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                    <a href="/admin/ruangan" class="dropdown-item">
+                    <a href="{{ route('admin.ruangan.index') }}" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
                     </a>
@@ -884,19 +884,19 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                    <a href="{{ route('jadwal-perkuliahan.index') }}" class="dropdown-item">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
                     </a>
-                    <a href="/admin/slotwaktu" class="dropdown-item">
+                    <a href="{{ route('admin.slotwaktu.index') }}" class="dropdown-item">
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                    <a href="{{ route('mata_kuliah.index') }}" class="dropdown-item">
                         <i class="fas fa-book"></i>
                         <span>Matakuliah</span>
                     </a>
-                    <a href="/admin/kelas" class="dropdown-item">
+                    <a href="{{ route('admin.kelas.index') }}" class="dropdown-item">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
@@ -926,11 +926,11 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="laporanMenu">
-                    <a href="/admin/laporan" class="dropdown-item">
+                    <a href="{{ route('admin.laporan') }}" class="dropdown-item">
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item">
+                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>
@@ -1012,7 +1012,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
                                     class="fas fa-user-circle me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
                                     class="fas fa-cog me-2"></i> Pengaturan</a></li>

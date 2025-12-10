@@ -126,8 +126,6 @@ Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function () {
 // Route group for Administrator
 Route::middleware(['auth', 'role:Administrator'])->group(function () {
     Route::get('/admin/dashboard-main', [AdminController::class, 'dashboard'])->name('dashboard'); // Keep old dashboard name if needed
-    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
-    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
 });
 
 // ================================
