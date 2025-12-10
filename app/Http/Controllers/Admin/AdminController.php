@@ -511,16 +511,36 @@ class AdminController extends Controller
     {
         $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
 
+        // Determine whether pengembalian was submitted after the peminjaman end time
+        $peminjaman = $pengembalian->peminjaman;
+        $statusToSave = 'verified';
+
+        try {
+            // prefer stored waktu_selesai, fallback to end of day
+            $waktuSelesai = $peminjaman->waktu_selesai ?? '23:59';
+            $end = Carbon::parse($peminjaman->tanggal . ' ' . $waktuSelesai);
+
+            // pengembalian->tanggal_pengembalian is cast to datetime; ensure we have a datetime
+            $tglPeng = $pengembalian->tanggal_pengembalian ? Carbon::parse($pengembalian->tanggal_pengembalian) : Carbon::now();
+
+            if ($tglPeng->greaterThan($end)) {
+                $statusToSave = 'overdue'; // DB canonical
+            }
+        } catch (\Exception $e) {
+            // If any parsing error, default to verified
+            $statusToSave = 'verified';
+        }
+
         // Update status pengembalian
         $pengembalian->update([
-            'status' => 'verified'
+            'status' => $statusToSave
         ]);
 
-        // Update status di tabel peminjaman
-        $pengembalian->peminjaman->update([
+        // Update status in peminjaman table: always mark selesai and set tanggal_kembali to pengembalian time
+        $peminjaman->update([
             'status' => 'selesai',
             'status_pengembalian' => 'sudah dikembalikan',
-            'tanggal_kembali' => now()
+            'tanggal_kembali' => $pengembalian->tanggal_pengembalian ?? now()
         ]);
 
         return redirect()->route('admin.pengembalian')
