@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Data Ruang - Sistem Manajemen Peminjaman</title>
+    <title>ManajemenWaktu - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -435,16 +435,8 @@
             opacity: 0.9;
         }
 
-        .stat-icon.tersedia {
+        .stat-icon.active {
             background: #66bb6a;
-        }
-
-        .stat-icon.digunakan {
-            background: #ffb74d;
-        }
-
-        .stat-icon.maintenance {
-            background: #ef5350;
         }
 
         .stat-icon.total {
@@ -542,29 +534,6 @@
             background: #f8f9fa;
         }
 
-        /* Status Badges */
-        .badge {
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.8rem;
-        }
-
-        .status-tersedia {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-digunakan {
-            background: #fff8e1;
-            color: #ff8f00;
-        }
-
-        .status-maintenance {
-            background: #ffebee;
-            color: #c62828;
-        }
-
         /* Action Buttons */
         .action-buttons {
             display: flex;
@@ -633,51 +602,44 @@
             color: #dee2e6;
         }
 
-        /* Modal Styles */
-        .modal-header {
-            background: var(--primary);
-            color: white;
-            border-bottom: none;
+        /* Modal Compact Styles */
+        .modal-md {
+            max-width: 500px;
         }
 
-        .modal-header .btn-close {
-            filter: invert(1);
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-light);
+            padding: 1.2rem 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-light);
+            padding: 1.2rem 1.5rem;
         }
 
         .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .form-label {
             font-weight: 500;
+            margin-bottom: 0.5rem;
             color: var(--dark);
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
-            outline: none;
-            transition: all 0.3s;
-            background-color: var(--bg-light);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
-        }
-
-        .form-group input:read-only {
-            background-color: #f8f9fa;
-            color: #6c757d;
-            cursor: not-allowed;
+        .form-control {
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
         }
 
         .error-message {
@@ -688,16 +650,6 @@
 
         .is-invalid {
             border-color: #dc3545 !important;
-        }
-
-        /* Status Badge Preview */
-        .status-preview {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            margin-left: 10px;
         }
 
         /* Responsive */
@@ -784,9 +736,7 @@
         body.dark-mode .search-bar input,
         body.dark-mode .filter-group input,
         body.dark-mode .filter-group select,
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .form-group textarea {
+        body.dark-mode .form-control {
             background: #2a2a2a;
             border-color: var(--border-light);
             color: var(--text-dark);
@@ -816,8 +766,13 @@
         }
 
         body.dark-mode .filter-group label,
-        body.dark-mode .form-group label {
+        body.dark-mode .form-label {
             color: var(--text-dark);
+        }
+
+        body.dark-mode .modal-header,
+        body.dark-mode .modal-footer {
+            border-color: var(--border-light);
         }
 
         .menu-toggle {
@@ -953,10 +908,9 @@
                 </div>
             </div>
             
-            <!-- Manajemen Aset - DROPDOWN -->
+            <!-- Manajemen Aset -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -965,15 +919,14 @@
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                    <a href="/admin/ruangan" class="dropdown-item active">
+                    <a href="/admin/ruangan" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
                     </a>
                 </div>
             </div>
-
             
-            <!-- Manajemen Akademik -->
+           <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
@@ -984,7 +937,7 @@
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
                     </a>
-                    <a href="/admin/slotwaktu" class="dropdown-item">
+                    <a href="/admin/slotwaktu" class="dropdown-item active">
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
@@ -999,10 +952,9 @@
                     <a href="/admin/dosen" class="dropdown-item">
                         <i class="fas fa-user-tie"></i>
                         <span>Dosen</span>
-                    </a>
                 </div>
             </div>
-            
+                        
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
@@ -1051,14 +1003,14 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
         <div class="header">
-            <form id="searchForm" method="GET" action="{{ route('admin.ruangan.index') }}" class="search-bar">
+            <form id="searchForm" method="GET" action="{{ route('dosen.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" name="cari" placeholder="Cari ruang..." value="{{ request('cari') }}">
+                <input type="text" name="search" placeholder="Cari dosen berdasarkan NIP atau Nama..." value="{{ request('search') }}">
                 <button type="submit" style="display: none;"></button>
             </form>
 
@@ -1100,7 +1052,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
@@ -1119,22 +1071,22 @@
         <!-- Page Title -->
         <div class="page-title">
             <div>
-                <h1>Manajemen Data Ruang</h1>
-                <p>Kelola informasi ruang dengan mudah dan efisien</p>
+                <h1>Manajemen Dosen</h1>
+                <p>Kelola data dosen secara efisien</p>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahRuanganModal">
-                    <i class="fas fa-plus"></i> Tambah Ruang
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahDosenModal">
+                    <i class="fas fa-plus"></i> Tambah Dosen
                 </button>
             </div>
         </div>
 
-        <!-- Import Excel Form -->
-        <form action="{{ route('ruangan.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
+        <!-- Import Excel Form (matches Ruangan/SlotWaktu layout) -->
+        <form action="{{ route('dosen.import') }}" method="POST" enctype="multipart/form-data" class="import-form">
             @csrf
             <div class="import-header">
                 <h3 class="import-title">
-                    <i class="fas fa-file-import me-2"></i>Import Data Ruangan dari Excel
+                    <i class="fas fa-file-import me-2"></i>Import Data Dosen dari Excel
                 </h3>
                 <div class="import-actions">
                     <div class="file-input-wrapper">
@@ -1143,10 +1095,9 @@
                     <button class="btn btn-success" type="submit">
                         <i class="fas fa-upload me-1"></i> Import Excel
                     </button>
-
                 </div>
             </div>
-            <!-- Alert untuk pesan sukses/error import -->
+
             @if (session('import_success'))
                 <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
                     <i class="fas fa-check-circle me-2"></i>
@@ -1176,126 +1127,34 @@
             @endif
         </form>
 
-        <!-- Stats Cards -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon tersedia">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="tersedia-count">{{ $tersediaCount ?? 0 }}</h3>
-                    <p>Ruangan Tersedia</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon digunakan">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="digunakan-count">{{ $digunakanCount ?? 0 }}</h3>
-                    <p>Sedang Digunakan</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon maintenance">
-                    <i class="fas fa-tools"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="maintenance-count">{{ $maintenanceCount ?? 0 }}</h3>
-                    <p>Dalam Maintenance</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon total">
-                    <i class="fas fa-door-open"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="total-count">{{ $totalCount ?? 0 }}</h3>
-                    <p>Total Ruangan</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <form id="filterForm" method="GET" action="{{ route('admin.ruangan.index') }}">
-                <div class="filter-grid">
-                    <div class="filter-group">
-                        <label for="search">Cari Ruangan</label>
-                        <input type="text" id="search" name="cari" placeholder="Cari nama atau kode ruang..."
-                            value="{{ request('cari') }}">
-                    </div>
-                    <div class="filter-group">
-                        <label for="status_filter">Status Ruangan</label>
-                        <select id="status_filter" name="status">
-                            <option value="Semua" {{ request('status') == 'Semua' ? 'selected' : '' }}>Semua Status</option>
-                            <option value="Tersedia" {{ request('status') == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
-                            <option value="Sedang Digunakan" {{ request('status') == 'Sedang Digunakan' ? 'selected' : '' }}>Sedang Digunakan</option>
-                            <option value="Maintenance" {{ request('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="kapasitas_filter">Kapasitas Minimal</label>
-                        <input type="number" id="kapasitas_filter" name="kapasitas" value="{{ request('kapasitas') }}" min="1" placeholder="Jumlah orang">
-                    </div>
-                </div>
-                <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Terapkan Filter
-                    </button>
-                    <a href="{{ route('admin.ruangan.index') }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-refresh me-1"></i> Reset
-                    </a>
-                </div>
-            </form>
-        </div>
-
         <!-- Table -->
         <div class="table-container">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Kode Ruangan</th>
-                            <th>Nama Ruangan</th>
-                            <th>Kapasitas</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th style="width: 10%">No</th>
+                            <th style="width: 35%">NIP</th>
+                            <th style="width: 45%">Nama Dosen</th>
+                            <th style="width: 10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($ruangan as $index => $r)
+                        @forelse ($dosens as $loopKey => $dosen)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td class="font-semibold">{{ $r->kode_ruangan }}</td>
-                                <td>{{ $r->nama_ruangan }}</td>
-                                <td>{{ $r->kapasitas }} Orang</td>
-                                <td>
-                                    @if($r->status == 'Tersedia')
-                                        <span class="badge status-tersedia">Tersedia</span>
-                                    @elseif($r->status == 'Sedang Digunakan')
-                                        <span class="badge status-digunakan">Sedang Digunakan</span>
-                                    @elseif($r->status == 'Maintenance')
-                                        <span class="badge status-maintenance">Maintenance</span>
-                                    @else
-                                        <span class="badge bg-secondary">{{ $r->status }}</span>
-                                    @endif
-                                </td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td><strong>{{ $dosen->nip }}</strong></td>
+                                <td>{{ $dosen->nama_dosen }}</td>
                                 <td>
                                     <div class="d-flex gap-2 action-buttons">
-                                        <button class="btn btn-warning-custom btn-sm edit-ruangan" 
-                                                data-id="{{ $r->id }}"
-                                                data-kode="{{ $r->kode_ruangan }}"
-                                                data-nama="{{ $r->nama_ruangan }}"
-                                                data-kapasitas="{{ $r->kapasitas }}"
-                                                data-status="{{ $r->status }}">
+                                        <button class="btn btn-warning-custom btn-sm edit-dosen" 
+                                                data-nip="{{ $dosen->nip }}"
+                                                data-nama="{{ $dosen->nama_dosen }}">
                                             <i class="fas fa-edit me-1"></i> Edit
                                         </button>
-                                        <form action="{{ route('admin.ruangan.destroy', $r->id) }}" method="POST" onsubmit="return confirm('Yakin hapus ruangan ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger-custom btn-sm">
+                                        <form action="{{ route('dosen.destroy', $dosen->nip) }}" method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" onclick="return confirm('Yakin hapus data dosen ini?')" class="btn btn-danger-custom btn-sm">
                                                 <i class="fas fa-trash me-1"></i> Hapus
                                             </button>
                                         </form>
@@ -1304,9 +1163,9 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="empty-state">
-                                    <i class="fas fa-box-open"></i><br>
-                                    Tidak ada data ruangan yang ditemukan.
+                                <td colspan="4" class="empty-state">
+                                    <i class="fas fa-user-tie"></i><br>
+                                    Tidak ada data dosen ditemukan
                                 </td>
                             </tr>
                         @endforelse
@@ -1315,71 +1174,44 @@
             </div>
         </div>
 
-        <!-- Modal Tambah Ruangan -->
-        <div class="modal fade" id="tambahRuanganModal" tabindex="-1" aria-labelledby="tambahRuanganModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md"> <!-- Changed from modal-lg to modal-md -->
+        <!-- Pagination removed: showing all dosen on one page -->
+
+        <!-- Modal Tambah Dosen -->
+        <div class="modal fade" id="tambahDosenModal" tabindex="-1" aria-labelledby="tambahDosenModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="tambahRuanganModalLabel">
-                            <i class="fas fa-door-open me-2"></i>Tambah Ruangan Baru
+                        <h5 class="modal-title" id="tambahDosenModalLabel">
+                            <i class="fas fa-plus-circle me-2"></i>Tambah Dosen Baru
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="tambahRuanganForm" action="{{ route('admin.ruangan.store') }}" method="POST">
+                    <form id="tambahDosenForm" action="{{ route('dosen.store') }}" method="POST">
                         @csrf
                         <div class="modal-body">
-                            <!-- Form fields in single column layout -->
                             <div class="form-group mb-3">
-                                <label for="tambah_kode_ruangan" class="form-label">
-                                    <i class="fas fa-hashtag me-1"></i>Kode Ruangan <span class="text-danger">*</span>
+                                <label for="tambah_nip" class="form-label">
+                                    <i class="fas fa-id-card me-1"></i>NIP <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="tambah_kode_ruangan" name="kode_ruangan" 
-                                    class="form-control @error('kode_ruangan') is-invalid @enderror" 
-                                    value="{{ old('kode_ruangan') }}" required 
-                                    placeholder="Masukkan kode ruangan">
-                                @error('kode_ruangan')
+                                <input type="text" id="tambah_nip" name="nip" 
+                                       class="form-control @error('nip') is-invalid @enderror" 
+                                       value="{{ old('nip') }}" required 
+                                       placeholder="Masukkan NIP dosen">
+                                @error('nip')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
+                                <small class="text-muted">NIP akan menjadi ID unik dosen</small>
                             </div>
                             
                             <div class="form-group mb-3">
-                                <label for="tambah_nama_ruangan" class="form-label">
-                                    <i class="fas fa-door-closed me-1"></i>Nama Ruangan <span class="text-danger">*</span>
+                                <label for="tambah_nama_dosen" class="form-label">
+                                    <i class="fas fa-user-tie me-1"></i>Nama Dosen <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="tambah_nama_ruangan" name="nama_ruangan" 
-                                    class="form-control @error('nama_ruangan') is-invalid @enderror" 
-                                    value="{{ old('nama_ruangan') }}" required 
-                                    placeholder="Masukkan nama ruangan">
-                                @error('nama_ruangan')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="form-group mb-3">
-                                <label for="tambah_kapasitas" class="form-label">
-                                    <i class="fas fa-users me-1"></i>Kapasitas <span class="text-danger">*</span>
-                                </label>
-                                <input type="number" id="tambah_kapasitas" name="kapasitas" 
-                                    class="form-control @error('kapasitas') is-invalid @enderror" 
-                                    value="{{ old('kapasitas') }}" min="1" required 
-                                    placeholder="Jumlah orang">
-                                @error('kapasitas')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="form-group mb-3">
-                                <label for="tambah_status" class="form-label">
-                                    <i class="fas fa-info-circle me-1"></i>Status <span class="text-danger">*</span>
-                                </label>
-                                <select id="tambah_status" name="status" 
-                                        class="form-control @error('status') is-invalid @enderror" required>
-                                    <option value="">Pilih Status</option>
-                                    <option value="Tersedia" {{ old('status') == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
-                                    <option value="Sedang Digunakan" {{ old('status') == 'Sedang Digunakan' ? 'selected' : '' }}>Sedang Digunakan</option>
-                                    <option value="Maintenance" {{ old('status') == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
-                                </select>
-                                @error('status')
+                                <input type="text" id="tambah_nama_dosen" name="nama_dosen" 
+                                       class="form-control @error('nama_dosen') is-invalid @enderror" 
+                                       value="{{ old('nama_dosen') }}" required 
+                                       placeholder="Masukkan nama lengkap dosen">
+                                @error('nama_dosen')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -1389,7 +1221,7 @@
                                 <i class="fas fa-times me-1"></i> Batal
                             </button>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Simpan Ruangan
+                                <i class="fas fa-save me-1"></i> Simpan Data
                             </button>
                         </div>
                     </form>
@@ -1397,78 +1229,39 @@
             </div>
         </div>
 
-        <!-- Modal Edit Ruangan -->
-        <div class="modal fade" id="editRuanganModal" tabindex="-1" aria-labelledby="editRuanganModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md"> <!-- Changed from modal-lg to modal-md -->
+        <!-- Modal Edit Dosen -->
+        <div class="modal fade" id="editDosenModal" tabindex="-1" aria-labelledby="editDosenModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editRuanganModalLabel">
-                            <i class="fas fa-edit me-2"></i>Edit Ruangan
+                        <h5 class="modal-title" id="editDosenModalLabel">
+                            <i class="fas fa-edit me-2"></i>Edit Data Dosen
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="editRuanganForm" action="" method="POST">
+                    <form id="editDosenForm" action="" method="POST">
                         @csrf 
                         @method('PUT')
                         <div class="modal-body">
-                            <!-- Form fields in single column layout -->
                             <div class="form-group mb-3">
-                                <label for="edit_kode_ruangan" class="form-label">
-                                    <i class="fas fa-hashtag me-1"></i>Kode Ruangan <span class="text-danger">*</span>
+                                <label for="edit_nip" class="form-label">
+                                    <i class="fas fa-id-card me-1"></i>NIP
                                 </label>
-                                <input type="text" id="edit_kode_ruangan" name="kode_ruangan" 
-                                    class="form-control @error('kode_ruangan') is-invalid @enderror" 
-                                    required readonly>
-                                @error('kode_ruangan')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                                <small class="text-muted">Kode ruangan tidak dapat diubah</small>
+                                <input type="text" id="edit_nip" name="nip" 
+                                       class="form-control" readonly disabled>
+                                <small class="text-muted">NIP tidak dapat diubah</small>
                             </div>
                             
                             <div class="form-group mb-3">
-                                <label for="edit_nama_ruangan" class="form-label">
-                                    <i class="fas fa-door-closed me-1"></i>Nama Ruangan <span class="text-danger">*</span>
+                                <label for="edit_nama_dosen" class="form-label">
+                                    <i class="fas fa-user-tie me-1"></i>Nama Dosen <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="edit_nama_ruangan" name="nama_ruangan" 
-                                    class="form-control @error('nama_ruangan') is-invalid @enderror" 
-                                    required placeholder="Masukkan nama ruangan">
-                                @error('nama_ruangan')
+                                <input type="text" id="edit_nama_dosen" name="nama_dosen" 
+                                       class="form-control @error('nama_dosen') is-invalid @enderror" 
+                                       required placeholder="Masukkan nama lengkap dosen">
+                                @error('nama_dosen')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
-                            </div>
-                            
-                            <div class="form-group mb-3">
-                                <label for="edit_kapasitas" class="form-label">
-                                    <i class="fas fa-users me-1"></i>Kapasitas <span class="text-danger">*</span>
-                                </label>
-                                <input type="number" id="edit_kapasitas" name="kapasitas" 
-                                    class="form-control @error('kapasitas') is-invalid @enderror" 
-                                    min="1" required placeholder="Jumlah orang">
-                                @error('kapasitas')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="form-group mb-3">
-                                <label for="edit_status" class="form-label">
-                                    <i class="fas fa-info-circle me-1"></i>Status <span class="text-danger">*</span>
-                                </label>
-                                <select id="edit_status" name="status" 
-                                        class="form-control @error('status') is-invalid @enderror" required>
-                                    <option value="Tersedia">Tersedia</option>
-                                    <option value="Sedang Digunakan">Sedang Digunakan</option>
-                                    <option value="Maintenance">Maintenance</option>
-                                </select>
-                                @error('status')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                                <div class="mt-2">
-                                    <small>Preview Status: 
-                                        <span class="status-preview status-tersedia" id="edit_status_preview">
-                                            Tersedia
-                                        </span>
-                                    </small>
-                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -1476,7 +1269,7 @@
                                 <i class="fas fa-times me-1"></i> Batal
                             </button>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Perbarui Ruangan
+                                <i class="fas fa-save me-1"></i> Perbarui Data
                             </button>
                         </div>
                     </form>
@@ -1514,12 +1307,13 @@
 
             // Auto-submit form search ketika mengetik (dengan debounce)
             let searchTimeout;
-            const searchInputs = document.querySelectorAll('input[name="cari"]');
+            const searchInputs = document.querySelectorAll('input[name="search"]');
 
             searchInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     clearTimeout(searchTimeout);
                     searchTimeout = setTimeout(() => {
+                        console.log('Auto-submitting search:', this.value);
                         // Submit form yang sesuai
                         const form = this.closest('form');
                         if (form) {
@@ -1529,68 +1323,27 @@
                 });
             });
 
-            // Auto-submit filter ketika perubahan select box
-            const filterSelects = document.querySelectorAll('#filterForm select');
-            filterSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    document.getElementById('filterForm').submit();
-                });
-            });
-
-            // Edit ruangan modal
-            const editButtons = document.querySelectorAll('.edit-ruangan');
-            const editModal = new bootstrap.Modal(document.getElementById('editRuanganModal'));
-            const editForm = document.getElementById('editRuanganForm');
-            const editStatusPreview = document.getElementById('edit_status_preview');
+            // Edit dosen modal
+            const editButtons = document.querySelectorAll('.edit-dosen');
+            const editModal = new bootstrap.Modal(document.getElementById('editDosenModal'));
+            const editForm = document.getElementById('editDosenForm');
             
             editButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const kode = this.getAttribute('data-kode');
+                    const nip = this.getAttribute('data-nip');
                     const nama = this.getAttribute('data-nama');
-                    const kapasitas = this.getAttribute('data-kapasitas');
-                    const status = this.getAttribute('data-status');
                     
                     // Set form action
-                    editForm.action = `/admin/ruangan/${id}`;
+                    editForm.action = `/admin/dosen/${nip}`;
                     
                     // Set form values
-                    document.getElementById('edit_kode_ruangan').value = kode;
-                    document.getElementById('edit_nama_ruangan').value = nama;
-                    document.getElementById('edit_kapasitas').value = kapasitas;
-                    document.getElementById('edit_status').value = status;
-                    
-                    // Update status preview
-                    updateStatusPreview(status, editStatusPreview);
+                    document.getElementById('edit_nip').value = nip;
+                    document.getElementById('edit_nama_dosen').value = nama;
                     
                     // Show modal
                     editModal.show();
                 });
             });
-
-            // Update status preview when status changes
-            const editStatusSelect = document.getElementById('edit_status');
-            
-            editStatusSelect.addEventListener('change', function() {
-                const status = this.value;
-                updateStatusPreview(status, editStatusPreview);
-            });
-
-            function updateStatusPreview(status, previewElement) {
-                previewElement.textContent = status;
-                
-                // Remove all status classes
-                previewElement.classList.remove('status-tersedia', 'status-digunakan', 'status-maintenance');
-                
-                // Add appropriate class based on status
-                if (status === 'Tersedia') {
-                    previewElement.classList.add('status-tersedia');
-                } else if (status === 'Sedang Digunakan') {
-                    previewElement.classList.add('status-digunakan');
-                } else {
-                    previewElement.classList.add('status-maintenance');
-                }
-            }
 
             // Terapkan dark mode jika sebelumnya diaktifkan
             if (localStorage.getItem('darkMode') === 'enabled') {

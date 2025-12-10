@@ -305,6 +305,15 @@ class AdminController extends Controller
     }
 
     /**
+     * Show admin profile page
+     */
+    public function profile(Request $request)
+    {
+        $user = auth()->user();
+        return view('admin.profile', compact('user'));
+    }
+
+    /**
      * Store new peminjaman from admin
      */
     public function store(Request $request)

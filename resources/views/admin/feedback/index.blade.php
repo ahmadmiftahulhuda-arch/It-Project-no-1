@@ -1085,6 +1085,17 @@
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                     <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
                 </div>
             </div>
             
@@ -1170,7 +1181,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
