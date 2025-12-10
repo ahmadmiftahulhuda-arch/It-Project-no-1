@@ -909,6 +909,9 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
                 </div>
             </div>
 

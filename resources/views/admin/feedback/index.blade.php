@@ -1085,6 +1085,17 @@
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                     <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
                 </div>
             </div>
             
