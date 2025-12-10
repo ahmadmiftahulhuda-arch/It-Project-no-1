@@ -902,22 +902,27 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Dosen Pengampu Mata Kuliah (opsional)</label>
-                                <div class="input-icon">
-                                    <i class="fas fa-chalkboard-teacher"></i>
-                                    <select name="dosen_nip" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
-                                        <option value="">-- Pilih Dosen Pengampu --</option>
-                                        @foreach($dosens as $d)
-                                            <option value="{{ $d->nip }}" {{ old('dosen_nip', $peminjaman->dosen_nip) == $d->nip ? 'selected' : '' }}>
-                                                {{ $d->nama_dosen }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('dosen_nip')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                            <div class="col-md-6 mb-4 form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-user text-primary"></i>
+                                            Dosen Pengampu Mata Kuliah
+                                        </label>
+                                        <div class="input-icon">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                            <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror">
+                                                <option value="">-- Pilih Dosen Pengampu --</option>
+                                                @if(!empty($dosens) && $dosens->count())
+                                                    @foreach($dosens as $dosen)
+                                                        <option value="{{ $dosen->nama_dosen }}" {{ old('dosen_nama') == $dosen->nama_dosen ? 'selected' : '' }}>
+                                                            {{ $dosen->nama_dosen }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        @error('dosen_nama')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                             </div>
 
                             <div class="mb-4">
