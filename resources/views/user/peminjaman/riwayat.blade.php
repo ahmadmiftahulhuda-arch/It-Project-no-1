@@ -417,6 +417,18 @@
             border-color: #d6d8db;
         }
 
+        .status-terlambat {
+            background-color: #f8d7da;
+            color: #842029;
+            border-color: #f5c2c7;
+        }
+
+        .status-belum-dikembalikan {
+            background-color: #e9ecef;
+            color: #495057;
+            border-color: #dbe0e5;
+        }
+
         /* ===== STATUS BERLANGSUNG YANG DIPERBAIKI ===== */
         .status-berlangsung {
             background: linear-gradient(135deg, #d4edda, #c3e6cb);
@@ -1433,11 +1445,12 @@
                         <tr>
                             <th width="50" class="text-center">No</th>
                             <th>Peminjam</th>
-                            <th>Ruang & Barang</th>
-                            <th>Tanggal Pinjam</th>
-                            <th>Tanggal Kembali</th>
-                            <th width="130" class="text-center">Status</th>
-                            <th>Kondisi</th>
+                            <th>Tanggal</th>
+                            <th>Ruang</th>
+                            <th>Proyektor</th>
+                            <th>Keperluan</th>
+                            <th width="140" class="text-center">Status Peminjaman</th>
+                            <th width="160" class="text-center">Status Pengembalian</th>
                             <th width="100" class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -1457,17 +1470,15 @@
                                 data-status="{{ $peminjaman->status }}" 
                                 data-ruang="{{ $peminjaman->ruang }}" 
                                 data-tanggal="{{ $peminjaman->tanggal }}"
-                                data-waktu-pengajuan="{{ $peminjaman->created_at }}">
+                                data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '') }}"
+                                data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '') }}"
+                                data-waktu-pengajuan="{{ $peminjaman->created_at }}"
+                                data-waktu-pengembalian="{{ optional($peminjaman->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($peminjaman->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}">
                                 <td class="fw-bold text-center">
                                     {{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                 </td>
                                 <td>
-                                    {{ $peminjaman->nama_peminjam ?? optional($peminjaman->user)->display_name ?? 'Tidak tersedia' }}
-                                </td>
-
-                                <td>
-                                    <div><i class="fas fa-door-open text-info me-1"></i> {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}</div>
-                                    <div class="text-muted small mt-1">Proyektor: {{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}</div>
+                                    {{ optional($peminjaman->user)->display_name ?? $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}
                                 </td>
 
                                 <td>
@@ -1476,27 +1487,26 @@
                                         {{ $tanggal->format('d M Y') }}
                                     </div>
                                     <div>
-                                        <span class="time-badge">
+                                        <small class="text-muted">
                                             <i class="fas fa-clock me-1"></i>
-                                            {{ $peminjaman->waktu_mulai ?? '08:00' }} -
-                                            {{ $peminjaman->waktu_selesai ?? '17:00' }}
-                                        </span>
+                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }} -
+                                            {{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}
+                                        </small>
                                     </div>
                                 </td>
 
                                 <td>
-                                    @if(optional($peminjaman->pengembalian)->tanggal_pengembalian)
-                                        <div>
-                                            <i class="fas fa-calendar-check text-success me-1"></i>
-                                            {{ \Carbon\Carbon::parse($peminjaman->pengembalian->tanggal_pengembalian)->format('d M Y') }}
-                                        </div>
-                                        <div class="text-muted small mt-1">
-                                            <i class="fas fa-clock me-1"></i>
-                                            {{ optional($peminjaman->pengembalian)->created_at ? \Carbon\Carbon::parse($peminjaman->pengembalian->created_at)->format('H:i') : '-' }}
-                                        </div>
-                                    @else
-                                        <div class="text-muted">-</div>
-                                    @endif
+                                    <i class="fas fa-door-open text-info me-1"></i>
+                                    {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
+                                </td>
+
+                                <td>
+                                    <strong>{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor ?? '-') : 'Tidak' }}</strong>
+                                    <div class="text-muted small mt-1">{{ $peminjaman->projector->merk ?? '' }}</div>
+                                </td>
+
+                                <td>
+                                    <div class="text-truncate-custom">{{ $peminjaman->keperluan ?? '-' }}</div>
                                 </td>
 
                                 <td class="text-center">
@@ -1504,84 +1514,43 @@
                                         $pjStatus = optional($peminjaman->pengembalian)->status;
                                     @endphp
 
-                                    @if(in_array($pjStatus, ['overdue','terlambat']))
-                                        <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                    @if($isOngoing && $peminjaman->status === 'disetujui')
+                                        <span class="badge status-badge status-berlangsung">
+                                            <span class="pulse-dot"></span>
+                                            <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                        </span>
                                     @else
-                                        @switch(true)
-                                            @case($isOngoing)
-                                                <span class="badge status-badge status-berlangsung">
-                                                    <span class="pulse-dot"></span>
-                                                    <i class="fas fa-play-circle me-1"></i> Berlangsung
-                                                </span>
+                                        @switch($peminjaman->status)
+                                            @case('disetujui')
+                                                <span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
                                             @break
-
-                                            @case($peminjaman->status === 'disetujui')
-                                                <span class="badge status-badge status-disetujui">
-                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
-                                                </span>
+                                            @case('selesai')
+                                                <span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>
                                             @break
-
-                                            @case($peminjaman->status === 'selesai')
-                                                <span class="badge status-badge status-selesai">
-                                                    <i class="fas fa-check-double me-1"></i> Selesai
-                                                </span>
+                                            @case('ditolak')
+                                                <span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
                                             @break
-
-                                            @case($peminjaman->status === 'ditolak')
-                                                <span class="badge status-badge status-ditolak">
-                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
-                                                </span>
-                                            @break
-
                                             @default
-                                                <span class="badge status-badge status-menunggu">
-                                                    <i class="fas fa-clock me-1"></i> Menunggu
-                                                </span>
+                                                <span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>
                                         @endswitch
                                     @endif
                                 </td>
 
-                                <td>
-                                    @if(optional($peminjaman->pengembalian)->kondisi_ruang || optional($peminjaman->pengembalian)->kondisi_proyektor)
-                                        <div><small>Ruang: {{ optional($peminjaman->pengembalian)->kondisi_ruang ?? '-' }}</small></div>
-                                        <div><small>Proyektor: {{ optional($peminjaman->pengembalian)->kondisi_proyektor ?? '-' }}</small></div>
-                                    @else
-                                        <div class="text-muted">-</div>
-                                    @endif
-                                </td>
-
                                 <td class="text-center">
-                                    @switch(true)
-                                        @case($isOngoing)
-                                            <span class="badge status-badge status-berlangsung">
-                                                <span class="pulse-dot"></span>
-                                                <i class="fas fa-play-circle me-1"></i> Berlangsung
-                                            </span>
-                                        @break
-
-                                        @case($peminjaman->status === 'disetujui')
-                                            <span class="badge status-badge status-disetujui">
-                                                <i class="fas fa-check-circle me-1"></i> Disetujui
-                                            </span>
-                                        @break
-
-                                        @case($peminjaman->status === 'selesai')
-                                            <span class="badge status-badge status-selesai">
-                                                <i class="fas fa-check-double me-1"></i> Selesai
-                                            </span>
-                                        @break
-
-                                        @case($peminjaman->status === 'ditolak')
-                                            <span class="badge status-badge status-ditolak">
-                                                <i class="fas fa-times-circle me-1"></i> Ditolak
-                                            </span>
-                                        @break
-
-                                        @default
-                                            <span class="badge status-badge status-menunggu">
-                                                <i class="fas fa-clock me-1"></i> Menunggu
-                                            </span>
-                                    @endswitch
+                                    @php
+                                        $pj = strtolower($pjStatus ?? '');
+                                    @endphp
+                                    @if(in_array($pj, ['overdue','terlambat']))
+                                        <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                    @elseif(in_array($pj, ['verified','disetujui']))
+                                        <span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                    @elseif(in_array($pj, ['rejected','ditolak']))
+                                        <span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                    @elseif(in_array($pj, ['pending','menunggu','']))
+                                        <span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
+                                    @else
+                                        <span class="badge status-badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
+                                    @endif
                                 </td>
 
                                 <td class="text-center">
@@ -1590,22 +1559,23 @@
                                             title="Lihat Detail"
                                             data-id="{{ $peminjaman->id }}"
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
-                                            data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
-                                            data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
+                                            data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}"
+                                            data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
                                             data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}"
-                                            data-tanggal-pengembalian="{{ optional($peminjaman->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse($peminjaman->pengembalian->tanggal_pengembalian)->format('d M Y') : '' }}"
-                                            data-waktu-pengembalian="{{ optional($peminjaman->pengembalian)->created_at ? \Carbon\Carbon::parse($peminjaman->pengembalian->created_at)->format('H:i') : '' }}"
+                                            data-tanggal-pengembalian="{{ optional($peminjaman->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($peminjaman->pengembalian)->tanggal_pengembalian)->format('d M Y') : '' }}"
+                                            data-waktu-pengembalian="{{ optional($peminjaman->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($peminjaman->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}"
+                                            data-status-pengembalian="{{ optional($peminjaman->pengembalian)->status ?? '' }}"
                                             data-kondisi-ruang="{{ optional($peminjaman->pengembalian)->kondisi_ruang ?? '' }}"
                                             data-kondisi-proyektor="{{ optional($peminjaman->pengembalian)->kondisi_proyektor ?? '' }}"
-                                            data-nama-peminjam="{{ $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
-                                            data-nim="{{ $peminjaman->nim ?? 'Tidak tersedia' }}"
-                                            data-prodi="{{ $peminjaman->prodi ?? 'Tidak tersedia' }}"
-                                            data-no-hp="{{ $peminjaman->no_hp ?? 'Tidak tersedia' }}"
-                                            data-email="{{ $peminjaman->email ?? 'Tidak tersedia' }}"
+                                            data-nama-peminjam="{{ optional($peminjaman->user)->display_name ?? $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
+                                            data-nim="{{ optional($peminjaman->user)->nim ?? $peminjaman->nim ?? 'Tidak tersedia' }}"
+                                            data-prodi="{{ optional($peminjaman->user)->prodi ?? $peminjaman->prodi ?? 'Tidak tersedia' }}"
+                                            data-no-hp="{{ optional($peminjaman->user)->no_hp ?? $peminjaman->no_hp ?? 'Tidak tersedia' }}"
+                                            data-email="{{ optional($peminjaman->user)->email ?? $peminjaman->email ?? 'Tidak tersedia' }}"
                                             data-diajukan="{{ $waktuPengajuan->format('d M Y H:i') }}"
                                             data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
                                             <i class="fas fa-eye"></i>
@@ -1629,7 +1599,7 @@
                             </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-5">
+                                    <td colspan="9" class="text-center py-5">
                                         <i class="fas fa-inbox fa-2x text-muted"></i>
                                         <h5 class="mt-2">Belum ada riwayat peminjaman</h5>
                                         <p class="text-muted">Silakan ajukan peminjaman baru untuk melihat riwayat di sini.
@@ -1698,6 +1668,31 @@
                     <button class="modal-close" id="closeModal">&times;</button>
                 </div>
                 <div class="modal-body-custom">
+
+                                        <div class="detail-section">
+                        <h4><i class="fas fa-user"></i> Informasi Peminjam</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Nama Peminjam</div>
+                            <div class="detail-value" id="detail-nama-peminjam"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">NIM</div>
+                            <div class="detail-value" id="detail-nim"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Program Studi</div>
+                            <div class="detail-value" id="detail-prodi"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">No. HP</div>
+                            <div class="detail-value" id="detail-no-hp"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value" id="detail-email"></div>
+                        </div>
+                    </div>
+
                     <div class="detail-section">
                         <h4><i class="fas fa-calendar-alt"></i> Informasi Peminjaman</h4>
                         <div class="detail-row">
@@ -1738,29 +1733,11 @@
                                 <span class="status-badge" id="detail-status"></span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="detail-section">
-                        <h4><i class="fas fa-user"></i> Informasi Peminjam</h4>
                         <div class="detail-row">
-                            <div class="detail-label">Nama Peminjam</div>
-                            <div class="detail-value" id="detail-nama-peminjam"></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">NIM</div>
-                            <div class="detail-value" id="detail-nim"></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Program Studi</div>
-                            <div class="detail-value" id="detail-prodi"></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">No. HP</div>
-                            <div class="detail-value" id="detail-no-hp"></div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Email</div>
-                            <div class="detail-value" id="detail-email"></div>
+                            <div class="detail-label">Status Pengembalian</div>
+                            <div class="detail-value">
+                                <span class="status-badge" id="detail-status-pengembalian"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -1950,6 +1927,7 @@
                 const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
                 const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || '';
                 const waktuPengembalian = button.getAttribute('data-waktu-pengembalian') || '';
+                const statusPengembalian = button.getAttribute('data-status-pengembalian') || '';
                 const kondisiRuang = button.getAttribute('data-kondisi-ruang') || '';
                 const kondisiProyektor = button.getAttribute('data-kondisi-proyektor') || '';
 
@@ -1971,6 +1949,25 @@
                 document.getElementById('detail-waktu-kembali').textContent = waktuPengembalian || '-';
                 document.getElementById('detail-kondisi-ruang').textContent = kondisiRuang || '-';
                 document.getElementById('detail-kondisi-proyektor').textContent = kondisiProyektor || '-';
+
+                // Status pengembalian mapping (show badge + waktu)
+                const pjEl = document.getElementById('detail-status-pengembalian');
+                const pj = (statusPengembalian || '').toString().toLowerCase();
+                let pjHtml = '';
+                if (pj === 'verified' || pj === 'disetujui') {
+                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (pj === 'pending' || pj === 'menunggu') {
+                    pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (pj === 'rejected' || pj === 'ditolak') {
+                    pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (pj === 'overdue' || pj === 'terlambat') {
+                    pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (waktuPengembalian) {
+                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + waktuPengembalian + ')</span>';
+                } else {
+                    pjHtml = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
+                }
+                pjEl.innerHTML = pjHtml;
 
                 // Set status dengan badge yang sesuai
                 const statusBadge = document.getElementById('detail-status');
