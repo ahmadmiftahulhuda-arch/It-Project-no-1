@@ -724,26 +724,26 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="kalenderDropdown">
                             <li>
-                                <a class="dropdown-item-custom" href="/kalender">
-                                    <i class="fas fa-calendar me-2"></i> Kalender Akademik
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
-                                </a>
-                            </li>
-                           
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-download me-2"></i> Download Kalender
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="peminjamanDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <label class="form-label">
+                                            <i class="fas fa-user text-primary"></i>
+                                            Dosen Pengampu Mata Kuliah
+                                        </label>
+                                        <div class="input-icon">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                            <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror">
+                                                <option value="">-- Pilih Dosen Pengampu (opsional) --</option>
+                                                @if(!empty($dosens) && $dosens->count())
+                                                    @foreach($dosens as $dosen)
+                                                        <option value="{{ $dosen->nip }}" {{ old('dosen_nip') == $dosen->nip ? 'selected' : '' }}>
+                                                            {{ $dosen->nama_dosen }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        @error('dosen_nip')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                             <i class="fas fa-clipboard-list me-1"></i> Peminjaman
                             <span class="custom-arrow">
                                 <i class="fa-solid fa-chevron-down"></i>
@@ -980,6 +980,29 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="col-md-6 mb-4 form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-user text-primary"></i>
+                                            Dosen Pengampu Mata Kuliah
+                                        </label>
+                                        <div class="input-icon">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                            <select name="dosen_nip" class="form-select @error('dosen_nama') is-invalid @enderror">
+                                                <option value="">-- Pilih Dosen Pengampu --</option>
+                                                @if(!empty($dosens) && $dosens->count())
+                                                    @foreach($dosens as $dosen)
+                                                        <option value="{{ $dosen->nama_dosen }}" {{ old('dosen_nama') == $dosen->nama_dosen ? 'selected' : '' }}>
+                                                            {{ $dosen->nama_dosen }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        @error('dosen_nama')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
                             <div class="mb-4 form-group">
                                 <label class="form-label">

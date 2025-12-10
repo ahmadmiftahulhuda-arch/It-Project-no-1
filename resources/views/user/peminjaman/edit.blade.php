@@ -903,6 +903,24 @@
                             </div>
 
                             <div class="mb-4">
+                                <label class="form-label">Dosen Pengampu Mata Kuliah (opsional)</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <select name="dosen_nip" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
+                                        <option value="">-- Pilih Dosen Pengampu --</option>
+                                        @foreach($dosens as $d)
+                                            <option value="{{ $d->nip }}" {{ old('dosen_nip', $peminjaman->dosen_nip) == $d->nip ? 'selected' : '' }}>
+                                                {{ $d->nama_dosen }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('dosen_nip')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
                                 <label class="form-label">Keperluan</label>
                                 <div class="input-icon">
                                     <i class="fas fa-clipboard-list"></i>

@@ -8,6 +8,7 @@ use App\Models\Pengembalian;
 use App\Models\Ruangan;
 use App\Models\Projector;
 use App\Models\SlotWaktu;
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -55,7 +56,10 @@ class PeminjamanController extends Controller
         // Ambil slot waktu yang telah didefinisikan admin
         $slotwaktu = SlotWaktu::all();
 
-        return view('user.peminjaman.create', compact('ruangan', 'projectors', 'slotwaktu'));
+        // Ambil daftar dosen yang telah diinput oleh admin
+        $dosens = Dosen::orderBy('nama_dosen')->get();
+
+        return view('user.peminjaman.create', compact('ruangan', 'projectors', 'slotwaktu', 'dosens'));
     }
 
     public function store(Request $request)
@@ -72,6 +76,7 @@ class PeminjamanController extends Controller
             'waktu_mulai'   => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i',
             'keperluan'     => 'required|string|max:255',
+            'dosen_nip'     => 'nullable|exists:dosens,nip'
         ]);
 
         Peminjaman::create([
@@ -82,6 +87,7 @@ class PeminjamanController extends Controller
             'waktu_mulai'   => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
             'keperluan'     => $request->keperluan,
+            'dosen_nip'     => $request->dosen_nip ?? null,
             'status'        => 'pending',
         ]);
 
@@ -99,7 +105,8 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::where('user_id', Auth::id())->findOrFail($id);
         $ruangan = Ruangan::all();
         $projectors = Projector::where('status', 'tersedia')->get();
-        return view('user.peminjaman.edit', compact('peminjaman', 'ruangan', 'projectors'));
+        $dosens = Dosen::orderBy('nama_dosen')->get();
+        return view('user.peminjaman.edit', compact('peminjaman', 'ruangan', 'projectors', 'dosens'));
     }
 
     public function update(Request $request, $id)
@@ -111,6 +118,7 @@ class PeminjamanController extends Controller
             'waktu_mulai'   => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i',
             'keperluan'     => 'required|string|max:255',
+            'dosen_nip'     => 'nullable|exists:dosens,nip'
         ]);
 
         $peminjaman = Peminjaman::where('user_id', Auth::id())->findOrFail($id);
@@ -122,6 +130,7 @@ class PeminjamanController extends Controller
             'waktu_mulai'   => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
             'keperluan'     => $request->keperluan,
+            'dosen_nip'     => $request->dosen_nip ?? null,
         ]);
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil diupdate');
