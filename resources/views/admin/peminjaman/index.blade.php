@@ -536,6 +536,12 @@
             border-color: #c3e6cb;
         }
 
+        .status-terlambat {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
         .status-ditolak {
             background-color: #f8d7da;
             color: #721c24;
