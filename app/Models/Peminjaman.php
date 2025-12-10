@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Peminjaman extends Model
 {
@@ -98,5 +99,67 @@ class Peminjaman extends Model
     public function feedback()
     {
         return $this->hasOne(Feedback::class, 'peminjaman_id');
+    }
+
+    /**
+     * Tampilkan waktu mulai dalam format H:i (tanpa detik)
+     */
+    public function getDisplayWaktuMulaiAttribute()
+    {
+        if (!$this->waktu_mulai) return null;
+        // Normalize strings like '07:30:00' or '07:30'
+        return substr($this->waktu_mulai, 0, 5);
+    }
+
+    /**
+     * Tampilkan waktu selesai dalam format H:i (tanpa detik)
+     */
+    public function getDisplayWaktuSelesaiAttribute()
+    {
+        if (!$this->waktu_selesai) return null;
+        return substr($this->waktu_selesai, 0, 5);
+    }
+
+    /**
+     * Apakah peminjaman sedang berlangsung sekarang?
+     * - Menggunakan tanggal + waktu_mulai/waktu_selesai jika tersedia
+     * - Fallback: apabila tanggal adalah hari ini, bandingkan H:i string
+     */
+    public function getIsOngoingAttribute()
+    {
+        $now = Carbon::now();
+
+        // Build start/end datetimes if possible
+        try {
+            $start = $this->waktu_mulai ? Carbon::parse($this->tanggal . ' ' . $this->waktu_mulai) : null;
+        } catch (\Exception $e) {
+            $start = null;
+        }
+
+        try {
+            $end = $this->waktu_selesai ? Carbon::parse($this->tanggal . ' ' . $this->waktu_selesai) : null;
+        } catch (\Exception $e) {
+            $end = null;
+        }
+
+        if ($this->status === 'disetujui' && $start && $end) {
+            if ($now->between($start, $end)) return true;
+        }
+
+        // Fallback: if booking is today, compare H:i strings
+        try {
+            $tanggal = Carbon::parse($this->tanggal);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        if ($this->status === 'disetujui' && $tanggal->isToday() && $this->waktu_mulai && $this->waktu_selesai) {
+            $nowTime = $now->format('H:i');
+            $startTime = substr($this->waktu_mulai, 0, 5);
+            $endTime = substr($this->waktu_selesai, 0, 5);
+            return ($nowTime >= $startTime && $nowTime <= $endTime);
+        }
+
+        return false;
     }
 }

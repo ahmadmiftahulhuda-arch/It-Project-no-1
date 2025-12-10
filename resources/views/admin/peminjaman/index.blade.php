@@ -1182,19 +1182,16 @@
                         @forelse($peminjamans as $peminjaman)
                             @php
                                 $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
-                                $isToday = $tanggal->isToday();
                                 $now = \Carbon\Carbon::now();
-
-                                // Cek apakah sedang berlangsung (hari ini, disetujui, dan dalam rentang waktu)
-                                $isOngoing =
-                                    $isToday &&
-                                    $peminjaman->status === 'disetujui' &&
-                                    $now->format('H:i:s') >= ($peminjaman->waktu_mulai ?? '00:00:00') &&
-                                    $now->format('H:i:s') <= ($peminjaman->waktu_selesai ?? '23:59:59');
+                                $isOngoing = $peminjaman->is_ongoing;
                             @endphp
 
                             <tr data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
-                                data-tanggal="{{ $peminjaman->tanggal }}" data-id="{{ $peminjaman->id }}"
+                                data-tanggal="{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}"
+                                data-tanggal-iso="{{ $peminjaman->tanggal }}"
+                                data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '') }}"
+                                data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '') }}"
+                                data-id="{{ $peminjaman->id }}"
                                 class="{{ $isOngoing ? 'table-success' : '' }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
@@ -1217,10 +1214,11 @@
                                     <div>
                                         <span class="badge bg-light text-dark">
                                             <i class="fas fa-clock me-1"></i>
-                                            {{ $peminjaman->waktu_mulai ?? '08:00' }} -
-                                            {{ $peminjaman->waktu_selesai ?? '17:00' }}
+                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }} -
+                                            {{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}
                                         </span>
                                     </div>
+                                    {{-- debug info removed --}}
                                 </td>
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
@@ -1241,26 +1239,32 @@
                                     {{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 40) }}
                                 </td>
                                 <td>
-                                    @if ($isOngoing)
-                                        <span class="badge status-badge status-berlangsung">
-                                            <i class="fas fa-play-circle me-1"></i> Berlangsung
-                                        </span>
-                                    @elseif ($peminjaman->status == 'selesai')
-                                        <span class="badge status-badge status-selesai">
-                                            <i class="fas fa-check-double me-1"></i> Selesai
-                                        </span>
-                                    @elseif ($peminjaman->status == 'disetujui')
-                                        <span class="badge status-badge status-disetujui">
-                                            <i class="fas fa-check-circle me-1"></i> Disetujui
-                                        </span>
-                                    @elseif($peminjaman->status == 'ditolak')
-                                        <span class="badge status-badge status-ditolak">
-                                            <i class="fas fa-times-circle me-1"></i> Ditolak
-                                        </span>
+                                    @php $pjStatus = optional($peminjaman->pengembalian)->status; @endphp
+
+                                    @if(in_array($pjStatus, ['overdue','terlambat']))
+                                        <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                     @else
-                                        <span class="badge status-badge status-menunggu">
-                                            <i class="fas fa-clock me-1"></i> Menunggu
-                                        </span>
+                                        @if ($isOngoing)
+                                            <span class="badge status-badge status-berlangsung">
+                                                <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                            </span>
+                                        @elseif ($peminjaman->status == 'selesai')
+                                            <span class="badge status-badge status-selesai">
+                                                <i class="fas fa-check-double me-1"></i> Selesai
+                                            </span>
+                                        @elseif ($peminjaman->status == 'disetujui')
+                                            <span class="badge status-badge status-disetujui">
+                                                <i class="fas fa-check-circle me-1"></i> Disetujui
+                                            </span>
+                                        @elseif($peminjaman->status == 'ditolak')
+                                            <span class="badge status-badge status-ditolak">
+                                                <i class="fas fa-times-circle me-1"></i> Ditolak
+                                            </span>
+                                        @else
+                                            <span class="badge status-badge status-menunggu">
+                                                <i class="fas fa-clock me-1"></i> Menunggu
+                                            </span>
+                                        @endif
                                     @endif
                                 </td>
                                 <td>
@@ -1925,9 +1929,59 @@
                 }
             }
 
+            // Client-side: update badges to 'Berlangsung' when local time is inside booking window
+            function updateOngoingBadges() {
+                const rows = document.querySelectorAll('tbody tr[data-tanggal-iso]');
+                const now = new Date();
+
+                rows.forEach(row => {
+                    const tanggalIso = row.getAttribute('data-tanggal-iso');
+                    const waktuMulai = row.getAttribute('data-waktu-mulai') || '';
+                    const waktuSelesai = row.getAttribute('data-waktu-selesai') || '';
+
+                    if (!tanggalIso || !waktuMulai || !waktuSelesai) return;
+
+                    // build local Date objects
+                    const [y, m, d] = tanggalIso.split('-').map(Number);
+                    const parseTime = (t) => {
+                        const parts = t.split(':').map(Number);
+                        return {
+                            h: parts[0] || 0,
+                            min: parts[1] || 0
+                        };
+                    };
+
+                    const s = parseTime(waktuMulai);
+                    const e = parseTime(waktuSelesai);
+                    const start = new Date(y, m - 1, d, s.h, s.min, 0);
+                    const end = new Date(y, m - 1, d, e.h, e.min, 59);
+
+                    const isOngoing = now >= start && now <= end;
+
+                    // Prefer the status column badge to avoid overwriting the time-range badge
+                    const badge = row.querySelector('.status-badge') || row.querySelector('span.badge');
+                    if (!badge) return;
+
+                    if (isOngoing) {
+                        // update visual only if not already 'Berlangsung'
+                        if (!/Berlangsung/i.test(badge.textContent)) {
+                            // keep status-badge classes for styling consistency
+                            badge.innerHTML = '<i class="fas fa-play-circle me-1"></i> Berlangsung';
+                            badge.className = 'badge status-badge status-berlangsung';
+                        }
+                    } else {
+                        // optional: do nothing — server render keeps canonical statuses
+                    }
+                });
+            }
+
             // Panggil fungsi saat halaman dimuat
             document.addEventListener('DOMContentLoaded', function() {
                 showActiveFilters();
+
+                // Update badges on load and every minute
+                updateOngoingBadges();
+                setInterval(updateOngoingBadges, 60000);
 
                 // Debug: Tampilkan jumlah data yang difilter
                 const tableRows = document.querySelectorAll('tbody tr');

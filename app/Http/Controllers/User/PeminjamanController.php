@@ -236,8 +236,17 @@ class PeminjamanController extends Controller
                 ->where('status', 'disetujui')
                 ->findOrFail($id);
 
-            // Always record tanggal_pengembalian as server time (current date)
+            // Always record tanggal_pengembalian as server time (current datetime)
             $tanggalPengembalian = Carbon::now()->toDateString();
+
+            // Determine if this submission is late relative to the peminjaman end time
+            try {
+                $end = $peminjaman->waktu_selesai ? Carbon::parse($peminjaman->tanggal . ' ' . $peminjaman->waktu_selesai) : Carbon::parse($peminjaman->tanggal)->endOfDay();
+            } catch (\Exception $e) {
+                $end = Carbon::parse($peminjaman->tanggal)->endOfDay();
+            }
+
+            $statusToSave = Carbon::now()->greaterThan($end) ? 'overdue' : 'pending';
 
             // If a Pengembalian already exists for this peminjaman, update it (allow re-submit)
             $existing = Pengembalian::where('peminjaman_id', $peminjaman->id)->first();
@@ -248,7 +257,7 @@ class PeminjamanController extends Controller
                     'kondisi_ruang' => $request->kondisi_ruang,
                     'kondisi_proyektor' => $request->kondisi_proyektor,
                     'catatan' => $request->catatan,
-                    'status' => 'pending',
+                    'status' => $statusToSave,
                 ]);
             } else {
                 Pengembalian::create([
@@ -258,7 +267,7 @@ class PeminjamanController extends Controller
                     'kondisi_ruang' => $request->kondisi_ruang,
                     'kondisi_proyektor' => $request->kondisi_proyektor,
                     'catatan' => $request->catatan,
-                    'status' => 'pending',
+                    'status' => $statusToSave,
                 ]);
             }
 

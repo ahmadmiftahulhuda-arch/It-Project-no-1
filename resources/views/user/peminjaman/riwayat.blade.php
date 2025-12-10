@@ -1445,15 +1445,8 @@
                         @forelse($riwayat as $peminjaman)
                             @php
                                 $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
-                                $isToday = $tanggal->isToday();
                                 $now = \Carbon\Carbon::now();
-
-                                // Cek apakah sedang berlangsung (hari ini, disetujui, dan dalam rentang waktu)
-                                $isOngoing =
-                                    $isToday &&
-                                    $peminjaman->status === 'disetujui' &&
-                                    $now->format('H:i:s') >= ($peminjaman->waktu_mulai ?? '00:00:00') &&
-                                    $now->format('H:i:s') <= ($peminjaman->waktu_selesai ?? '23:59:59');
+                                $isOngoing = $peminjaman->is_ongoing;
 
                                 // Hitung waktu pengajuan relatif
                                 $waktuPengajuan = \Carbon\Carbon::parse($peminjaman->created_at);
@@ -1507,37 +1500,45 @@
                                 </td>
 
                                 <td class="text-center">
-                                    @switch(true)
-                                        @case($isOngoing)
-                                            <span class="badge status-badge status-berlangsung">
-                                                <span class="pulse-dot"></span>
-                                                <i class="fas fa-play-circle me-1"></i> Berlangsung
-                                            </span>
-                                        @break
+                                    @php
+                                        $pjStatus = optional($peminjaman->pengembalian)->status;
+                                    @endphp
 
-                                        @case($peminjaman->status === 'disetujui')
-                                            <span class="badge status-badge status-disetujui">
-                                                <i class="fas fa-check-circle me-1"></i> Disetujui
-                                            </span>
-                                        @break
+                                    @if(in_array($pjStatus, ['overdue','terlambat']))
+                                        <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                    @else
+                                        @switch(true)
+                                            @case($isOngoing)
+                                                <span class="badge status-badge status-berlangsung">
+                                                    <span class="pulse-dot"></span>
+                                                    <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                                </span>
+                                            @break
 
-                                        @case($peminjaman->status === 'selesai')
-                                            <span class="badge status-badge status-selesai">
-                                                <i class="fas fa-check-double me-1"></i> Selesai
-                                            </span>
-                                        @break
+                                            @case($peminjaman->status === 'disetujui')
+                                                <span class="badge status-badge status-disetujui">
+                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
+                                                </span>
+                                            @break
 
-                                        @case($peminjaman->status === 'ditolak')
-                                            <span class="badge status-badge status-ditolak">
-                                                <i class="fas fa-times-circle me-1"></i> Ditolak
-                                            </span>
-                                        @break
+                                            @case($peminjaman->status === 'selesai')
+                                                <span class="badge status-badge status-selesai">
+                                                    <i class="fas fa-check-double me-1"></i> Selesai
+                                                </span>
+                                            @break
 
-                                        @default
-                                            <span class="badge status-badge status-menunggu">
-                                                <i class="fas fa-clock me-1"></i> Menunggu
-                                            </span>
-                                    @endswitch
+                                            @case($peminjaman->status === 'ditolak')
+                                                <span class="badge status-badge status-ditolak">
+                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
+                                                </span>
+                                            @break
+
+                                            @default
+                                                <span class="badge status-badge status-menunggu">
+                                                    <i class="fas fa-clock me-1"></i> Menunggu
+                                                </span>
+                                        @endswitch
+                                    @endif
                                 </td>
 
                                 <td>
