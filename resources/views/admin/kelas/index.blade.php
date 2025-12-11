@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Data Kelas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -80,13 +81,29 @@
             color: white;
         }
 
-        .stat-icon.bg-primary-light { background-color: var(--primary); }
-        .stat-icon.bg-success-light { background-color: var(--success); }
-        .stat-icon.bg-info-light { background-color: var(--info); }
-        
-        .dark-mode .stat-icon.bg-primary-light { background-color: #3f60a8; }
-        .dark-mode .stat-icon.bg-success-light { background-color: #388e3c; }
-        .dark-mode .stat-icon.bg-info-light { background-color: #1565c0; }
+        .stat-icon.bg-primary-light {
+            background-color: var(--primary);
+        }
+
+        .stat-icon.bg-success-light {
+            background-color: var(--success);
+        }
+
+        .stat-icon.bg-info-light {
+            background-color: var(--info);
+        }
+
+        .dark-mode .stat-icon.bg-primary-light {
+            background-color: #3f60a8;
+        }
+
+        .dark-mode .stat-icon.bg-success-light {
+            background-color: #388e3c;
+        }
+
+        .dark-mode .stat-icon.bg-info-light {
+            background-color: #1565c0;
+        }
 
 
         .stat-title {
@@ -104,6 +121,7 @@
         .dark-mode .stat-value {
             color: var(--text-dark);
         }
+
         /* END CARD STATS STYLES */
 
         /* CARD KELAS STYLES (NEW) */
@@ -125,12 +143,13 @@
         }
 
         .card-kelas .card-footer {
-            background-color: var(--bg-light); 
+            background-color: var(--bg-light);
             border-top: 1px solid var(--border-light);
             padding: 10px 15px;
             border-radius: 0 0 10px 10px;
             display: flex;
-            gap: 8px; /* Menjaga jarak antar tombol */
+            gap: 8px;
+            /* Menjaga jarak antar tombol */
             flex-wrap: nowrap;
         }
 
@@ -159,14 +178,16 @@
             color: white;
             background-color: var(--primary);
         }
-        
+
         /* Memastikan tombol di card footer memiliki lebar yang sama */
         .card-footer .btn {
             flex-grow: 1;
             text-align: center;
-            padding: 6px 10px; /* Sedikit lebih kecil agar muat */
+            padding: 6px 10px;
+            /* Sedikit lebih kecil agar muat */
             font-size: 0.8rem;
         }
+
         /* END CARD KELAS STYLES */
 
 
@@ -497,7 +518,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            margin-top: 0; 
+            margin-top: 0;
             padding: 0 5px;
         }
 
@@ -547,7 +568,8 @@
             font-size: 0.8rem;
             display: inline-flex;
             align-items: center;
-            justify-content: center; /* Tambah: agar icon dan teks center */
+            justify-content: center;
+            /* Tambah: agar icon dan teks center */
             gap: 5px;
             transition: all 0.3s;
             font-weight: 500;
@@ -569,7 +591,8 @@
             font-size: 0.8rem;
             display: inline-flex;
             align-items: center;
-            justify-content: center; /* Tambah: agar icon dan teks center */
+            justify-content: center;
+            /* Tambah: agar icon dan teks center */
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
@@ -635,16 +658,17 @@
             .search-bar {
                 width: 100%;
             }
-            
+
             .page-title {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            
+
             .page-title h1 {
                 font-size: 1.5rem;
             }
+
             /* Menyesuaikan grid agar menjadi 1 kolom di HP */
             .col-xl-3.col-lg-4.col-md-6 {
                 width: 100%;
@@ -662,6 +686,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -675,7 +700,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -686,10 +712,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -712,10 +739,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -730,10 +758,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -754,12 +783,17 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -770,10 +804,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -811,7 +846,8 @@
             <div class="search-bar">
                 <form action="{{ route('admin.kelas.index') }}" method="GET" class="flex-grow">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari kelas..." id="globalSearch" name="search" value="{{ request('search') ?? '' }}">
+                    <input type="text" placeholder="Cari kelas..." id="globalSearch" name="search"
+                        value="{{ request('search') ?? '' }}">
                 </form>
             </div>
 
@@ -825,7 +861,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -851,11 +889,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -886,7 +935,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="stat-title">Total Kelas</div>
-                        <div class="stat-value">{{ $totalKelas ?? '0' }}</div> 
+                        <div class="stat-value">{{ $totalKelas ?? '0' }}</div>
                     </div>
                     <div class="stat-icon bg-primary-light">
                         <i class="fas fa-university"></i>
@@ -899,7 +948,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="stat-title">Total Mahasiswa</div>
-                        <div class="stat-value">{{ $totalMahasiswa ?? '0' }}</div> 
+                        <div class="stat-value">{{ $totalMahasiswa ?? '0' }}</div>
                     </div>
                     <div class="stat-icon bg-success-light">
                         <i class="fas fa-user-graduate"></i>
@@ -912,7 +961,7 @@
                 <div class="stat-card d-flex align-items-center justify-content-between">
                     <div>
                         <div class="stat-title">Rata-rata per Kelas</div>
-                        <div class="stat-value">{{ $rataRata ?? '0' }}</div> 
+                        <div class="stat-value">{{ $rataRata ?? '0' }}</div>
                     </div>
                     <div class="stat-icon bg-info-light">
                         <i class="fas fa-chart-pie"></i>
@@ -923,50 +972,53 @@
         <h3 style="margin-bottom: 15px; color: var(--dark);">Daftar Seluruh Kelas</h3>
         <div class="row">
             @forelse($kelas as $k)
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card-kelas card h-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title fw-bold" style="font-size: 1.5rem;">
-                                    {{ $k->nama_kelas }}
-                                </h5>
-                                <p class="card-text text-muted" style="font-size: 0.9rem;">
-                                    {{ $k->mahasiswa_count }} Mahasiswa
-                                </p>
-                            </div>
-                            <div class="kelas-icon bg-primary-light text-white">
-                                <i class="fas fa-users"></i>
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card-kelas card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title fw-bold" style="font-size: 1.5rem;">
+                                        {{ $k->nama_kelas }}
+                                    </h5>
+                                    <p class="card-text text-muted" style="font-size: 0.9rem;">
+                                        {{ $k->mahasiswa_count }} Mahasiswa
+                                    </p>
+                                </div>
+                                <div class="kelas-icon bg-primary-light text-white">
+                                    <i class="fas fa-users"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ route('admin.kelas.show', $k->id) }}" class="btn btn-info btn-sm">
-                            Detail
-                        </a>
-                        <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditKelas{{ $k->id }}">
-                            Edit
-                        </button>
-                        <form action="{{ route('admin.kelas.destroy', $k->id) }}" method="POST" style="display: inline;" class="flex-grow-1">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger-custom btn-sm w-100" onclick="return confirm('Hapus kelas {{ $k->nama_kelas }}?')">
-                                Hapus
+                        <div class="card-footer">
+                            <a href="{{ route('admin.kelas.show', $k->id) }}" class="btn btn-info btn-sm">
+                                Detail
+                            </a>
+                            <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalEditKelas{{ $k->id }}">
+                                Edit
                             </button>
-                        </form>
+                            <form action="{{ route('admin.kelas.destroy', $k->id) }}" method="POST"
+                                style="display: inline;" class="flex-grow-1">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger-custom btn-sm w-100"
+                                    onclick="return confirm('Hapus kelas {{ $k->nama_kelas }}?')">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
             @empty
-            <div class="col-12">
-                <div class="empty-state">
-                    <i class="fas fa-users"></i><br>
-                    Belum ada data kelas
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i><br>
+                        Belum ada data kelas
+                    </div>
                 </div>
-            </div>
             @endforelse
         </div>
-        </div>
+    </div>
 
     <div class="modal fade" id="modalTambahKelas" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -980,67 +1032,65 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="nama_kelas_tambah" class="form-label">Nama Kelas</label>
-                            <input type="text" 
-                                id="nama_kelas_tambah" 
-                                name="nama_kelas" 
-                                value="{{ old('nama_kelas') }}" 
-                                class="form-control @error('nama_kelas') is-invalid @enderror" 
-                                placeholder="Contoh: 3A" 
-                                required>
+                            <input type="text" id="nama_kelas_tambah" name="nama_kelas"
+                                value="{{ old('nama_kelas') }}"
+                                class="form-control @error('nama_kelas') is-invalid @enderror"
+                                placeholder="Contoh: 3A" required>
                             @error('nama_kelas')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i> Tambah Kelas</button>
+                        <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i>
+                            Tambah Kelas</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    @foreach($kelas as $k)
-    <div class="modal fade" id="modalEditKelas{{ $k->id }}" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form method="POST" action="{{ route('admin.kelas.update', $k->id) }}">
-                    @csrf @method('PUT')
-                    <div class="modal-header">
-                        <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i> Edit Kelas</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nama_kelas_{{ $k->id }}" class="form-label">Nama Kelas</label>
-                            <input type="text" 
-                                id="nama_kelas_{{ $k->id }}" 
-                                name="nama_kelas" 
-                                value="{{ old('nama_kelas', $k->nama_kelas) }}" 
-                                class="form-control @error('nama_kelas') is-invalid @enderror" 
-                                placeholder="Contoh: 3A" 
-                                required>
-                            @error('nama_kelas')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+    @foreach ($kelas as $k)
+        <div class="modal fade" id="modalEditKelas{{ $k->id }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="{{ route('admin.kelas.update', $k->id) }}">
+                        @csrf @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i> Edit Kelas</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Simpan Perubahan</button>
-                    </div>
-                </form>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="nama_kelas_{{ $k->id }}" class="form-label">Nama Kelas</label>
+                                <input type="text" id="nama_kelas_{{ $k->id }}" name="nama_kelas"
+                                    value="{{ old('nama_kelas', $k->nama_kelas) }}"
+                                    class="form-control @error('nama_kelas') is-invalid @enderror"
+                                    placeholder="Contoh: 3A" required>
+                                @error('nama_kelas')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Simpan
+                                Perubahan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
     @endforeach
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Toggle Dark Mode
         const themeToggle = document.getElementById('theme-toggle');
-        
+
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -1065,4 +1115,5 @@
     </script>
 
 </body>
+
 </html>

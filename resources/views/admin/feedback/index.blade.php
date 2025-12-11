@@ -992,7 +992,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1003,10 +1004,11 @@
                     </a>
                 </div>
             </div>
-            
-            <!-- Manajemen Peminjaman -->
+
+            <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1029,10 +1031,11 @@
                     </a>
                 </div>
             </div>
-            
-            <!-- Manajemen Aset -->
+
+            <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1047,10 +1050,11 @@
                     </a>
                 </div>
             </div>
-            
-            <!-- Manajemen Akademik -->
+
+            <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1071,12 +1075,17 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
-            
-            <!-- Manajemen Pengguna -->
+
+            <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1085,23 +1094,13 @@
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item">
-                        <i class="fas fa-book"></i>
-                        <span>Matakuliah</span>
-                    </a>
-                     <a href="/admin/kelas" class="dropdown-item">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <span>Kelas</span>
-                    </a>
-                    <a href="/admin/dosen" class="dropdown-item">
-                        <i class="fas fa-user-tie"></i>
-                        <span>Dosen</span>
                 </div>
             </div>
-            
-            <!-- Laporan & Pengaturan -->
+
+            <!-- Laporan & Pengaturan - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>

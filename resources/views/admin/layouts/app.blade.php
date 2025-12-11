@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>@yield('title', 'Admin Dashboard')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-
         :root {
             --primary: #3b5998;
             --secondary: #6d84b4;
@@ -31,8 +31,10 @@
             --secondary: #5d7ba6;
             --light: #1a1d23;
             --dark: #f0f0f0;
-            --bg-light: #121212; /* Latar belakang body/main content */
-            --bg-card: #1e1e1e; /* Latar belakang CARD (kontras) */
+            --bg-light: #121212;
+            /* Latar belakang body/main content */
+            --bg-card: #1e1e1e;
+            /* Latar belakang CARD (kontras) */
             --text-dark: #e0e0e0;
             --text-light: #a0a0a0;
             --border-light: #333;
@@ -46,11 +48,11 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            display: flex; 
+            display: flex;
             transition: all 0.3s ease;
         }
 
-    /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
         .sidebar {
             position: fixed;
             top: 0;
@@ -236,7 +238,7 @@
             padding: 20px;
             transition: all 0.3s;
             min-height: 100vh;
-            width: calc(100% - var(--sidebar-width)); 
+            width: calc(100% - var(--sidebar-width));
         }
 
         /* Header Styles */
@@ -257,7 +259,7 @@
             background: var(--bg-card);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* Search Bar */
         .search-bar {
             position: relative;
@@ -396,20 +398,23 @@
 
         /* Card Styling Modern & Dark Mode Fix */
         .card {
-            border-radius: 12px !important; 
+            border-radius: 12px !important;
             transition: all 0.3s ease;
             background-color: var(--bg-card);
             border: 1px solid var(--border-light);
         }
 
         .dark-mode .card {
-            background-color: #1e1e1e !important; /* Latar belakang card: #1e1e1e */
-            border: 1px solid #2a2a2a !important; /* Border card: lebih terang dari latar body */
+            background-color: #1e1e1e !important;
+            /* Latar belakang card: #1e1e1e */
+            border: 1px solid #2a2a2a !important;
+            /* Border card: lebih terang dari latar body */
         }
-        
+
         .dark-mode .card-header {
             background-color: var(--bg-card) !important;
-            border-color: #2a2a2a !important; /* Border di header card */
+            border-color: #2a2a2a !important;
+            /* Border di header card */
         }
 
         /* Page Title & Button Styling */
@@ -418,9 +423,9 @@
         }
 
         .btn {
-            border-radius: 8px !important; 
+            border-radius: 8px !important;
         }
-        
+
         /* Tombol Kembali (btn-outline-secondary) Dark Mode Fix */
         .dark-mode .btn-outline-secondary {
             color: var(--text-dark);
@@ -458,29 +463,33 @@
         }
 
         .table-head-modern {
-            background-color: var(--bg-light) !important; 
+            background-color: var(--bg-light) !important;
         }
 
         /* PERBAIKAN DARK MODE UTAMA UNTUK TEKS DAN GARIS TABEL */
-        
+
         /* Memastikan teks di sel tabel selalu terang di Dark Mode */
         .dark-mode table tbody tr td {
-            color: var(--text-dark) !important; 
+            color: var(--text-dark) !important;
         }
 
         .dark-mode .table thead th {
-            color: var(--text-light) !important; 
-            border-bottom: 2px solid #2a2a2a !important; /* Garis header */
+            color: var(--text-light) !important;
+            border-bottom: 2px solid #2a2a2a !important;
+            /* Garis header */
         }
+
         .dark-mode .table-head-modern {
-            background-color: #1a1a1a !important; /* Header tabel agar kontras dengan body */
+            background-color: #1a1a1a !important;
+            /* Header tabel agar kontras dengan body */
         }
-        
+
         /* Garis pemisah antar baris */
-        .dark-mode .table-hover > tbody > tr {
-             border-bottom: 1px solid #2a2a2a !important; 
+        .dark-mode .table-hover>tbody>tr {
+            border-bottom: 1px solid #2a2a2a !important;
         }
-        .dark-mode .table-hover > tbody > tr:hover > * {
+
+        .dark-mode .table-hover>tbody>tr:hover>* {
             --bs-table-accent-bg: rgba(255, 255, 255, 0.05);
             color: var(--text-dark) !important;
         }
@@ -490,33 +499,38 @@
             background-color: var(--bg-card);
             color: var(--text-dark);
         }
+
         .dark-mode .btn-close {
-            filter: invert(1); 
+            filter: invert(1);
         }
+
         .text-dark-mode-aware {
             color: var(--text-dark) !important;
         }
+
         .dark-mode .text-secondary {
-            color: var(--text-light) !important; 
+            color: var(--text-light) !important;
         }
-        
+
         /* Badge Program Studi Styling */
         .program-studi-badge {
             font-size: 0.85rem;
             padding: 0.5em 0.75em;
             border-radius: 50px;
-            background-color: var(--primary); 
+            background-color: var(--primary);
             color: white;
             display: inline-block;
             white-space: nowrap;
             transition: all 0.3s ease;
         }
+
         .dark-mode .program-studi-badge {
-            background-color: #3f5d91 !important; 
+            background-color: #3f5d91 !important;
             color: #e0e0e0 !important;
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -530,7 +544,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -541,10 +556,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -567,10 +583,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -585,10 +602,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -605,30 +623,36 @@
                         <i class="fas fa-book"></i>
                         <span>Matakuliah</span>
                     </a>
-                    <a href="/admin/kelas" class="dropdown-item">
+                    <a href="/admin/kelas" class="dropdown-item active">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="penggunaMenu">
-                    <a href="{{ route('admin.users.index') }}" class="dropdown-item active">
+                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -640,6 +664,21 @@
                     <a href="/admin/pengaturan" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+             <!-- Sistem Pendukung Keputusan -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                    <span>Sistem TPK</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse" id="spkMenu">
+                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>
@@ -671,7 +710,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container-fluid">
             @yield('content')
         </div>
@@ -681,7 +720,7 @@
     <script>
         // Toggle Dark Mode
         const themeToggle = document.getElementById('theme-toggle');
-        
+
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -703,23 +742,25 @@
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
         });
-        
+
         // Menambahkan kelas 'active' pada item menu yang sesuai dengan URL saat ini
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname;
             const menuItems = document.querySelectorAll('.menu-item');
-            
+
             menuItems.forEach(item => {
                 const itemHref = item.getAttribute('href').replace(/\/$/, "");
                 const pathToCheck = currentPath.replace(/\/$/, "");
 
                 if (itemHref === pathToCheck) {
                     item.classList.add('active');
-                } else if (pathToCheck.startsWith(itemHref) && itemHref !== '/admin/dashboard' && itemHref !== '/') {
+                } else if (pathToCheck.startsWith(itemHref) && itemHref !== '/admin/dashboard' &&
+                    itemHref !== '/') {
                     item.classList.add('active');
                 }
             });
         });
     </script>
 </body>
-</html>     
+
+</html>

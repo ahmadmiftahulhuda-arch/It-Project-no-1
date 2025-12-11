@@ -959,7 +959,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="menuUtama">
-                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
+                    <a href="/admin/dashboard" class="dropdown-item">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -978,15 +978,15 @@
                         <i class="fas fa-hand-holding"></i>
                         <span>Peminjaman</span>
                     </a>
-                    <a href="{{ route('admin.pengembalian') }}" class="dropdown-item">
+                    <a href="/admin/pengembalian" class="dropdown-item">
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="{{ route('admin.riwayat') }}" class="dropdown-item">
+                    <a href="/admin/riwayat" class="dropdown-item">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
-                    <a href="{{ route('admin.feedback.index') }}" class="dropdown-item">
+                    <a href="/admin/feedback" class="dropdown-item">
                         <i class="fas fa-comment"></i>
                         <span>Feedback</span>
                     </a>
@@ -1002,7 +1002,13 @@
                 </button>
                 <div class="dropdown-items collapse" id="asetMenu">
                     <a href="{{ route('projectors.index') }}" class="dropdown-item">
-                    <a href="{{ route('admin.ruangan.index') }}" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        <span>Proyektor</span>
+                    </a>
+                    <a href="/admin/ruangan" class="dropdown-item">
+                        <i class="fas fa-door-open"></i>
+                        <span>Ruangan</span>
+                    </a>
                 </div>
             </div>
 
@@ -1014,12 +1020,26 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="{{ route('jadwal-perkuliahan.index') }}" class="dropdown-item">
-                    <a href="{{ route('admin.slotwaktu.index') }}" class="dropdown-item">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jadwal Perkuliahan</span>
                     </a>
-                    <a href="{{ route('mata_kuliah.index') }}" class="dropdown-item">
+                    <a href="/admin/slotwaktu" class="dropdown-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Slot Waktu</span>
                     </a>
-                    <a href="{{ route('admin.kelas.index') }}" class="dropdown-item">
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
+                    <a href="/admin/kelas" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Kelas</span>
+                    </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
 
@@ -1040,7 +1060,8 @@
 
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
