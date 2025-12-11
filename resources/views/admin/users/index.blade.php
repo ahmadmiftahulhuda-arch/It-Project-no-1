@@ -1436,6 +1436,13 @@
                     passwordConfirmationInput.attr('type', type);
                     $(this).find('i').toggleClass('fa-eye fa-eye-slash');
                 });
+
+                $('#email').on('input', function() {
+                    // Only auto-fill for new users (when currentEditId is null)
+                    if (currentEditId === null && $(this).val().endsWith('@mhs.politala.ac.id')) {
+                        $('#peran').val('Mahasiswa');
+                    }
+                });
             }
 
             function resetForm() {
