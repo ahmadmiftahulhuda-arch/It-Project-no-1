@@ -1281,48 +1281,32 @@
                             <tbody id="riwayat-table-body">
                                 @forelse($riwayat as $item)
                                     @php
-                                        $now = \Carbon\Carbon::now();
-
-                                        // Prefer display_* then raw waktu fields; handle ranges like '16:30 - 16:40'
-                                        $wStartRaw = $item->display_waktu_mulai ?? $item->waktu_mulai ?? '00:00';
-                                        $wEndRaw = $item->display_waktu_selesai ?? $item->waktu_selesai ?? '23:59';
-                                        $normalizePart = function($t) {
-                                            if (!$t) return null;
-                                            $parts = explode('-', $t);
-                                            return trim($parts[0]);
-                                        };
-
-                                        try {
-                                            $wm = $normalizePart($wStartRaw) ?? '00:00';
-                                            $ws = $normalizePart($wEndRaw) ?? '23:59';
-                                            $start = \Carbon\Carbon::parse($item->tanggal . ' ' . $wm);
-                                            $end = \Carbon\Carbon::parse($item->tanggal . ' ' . $ws);
-                                        } catch (\Exception $e) {
-                                            $start = \Carbon\Carbon::parse($item->tanggal)->startOfDay();
-                                            $end = \Carbon\Carbon::parse($item->tanggal)->endOfDay();
-                                        }
-
-                                        // Normalize status and compute ongoing only when approved and time between start/end
-                                        $normalizedStatus = strtolower(trim($item->status ?? ''));
-                                        $isOngoing = ($normalizedStatus === 'disetujui') && $now->between($start, $end);
-
-                                        // Pengembalian and lateness
+                                        // Tentukan apakah peminjaman sedang berlangsung
+                                        $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
+                                        $isOngoing = $isToday && $item->status == 'disetujui';
+                                        // Tentukan pengembalian dan keterlambatan lebih awal untuk dipakai di beberapa kolom
                                         $pj = $item->pengembalian ?? null;
                                         $isLate = false;
-                                        if ($pj && $pj->tanggal_pengembalian) {
-                                            try {
-                                                $tglPeng = \Carbon\Carbon::parse($pj->tanggal_pengembalian);
-                                                $isLate = $tglPeng->greaterThan($end);
-                                            } catch (\Exception $e) {
-                                                $isLate = false;
+                                        try {
+                                            // Compute booking end datetime using waktu_selesai when available
+                                            $end = $item->waktu_selesai ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai) : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
+                                            if ($pj && $pj->tanggal_pengembalian) {
+                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->greaterThan($end);
                                             }
+                                        } catch (\Exception $e) {
+                                            $isLate = false;
                                         }
 
-                                        // duePassed: no pengembalian yet and now past end and still approved
-                                        $duePassed = !$pj && $now->greaterThan($end) && ($normalizedStatus === 'disetujui');
+                                        $duePassed = false;
+                                        try {
+                                            $end = $item->waktu_selesai ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai) : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
+                                            $duePassed = !$pj && \Carbon\Carbon::now()->greaterThan($end) && $item->status == 'disetujui';
+                                        } catch (\Exception $e) {
+                                            $duePassed = false;
+                                        }
                                     @endphp
 
-                                    <tr data-status="{{ $isOngoing ? 'berlangsung' : ($item->status ?? '') }}" data-id="{{ $item->id }}"
+                                    <tr data-status="{{ $item->status }}" data-id="{{ $item->id }}"
                                         class="{{ $isOngoing ? 'today-indicator' : '' }}"
                                         data-waktu-mulai="{{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '') }}"
                                         data-waktu-selesai="{{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '') }}"
