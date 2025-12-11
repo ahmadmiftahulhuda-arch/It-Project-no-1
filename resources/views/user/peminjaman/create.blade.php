@@ -984,7 +984,7 @@
                             <div class="col-md-12 mb-4 form-group">
                                         <label class="form-label">
                                             <i class="fas fa-user text-primary"></i>
-                                            Dosen Pengampu Mata Kuliah
+                                            Dosen Pengampu Mata Kuliah (Opsional)
                                         </label>
                                         <div class="input-icon">
                                             <i class="fas fa-chalkboard-teacher"></i>
@@ -992,14 +992,14 @@
                                                 <option value="">Pilih Dosen Pengampu Mata Kuliah</option>
                                                 @if(!empty($dosens) && $dosens->count())
                                                     @foreach($dosens as $dosen)
-                                                        <option value="{{ $dosen->nama_dosen }}" {{ old('dosen_nama') == $dosen->nama_dosen ? 'selected' : '' }}>
-                                                            {{ $dosen->nama_dosen }}
+                                                        <option value="{{ $dosen->nip }}" {{ old('dosen_nip') == $dosen->nip ? 'selected' : '' }}>
+                                                            {{ $dosen->nama_dosen }} - {{ $dosen->nip }}
                                                         </option>
                                                     @endforeach
                                                 @endif
                                             </select>
                                         </div>
-                                        @error('dosen_nama')
+                                        @error('dosen_nip')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
