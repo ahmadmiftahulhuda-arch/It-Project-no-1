@@ -1150,11 +1150,8 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
 
-                    <!-- Tombol kiri (Filter + Reset) -->
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="fas fa-filter me-1"></i> Terapkan Filter
-                        </button>
+                    <!-- Tombol kiri (Reset) -->
+                    <div class="d-flex gap-2">  
 
                         <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-refresh me-1"></i> Reset
@@ -1162,7 +1159,7 @@
                     </div>
 
                     <!-- Tombol kanan (Ekspor) -->
-                    <a href="{{ route('admin.peminjaman.export') }}" class="btn btn-outline btn-sm">
+                    <a href="{{ route('admin.peminjaman.export') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-file-export me-1"></i> Ekspor
                     </a>
 

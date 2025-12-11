@@ -1655,6 +1655,7 @@
         <!-- Filter Section -->
         <div class="filter-section">
             <form id="filterForm" method="GET" action="{{ route('jadwal-perkuliahan.index') }}">
+                <input type="hidden" name="search" id="search" value="{{ request('search') ?? '' }}">
                 <div class="filter-grid">
 
                     <div class="filter-group">
@@ -1705,6 +1706,19 @@
                         </select>
                     </div>
                 </div>
+
+                    <!-- Tombol kiri (Reset) -->
+  <div class="filter-actions" style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+
+                        <!-- Tombol kanan (Ekspor) -->
+                    <a href="" class="btn btn-primary btn-sm">
+                        <i class="fas fa-file-export me-1"></i> Ekspor
+                    </a>
+                    
+                        <a href="" class="btn btn-outline btn-sm">
+                            <i class="fas fa-refresh me-1"></i> Reset
+                        </a>
+                    </div>
             </form>
         </div>
 
@@ -2298,34 +2312,38 @@
                 }
 
                 // Auto submit filter changes
-                // Auto-submit when filter inputs change (guard with existence checks)
+                // Note: automatic submission on select change is disabled so users apply filters
+                // using the "Terapkan Filter" button. Stats cards still call filterByDay().
                 const hariEl = document.getElementById('hari');
                 const ruanganEl = document.getElementById('ruangan');
                 const sistemEl = document.getElementById('sistem_kuliah');
                 const sortEl = document.getElementById('sort');
 
-                if (hariEl) hariEl.addEventListener('change', () => document.getElementById('filterForm').submit());
-                if (ruanganEl) ruanganEl.addEventListener('change', () => document.getElementById('filterForm').submit());
-                if (sistemEl) sistemEl.addEventListener('change', () => document.getElementById('filterForm').submit());
-                if (sortEl) sortEl.addEventListener('change', () => document.getElementById('filterForm').submit());
+                // (no auto-submit on change) -- user will click the submit button
 
-                // Auto submit search dengan debounce
+                // Auto submit search dengan debounce (guarded)
                 let searchTimeout;
-                document.getElementById('search').addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        document.getElementById('filterForm').submit();
-                    }, 800);
-                });
+                const searchHidden = document.getElementById('search');
+                if (searchHidden) {
+                    searchHidden.addEventListener('input', function() {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            document.getElementById('filterForm').submit();
+                        }, 800);
+                    });
+                }
 
-                // Global search
-                document.getElementById('globalSearch').addEventListener('input', function() {
-                    document.getElementById('search').value = this.value;
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        document.getElementById('filterForm').submit();
-                    }, 800);
-                });
+                // Global search (header) — synchronize into hidden input and debounce submit
+                const globalSearchEl = document.getElementById('globalSearch');
+                if (globalSearchEl) {
+                    globalSearchEl.addEventListener('input', function() {
+                        if (searchHidden) searchHidden.value = this.value;
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            document.getElementById('filterForm').submit();
+                        }, 800);
+                    });
+                }
 
                 // Konfirmasi hapus semua data
                 function confirmDeleteAll() {
