@@ -908,7 +908,7 @@
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
                                         <select name="waktu_mulai" class="form-select @error('waktu_mulai') is-invalid @enderror" required>
-                                            <option value="">-- Pilih Waktu Mulai --</option>
+                                            <option value="">Pilih Waktu Mulai</option>
                                             @foreach($slotwaktu as $slot)
                                                 <option value="{{ $slot->waktu }}" {{ old('waktu_mulai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
                                             @endforeach
@@ -927,7 +927,7 @@
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
                                         <select name="waktu_selesai" class="form-select @error('waktu_selesai') is-invalid @enderror" required>
-                                            <option value="">-- Pilih Waktu Selesai --</option>
+                                            <option value="">Pilih Waktu Selesai</option>
                                             @foreach($slotwaktu as $slot)
                                                 <option value="{{ $slot->waktu }}" {{ old('waktu_selesai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
                                             @endforeach
@@ -947,7 +947,7 @@
                                 <div class="input-icon">
                                     <i class="fas fa-door-open"></i>
                                     <select name="ruangan_id" class="form-select @error('ruangan_id') is-invalid @enderror" required>
-                                        <option value="">-- Pilih Ruang --</option>
+                                        <option value="">Pilih Ruang</option>
                                         @foreach ($ruangan as $ruang)
                                             <option value="{{ $ruang->id }}" {{ old('ruangan_id') == $ruang->id ? 'selected' : '' }}>
                                                 {{ $ruang->nama_ruangan ?? $ruang->name }}  {{ $ruang->lokasi ?? $ruang->building ?? '' }}
@@ -968,7 +968,7 @@
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
                                     <select name="projector_id" class="form-select @error('projector_id') is-invalid @enderror">
-                                        <option value="">-- Tidak Ada Proyektor --</option>
+                                        <option value="">Pilih Proyektor </option>
                                         @foreach($projectors as $projector)
                                             <option value="{{ $projector->id }}" {{ old('projector_id') == $projector->id ? 'selected' : '' }}>
                                                 {{ $projector->kode_proyektor ?? ('' . $projector->id) }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}
@@ -981,7 +981,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-4 form-group">
+                            <div class="col-md-12 mb-4 form-group">
                                         <label class="form-label">
                                             <i class="fas fa-user text-primary"></i>
                                             Dosen Pengampu Mata Kuliah
@@ -989,7 +989,7 @@
                                         <div class="input-icon">
                                             <i class="fas fa-chalkboard-teacher"></i>
                                             <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror">
-                                                <option value="">-- Pilih Dosen Pengampu --</option>
+                                                <option value="">Pilih Dosen Pengampu Mata Kuliah</option>
                                                 @if(!empty($dosens) && $dosens->count())
                                                     @foreach($dosens as $dosen)
                                                         <option value="{{ $dosen->nama_dosen }}" {{ old('dosen_nama') == $dosen->nama_dosen ? 'selected' : '' }}>
@@ -1011,7 +1011,7 @@
                                 </label>
                                 <div class="input-icon">
                                     <textarea name="keperluan" class="form-control @error('keperluan') is-invalid @enderror" 
-                                              rows="4" placeholder="Jelaskan keperluan peminjaman secara detail..." required>{{ old('keperluan') }}</textarea>
+                                              rows="4" placeholder="Jelaskan keperluan peminjaman anda secara mendetail..." required>{{ old('keperluan') }}</textarea>
                                 </div>
                                 @error('keperluan')
                                     <div class="invalid-feedback">{{ $message }}</div>

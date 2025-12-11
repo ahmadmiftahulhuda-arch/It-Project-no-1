@@ -1683,7 +1683,7 @@
 
         <!-- Aktivitas Terbaru -->
         <section class="mb-5">
-            <h2 class="section-title"><i class="fas fa-history"></i> Aktivitas Terbaru</h2>
+            <h2 class="section-title"><i class="fas fa-history"></i> Feedback Pengguna</h2>
             <div class="activity-list">
                 <div class="activity-item">
                     <div class="activity-icon booking">
