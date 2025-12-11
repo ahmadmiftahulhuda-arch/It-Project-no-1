@@ -821,7 +821,6 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- Menu Utama - DIPERBAIKI -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
@@ -829,7 +828,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="menuUtama">
-                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
+                    <a href="/admin/dashboard" class="dropdown-item">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -848,15 +847,15 @@
                         <i class="fas fa-hand-holding"></i>
                         <span>Peminjaman</span>
                     </a>
-                    <a href="{{ route('admin.pengembalian') }}" class="dropdown-item">
+                    <a href="/admin/pengembalian" class="dropdown-item">
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="{{ route('admin.riwayat') }}" class="dropdown-item">
+                    <a href="/admin/riwayat" class="dropdown-item">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
-                    <a href="{{ route('admin.feedback.index') }}" class="dropdown-item">
+                    <a href="/admin/feedback" class="dropdown-item">
                         <i class="fas fa-comment"></i>
                         <span>Feedback</span>
                     </a>
@@ -875,7 +874,7 @@
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                    <a href="{{ route('admin.ruangan.index') }}" class="dropdown-item">
+                    <a href="/admin/ruangan" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
                     </a>
@@ -890,21 +889,25 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="{{ route('jadwal-perkuliahan.index') }}" class="dropdown-item">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
                     </a>
-                    <a href="{{ route('admin.slotwaktu.index') }}" class="dropdown-item">
+                    <a href="/admin/slotwaktu" class="dropdown-item">
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
-                    <a href="{{ route('mata_kuliah.index') }}" class="dropdown-item">
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
                         <i class="fas fa-book"></i>
                         <span>Matakuliah</span>
                     </a>
-                    <a href="{{ route('admin.kelas.index') }}" class="dropdown-item">
+                    <a href="/admin/kelas" class="dropdown-item">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
+                    </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
                     </a>
                 </div>
             </div>
@@ -921,17 +924,6 @@
                         <i class="fas fa-users"></i>
                         <span>Pengguna</span>
                     </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item">
-                        <i class="fas fa-book"></i>
-                        <span>Matakuliah</span>
-                    </a>
-                     <a href="/admin/kelas" class="dropdown-item">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <span>Kelas</span>
-                    </a>
-                    <a href="/admin/dosen" class="dropdown-item">
-                        <i class="fas fa-user-tie"></i>
-                        <span>Dosen</span>
                 </div>
             </div>
 
@@ -943,11 +935,11 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="laporanMenu">
-                    <a href="{{ route('admin.laporan') }}" class="dropdown-item">
+                    <a href="/admin/laporan" class="dropdown-item">
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
+                    <a href="/admin/pengaturan" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>
@@ -1208,8 +1200,7 @@
                                 data-tanggal-iso="{{ $peminjaman->tanggal }}"
                                 data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '') }}"
                                 data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '') }}"
-                                data-id="{{ $peminjaman->id }}"
-                                class="{{ $isOngoing ? 'table-success' : '' }}">
+                                data-id="{{ $peminjaman->id }}" class="{{ $isOngoing ? 'table-success' : '' }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -1231,7 +1222,8 @@
                                     <div>
                                         <span class="badge bg-light text-dark">
                                             <i class="fas fa-clock me-1"></i>
-                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }} -
+                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}
+                                            -
                                             {{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}
                                         </span>
                                     </div>
@@ -1258,8 +1250,9 @@
                                 <td>
                                     @php $pjStatus = optional($peminjaman->pengembalian)->status; @endphp
 
-                                    @if(in_array($pjStatus, ['overdue','terlambat']))
-                                        <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                    @if (in_array($pjStatus, ['overdue', 'terlambat']))
+                                        <span class="badge status-badge status-terlambat"><i
+                                                class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                     @else
                                         @if ($peminjaman->status == 'disetujui' && $isOngoing)
                                             <span class="badge status-badge status-berlangsung">
@@ -1478,8 +1471,8 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="edit_waktu_mulai" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_mulai" name="waktu_mulai"
-                                        required>
+                                    <input type="time" class="form-control" id="edit_waktu_mulai"
+                                        name="waktu_mulai" required>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="edit_waktu_selesai" class="form-label">Waktu Selesai</label>
@@ -1520,7 +1513,8 @@
                                         <option value="selesai">Selesai</option>
                                     </select>
                                     <div id="edit_is_ongoing_container" style="margin-top:8px; display:none;">
-                                        <span id="edit_is_ongoing_badge" class="badge status-badge status-berlangsung">
+                                        <span id="edit_is_ongoing_badge"
+                                            class="badge status-badge status-berlangsung">
                                             <i class="fas fa-play-circle me-1"></i> Berlangsung
                                         </span>
                                     </div>
@@ -1793,7 +1787,9 @@
                     if (parts[0].length === 4) return parts.join('-');
 
                     // If ambiguous (MM/DD/YYYY or DD/MM/YYYY), try to detect by value >12
-                    let d = parts[0], m = parts[1], y = parts[2];
+                    let d = parts[0],
+                        m = parts[1],
+                        y = parts[2];
                     if (parseInt(d, 10) > 12) {
                         // d is day
                         return `${y.padStart(4,'0')}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
