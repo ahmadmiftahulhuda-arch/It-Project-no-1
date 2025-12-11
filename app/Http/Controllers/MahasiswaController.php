@@ -12,7 +12,7 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required|numeric|unique:mahasiswa',
             'nama' => 'required',
-            'jenis_kelamin' => 'required',
+            'kordinator' => 'required',
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
@@ -25,7 +25,7 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required|numeric|unique:mahasiswa,nim,'.$mahasiswa->id,
             'nama' => 'required',
-            'jenis_kelamin' => 'required',
+            'kordinator' => 'required',
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 

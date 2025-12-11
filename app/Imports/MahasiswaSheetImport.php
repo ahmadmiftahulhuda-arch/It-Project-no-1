@@ -28,7 +28,7 @@ class MahasiswaSheetImport implements ToModel, WithStartRow
         return new Mahasiswa([
             'nim'           => $row[0],
             'nama'          => $row[1],
-            'jenis_kelamin' => $row[2],
+            'kordinator'    => $row[2],
             'kelas_id'      => $this->kelas_id,
         ]);
     }
