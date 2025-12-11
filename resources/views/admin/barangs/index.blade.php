@@ -2042,7 +2042,7 @@
                                 </select>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label for="edit_keterangan_barang" class="form-.label">Keterangan</label>
+                                <label for="edit_keterangan_barang" class="form-label">Keterangan</label>
                                 <textarea class="form-control" id="edit_keterangan_barang" name="keterangan_barang" rows="3"></textarea>
                             </div>
                         </div>
@@ -2107,8 +2107,41 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // JavaScript for handling modals
         document.addEventListener('DOMContentLoaded', function () {
+            // DARK MODE LOGIC
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            function applyTheme(theme) {
+                if (theme === 'enabled') {
+                    body.classList.add('dark-mode');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    body.classList.remove('dark-mode');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            }
+
+            function toggleDarkMode() {
+                const isDarkMode = body.classList.contains('dark-mode');
+                if (isDarkMode) {
+                    localStorage.setItem('darkMode', 'disabled');
+                    applyTheme('disabled');
+                } else {
+                    localStorage.setItem('darkMode', 'enabled');
+                    applyTheme('enabled');
+                }
+            }
+
+            themeToggle.addEventListener('click', toggleDarkMode);
+
+            // Load saved theme preference
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            }
+
+            // MODAL LOGIC
             var editBarangModal = document.getElementById('editBarangModal');
             editBarangModal.addEventListener('show.bs.modal', function (event) {
                 var button = event.relatedTarget;
@@ -2125,7 +2158,7 @@
 
                 var modalBodyInputKode = editBarangModal.querySelector('#edit_kode_barang');
                 var modalBodyInputNama = editBarangModal.querySelector('#edit_nama_barang');
-                var modalBodyInputModel = editBarangModal.querySelector('#edit_Model_barang');
+                var modalBodyInputModel = editBarangModal.querySelector('#edit_model_barang');
                 var modalBodyInputMerek = editBarangModal.querySelector('#edit_merek_barang');
                 var modalBodyInputStatus = editBarangModal.querySelector('#edit_status_barang');
                 var modalBodyInputKeterangan = editBarangModal.querySelector('#edit_keterangan_barang');
