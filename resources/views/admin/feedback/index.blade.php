@@ -1043,7 +1043,7 @@
                     <a href="{{ route('projectors.index') }}" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
-                    </a>
+                    </a> 
                     <a href="/admin/ruangan" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
