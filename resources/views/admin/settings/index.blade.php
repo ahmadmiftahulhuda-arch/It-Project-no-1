@@ -1380,27 +1380,34 @@
                     
                     <div class="settings-section">
                         <h3>Autentikasi Dua Faktor</h3>
-                        <form action="{{ route('admin.settings.security') }}" method="POST">
-                            @csrf
-                            <div class="toggle-container">
-                                <div class="toggle-label">
-                                    <span>2FA (Two-Factor Authentication)</span>
-                                    <span>Tambahkan lapisan keamanan ekstra dengan kode OTP</span>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" name="two_factor_enabled" value="1" {{ old('two_factor_enabled', isset($user) && $user->two_factor_enabled) ? 'checked' : '' }}>
-                                    <span class="toggle-slider"></span>
-                                </label>
+                        @if(session('success_security'))
+                            <div class="alert alert-success">
+                                {{ session('success_security') }}
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">
-                                <i class="fas fa-save"></i> Simpan Pengaturan Keamanan
+                        @endif
+
+                        @if(Auth::user()->two_factor_enabled)
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i>
+                                Autentikasi Dua Faktor (2FA) saat ini <strong>Aktif</strong>.
+                            </div>
+                            <p>Akun Anda dilindungi dengan lapisan keamanan tambahan. Setiap kali login, Anda akan diminta memasukkan kode dari aplikasi authenticator Anda.</p>
+                            <form id="disable-2fa-form" action="{{ route('admin.2fa.disable') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-ban"></i> Nonaktifkan 2FA
+                                </button>
+                            </form>
+                        @else
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                Autentikasi Dua Faktor (2FA) saat ini <strong>Tidak Aktif</strong>.
+                            </div>
+                            <p>Tingkatkan keamanan akun Anda dengan mengaktifkan 2FA. Anda akan memerlukan aplikasi seperti Google Authenticator.</p>
+                            <button type="button" class="btn btn-primary" id="enable-2fa-btn">
+                                <i class="fas fa-shield-alt"></i> Aktifkan 2FA
                             </button>
-                        </form>
-                        
-                        <div class="alert alert-info mt-3">
-                            <i class="fas fa-info-circle"></i>
-                            Untuk mengaktifkan 2FA, Anda perlu mengunduh aplikasi authenticator seperti Google Authenticator.
-                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -1575,6 +1582,132 @@
             }
             // ========== END PERBAIKAN UTAMA ==========
 
+            // 2FA Setup
+            const enable2faBtn = document.getElementById('enable-2fa-btn');
+            const twoFactorAuthModal = new bootstrap.Modal(document.getElementById('twoFactorAuthModal'));
+            const qrCodeContainer = document.getElementById('qr-code-container');
+            const recoveryCodesList = document.getElementById('recovery-codes-list');
+            const activate2faForm = document.getElementById('activate-2fa-form');
+            const otpInput = document.getElementById('otp');
+            const otpError = document.getElementById('otp-error');
+
+            if (enable2faBtn) {
+                enable2faBtn.addEventListener('click', function () {
+                    // Show spinner while fetching QR code
+                    qrCodeContainer.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+                    recoveryCodesList.innerHTML = '';
+                    
+                    twoFactorAuthModal.show();
+
+                    // Fetch QR code and recovery codes
+                    fetch('{{ route("admin.2fa.setup") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            // If response is not ok, get the JSON error message and throw it
+                            return response.json().then(err => { throw new Error(err.message || 'Failed to setup 2FA.') });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        qrCodeContainer.innerHTML = `<img src="${data.qr_code_url}" alt="QR Code">`;
+                        
+                        let recoveryHtml = '';
+                        data.recovery_codes.forEach(code => {
+                            recoveryHtml += `<li class="col-md-6 col-sm-12"><code>${code}</code></li>`;
+                        });
+                        recoveryCodesList.innerHTML = recoveryHtml;
+                    })
+                    .catch(error => {
+                        console.error('Error during 2FA setup:', error);
+                        // Display the specific error message from the server
+                        qrCodeContainer.innerHTML = `<p class="text-danger">Gagal memuat QR code. Error: ${error.message}</p>`;
+                    });
+                });
+            }
+
+            if(activate2faForm) {
+                activate2faForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    
+                    otpError.textContent = '';
+                    otpInput.classList.remove('is-invalid');
+
+                    fetch('{{ route("admin.2fa.activate") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ otp: otpInput.value })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        return response.json().then(err => { throw new Error(err.message) });
+                    })
+                    .then(data => {
+                        twoFactorAuthModal.hide();
+                        showNotification(data.message, 'success');
+                        setTimeout(() => window.location.reload(), 1500);
+                    })
+                    .catch(error => {
+                        otpInput.classList.add('is-invalid');
+                        otpError.textContent = error.message || 'Terjadi kesalahan.';
+                    });
+                });
+            }
+
+            const copyRecoveryCodesBtn = document.getElementById('copy-recovery-codes');
+            if (copyRecoveryCodesBtn) {
+                copyRecoveryCodesBtn.addEventListener('click', function() {
+                    const codes = Array.from(recoveryCodesList.querySelectorAll('code')).map(el => el.textContent);
+                    const codesText = codes.join('\n');
+                    navigator.clipboard.writeText(codesText).then(() => {
+                        showNotification('Kode pemulihan disalin ke clipboard!', 'success');
+                    });
+                });
+            }
+
+            // Disable 2FA
+            const disable2faForm = document.getElementById('disable-2fa-form');
+            if (disable2faForm) {
+                disable2faForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    fetch('{{ route("admin.2fa.disable") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({}) // Empty body for disable
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        return response.json().then(err => { throw new Error(err.message || 'Failed to disable 2FA.') });
+                    })
+                    .then(data => {
+                        showNotification(data.message, 'success');
+                        setTimeout(() => window.location.reload(), 1500);
+                    })
+                    .catch(error => {
+                        console.error('Error during 2FA disable:', error);
+                        showNotification(`Gagal menonaktifkan 2FA. Error: ${error.message}`, 'danger');
+                    });
+                });
+            }
+
             // Search settings
             const searchInput = document.getElementById('searchSettings');
             searchInput.addEventListener('input', function() {
@@ -1712,5 +1845,59 @@
             }
         }
     </script>
+
+    <!-- 2FA Setup Modal -->
+    <div class="modal fade" id="twoFactorAuthModal" tabindex="-1" aria-labelledby="twoFactorAuthModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="twoFactorAuthModalLabel">Konfigurasi Autentikasi Dua Faktor (2FA)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="2fa-step-1" class="text-center">
+                        <p>Pindai gambar QR di bawah ini menggunakan aplikasi authenticator Anda (misalnya Google Authenticator).</p>
+                        <div id="qr-code-container" class="my-3">
+                            <!-- QR Code will be loaded here -->
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <p class="text-muted">Setelah memindai, masukkan kode OTP yang muncul di aplikasi Anda untuk menyelesaikan proses aktivasi.</p>
+                    </div>
+                    <hr>
+                    <div id="2fa-step-2">
+                        <form id="activate-2fa-form">
+                            @csrf
+                            <div class="form-group mb-3">
+                                <label for="otp" class="form-label">Kode OTP</label>
+                                <input type="text" class="form-control" id="otp" name="otp" required placeholder="Masukkan 6 digit kode" maxlength="6">
+                                <div class="invalid-feedback" id="otp-error"></div>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-check-circle"></i> Aktifkan dan Verifikasi
+                            </button>
+                        </form>
+                    </div>
+                    <hr>
+                    <div id="2fa-step-3">
+                        <h5><i class="fas fa-key"></i> Simpan Kode Pemulihan Anda!</h5>
+                        <p>Simpan kode pemulihan ini di tempat yang aman. Anda dapat menggunakannya untuk mengakses akun jika kehilangan akses ke perangkat Anda.</p>
+                        <div id="recovery-codes-container" class="bg-light p-3 rounded">
+                            <ul id="recovery-codes-list" class="list-unstyled row">
+                               <!-- Recovery codes will be loaded here -->
+                            </ul>
+                        </div>
+                         <button class="btn btn-secondary mt-3" id="copy-recovery-codes">
+                            <i class="fas fa-copy"></i> Salin Kode
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

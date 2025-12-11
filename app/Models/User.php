@@ -32,6 +32,7 @@ class User extends Authenticatable
         'tanggal_bergabung',
         'two_factor_enabled',
         'notification_preferences',
+        'google2fa_secret',
     ];
 
     /**
@@ -42,8 +43,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
+        'google2fa_secret',
+        'google2fa_recovery_codes',
     ];
 
     /**

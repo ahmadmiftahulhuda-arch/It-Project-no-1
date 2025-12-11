@@ -56,6 +56,14 @@ class AuthController extends Controller
         // Ambil instance user yang terautentikasi (dari tabel `users` melalui provider)
         $user = Auth::user();
 
+        // Check if 2FA is enabled
+        if ($user->two_factor_enabled) {
+            // Set a session flag to indicate that 2FA verification is pending
+            $request->session()->put('2fa_in_progress', true);
+            // Redirect to the 2FA verification page
+            return redirect()->route('admin.2fa.verify');
+        }
+
         // Invalidate semua session lain untuk user ini (1 akun 1 device)
         DB::table('sessions')
             ->where('user_id', $user->id)

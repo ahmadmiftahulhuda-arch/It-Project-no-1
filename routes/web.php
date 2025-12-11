@@ -102,6 +102,10 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 
+// Routes for 2FA verification
+Route::get('/admin/2fa/verify', [App\Http\Controllers\Admin\Google2FAController::class, 'showVerifyForm'])->name('admin.2fa.verify');
+Route::post('/admin/2fa/verify', [App\Http\Controllers\Admin\Google2FAController::class, 'verify']);
+
 // ================================
 // AUTHENTIKASI ADMIN
 // ================================
@@ -134,7 +138,7 @@ Route::middleware(['auth', 'role:Administrator'])->group(function () {
 // ADMIN ROUTES
 // ================================
 
-Route::middleware(['auth', 'role:Administrator'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin')->group(function () {
     // Dashboard is now defined in a separate group, but we can keep this for structure
     // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
@@ -186,6 +190,11 @@ Route::middleware(['auth', 'role:Administrator'])->prefix('admin')->group(functi
     Route::post('/settings/security', [App\Http\Controllers\Admin\PengaturanController::class, 'updateSecurity'])->name('admin.settings.security');
     Route::post('/settings/notifications', [App\Http\Controllers\Admin\PengaturanController::class, 'updateNotifications'])->name('admin.settings.notifications');
     Route::post('/settings/system', [App\Http\Controllers\Admin\PengaturanController::class, 'updateSystemSettings'])->name('admin.settings.system');
+
+    // 2FA Routes
+    Route::post('/settings/2fa/setup', [App\Http\Controllers\Admin\Google2FAController::class, 'setup'])->name('admin.2fa.setup');
+    Route::post('/settings/2fa/activate', [App\Http\Controllers\Admin\Google2FAController::class, 'activate'])->name('admin.2fa.activate');
+    Route::post('/settings/2fa/disable', [App\Http\Controllers\Admin\Google2FAController::class, 'disable'])->name('admin.2fa.disable');
 
     // Kelas & Mahasiswa
     Route::prefix('admin')->name('admin.')->group(function () {
