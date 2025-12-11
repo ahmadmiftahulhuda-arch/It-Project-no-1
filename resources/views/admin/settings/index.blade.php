@@ -229,6 +229,25 @@
             opacity: 0.8;
         }
 
+        .password-input-wrapper {
+            position: relative;
+        }
+        .password-input-wrapper .form-control {
+            padding-right: 40px; /* Make space for the icon */
+        }
+        .password-toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray);
+        }
+        /* Ensure icon color is right in dark mode */
+        .dark-mode .password-toggle-icon {
+            color: var(--gray);
+        }
+
         /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
@@ -1301,18 +1320,27 @@
                             @csrf
                             <div class="form-group">
                                 <label for="current_password">Password Saat Ini <span class="text-danger">*</span></label>
-                                <input type="password" id="current_password" name="current_password" class="form-control" required>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="current_password" name="current_password" class="form-control" required>
+                                    <i class="fas fa-eye password-toggle-icon"></i>
+                                </div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="password">Password Baru <span class="text-danger">*</span></label>
-                                <input type="password" id="password" name="password" class="form-control" required>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="password" name="password" class="form-control" required>
+                                    <i class="fas fa-eye password-toggle-icon"></i>
+                                </div>
                                 <small class="text-muted">Minimal 8 karakter dengan kombinasi huruf, angka, dan simbol</small>
                             </div>
                             
                             <div class="form-group">
                                 <label for="password_confirmation">Konfirmasi Password Baru <span class="text-danger">*</span></label>
-                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+                                    <i class="fas fa-eye password-toggle-icon"></i>
+                                </div>
                             </div>
                             
                             <button type="submit" class="btn btn-primary">
@@ -1465,6 +1493,21 @@
             // Load saved theme preference
             applyTheme(localStorage.getItem('darkMode') || 'disabled');
 
+            // Show/hide password functionality
+            document.querySelectorAll('.password-toggle-icon').forEach(icon => {
+                icon.addEventListener('click', function () {
+                    const passwordInput = this.previousElementSibling;
+                    
+                    // Toggle the type
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Toggle the icon class
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+
             // ========== PERBAIKAN UTAMA: Settings Navigation ==========
             const navItems = document.querySelectorAll('.settings-nav-item');
             const panels = document.querySelectorAll('.settings-panel');
@@ -1503,6 +1546,11 @@
                 if (targetNavItem) {
                     targetNavItem.click();
                 }
+            } else {
+                // Re-open security tab on password validation error, only if no hash is present
+                @if ($errors->has('current_password') || $errors->has('password') || session('success_password'))
+                    document.querySelector('.settings-nav-item[data-target="security"]').click();
+                @endif
             }
             // ========== END PERBAIKAN UTAMA ==========
 
