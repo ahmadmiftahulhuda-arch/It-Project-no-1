@@ -1700,25 +1700,28 @@
                             <option value="">Semua Sistem</option>
                             @if (!empty($sistemKuliahList) && $sistemKuliahList->count())
                                 @foreach ($sistemKuliahList as $sk)
-                                    <option value="{{ $sk }}" {{ request('sistem_kuliah') == $sk ? 'selected' : '' }}>{{ $sk }}</option>
+                                    <option value="{{ $sk }}"
+                                        {{ request('sistem_kuliah') == $sk ? 'selected' : '' }}>{{ $sk }}
+                                    </option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
                 </div>
 
-                    <!-- Tombol kiri (Reset) -->
-  <div class="filter-actions" style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+                <!-- Tombol kiri (Reset) -->
+                <div class="filter-actions" style="margin-top:12px; display:flex; gap:8px;">
 
-                        <!-- Tombol kanan (Ekspor) -->
+
+                    <a href="" class="btn btn-outline btn-sm">
+                        <i class="fas fa-refresh me-1"></i> Reset
+                    </a>
+
+                    <!-- Tombol kanan (Ekspor) -->
                     <a href="" class="btn btn-primary btn-sm">
                         <i class="fas fa-file-export me-1"></i> Ekspor
                     </a>
-                    
-                        <a href="" class="btn btn-outline btn-sm">
-                            <i class="fas fa-refresh me-1"></i> Reset
-                        </a>
-                    </div>
+                </div>
             </form>
         </div>
 
