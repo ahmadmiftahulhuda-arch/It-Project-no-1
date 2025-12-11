@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Peminjaman - Admin Lab TI</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <style>
         :root {
             --primary: #3b5998;
@@ -807,6 +808,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -832,10 +834,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -858,10 +861,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -876,10 +880,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -900,12 +905,17 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -916,10 +926,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -971,7 +982,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -997,11 +1010,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1043,7 +1067,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="stat-card">
                 <div class="stat-icon borrowed">
                     <i class="fas fa-hand-holding"></i>
@@ -1057,7 +1081,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="stat-card">
                 <div class="stat-icon pending">
                     <i class="fas fa-clock"></i>
@@ -1071,7 +1095,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="stat-card">
                 <div class="stat-icon available">
                     <i class="fas fa-check-circle"></i>
@@ -1099,7 +1123,7 @@
                     Grafik Statistik Peminjaman Barang
                 </div>
             </div>
-            
+
             <div class="table-container">
                 <div class="section-header">
                     <div class="section-title">Peminjaman Terbaru</div>
@@ -1117,56 +1141,57 @@
                         </thead>
                         <tbody>
                             @forelse($peminjamanTerbaru as $peminjaman)
-                            <tr>
-                                <td>{{ $peminjaman->user->name ?? 'Guest' }}</td>
-                                <td>
-                                    @if($peminjaman->ruangan)
-                                        {{ $peminjaman->ruangan->nama_ruangan }}
-                                    @else
-                                        -
-                                    @endif
-                                    @if($peminjaman->projector)
-                                        <br><small>{{ $peminjaman->projector->kode_proyektor }}</small>
-                                    @endif
-                                </td>
-                                <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}</td>
-                                <td>
-                                    @php
-                                        $statusClass = '';
-                                        $statusText = '';
-                                        switch ($peminjaman->status) {
-                                            case 'pending':
-                                                $statusClass = 'status-menunggu';
-                                                $statusText = 'Menunggu';
-                                                break;
-                                            case 'disetujui':
-                                                $statusClass = 'status-disetujui';
-                                                $statusText = 'Disetujui';
-                                                break;
-                                            case 'ditolak':
-                                                $statusClass = 'status-ditolak';
-                                                $statusText = 'Ditolak';
-                                                break;
-                                            case 'selesai':
-                                                $statusClass = 'status-selesai';
-                                                $statusText = 'Selesai';
-                                                break;
-                                            case 'berlangsung':
-                                                $statusClass = 'status-berlangsung';
-                                                $statusText = 'Berlangsung';
-                                                break;
-                                            default:
-                                                $statusClass = '';
-                                                $statusText = ucfirst($peminjaman->status);
-                                        }
-                                    @endphp
-                                    <span class="status {{ $statusClass }}">{{ $statusText }}</span>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ $peminjaman->user->name ?? 'Guest' }}</td>
+                                    <td>
+                                        @if ($peminjaman->ruangan)
+                                            {{ $peminjaman->ruangan->nama_ruangan }}
+                                        @else
+                                            -
+                                        @endif
+                                        @if ($peminjaman->projector)
+                                            <br><small>{{ $peminjaman->projector->kode_proyektor }}</small>
+                                        @endif
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}</td>
+                                    <td>
+                                        @php
+                                            $statusClass = '';
+                                            $statusText = '';
+                                            switch ($peminjaman->status) {
+                                                case 'pending':
+                                                    $statusClass = 'status-menunggu';
+                                                    $statusText = 'Menunggu';
+                                                    break;
+                                                case 'disetujui':
+                                                    $statusClass = 'status-disetujui';
+                                                    $statusText = 'Disetujui';
+                                                    break;
+                                                case 'ditolak':
+                                                    $statusClass = 'status-ditolak';
+                                                    $statusText = 'Ditolak';
+                                                    break;
+                                                case 'selesai':
+                                                    $statusClass = 'status-selesai';
+                                                    $statusText = 'Selesai';
+                                                    break;
+                                                case 'berlangsung':
+                                                    $statusClass = 'status-berlangsung';
+                                                    $statusText = 'Berlangsung';
+                                                    break;
+                                                default:
+                                                    $statusClass = '';
+                                                    $statusText = ucfirst($peminjaman->status);
+                                            }
+                                        @endphp
+                                        <span class="status {{ $statusClass }}">{{ $statusText }}</span>
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">Tidak ada peminjaman terbaru.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Tidak ada peminjaman terbaru.
+                                    </td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -1180,31 +1205,38 @@
                 <div class="section-title">Aktivitas Terkini</div>
                 <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
             </div>
-            
+
             <ul class="activity-list">
                 @forelse($peminjamanTerbaru as $peminjaman)
                     @php
                         $activity = [
                             'icon' => 'fa-clock',
                             'color' => 'var(--warning)',
-                            'title' => ($peminjaman->user->name ?? 'Seseorang') . ' mengajukan peminjaman untuk ' . ($peminjaman->ruangan->nama_ruangan ?? ($peminjaman->projector->kode_proyektor ?? 'item')),
+                            'title' =>
+                                ($peminjaman->user->name ?? 'Seseorang') .
+                                ' mengajukan peminjaman untuk ' .
+                                ($peminjaman->ruangan->nama_ruangan ??
+                                    ($peminjaman->projector->kode_proyektor ?? 'item')),
                         ];
 
                         switch ($peminjaman->status) {
                             case 'disetujui':
                                 $activity['icon'] = 'fa-check-circle';
                                 $activity['color'] = 'var(--success)';
-                                $activity['title'] = 'Peminjaman oleh ' . ($peminjaman->user->name ?? 'seseorang') . ' telah disetujui.';
+                                $activity['title'] =
+                                    'Peminjaman oleh ' . ($peminjaman->user->name ?? 'seseorang') . ' telah disetujui.';
                                 break;
                             case 'ditolak':
                                 $activity['icon'] = 'fa-times-circle';
                                 $activity['color'] = 'var(--danger)';
-                                $activity['title'] = 'Peminjaman oleh ' . ($peminjaman->user->name ?? 'seseorang') . ' ditolak.';
+                                $activity['title'] =
+                                    'Peminjaman oleh ' . ($peminjaman->user->name ?? 'seseorang') . ' ditolak.';
                                 break;
                             case 'selesai':
                                 $activity['icon'] = 'fa-undo';
                                 $activity['color'] = 'var(--info)';
-                                $activity['title'] = ($peminjaman->user->name ?? 'Seseorang') . ' telah menyelesaikan peminjaman.';
+                                $activity['title'] =
+                                    ($peminjaman->user->name ?? 'Seseorang') . ' telah menyelesaikan peminjaman.';
                                 break;
                         }
                     @endphp
@@ -1277,7 +1309,7 @@
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
-            
+
             if (window.innerWidth <= 768) {
                 sidebar.classList.toggle('active');
                 if (sidebar.classList.contains('active')) {
@@ -1292,7 +1324,7 @@
         window.addEventListener('resize', function() {
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
-            
+
             if (window.innerWidth > 768) {
                 sidebar.style.transform = 'translateX(0)';
                 mainContent.style.marginLeft = 'var(--sidebar-width)';
@@ -1303,4 +1335,5 @@
         });
     </script>
 </body>
+
 </html>

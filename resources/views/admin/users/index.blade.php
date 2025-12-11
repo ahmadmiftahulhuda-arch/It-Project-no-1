@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Pengguna - Admin Lab TI</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <style>
         :root {
             --primary: #3b5998;
@@ -822,7 +823,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -833,10 +835,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -859,10 +862,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -877,10 +881,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -901,12 +906,17 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -917,10 +927,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -959,7 +970,9 @@
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.users.index') }}" class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" name="cari" placeholder="Cari pengguna berdasarkan nama atau email..." value="{{ request('cari') }}" autocomplete="off">
+                <input type="text" id="searchInput" name="cari"
+                    placeholder="Cari pengguna berdasarkan nama atau email..." value="{{ request('cari') }}"
+                    autocomplete="off">
                 <button type="submit" style="display: none;"></button>
             </form>
 
@@ -973,7 +986,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -999,11 +1014,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1024,7 +1050,8 @@
                 <p>Kelola data pengguna sistem Lab Teknologi Informasi</p>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openCreateModal()">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal"
+                    onclick="openCreateModal()">
                     <i class="fas fa-plus"></i> Tambah Pengguna
                 </button>
             </div>
@@ -1036,32 +1063,43 @@
                 <div class="filter-grid">
                     <div class="filter-group">
                         <label for="search">Cari Berdasarkan Nama atau Email</label>
-                        <input type="text" id="search" name="cari" placeholder="Contoh: Budi atau budi@email.com" 
-                               value="{{ request('cari') }}">
+                        <input type="text" id="search" name="cari"
+                            placeholder="Contoh: Budi atau budi@email.com" value="{{ request('cari') }}">
                     </div>
                     <div class="filter-group">
                         <label for="role_filter">Peran Pengguna</label>
                         <select id="role_filter" name="peran">
-                            <option value="Semua" {{ request('peran') == 'Semua' || !request('peran') ? 'selected' : '' }}>Semua Peran</option>
-                            <option value="Administrator" {{ request('peran') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
-                            <option value="Mahasiswa" {{ request('peran') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                            <option value="Semua"
+                                {{ request('peran') == 'Semua' || !request('peran') ? 'selected' : '' }}>Semua Peran
+                            </option>
+                            <option value="Administrator" {{ request('peran') == 'Administrator' ? 'selected' : '' }}>
+                                Administrator</option>
+                            <option value="Mahasiswa" {{ request('peran') == 'Mahasiswa' ? 'selected' : '' }}>
+                                Mahasiswa</option>
                             <option value="Dosen" {{ request('peran') == 'Dosen' ? 'selected' : '' }}>Dosen</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="status_filter">Status Pengguna</label>
                         <select id="status_filter" name="status">
-                            <option value="Semua" {{ request('status') == 'Semua' || !request('status') ? 'selected' : '' }}>Semua Status</option>
+                            <option value="Semua"
+                                {{ request('status') == 'Semua' || !request('status') ? 'selected' : '' }}>Semua Status
+                            </option>
                             <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="Nonaktif" {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                            <option value="Nonaktif" {{ request('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif
+                            </option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="verifikasi_filter">Status Verifikasi</label>
                         <select id="verifikasi_filter" name="verifikasi">
-                            <option value="Semua" {{ request('verifikasi') == 'Semua' || !request('verifikasi') ? 'selected' : '' }}>Semua Status</option>
-                            <option value="Terverifikasi" {{ request('verifikasi') == 'Terverifikasi' ? 'selected' : '' }}>Terverifikasi</option>
-                            <option value="Belum" {{ request('verifikasi') == 'Belum' ? 'selected' : '' }}>Belum Terverifikasi</option>
+                            <option value="Semua"
+                                {{ request('verifikasi') == 'Semua' || !request('verifikasi') ? 'selected' : '' }}>
+                                Semua Status</option>
+                            <option value="Terverifikasi"
+                                {{ request('verifikasi') == 'Terverifikasi' ? 'selected' : '' }}>Terverifikasi</option>
+                            <option value="Belum" {{ request('verifikasi') == 'Belum' ? 'selected' : '' }}>Belum
+                                Terverifikasi</option>
                         </select>
                     </div>
                 </div>
@@ -1092,19 +1130,21 @@
                         </tr>
                     </thead>
                     <tbody id="users-table-body">
-                        @if(isset($users) && count($users) > 0)
-                            @foreach($users as $user)
+                        @if (isset($users) && count($users) > 0)
+                            @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $users->firstItem() + $loop->index }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        <span class="badge {{ $user->peran == 'Administrator' ? 'bg-warning' : ($user->peran == 'Dosen' ? 'bg-info' : 'bg-success') }}">
+                                        <span
+                                            class="badge {{ $user->peran == 'Administrator' ? 'bg-warning' : ($user->peran == 'Dosen' ? 'bg-info' : 'bg-success') }}">
                                             {{ $user->peran ?? 'N/A' }}
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge {{ $user->status === 'Aktif' ? 'bg-success' : 'bg-danger' }}">
+                                        <span
+                                            class="badge {{ $user->status === 'Aktif' ? 'bg-success' : 'bg-danger' }}">
                                             <i class="fas fa-circle me-1 small"></i>{{ $user->status ?? 'N/A' }}
                                         </span>
                                     </td>
@@ -1118,28 +1158,30 @@
                                     <td>
                                         <div class="d-flex gap-2 action-buttons">
                                             @if (!$user->verified)
-                                                <form action="{{ route('admin.users.verify', $user->id) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('admin.users.verify', $user->id) }}"
+                                                    method="POST" class="d-inline">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-success-custom btn-sm" title="Verifikasi">
+                                                    <button type="submit" class="btn btn-success-custom btn-sm"
+                                                        title="Verifikasi">
                                                         <i class="fas fa-check-circle me-1"></i> Verifikasi
                                                     </button>
                                                 </form>
                                             @endif
-                                            <button class="btn btn-warning-custom btn-sm edit-user" 
-                                                    data-id="{{ $user->id }}"
-                                                    data-name="{{ $user->name }}"
-                                                    data-email="{{ $user->email }}"
-                                                    data-nim="{{ $user->nim }}"
-                                                    data-no_hp="{{ $user->no_hp }}"
-                                                    data-peran="{{ $user->peran }}"
-                                                    data-status="{{ $user->status }}"
-                                                    data-tanggal_bergabung="{{ $user->tanggal_bergabung ?? $user->created_at->format('Y-m-d') }}"
-                                                    title="Edit">
+                                            <button class="btn btn-warning-custom btn-sm edit-user"
+                                                data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                                data-email="{{ $user->email }}" data-nim="{{ $user->nim }}"
+                                                data-no_hp="{{ $user->no_hp }}" data-peran="{{ $user->peran }}"
+                                                data-status="{{ $user->status }}"
+                                                data-tanggal_bergabung="{{ $user->tanggal_bergabung ?? $user->created_at->format('Y-m-d') }}"
+                                                title="Edit">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </button>
-                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.users.destroy', $user->id) }}"
+                                                method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus pengguna ini?')" class="btn btn-danger-custom btn-sm" title="Hapus">
+                                                <button type="submit"
+                                                    onclick="return confirm('Yakin hapus pengguna ini?')"
+                                                    class="btn btn-danger-custom btn-sm" title="Hapus">
                                                     <i class="fas fa-trash me-1"></i> Hapus
                                                 </button>
                                             </form>
@@ -1172,7 +1214,8 @@
                         <h5 class="modal-title" id="userModalLabel">
                             <i class="fas fa-user-plus me-2"></i>Tambah Pengguna Baru
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <form id="userForm" action="{{ route('admin.users.store') }}" method="POST">
                         @csrf
@@ -1182,38 +1225,35 @@
                                 <label for="name" class="form-label">
                                     <i class="fas fa-user me-1"></i>Nama Lengkap <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="name" name="name" 
-                                       class="form-control @error('name') is-invalid @enderror" 
-                                       value="{{ old('name') }}" required 
-                                       placeholder="Masukkan nama lengkap">
+                                <input type="text" id="name" name="name"
+                                    class="form-control @error('name') is-invalid @enderror"
+                                    value="{{ old('name') }}" required placeholder="Masukkan nama lengkap">
                                 @error('name')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="email" class="form-label">
                                     <i class="fas fa-envelope me-1"></i>Email <span class="text-danger">*</span>
                                 </label>
-                                <input type="email" id="email" name="email" 
-                                       class="form-control @error('email') is-invalid @enderror" 
-                                       value="{{ old('email') }}" required 
-                                       placeholder="Masukkan alamat email">
+                                <input type="email" id="email" name="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    value="{{ old('email') }}" required placeholder="Masukkan alamat email">
                                 @error('email')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div id="passwordFields">
                                 <div class="form-group mb-3">
                                     <label for="password" class="form-label">
                                         <i class="fas fa-lock me-1"></i>Password <span class="text-danger">*</span>
                                     </label>
                                     <div class="input-group">
-                                        <input type="password" id="password" name="password" 
-                                               class="form-control @error('password') is-invalid @enderror" 
-                                               required 
-                                               placeholder="Masukkan password">
+                                        <input type="password" id="password" name="password"
+                                            class="form-control @error('password') is-invalid @enderror" required
+                                            placeholder="Masukkan password">
                                         <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -1222,76 +1262,78 @@
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                
+
                                 <div class="form-group mb-3">
                                     <label for="password_confirmation" class="form-label">
-                                        <i class="fas fa-lock me-1"></i>Konfirmasi Password <span class="text-danger">*</span>
+                                        <i class="fas fa-lock me-1"></i>Konfirmasi Password <span
+                                            class="text-danger">*</span>
                                     </label>
                                     <div class="input-group">
-                                        <input type="password" id="password_confirmation" name="password_confirmation" 
-                                               class="form-control" 
-                                               required 
-                                               placeholder="Konfirmasi password">
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                                        <input type="password" id="password_confirmation"
+                                            name="password_confirmation" class="form-control" required
+                                            placeholder="Konfirmasi password">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="togglePasswordConfirmation">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="nim" class="form-label">
                                     <i class="fas fa-id-card me-1"></i>NIM
                                 </label>
-                                <input type="text" id="nim" name="nim" 
-                                       class="form-control @error('nim') is-invalid @enderror" 
-                                       value="{{ old('nim') }}" 
-                                       placeholder="Masukkan NIM">
+                                <input type="text" id="nim" name="nim"
+                                    class="form-control @error('nim') is-invalid @enderror"
+                                    value="{{ old('nim') }}" placeholder="Masukkan NIM">
                                 @error('nim')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="no_hp" class="form-label">
                                     <i class="fas fa-phone me-1"></i>Nomor HP
                                 </label>
-                                <input type="text" id="no_hp" name="no_hp" 
-                                       class="form-control @error('no_hp') is-invalid @enderror" 
-                                       value="{{ old('no_hp') }}" 
-                                       placeholder="Masukkan nomor HP">
+                                <input type="text" id="no_hp" name="no_hp"
+                                    class="form-control @error('no_hp') is-invalid @enderror"
+                                    value="{{ old('no_hp') }}" placeholder="Masukkan nomor HP">
                                 @error('no_hp')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="peran" class="form-label">
                                     <i class="fas fa-user-tag me-1"></i>Peran <span class="text-danger">*</span>
                                 </label>
-                                <select id="peran" name="peran" 
-                                        class="form-control @error('peran') is-invalid @enderror" 
-                                        required>
+                                <select id="peran" name="peran"
+                                    class="form-control @error('peran') is-invalid @enderror" required>
                                     <option value="">Pilih Peran</option>
-                                    <option value="Administrator" {{ old('peran') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
-                                    <option value="Mahasiswa" {{ old('peran') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                                    <option value="Dosen" {{ old('peran') == 'Dosen' ? 'selected' : '' }}>Dosen</option>
+                                    <option value="Administrator"
+                                        {{ old('peran') == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                                    <option value="Mahasiswa" {{ old('peran') == 'Mahasiswa' ? 'selected' : '' }}>
+                                        Mahasiswa</option>
+                                    <option value="Dosen" {{ old('peran') == 'Dosen' ? 'selected' : '' }}>Dosen
+                                    </option>
                                 </select>
                                 @error('peran')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="form-group mb-3">
                                 <label for="status" class="form-label">
                                     <i class="fas fa-circle me-1"></i>Status <span class="text-danger">*</span>
                                 </label>
-                                <select id="status" name="status" 
-                                        class="form-control @error('status') is-invalid @enderror" 
-                                        required>
+                                <select id="status" name="status"
+                                    class="form-control @error('status') is-invalid @enderror" required>
                                     <option value="">Pilih Status</option>
-                                    <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                    <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif
+                                    </option>
+                                    <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>
+                                        Nonaktif</option>
                                 </select>
                                 @error('status')
                                     <div class="error-message">{{ $message }}</div>
@@ -1312,10 +1354,9 @@
                                 <label for="tanggal_bergabung" class="form-label">
                                     <i class="fas fa-calendar-alt me-1"></i>Tanggal Bergabung
                                 </label>
-                                <input type="date" id="tanggal_bergabung" name="tanggal_bergabung" 
-                                       class="form-control @error('tanggal_bergabung') is-invalid @enderror" 
-                                       value="{{ old('tanggal_bergabung') }}" 
-                                       placeholder="Tanggal bergabung">
+                                <input type="date" id="tanggal_bergabung" name="tanggal_bergabung"
+                                    class="form-control @error('tanggal_bergabung') is-invalid @enderror"
+                                    value="{{ old('tanggal_bergabung') }}" placeholder="Tanggal bergabung">
                                 @error('tanggal_bergabung')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
@@ -1341,212 +1382,216 @@
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    // Global variables
-    let currentEditId = null;
-    let userModal = null;
+        <script>
+            // Global variables
+            let currentEditId = null;
+            let userModal = null;
 
-    // Initialize when document is ready
-    $(document).ready(function() {
-        userModal = new bootstrap.Modal(document.getElementById('userModal'));
-        initializeEventListeners();
-        initializeTheme();
-    });
+            // Initialize when document is ready
+            $(document).ready(function() {
+                userModal = new bootstrap.Modal(document.getElementById('userModal'));
+                initializeEventListeners();
+                initializeTheme();
+            });
 
-    function initializeEventListeners() {
-        $('#userForm').on('submit', function(e) {
-            e.preventDefault();
-            submitUserForm();
-        });
+            function initializeEventListeners() {
+                $('#userForm').on('submit', function(e) {
+                    e.preventDefault();
+                    submitUserForm();
+                });
 
-        // Use event delegation for edit buttons since the table content can be dynamic
-        $('#users-table-body').on('click', '.edit-user', function() {
-            const userId = $(this).data('id');
-            openEditModal(userId);
-        });
+                // Use event delegation for edit buttons since the table content can be dynamic
+                $('#users-table-body').on('click', '.edit-user', function() {
+                    const userId = $(this).data('id');
+                    openEditModal(userId);
+                });
 
-        // Event listeners for filter changes to submit the form
-        $('#role_filter, #status_filter, #verifikasi_filter').on('change', function() {
-            $('#filterForm').submit();
-        });
+                // Event listeners for filter changes to submit the form
+                $('#role_filter, #status_filter, #verifikasi_filter').on('change', function() {
+                    $('#filterForm').submit();
+                });
 
-        // For delete confirmation, ensure it targets the form dynamically if needed
-        $('body').on('submit', '.action-buttons form', function(e) {
-            if (!confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
-                e.preventDefault();
+                // For delete confirmation, ensure it targets the form dynamically if needed
+                $('body').on('submit', '.action-buttons form', function(e) {
+                    if (!confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+                        e.preventDefault();
+                    }
+                });
+
+                $('#theme-toggle').on('click', function() {
+                    toggleTheme();
+                });
+
+                // Toggle password visibility
+                $('#togglePassword').on('click', function() {
+                    const passwordInput = $('#password');
+                    const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+                    passwordInput.attr('type', type);
+                    $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+                });
+
+                $('#togglePasswordConfirmation').on('click', function() {
+                    const passwordConfirmationInput = $('#password_confirmation');
+                    const type = passwordConfirmationInput.attr('type') === 'password' ? 'text' : 'password';
+                    passwordConfirmationInput.attr('type', type);
+                    $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+                });
             }
-        });
 
-        $('#theme-toggle').on('click', function() {
-            toggleTheme();
-        });
-
-        // Toggle password visibility
-        $('#togglePassword').on('click', function() {
-            const passwordInput = $('#password');
-            const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
-            passwordInput.attr('type', type);
-            $(this).find('i').toggleClass('fa-eye fa-eye-slash');
-        });
-
-        $('#togglePasswordConfirmation').on('click', function() {
-            const passwordConfirmationInput = $('#password_confirmation');
-            const type = passwordConfirmationInput.attr('type') === 'password' ? 'text' : 'password';
-            passwordConfirmationInput.attr('type', type);
-            $(this).find('i').toggleClass('fa-eye fa-eye-slash');
-        });
-    }
-
-    function resetForm() {
-        $('#userForm')[0].reset();
-        $('#userForm').attr('action', "{{ route('admin.users.store') }}");
-        $('#formMethod').html(''); // Clear _method field
-        $('#userModalLabel').html('<i class="fas fa-user-plus me-2"></i>Tambah Pengguna Baru');
-        $('#passwordFields').show();
-        $('#password').prop('required', true);
-        $('#password_confirmation').prop('required', true);
-        // Reset eye icon to fa-eye and input type to password
-        $('#togglePassword i').removeClass('fa-eye-slash').addClass('fa-eye');
-        $('#password').attr('type', 'password');
-        $('#togglePasswordConfirmation i').removeClass('fa-eye-slash').addClass('fa-eye');
-        $('#password_confirmation').attr('type', 'password');
-        currentEditId = null;
-        // Clear validation errors
-        $('.error-message').text('');
-        $('.is-invalid').removeClass('is-invalid');
-    }
-
-    function openCreateModal() {
-        resetForm();
-        userModal.show();
-    }
-
-    function openEditModal(userId) {
-        currentEditId = userId;
-        resetForm(); // Reset form first to clear previous data and errors
-        
-        $('#userModalLabel').html('<i class="fas fa-edit me-2"></i>Edit Pengguna');
-        $('#userForm').attr('action', `/admin/users/${userId}`);
-        $('#formMethod').html('<input type="hidden" name="_method" value="PUT">');
-        
-        $('#passwordFields').hide(); // Hide password fields for edit by default
-        $('#password').prop('required', false);
-        $('#password_confirmation').prop('required', false);
-        
-        fetchUserData(userId);
-    }
-
-    function fetchUserData(userId) {
-        $.ajax({
-            url: `/admin/users/${userId}/edit`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (response.success && response.data) {
-                    populateEditForm(response.data);
-                    userModal.show();
-                } else {
-                    alert('Gagal memuat data pengguna.');
-                }
-            },
-            error: function() {
-                alert('Terjadi kesalahan saat mengambil data pengguna.');
+            function resetForm() {
+                $('#userForm')[0].reset();
+                $('#userForm').attr('action', "{{ route('admin.users.store') }}");
+                $('#formMethod').html(''); // Clear _method field
+                $('#userModalLabel').html('<i class="fas fa-user-plus me-2"></i>Tambah Pengguna Baru');
+                $('#passwordFields').show();
+                $('#password').prop('required', true);
+                $('#password_confirmation').prop('required', true);
+                // Reset eye icon to fa-eye and input type to password
+                $('#togglePassword i').removeClass('fa-eye-slash').addClass('fa-eye');
+                $('#password').attr('type', 'password');
+                $('#togglePasswordConfirmation i').removeClass('fa-eye-slash').addClass('fa-eye');
+                $('#password_confirmation').attr('type', 'password');
+                currentEditId = null;
+                // Clear validation errors
+                $('.error-message').text('');
+                $('.is-invalid').removeClass('is-invalid');
             }
-        });
-    }
 
-    function populateEditForm(user) {
-        $('#name').val(user.name || '');
-        $('#email').val(user.email || '');
-        $('#nim').val(user.nim || '');
-        $('#no_hp').val(user.no_hp || '');
-        $('#peran').val(user.peran || '');
-        $('#status').val(user.status || '');
-        $('#verified').val(user.verified ? '1' : '0');
-        
-        // Populate tanggal_bergabung, format to YYYY-MM-DD for input type="date"
-        if (user.tanggal_bergabung) {
-            $('#tanggal_bergabung').val(user.tanggal_bergabung.substring(0, 10)); 
-        } else if (user.created_at) { // Fallback to created_at if tanggal_bergabung is null
-            $('#tanggal_bergabung').val(user.created_at.substring(0, 10));
-        } else {
-            $('#tanggal_bergabung').val('');
-        }
-    }
+            function openCreateModal() {
+                resetForm();
+                userModal.show();
+            }
 
-    function submitUserForm() {
-        const form = $('#userForm');
-        const url = form.attr('action');
-        let formData = new FormData(form[0]);
+            function openEditModal(userId) {
+                currentEditId = userId;
+                resetForm(); // Reset form first to clear previous data and errors
 
-        // Clear previous validation errors
-        $('.error-message').text('');
-        $('.is-invalid').removeClass('is-invalid');
+                $('#userModalLabel').html('<i class="fas fa-edit me-2"></i>Edit Pengguna');
+                $('#userForm').attr('action', `/admin/users/${userId}`);
+                $('#formMethod').html('<input type="hidden" name="_method" value="PUT">');
 
-        $.ajax({
-            url: url,
-            type: 'POST', // Always POST for Laravel AJAX, method spoofing is done via _method
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                userModal.hide();
-                alert(response.success || 'Operasi berhasil!'); // Show success message
-                window.location.reload();
-            },
-            error: function(xhr) {
-                if (xhr.status === 422) { // Validation errors
-                    let errors = xhr.responseJSON.errors;
-                    $.each(errors, function(key, value) {
-                        // Dynamically find the input by ID, assuming ID matches name
-                        const inputElement = $('#' + key);
-                        if(inputElement.length === 0) { // Fallback for nested attributes or special cases
-                            inputElement = $('[name="' + key + '"]');
+                $('#passwordFields').hide(); // Hide password fields for edit by default
+                $('#password').prop('required', false);
+                $('#password_confirmation').prop('required', false);
+
+                fetchUserData(userId);
+            }
+
+            function fetchUserData(userId) {
+                $.ajax({
+                    url: `/admin/users/${userId}/edit`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success && response.data) {
+                            populateEditForm(response.data);
+                            userModal.show();
+                        } else {
+                            alert('Gagal memuat data pengguna.');
                         }
-                        inputElement.addClass('is-invalid').closest('.form-group').find('.error-message').text(value[0]);
-                    });
-                } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                    alert(xhr.responseJSON.error); // Show general error message from server
+                    },
+                    error: function() {
+                        alert('Terjadi kesalahan saat mengambil data pengguna.');
+                    }
+                });
+            }
+
+            function populateEditForm(user) {
+                $('#name').val(user.name || '');
+                $('#email').val(user.email || '');
+                $('#nim').val(user.nim || '');
+                $('#no_hp').val(user.no_hp || '');
+                $('#peran').val(user.peran || '');
+                $('#status').val(user.status || '');
+                $('#verified').val(user.verified ? '1' : '0');
+
+                // Populate tanggal_bergabung, format to YYYY-MM-DD for input type="date"
+                if (user.tanggal_bergabung) {
+                    $('#tanggal_bergabung').val(user.tanggal_bergabung.substring(0, 10));
+                } else if (user.created_at) { // Fallback to created_at if tanggal_bergabung is null
+                    $('#tanggal_bergabung').val(user.created_at.substring(0, 10));
                 } else {
-                    console.error('AJAX Error:', xhr.responseText);
-                    alert('Terjadi kesalahan yang tidak terduga. Silakan periksa konsol browser untuk detail.');
+                    $('#tanggal_bergabung').val('');
                 }
             }
-        });
-    }
 
-    function initializeTheme() {
-        const savedTheme = localStorage.getItem('darkMode');
-        if (savedTheme === 'enabled') {
-            document.body.classList.add('dark-mode');
-            $('#theme-toggle').html('<i class="fas fa-sun"></i>');
-        }
-    }
+            function submitUserForm() {
+                const form = $('#userForm');
+                const url = form.attr('action');
+                let formData = new FormData(form[0]);
 
-    function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-        let theme = 'disabled';
-        let icon = '<i class="fas fa-moon"></i>';
-        if (document.body.classList.contains('dark-mode')) {
-            theme = 'enabled';
-            icon = '<i class="fas fa-sun"></i>';
-        }
-        localStorage.setItem('darkMode', theme);
-        $('#theme-toggle').html(icon);
-    }
+                // Clear previous validation errors
+                $('.error-message').text('');
+                $('.is-invalid').removeClass('is-invalid');
 
-    // Submit search only when user presses Enter or Space (keyup so the character is present)
-    $(document).ready(function() {
-        $('#searchInput').on('keyup', function(e) {
-            // Only submit on Enter press for the header search bar
-            if (e.key === 'Enter') {
-                $('#searchForm').submit();
+                $.ajax({
+                    url: url,
+                    type: 'POST', // Always POST for Laravel AJAX, method spoofing is done via _method
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        userModal.hide();
+                        alert(response.success || 'Operasi berhasil!'); // Show success message
+                        window.location.reload();
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) { // Validation errors
+                            let errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                // Dynamically find the input by ID, assuming ID matches name
+                                const inputElement = $('#' + key);
+                                if (inputElement.length ===
+                                    0) { // Fallback for nested attributes or special cases
+                                    inputElement = $('[name="' + key + '"]');
+                                }
+                                inputElement.addClass('is-invalid').closest('.form-group').find(
+                                    '.error-message').text(value[0]);
+                            });
+                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                            alert(xhr.responseJSON.error); // Show general error message from server
+                        } else {
+                            console.error('AJAX Error:', xhr.responseText);
+                            alert(
+                                'Terjadi kesalahan yang tidak terduga. Silakan periksa konsol browser untuk detail.');
+                        }
+                    }
+                });
             }
-        });
-    });
-</script>
-</body> 
+
+            function initializeTheme() {
+                const savedTheme = localStorage.getItem('darkMode');
+                if (savedTheme === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                    $('#theme-toggle').html('<i class="fas fa-sun"></i>');
+                }
+            }
+
+            function toggleTheme() {
+                document.body.classList.toggle('dark-mode');
+                let theme = 'disabled';
+                let icon = '<i class="fas fa-moon"></i>';
+                if (document.body.classList.contains('dark-mode')) {
+                    theme = 'enabled';
+                    icon = '<i class="fas fa-sun"></i>';
+                }
+                localStorage.setItem('darkMode', theme);
+                $('#theme-toggle').html(icon);
+            }
+
+            // Submit search only when user presses Enter or Space (keyup so the character is present)
+            $(document).ready(function() {
+                $('#searchInput').on('keyup', function(e) {
+                    // Only submit on Enter press for the header search bar
+                    if (e.key === 'Enter') {
+                        $('#searchForm').submit();
+                    }
+                });
+            });
+        </script>
+</body>
+
 </html>

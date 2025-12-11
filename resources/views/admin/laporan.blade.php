@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan & Statistik - Admin Lab TI</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <style>
         :root {
             --primary: #3b5998;
@@ -817,6 +818,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -830,7 +832,8 @@
         <div class="sidebar-menu">
             <!-- Menu Utama -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -841,10 +844,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -867,10 +871,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Aset -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -885,10 +890,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -909,12 +915,17 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
                     </a>
+                    <a href="/admin/dosen" class="dropdown-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Dosen</span>
+                    </a>
                 </div>
             </div>
-            
+
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -925,10 +936,11 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -981,7 +993,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -1007,11 +1021,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1081,197 +1106,196 @@
             </div>
         </div>
 
-                <!-- Stats Cards -->
+        <!-- Stats Cards -->
 
-                <div class="stats-container">
+        <div class="stats-container">
 
-                    <!-- Stat cards will be dynamically generated here -->
+            <!-- Stat cards will be dynamically generated here -->
 
-                </div>
+        </div>
 
-                <!-- Charts Section -->
+        <!-- Charts Section -->
 
-                <div class="charts-grid">
+        <div class="charts-grid">
 
-                    <div class="chart-card">
+            <div class="chart-card">
 
-                        <div class="chart-header">
+                <div class="chart-header">
 
-                            <div class="section-title" id="monthlyChartTitle">Statistik Peminjaman Bulanan</div>
+                    <div class="section-title" id="monthlyChartTitle">Statistik Peminjaman Bulanan</div>
 
-                            <select id="yearSelect" style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
+                    <select id="yearSelect"
+                        style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
 
-                                @foreach($years as $year)
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                                {{ $year }}</option>
+                        @endforeach
 
-                                    <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}</option>
-
-                                @endforeach
-
-                            </select>
-
-                        </div>
-
-                        <div class="chart-container">
-
-                            <canvas id="monthlyChart"></canvas>
-
-                        </div>
-
-                    </div>
-
-                    <div class="chart-card">
-
-                        <div class="chart-header">
-
-                            <div class="section-title" id="distributionChartTitle">Distribusi Peminjaman</div>
-
-                        </div>
-
-                        <div class="chart-container">
-
-                            <canvas id="distributionChart"></canvas>
-
-                        </div>
-
-                    </div>
+                    </select>
 
                 </div>
 
-        
+                <div class="chart-container">
 
-                <!-- Recent Activity -->
-
-                <div class="activity-container">
-
-                    <div class="chart-header">
-
-                        <div class="section-title">Aktivitas Terbaru</div>
-
-                        <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
-
-                    </div>
-
-                    <ul class="activity-list" id="recentActivityList">
-
-                        <!-- Activity items will be populated by JavaScript -->
-
-                    </ul>
+                    <canvas id="monthlyChart"></canvas>
 
                 </div>
 
             </div>
 
-            <div class="menu-toggle" id="menu-toggle">
+            <div class="chart-card">
 
-                <i class="fas fa-bars"></i>
+                <div class="chart-header">
+
+                    <div class="section-title" id="distributionChartTitle">Distribusi Peminjaman</div>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="distributionChart"></canvas>
+
+                </div>
 
             </div>
 
-            <!-- Bootstrap JS -->
+        </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-            <script>
 
-                let monthlyChart, distributionChart;
+        <!-- Recent Activity -->
 
-                // Initialize when document is ready
+        <div class="activity-container">
 
-                $(document).ready(function() {
+            <div class="chart-header">
 
-                    initializeEventListeners();
+                <div class="section-title">Aktivitas Terbaru</div>
 
-                    initializeTheme();
+                <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
 
-                    // Generate report on page load
+            </div>
 
-                    generateReport();
+            <ul class="activity-list" id="recentActivityList">
 
-                });
+                <!-- Activity items will be populated by JavaScript -->
 
-                function initializeEventListeners() {
+            </ul>
 
-                    $('#theme-toggle').on('click', toggleTheme);
+        </div>
 
-                    $('#menu-toggle').on('click', toggleSidebar);
+    </div>
 
-                    $('#printBtn').on('click', () => window.print());
+    <div class="menu-toggle" id="menu-toggle">
 
-                    $('#exportBtn').on('click', exportReport);
+        <i class="fas fa-bars"></i>
 
-                    $('#generateBtn').on('click', generateReport);
+    </div>
 
-                    $('#yearSelect').on('change', generateReport);
+    <!-- Bootstrap JS -->
 
-                    $('#report-type').on('change', generateReport);
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-                }
+    <script>
+        let monthlyChart, distributionChart;
 
-                function initializeTheme() {
+        // Initialize when document is ready
 
-                    if (localStorage.getItem('darkMode') === 'enabled') {
+        $(document).ready(function() {
 
-                        document.body.classList.add('dark-mode');
+            initializeEventListeners();
 
-                        $('#theme-toggle').html('<i class="fas fa-sun"></i>');
+            initializeTheme();
 
-                    }
+            // Generate report on page load
 
-                }
+            generateReport();
 
-                function toggleTheme() {
+        });
 
-                    document.body.classList.toggle('dark-mode');
+        function initializeEventListeners() {
 
-                    const isDarkMode = document.body.classList.contains('dark-mode');
+            $('#theme-toggle').on('click', toggleTheme);
 
-                    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            $('#menu-toggle').on('click', toggleSidebar);
 
-                    $('#theme-toggle').html(isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
+            $('#printBtn').on('click', () => window.print());
 
-                    updateChartColors();
+            $('#exportBtn').on('click', exportReport);
 
-                }
+            $('#generateBtn').on('click', generateReport);
 
-                function toggleSidebar() {
+            $('#yearSelect').on('change', generateReport);
 
-                    // Implement sidebar toggle logic if needed, especially for mobile
+            $('#report-type').on('change', generateReport);
 
-                }
+        }
 
-                function updateUI(data) {
+        function initializeTheme() {
 
-                    const uiConfig = data.uiConfig;
+            if (localStorage.getItem('darkMode') === 'enabled') {
 
-                    const stats = data.stats;
+                document.body.classList.add('dark-mode');
 
-        
+                $('#theme-toggle').html('<i class="fas fa-sun"></i>');
 
-                    // 1. Update Stats Cards dynamically
+            }
 
-                    const statsContainer = $('.stats-container');
+        }
 
-                    statsContainer.empty(); // Clear existing cards
+        function toggleTheme() {
 
-                    const icons = ['fa-hand-holding', 'fa-laptop', 'fa-users', 'fa-times-circle'];
+            document.body.classList.toggle('dark-mode');
 
-                    const colors = ['primary', 'success', 'warning', 'danger'];
+            const isDarkMode = document.body.classList.contains('dark-mode');
 
-                    let i = 0;
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
 
-                    for (const key in stats) {
+            $('#theme-toggle').html(isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
 
-                        const title = uiConfig.stat_titles[i] || key;
+            updateChartColors();
 
-                        const value = stats[key];
+        }
 
-                        const icon = icons[i % icons.length];
+        function toggleSidebar() {
 
-                        const color = colors[i % colors.length];
+            // Implement sidebar toggle logic if needed, especially for mobile
 
-        
+        }
 
-                        const statCardHtml = `
+        function updateUI(data) {
+
+            const uiConfig = data.uiConfig;
+
+            const stats = data.stats;
+
+
+
+            // 1. Update Stats Cards dynamically
+
+            const statsContainer = $('.stats-container');
+
+            statsContainer.empty(); // Clear existing cards
+
+            const icons = ['fa-hand-holding', 'fa-laptop', 'fa-users', 'fa-times-circle'];
+
+            const colors = ['primary', 'success', 'warning', 'danger'];
+
+            let i = 0;
+
+            for (const key in stats) {
+
+                const title = uiConfig.stat_titles[i] || key;
+
+                const value = stats[key];
+
+                const icon = icons[i % icons.length];
+
+                const color = colors[i % colors.length];
+
+
+
+                const statCardHtml = `
 
                             <div class="stat-card">
 
@@ -1293,41 +1317,41 @@
 
                         `;
 
-                        statsContainer.append(statCardHtml);
+                statsContainer.append(statCardHtml);
 
-                        i++;
+                i++;
 
-                    }
+            }
 
-                     // 2. Update Chart Titles
+            // 2. Update Chart Titles
 
-                    $('#monthlyChartTitle').text(uiConfig.chart_titles[0]);
+            $('#monthlyChartTitle').text(uiConfig.chart_titles[0]);
 
-                    $('#distributionChartTitle').text(uiConfig.chart_titles[1]);
+            $('#distributionChartTitle').text(uiConfig.chart_titles[1]);
 
-        
 
-        
 
-                    // 3. Update Recent Activity
 
-                    const activityList = $('#recentActivityList');
 
-                    activityList.empty();
+            // 3. Update Recent Activity
 
-                    if (data.recentActivity && data.recentActivity.length > 0) {
+            const activityList = $('#recentActivityList');
 
-                        data.recentActivity.forEach(item => {
+            activityList.empty();
 
-                            let iconClass = 'primary';
+            if (data.recentActivity && data.recentActivity.length > 0) {
 
-                            if (item.status === 'selesai' || item.status === 'disetujui') iconClass = 'success';
+                data.recentActivity.forEach(item => {
 
-                            if (item.status === 'ditolak') iconClass = 'danger';
+                    let iconClass = 'primary';
 
-                            if (item.status === 'pending') iconClass = 'warning';
+                    if (item.status === 'selesai' || item.status === 'disetujui') iconClass = 'success';
 
-                            const activityHtml = `
+                    if (item.status === 'ditolak') iconClass = 'danger';
+
+                    if (item.status === 'pending') iconClass = 'warning';
+
+                    const activityHtml = `
 
                                 <li class="activity-item">
 
@@ -1345,342 +1369,353 @@
 
                                 </li>`;
 
-                            activityList.append(activityHtml);
+                    activityList.append(activityHtml);
 
-                        });
+                });
 
-                    } else {
+            } else {
 
-                        activityList.append('<li class="text-center p-3 text-muted">Tidak ada aktivitas terbaru.</li>');
+                activityList.append('<li class="text-center p-3 text-muted">Tidak ada aktivitas terbaru.</li>');
 
-                    }
+            }
 
-        
 
-                    // 4. Update Charts
 
-                    const isDarkMode = document.body.classList.contains('dark-mode');
+            // 4. Update Charts
 
-                    const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            const isDarkMode = document.body.classList.contains('dark-mode');
 
-                    if (monthlyChart) {
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
 
-                        monthlyChart.destroy();
+            if (monthlyChart) {
 
-                    }
+                monthlyChart.destroy();
 
-                    monthlyChart = new Chart(monthlyCtx, {
+            }
 
-                        type: 'bar',
+            monthlyChart = new Chart(monthlyCtx, {
 
-                        data: {
+                type: 'bar',
 
-                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                data: {
 
-                            datasets: [{
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
 
-                                label: 'Jumlah',
+                    datasets: [{
 
-                                data: data.monthlyChart,
+                        label: 'Jumlah',
 
-                                backgroundColor: isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)',
+                        data: data.monthlyChart,
 
-                                borderColor: isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)',
+                        backgroundColor: isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)',
 
-                                borderWidth: 1,
+                        borderColor: isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)',
 
-                                borderRadius: 4
+                        borderWidth: 1,
 
-                            }]
+                        borderRadius: 4
 
+                    }]
+
+                },
+
+                options: getChartOptions()
+
+            });
+
+
+
+            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+
+            if (distributionChart) {
+
+                distributionChart.destroy();
+
+            }
+
+            distributionChart = new Chart(distributionCtx, {
+
+                type: 'doughnut',
+
+                data: {
+
+                    labels: data.distributionChart.labels,
+
+                    datasets: [{
+
+                        data: data.distributionChart.data,
+
+                        backgroundColor: ['rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)',
+                            'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'
+                        ],
+
+                        borderColor: isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+
+                        borderWidth: 2,
+
+                        hoverOffset: 15
+
+                    }]
+
+                },
+
+                options: getDoughnutChartOptions()
+
+            });
+
+
+
+            updateChartColors();
+
+        }
+
+
+
+        function getChartOptions() {
+
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            return {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        grid: {
+                            color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
                         },
 
-                        options: getChartOptions()
+                        ticks: {
+                            color: isDarkMode ? '#a0a0a0' : '#495057'
+                        }
 
-                    });
+                    },
 
-        
+                    x: {
 
-                    const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-
-                    if (distributionChart) {
-
-                        distributionChart.destroy();
-
-                    }
-
-                    distributionChart = new Chart(distributionCtx, {
-
-                        type: 'doughnut',
-
-                        data: {
-
-                            labels: data.distributionChart.labels,
-
-                            datasets: [{
-
-                                data: data.distributionChart.data,
-
-                                backgroundColor: ['rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)', 'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'],
-
-                                borderColor: isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-
-                                borderWidth: 2,
-
-                                hoverOffset: 15
-
-                            }]
-
+                        grid: {
+                            display: false
                         },
 
-                        options: getDoughnutChartOptions()
-
-                    });
-
-        
-
-                    updateChartColors();
-
-                }
-
-        
-
-                function getChartOptions() {
-
-                    const isDarkMode = document.body.classList.contains('dark-mode');
-
-                    return {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        scales: {
-
-                            y: {
-
-                                beginAtZero: true,
-
-                                grid: { color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' },
-
-                                ticks: { color: isDarkMode ? '#a0a0a0' : '#495057' }
-
-                            },
-
-                            x: {
-
-                                grid: { display: false },
-
-                                ticks: { color: isDarkMode ? '#a0a0a0' : '#495057' }
-
-                            }
-
-                        },
-
-                        plugins: {
-
-                            legend: { display: false },
-
-                            tooltip: getTooltipOptions()
-
+                        ticks: {
+                            color: isDarkMode ? '#a0a0a0' : '#495057'
                         }
-
-                    };
-
-                }
-
-                function getDoughnutChartOptions() {
-
-                    const isDarkMode = document.body.classList.contains('dark-mode');
-
-                    return {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        plugins: {
-
-                            legend: {
-
-                                position: 'bottom',
-
-                                labels: {
-
-                                    color: isDarkMode ? '#a0a0a0' : '#495057',
-
-                                    padding: 20,
-
-                                    usePointStyle: true,
-
-                                    pointStyle: 'circle'
-
-                                }
-
-                            },
-
-                            tooltip: getTooltipOptions()
-
-                        }
-
-                    };
-
-                }
-
-                function getTooltipOptions() {
-
-                    const isDarkMode = document.body.classList.contains('dark-mode');
-
-                    return {
-
-                        backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-
-                        titleColor: isDarkMode ? '#fff' : '#000',
-
-                        bodyColor: isDarkMode ? '#fff' : '#000',
-
-                        borderColor: isDarkMode ? '#333' : '#ddd',
-
-                        borderWidth: 1
-
-                    };
-
-                }
-
-                function updateChartColors() {
-
-                    const chartOptions = getChartOptions();
-
-                    const doughnutOptions = getDoughnutChartOptions();
-
-                    if (monthlyChart) {
-
-                        const isDarkMode = document.body.classList.contains('dark-mode');
-
-                        monthlyChart.options = chartOptions;
-
-                        monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)';
-
-                        monthlyChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
-
-                        monthlyChart.update();
 
                     }
 
-                    if (distributionChart) {
+                },
 
-                        const isDarkMode = document.body.classList.contains('dark-mode');
+                plugins: {
 
-                        distributionChart.options = doughnutOptions;
+                    legend: {
+                        display: false
+                    },
 
-                        distributionChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+                    tooltip: getTooltipOptions()
 
-                        distributionChart.update();
+                }
+
+            };
+
+        }
+
+        function getDoughnutChartOptions() {
+
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            return {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        position: 'bottom',
+
+                        labels: {
+
+                            color: isDarkMode ? '#a0a0a0' : '#495057',
+
+                            padding: 20,
+
+                            usePointStyle: true,
+
+                            pointStyle: 'circle'
+
+                        }
+
+                    },
+
+                    tooltip: getTooltipOptions()
+
+                }
+
+            };
+
+        }
+
+        function getTooltipOptions() {
+
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            return {
+
+                backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+
+                titleColor: isDarkMode ? '#fff' : '#000',
+
+                bodyColor: isDarkMode ? '#fff' : '#000',
+
+                borderColor: isDarkMode ? '#333' : '#ddd',
+
+                borderWidth: 1
+
+            };
+
+        }
+
+        function updateChartColors() {
+
+            const chartOptions = getChartOptions();
+
+            const doughnutOptions = getDoughnutChartOptions();
+
+            if (monthlyChart) {
+
+                const isDarkMode = document.body.classList.contains('dark-mode');
+
+                monthlyChart.options = chartOptions;
+
+                monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(59, 89, 152, 0.7)' :
+                    'rgba(59, 89, 152, 0.8)';
+
+                monthlyChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
+
+                monthlyChart.update();
+
+            }
+
+            if (distributionChart) {
+
+                const isDarkMode = document.body.classList.contains('dark-mode');
+
+                distributionChart.options = doughnutOptions;
+
+                distributionChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(30, 30, 30, 0.8)' :
+                    'rgba(255, 255, 255, 0.8)';
+
+                distributionChart.update();
+
+            }
+
+        }
+
+        function generateReport() {
+
+            const reportType = $('#report-type').val();
+
+            const dateRange = $('#date-range').val();
+
+            const department = $('#department').val();
+
+            const year = $('#yearSelect').val();
+
+            const btn = $('#generateBtn');
+
+            const originalHtml = btn.html();
+
+            btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
+
+            btn.prop('disabled', true);
+
+            const url =
+                `{{ route('admin.laporan.data') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
+
+            fetch(url, {
+
+                    headers: {
+
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+
+                        'Accept': 'application/json'
 
                     }
 
-                }
+                })
 
-                function generateReport() {
+                .then(response => {
 
-                    const reportType = $('#report-type').val();
+                    if (!response.ok) {
 
-                    const dateRange = $('#date-range').val();
+                        throw new Error('Network response was not ok');
 
-                    const department = $('#department').val();
+                    }
 
-                    const year = $('#yearSelect').val();
+                    return response.json();
 
-                    const btn = $('#generateBtn');
+                })
 
-                    const originalHtml = btn.html();
+                .then(data => {
 
-                    btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
+                    updateUI(data);
 
-                    btn.prop('disabled', true);
+                    btn.html(originalHtml);
 
-                    const url = `{{ route('admin.laporan.data') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
+                    btn.prop('disabled', false);
 
-                    fetch(url, {
+                })
 
-                        headers: {
+                .catch(error => {
 
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    console.error('Error fetching report data:', error);
 
-                            'Accept': 'application/json'
+                    alert('Gagal memuat data laporan. Silakan coba lagi.');
 
-                        }
+                    btn.html(originalHtml);
 
-                    })
+                    btn.prop('disabled', false);
 
-                    .then(response => {
+                });
 
-                        if (!response.ok) {
+        }
 
-                            throw new Error('Network response was not ok');
+        function exportReport() {
 
-                        }
+            const reportType = $('#report-type').val();
 
-                        return response.json();
+            const dateRange = $('#date-range').val();
 
-                    })
+            const department = $('#department').val();
 
-                    .then(data => {
+            const year = $('#yearSelect').val();
 
-                        updateUI(data);
 
-                        btn.html(originalHtml);
 
-                        btn.prop('disabled', false);
+            // Note: You need to create a route and controller method for this export.
 
-                    })
+            // For example: Route::get('/admin/laporan/export', [AdminController::class, 'exportReport'])->name('admin.laporan.export');
 
-                    .catch(error => {
+            const exportUrl =
+                `{{ route('admin.laporan') }}/export?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
 
-                        console.error('Error fetching report data:', error);
 
-                        alert('Gagal memuat data laporan. Silakan coba lagi.');
 
-                        btn.html(originalHtml);
+            alert(`Fungsi ekspor belum diimplementasikan di backend. URL yang akan digunakan: ${exportUrl}`);
 
-                        btn.prop('disabled', false);
+            // window.location.href = exportUrl; // Uncomment this line when backend is ready
 
-                    });
+        }
+    </script>
 
-                }
+</body>
 
-                function exportReport() {
-
-                    const reportType = $('#report-type').val();
-
-                    const dateRange = $('#date-range').val();
-
-                    const department = $('#department').val();
-
-                    const year = $('#yearSelect').val();
-
-                    
-
-                    // Note: You need to create a route and controller method for this export.
-
-                    // For example: Route::get('/admin/laporan/export', [AdminController::class, 'exportReport'])->name('admin.laporan.export');
-
-                    const exportUrl = `{{ route('admin.laporan') }}/export?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
-
-                    
-
-                    alert(`Fungsi ekspor belum diimplementasikan di backend. URL yang akan digunakan: ${exportUrl}`);
-
-                    // window.location.href = exportUrl; // Uncomment this line when backend is ready
-
-                }
-
-            </script>
-
-        </body>
-
-        </html>
-
-        
-
-        
+</html>

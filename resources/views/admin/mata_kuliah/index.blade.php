@@ -763,7 +763,7 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item active">
+                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Jadwal Perkuliahan</span>
                     </a>
@@ -771,7 +771,7 @@
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                    <a href="/admin/mata_kuliah" class="dropdown-item active">
                         <i class="fas fa-book"></i>
                         <span>Matakuliah</span>
                     </a>
@@ -782,6 +782,7 @@
                     <a href="/admin/dosen" class="dropdown-item">
                         <i class="fas fa-user-tie"></i>
                         <span>Dosen</span>
+                    </a>
                 </div>
             </div>
 

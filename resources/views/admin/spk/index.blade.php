@@ -703,6 +703,10 @@
                         <i class="fas fa-clock"></i>
                         <span>Slot Waktu</span>
                     </a>
+                    <a href="/admin/mata_kuliah" class="dropdown-item">
+                        <i class="fas fa-book"></i>
+                        <span>Matakuliah</span>
+                    </a>
                     <a href="/admin/kelas" class="dropdown-item">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Kelas</span>
@@ -710,7 +714,6 @@
                     <a href="/admin/dosen" class="dropdown-item">
                         <i class="fas fa-user-tie"></i>
                         <span>Dosen</span>
-
                     </a>
                 </div>
             </div>
@@ -742,24 +745,24 @@
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item">
+                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
                         <i class="fas fa-cog"></i>
-                        <span>Pengaturan Sistem</span>
+                        <span>Pengaturan</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Sistem TPK (SPK) -->
+            <!-- Sistem Pendukung Keputusan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#spkMenu" aria-expanded="true" aria-controls="spkMenu">
+                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
                     <span>Sistem TPK</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse show" id="spkMenu">
+                <div class="dropdown-items collapse" id="spkMenu">
                     <a href="{{ route('admin.spk.index') }}" class="dropdown-item active">
                         <i class="fas fa-sliders-h"></i>
-                        <span>AHP & SAW Peminjaman</span>
+                        <span>AHP & SAW</span>
                     </a>
                 </div>
             </div>
