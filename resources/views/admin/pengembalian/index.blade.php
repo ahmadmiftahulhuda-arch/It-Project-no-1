@@ -1148,9 +1148,6 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Terapkan Filter
-                    </button>
                     <a href="{{ route('admin.pengembalian') }}" class="btn btn-outline btn-sm">
                         <i class="fas fa-refresh me-1"></i> Reset
                     </a>
