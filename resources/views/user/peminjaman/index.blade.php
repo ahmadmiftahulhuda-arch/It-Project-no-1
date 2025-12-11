@@ -1414,6 +1414,7 @@
                             <th width="50" class="text-center">No</th>
                             <th>Tanggal & Waktu</th>
                             <th>Ruang</th>
+                            <th>Dosen Pengampu</th>
                             <th width="100" class="text-center">Proyektor</th>
                             <th>Keperluan</th>
                             <th width="130" class="text-center">Status</th>
@@ -1461,6 +1462,9 @@
                                 </td>
                                 <td><i class="fas fa-door-open text-info me-1"></i>
                                     {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}</td>
+                                <td>
+                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
+                                </td>
                                 <td class="text-center">
                                     @if ($peminjaman->projector)
                                         <div>
@@ -1531,6 +1535,8 @@
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
+                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
+                                            data-dosen-nip="{{ $peminjaman->dosen_nip ?? '' }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
                                             data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
@@ -1654,6 +1660,10 @@
                             <div class="detail-row">
                                 <div class="detail-label">Proyektor</div>
                                 <div class="detail-value" id="detail-proyektor"></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Dosen Pengampu</div>
+                                <div class="detail-value" id="detail-dosen">-</div>
                             </div>
                             <div class="detail-row">
                                 <div class="detail-label">Status</div>
@@ -1877,6 +1887,7 @@
                 const prodi = button.getAttribute('data-prodi');
                 const noHp = button.getAttribute('data-no-hp');
                 const email = button.getAttribute('data-email');
+                const dosen = button.getAttribute('data-dosen') || '';
                 const diajukan = button.getAttribute('data-diajukan');
                 const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
 
@@ -1891,6 +1902,7 @@
                 document.getElementById('detail-prodi').textContent = prodi;
                 document.getElementById('detail-no-hp').textContent = noHp;
                 document.getElementById('detail-email').textContent = email;
+                document.getElementById('detail-dosen').textContent = dosen || '-';
                 document.getElementById('detail-diajukan').textContent = diajukan;
 
                 // Set status dengan badge yang sesuai

@@ -1166,6 +1166,7 @@
                         <tr>
                             <th>No</th>
                             <th>Peminjam</th>
+                            <th>Dosen Pengampu</th>
                             <th>Ruang & Barang</th>
                             <th>Tanggal Pinjam</th>
                             <th>Tanggal Kembali</th>
@@ -1201,14 +1202,15 @@
                                     <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
                                     </td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar me-2"
-                                                style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                                {{ substr($pengembalian->user->name ?? 'G', 0, 1) }}
+                                            <div class="d-flex align-items-center">
+                                                <div class="user-avatar me-2"
+                                                    style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                                    {{ substr($pengembalian->user->name ?? 'G', 0, 1) }}
+                                                </div>
+                                                {{ $pengembalian->user->name ?? 'Guest' }}
                                             </div>
-                                            {{ $pengembalian->user->name ?? 'Guest' }}
-                                        </div>
-                                    </td>
+                                        </td>
+                                        <td>{{ $pengembalian->peminjaman->dosen->nama_dosen ?? '-' }}</td>
                                     <td>
                                         <strong>{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? ($pengembalian->peminjaman->ruang ?? 'N/A') }}</strong><br>
                                         @if ($pengembalian->peminjaman->projector)
@@ -1321,14 +1323,16 @@
                                                 data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}"
                                                 data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
                                                 data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '') }}"
+                                                data-dosen-nip="{{ $pengembalian->peminjaman->dosen_nip ?? '' }}"
                                                 data-status="{{ $pengembalian->status }}">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
 
                                             {{-- Tombol Detail --}}
-                                            <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
+                                                <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $pengembalian->id }}"
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
+                                                data-dosen="{{ $pengembalian->peminjaman->dosen->nama_dosen ?? '' }}"
                                                 data-barang="{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? 'N/A' }}"
                                                 data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal ?? '' }}"
                                                 data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
@@ -1346,7 +1350,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="9" class="empty-state">
+                                <td colspan="10" class="empty-state">
                                     <i class="fas fa-inbox"></i><br>
                                     Belum ada data pengembalian
                                 </td>
@@ -1488,6 +1492,10 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Barang</label>
                                 <p id="detail_barang"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dosen Pengampu</label>
+                                <p id="detail_dosen"></p>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Tanggal Pinjam</label>
@@ -1741,6 +1749,7 @@
                     const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
                     const kondisi = button.getAttribute('data-kondisi');
                     const keterangan = button.getAttribute('data-keterangan');
+                    const dosen = button.getAttribute('data-dosen');
                     const status = button.getAttribute('data-status');
 
                     // Isi data detail
@@ -1751,6 +1760,7 @@
                     document.getElementById('detail_tanggal_kembali').textContent = tanggalKembali ? (formatDate(tanggalKembali) + (waktuPengembalian ? ' ' + formatTime(waktuPengembalian) : '')) : '-';
                     document.getElementById('detail_kondisi').textContent = kondisi || '-';
                     document.getElementById('detail_keterangan').textContent = keterangan || '-';
+                    document.getElementById('detail_dosen').textContent = dosen || '-';
 
                     // Map status values to labels
                     let statusText = '';

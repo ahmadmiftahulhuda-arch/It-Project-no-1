@@ -1269,6 +1269,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Peminjam</th>
+                                    <th>Dosen Pengampu</th>
                                     <th>Tanggal</th>
                                     <th>Ruang</th>
                                     <th>Proyektor</th>
@@ -1276,8 +1277,8 @@
                                     <th>Status Peminjaman</th>
                                     <th>Status Pengembalian</th>
                                     <th>Aksi</th>
-                                </tr>
-                            </thead>
+                                <tr>
+                                <td colspan="10" class="empty-state">
                             <tbody id="riwayat-table-body">
                                 @forelse($riwayat as $item)
                                     @php
@@ -1322,6 +1323,7 @@
                                                 {{ $item->user->name ?? 'Guest' }}
                                             </div>
                                         </td>
+                                        <td>{{ $item->dosen->nama_dosen ?? '-' }}</td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                                             <br>
@@ -1408,6 +1410,8 @@
                                                 <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
                                                     data-bs-target="#detailModal" data-id="{{ $item->id }}"
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
+                                                    data-dosen="{{ $item->dosen->nama_dosen ?? '' }}"
+                                                    data-dosen-nip="{{ $item->dosen_nip ?? '' }}"
                                                     data-tanggal="{{ $item->tanggal }}"
                                                     data-waktu-mulai="{{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '') }}"
                                                     data-waktu-selesai="{{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '') }}"
@@ -1666,6 +1670,10 @@
                                 <p id="detail_peminjam"></p>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dosen Pengampu</label>
+                                <p id="detail_dosen"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Tanggal Peminjaman</label>
                                 <p id="detail_tanggal"></p>
                             </div>
@@ -1911,9 +1919,11 @@
                     const status = button.getAttribute('data-status');
                     const statusPengembalian = button.getAttribute('data-status-pengembalian');
                     const keterangan = button.getAttribute('data-keterangan');
+                    const dosen = button.getAttribute('data-dosen');
 
                     // Isi data detail (tanggal + waktu)
                     document.getElementById('detail_peminjam').textContent = peminjam;
+                    document.getElementById('detail_dosen').textContent = dosen || '-';
                     document.getElementById('detail_tanggal').textContent = formatDate(tanggal) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
                     document.getElementById('detail_ruang').textContent = ruang;
                     document.getElementById('detail_proyektor').textContent = proyektor;

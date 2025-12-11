@@ -1180,6 +1180,7 @@
                             <th>No</th>
                             <th>Peminjam</th>
                             <th>Tanggal & Waktu</th>
+                            <th>Dosen Pengampu</th>
                             <th>Ruang</th>
                             <th>Proyektor</th>
                             <th>Keperluan</th>
@@ -1228,6 +1229,9 @@
                                         </span>
                                     </div>
                                     {{-- debug info removed --}}
+                                </td>
+                                <td>
+                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
                                 </td>
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
@@ -1304,6 +1308,8 @@
                                             data-prodi="{{ $peminjaman->user->prodi ?? '-' }}"
                                             data-email="{{ $peminjaman->user->email ?? '-' }}"
                                             data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"
+                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
+                                            data-dosen-nip="{{ $peminjaman->dosen_nip ?? '' }}"
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
@@ -1325,6 +1331,8 @@
                                             data-prodi="{{ $peminjaman->user->prodi ?? '' }}"
                                             data-email="{{ $peminjaman->user->email ?? '' }}"
                                             data-no-hp="{{ $peminjaman->user->no_hp ?? '' }}"
+                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
+                                            data-dosen-nip="{{ $peminjaman->dosen_nip ?? '' }}"
                                             data-tanggal="{{ $peminjaman->tanggal }}"
                                             data-waktu-mulai="{{ $peminjaman->waktu_mulai }}"
                                             data-waktu-selesai="{{ $peminjaman->waktu_selesai }}"
@@ -1350,7 +1358,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="empty-state">
+                                <td colspan="9" class="empty-state">
                                     <i class="fas fa-inbox"></i><br>
                                     Belum ada data peminjaman
                                 </td>
@@ -1505,6 +1513,17 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    <label for="edit_dosen_nip" class="form-label">Dosen Pengampu</label>
+                                    <select name="dosen_nip" class="form-select" id="edit_dosen_nip">
+                                        <option value="">-- Tidak Ada --</option>
+                                        @if (isset($dosens) && $dosens->count())
+                                            @foreach ($dosens as $d)
+                                                <option value="{{ $d->nip }}">{{ $d->nama_dosen }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label for="edit_status" class="form-label">Status</label>
                                     <select name="status" class="form-select" id="edit_status">
                                         <option value="pending" selected>Menunggu</option>
@@ -1596,6 +1615,18 @@
                                                     {{ $p->kode_proyektor ?? 'P-' . $p->id }} - {{ $p->merk ?? '' }}
                                                     {{ $p->model ?? '' }}
                                                 </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="dosen_nip" class="form-label">Dosen Pengampu</label>
+                                    <select name="dosen_nip" class="form-select" id="dosen_nip">
+                                        <option value="">-- Tidak Ada --</option>
+                                        @if (isset($dosens) && $dosens->count())
+                                            @foreach ($dosens as $d)
+                                                <option value="{{ $d->nip }}">{{ $d->nama_dosen }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -1708,6 +1739,8 @@
                     const email = this.getAttribute('data-email');
                     const noHp = this.getAttribute('data-no-hp');
                     const tanggal = this.getAttribute('data-tanggal');
+                    const dosen = this.getAttribute('data-dosen');
+                    const dosenNip = this.getAttribute('data-dosen-nip');
                     const waktuMulai = this.getAttribute('data-waktu-mulai');
                     const waktuSelesai = this.getAttribute('data-waktu-selesai');
                     const ruang = this.getAttribute('data-ruang');
@@ -1756,6 +1789,7 @@
                                 <p><strong>Waktu:</strong> ${waktuMulai} - ${waktuSelesai}</p>
                                 <p><strong>Ruang:</strong> ${ruang}</p>
                                 <p><strong>Proyektor:</strong> ${proyektorLabel}</p>
+                                <p><strong>Dosen Pengampu:</strong> ${dosen || '-'}</p>
                                 <p><strong>Status:</strong> ${statusBadge}</p>
                             </div>
                             <div class="col-12 mt-3">
@@ -1829,6 +1863,7 @@
                     const waktuMulai = button.getAttribute('data-waktu-mulai');
                     const waktuSelesai = button.getAttribute('data-waktu-selesai');
                     const ruanganId = button.getAttribute('data-ruangan-id');
+                    const dosenNip = button.getAttribute('data-dosen-nip');
                     const projectorId = button.getAttribute('data-projector-id');
                     const keperluan = button.getAttribute('data-keperluan');
                     const status = button.getAttribute('data-status');
@@ -1877,6 +1912,12 @@
                         projectorSelect.value = projectorId;
                     } else {
                         projectorSelect.value = '';
+                    }
+
+                    // Set dosen select
+                    const dosenSelect = document.getElementById('edit_dosen_nip');
+                    if (dosenSelect) {
+                        dosenSelect.value = dosenNip || '';
                     }
                 });
             }

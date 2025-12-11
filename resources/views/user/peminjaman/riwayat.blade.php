@@ -1447,6 +1447,7 @@
                             <th>Peminjam</th>
                             <th>Tanggal</th>
                             <th>Ruang</th>
+                            <th>Dosen Pengampu</th>
                             <th>Proyektor</th>
                             <th>Keperluan</th>
                             <th width="140" class="text-center">Status Peminjaman</th>
@@ -1498,6 +1499,10 @@
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
                                     {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
+                                </td>
+
+                                <td>
+                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
                                 </td>
 
                                 <td>
@@ -1562,6 +1567,8 @@
                                             data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}"
                                             data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
+                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
+                                            data-dosen-nip="{{ $peminjaman->dosen_nip ?? '' }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
                                             data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
@@ -1923,6 +1930,7 @@
                 const prodi = button.getAttribute('data-prodi');
                 const noHp = button.getAttribute('data-no-hp');
                 const email = button.getAttribute('data-email');
+            const dosen = button.getAttribute('data-dosen') || '';
                 const diajukan = button.getAttribute('data-diajukan');
                 const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
                 const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || '';
@@ -1942,6 +1950,7 @@
                 document.getElementById('detail-prodi').textContent = prodi;
                 document.getElementById('detail-no-hp').textContent = noHp;
                 document.getElementById('detail-email').textContent = email;
+                document.getElementById('detail-dosen').textContent = dosen || '-';
                 document.getElementById('detail-diajukan').textContent = diajukan;
 
                 // Pengembalian / kondisi

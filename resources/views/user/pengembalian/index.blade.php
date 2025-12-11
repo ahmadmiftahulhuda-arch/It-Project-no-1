@@ -1277,6 +1277,7 @@
                                     <th width="50">#</th>
                                     <th>Tanggal</th>
                                     <th>Ruang</th>
+                                    <th>Dosen Pengampu</th>
                                     <th>Waktu</th>
                                     <th width="100" class="text-center">Proyektor</th>
                                     <th>Keperluan</th>
@@ -1301,6 +1302,9 @@
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
                                             {{ $p->ruangan->nama_ruangan ?? $p->ruang }}
+                                        </td>
+                                        <td>
+                                            {{ $p->dosen->nama_dosen ?? '-' }}
                                         </td>
                                         <td>
                                             <i class="fas fa-clock me-1 text-success"></i>
@@ -1328,6 +1332,8 @@
                                             <button class="btn btn-success btn-sm ajukan-pengembalian"
                                                 data-id="{{ $p->id }}"
                                                 data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
+                                                data-dosen="{{ $p->dosen->nama_dosen ?? '' }}"
+                                                data-dosen-nip="{{ $p->dosen_nip ?? '' }}"
                                                 data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
                                                 data-tanggal-iso="{{ $p->tanggal }}"
                                                 data-waktu-mulai="{{ $p->display_waktu_mulai ?? ($p->waktu_mulai ?? '') }}"
@@ -1368,6 +1374,7 @@
                                     <th width="50">#</th>
                                     <th>Tanggal Pinjam</th>
                                     <th>Ruang</th>
+                                    <th>Dosen Pengampu</th>
                                     <th width="180" class="text-center">Proyektor</th>
                                     <th>Tanggal Kembali</th>
                                     <th width="140" class="text-center">Status</th>
@@ -1385,10 +1392,13 @@
                                         <td>
                                             <i class="fas fa-calendar me-1 text-primary"></i>
                                             {{ \Carbon\Carbon::parse($pj->tanggal)->format('d M Y') }}
-                                        </td>
                                         <td>
                                             <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $pj->ruangan->nama_ruangan ?? $pj->ruang }}
+                                            {{ $k->peminjaman->ruangan->nama_ruangan ?? $k->peminjaman->ruang }}
+                                        </td>
+                                        <td>
+                                            {{ optional($k->peminjaman->dosen)->nama_dosen ?? '-' }}
+                                        </td>
                                         </td>
                                         <td class="text-center">
                                             @if(isset($pj->projector) && $pj->projector)
@@ -1434,6 +1444,8 @@
                                                 data-waktu-mulai="{{ $pj->waktu_mulai ?? '' }}"
                                                 data-waktu-selesai="{{ $pj->waktu_selesai ?? '' }}"
                                                 data-ruang="{{ $pj->ruangan->nama_ruangan ?? $pj->ruang }}"
+                                                data-dosen="{{ $pj->dosen->nama_dosen ?? '' }}"
+                                                data-dosen-nip="{{ $pj->dosen_nip ?? '' }}"
                                                 data-projector-label="{{ isset($pj->projector) && $pj->projector ? ($pj->projector->kode_proyektor . ' - ' . $pj->projector->merk . ' ' . $pj->projector->model) : ($pj->proyektor ? 'Ya' : 'Tidak') }}"
                                                 data-kondisi-ruang="{{ $k->kondisi_ruang }}"
                                                 data-kondisi-proyektor="{{ $k->kondisi_proyektor ?? '-' }}"
@@ -1473,6 +1485,7 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-6"><strong>Ruang:</strong> <span id="detail-ruang">-</span></div>
+                            <div class="col-md-6"><strong>Dosen Pengampu:</strong> <span id="detail-dosen">-</span></div>
                             <div class="col-md-6"><strong>Proyektor:</strong> <span id="detail-proyektor">-</span></div>
                         </div>
                         <hr/>
@@ -1851,6 +1864,7 @@
                         const waktuSelesai = d.waktuSelesai || '';
                         document.getElementById('detail-waktu-pinjam').textContent = (waktuMulai || '-') + (waktuSelesai ? (' - ' + waktuSelesai) : '');
                         document.getElementById('detail-ruang').textContent = d.ruang || '-';
+                        document.getElementById('detail-dosen').textContent = d.dosen || '-';
                         document.getElementById('detail-proyektor').textContent = d.projectorLabel || d.projector || '-';
                         document.getElementById('detail-kondisi-ruang').textContent = d.kondisiRuang ? d.kondisiRuang.replace('_',' ') : '-';
                         document.getElementById('detail-kondisi-proyektor').textContent = d.kondisiProyektor || '-';

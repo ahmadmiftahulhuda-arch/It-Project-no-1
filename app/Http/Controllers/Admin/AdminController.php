@@ -9,6 +9,7 @@ use App\Models\Peminjaman;
 use App\Models\User;
 use App\Models\Ruangan;
 use App\Models\Projector;
+use App\Models\Dosen;
 use Carbon\Carbon;
 use App\Exports\PeminjamanExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -31,7 +32,7 @@ class AdminController extends Controller
 
         // Query untuk data peminjaman dengan filter
         // Eager load related models so views can show names/details
-        $query = Peminjaman::with(['user', 'projector', 'ruangan']);
+        $query = Peminjaman::with(['user', 'projector', 'ruangan', 'dosen']);
 
         // Filter pencarian (lebih luas: nama, nim, email, no_hp, keperluan, ruangan, proyektor, tanggal)
         if ($request->has('search') && $request->search != '') {
@@ -101,6 +102,7 @@ class AdminController extends Controller
 
         $ruangan = Ruangan::where('status', 'Tersedia')->get();
         $projectors = Projector::where('status', 'tersedia')->get();
+        $dosens = Dosen::orderBy('nama_dosen')->get();
 
         return view('admin.peminjaman.index', compact(
             'peminjamans',
@@ -109,7 +111,8 @@ class AdminController extends Controller
             'rejectedCount',
             'totalCount',
             'ruangan',
-            'projectors'
+            'projectors',
+            'dosens'
         ));
     }
 
@@ -121,7 +124,7 @@ class AdminController extends Controller
         // 1. Peminjaman aktif (belum ajukan pengembalian)
         $peminjamans = Peminjaman::where('status', 'disetujui')
             ->whereDoesntHave('pengembalian')
-            ->with(['user', 'ruangan', 'projector'])
+            ->with(['user', 'ruangan', 'projector', 'dosen'])
             ->orderBy('tanggal', 'desc')
             ->paginate(10);   // <-- WAJIB paginate
 
@@ -224,7 +227,7 @@ class AdminController extends Controller
      */
     public function riwayat(Request $request)
     {
-        $query = Peminjaman::with(['user', 'ruangan', 'projector', 'pengembalian']);
+        $query = Peminjaman::with(['user', 'ruangan', 'projector', 'pengembalian', 'dosen']);
 
         // Filter pencarian
         if ($request->has('search') && $request->search != '') {
@@ -285,7 +288,8 @@ class AdminController extends Controller
     {
         $ruangan = Ruangan::all();
         $projectors = Projector::all();
-        $peminjamans = Peminjaman::with(['ruangan', 'projector'])->paginate(15);
+        $dosens = Dosen::orderBy('nama_dosen')->get();
+        $peminjamans = Peminjaman::with(['ruangan', 'projector', 'dosen'])->paginate(15);
 
         // juga hitung statistik jika dipakai di view
         $pendingCount = Peminjaman::where('status', 'pending')->count();
@@ -297,6 +301,7 @@ class AdminController extends Controller
             'peminjamans',
             'ruangan',
             'projectors',
+            'dosens',
             'pendingCount',
             'approvedCount',
             'rejectedCount',
@@ -325,6 +330,7 @@ class AdminController extends Controller
             'waktu_selesai' => 'required|date_format:H:i',
             'ruangan_id' => 'required|exists:ruangan,id',
             'projector_id' => 'nullable|exists:projectors,id',
+            'dosen_nip' => 'nullable|exists:dosens,nip',
             'keperluan' => 'required|string|max:500',
         ]);
 
@@ -342,6 +348,7 @@ class AdminController extends Controller
             'waktu_selesai' => $request->waktu_selesai,
             'ruangan_id' => $request->ruangan_id,
             'projector_id' => $request->projector_id,
+            'dosen_nip' => $request->dosen_nip ?? null,
             'keperluan' => $request->keperluan,
             'status' => 'disetujui',
         ]);
@@ -355,7 +362,7 @@ class AdminController extends Controller
      */
     public function approve($id)
     {
-        $peminjaman = Peminjaman::with(['user', 'ruangan'])->findOrFail($id);
+        $peminjaman = Peminjaman::with(['user', 'ruangan', 'dosen'])->findOrFail($id);
         $peminjaman->update(['status' => 'disetujui']);
 
         // Kirim notifikasi WhatsApp
@@ -381,7 +388,7 @@ class AdminController extends Controller
      */
     public function reject($id)
     {
-        $peminjaman = Peminjaman::with(['user', 'ruangan'])->findOrFail($id);
+        $peminjaman = Peminjaman::with(['user', 'ruangan', 'dosen'])->findOrFail($id);
         $peminjaman->update(['status' => 'ditolak']);
 
         // Kirim notifikasi WhatsApp
@@ -428,6 +435,7 @@ class AdminController extends Controller
             'waktu_selesai' => 'required|date_format:H:i',
             'ruangan_id' => 'required|exists:ruangan,id',
             'projector_id' => 'nullable|exists:projectors,id',
+            'dosen_nip' => 'nullable|exists:dosens,nip',
             'keperluan' => 'required|string|max:500',
             'status' => 'required|in:pending,disetujui,ditolak,selesai',
         ]);
@@ -440,6 +448,7 @@ class AdminController extends Controller
             'waktu_selesai' => $request->waktu_selesai,
             'ruangan_id' => $request->ruangan_id,
             'projector_id' => $request->projector_id,
+            'dosen_nip' => $request->dosen_nip ?? null,
             'keperluan' => $request->keperluan,
             'status' => $request->status,
         ];

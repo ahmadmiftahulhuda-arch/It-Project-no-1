@@ -18,7 +18,7 @@ class PeminjamanController extends Controller
     public function index(Request $request)
     {
         $userId = Auth::id();
-        $query = Peminjaman::where('user_id', $userId);
+        $query = Peminjaman::where('user_id', $userId)->with(['ruangan', 'projector', 'dosen']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -182,7 +182,7 @@ class PeminjamanController extends Controller
                       $q2->whereIn('status', ['pending', 'rejected']);
                   });
             })
-            ->with(['ruangan', 'projector', 'user']);
+            ->with(['ruangan', 'projector', 'user', 'dosen']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -199,7 +199,7 @@ class PeminjamanController extends Controller
         $pengembalians = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
             $q->where('user_id', $userId);
         })
-        ->with(['peminjaman.ruangan', 'peminjaman.projector', 'user'])
+        ->with(['peminjaman.ruangan', 'peminjaman.projector', 'peminjaman.dosen', 'user'])
         ->orderBy('created_at', 'desc')
         ->get();
 
