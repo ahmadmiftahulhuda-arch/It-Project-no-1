@@ -13,10 +13,6 @@
         :root {
             --primary-color: #3b5998;
             --secondary-color: #6d84b4;
-        
-        /* Force a minimum table width to enable horizontal scrolling on smaller screens */
-        .table-responsive-custom table {
-            min-width: 980px;
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
@@ -1451,7 +1447,6 @@
                             <th>Peminjam</th>
                             <th>Tanggal</th>
                             <th>Ruang</th>
-                            <th>Dosen Pengampu</th>
                             <th>Proyektor</th>
                             <th>Keperluan</th>
                             <th width="140" class="text-center">Status Peminjaman</th>
@@ -1503,10 +1498,6 @@
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
                                     {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
-                                </td>
-
-                                <td>
-                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
                                 </td>
 
                                 <td>
@@ -1564,15 +1555,14 @@
 
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-1">
-                                        <button class="btn btn-info btn-action view-detail" 
+                                        <button type="button" class="btn btn-info btn-action view-detail" 
                                             title="Lihat Detail"
+                                            onclick="populateDetailModalFromButton(this)"
                                             data-id="{{ $peminjaman->id }}"
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
                                             data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}"
                                             data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
-                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
-                                            data-dosen-nip="{{ $peminjaman->dosen_nip ?? '' }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
                                             data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
@@ -1915,98 +1905,95 @@
             const detailModal = document.getElementById('detailModal');
             const closeModal = document.getElementById('closeModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
+            const viewDetailButtons = document.querySelectorAll('.view-detail');
 
-            // Populate detail modal using a button element (safer than relying on currentTarget/event)
-            function populateDetailModalFromButton(button) {
-                if (!button || !detailModal) return;
-
-                const tanggal = button.getAttribute('data-tanggal') || '-';
-                const waktuMulai = button.getAttribute('data-waktu-mulai') || '-';
-                const waktuSelesai = button.getAttribute('data-waktu-selesai') || '-';
-                const ruang = button.getAttribute('data-ruang') || '-';
-                const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-projector') || '-';
-                const keperluan = button.getAttribute('data-keperluan') || '-';
-                const status = button.getAttribute('data-status') || '';
-                const namaPeminjam = button.getAttribute('data-nama-peminjam') || '-';
-                const nim = button.getAttribute('data-nim') || '-';
-                const prodi = button.getAttribute('data-prodi') || '-';
-                const noHp = button.getAttribute('data-no-hp') || '-';
-                const email = button.getAttribute('data-email') || '-';
-                const dosen = button.getAttribute('data-dosen') || '-';
-                const diajukan = button.getAttribute('data-diajukan') || '-';
+            // Fungsi untuk menampilkan modal detail
+            function showDetailModal(event) {
+                const button = event.currentTarget;
+                
+                // Ambil data dari atribut data-*
+                const tanggal = button.getAttribute('data-tanggal');
+                const waktuMulai = button.getAttribute('data-waktu-mulai');
+                const waktuSelesai = button.getAttribute('data-waktu-selesai');
+                const ruang = button.getAttribute('data-ruang');
+                const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-proyektor');
+                const keperluan = button.getAttribute('data-keperluan');
+                const status = button.getAttribute('data-status');
+                const namaPeminjam = button.getAttribute('data-nama-peminjam');
+                const nim = button.getAttribute('data-nim');
+                const prodi = button.getAttribute('data-prodi');
+                const noHp = button.getAttribute('data-no-hp');
+                const email = button.getAttribute('data-email');
+                const diajukan = button.getAttribute('data-diajukan');
                 const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
-                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || '-';
-                const waktuPengembalian = button.getAttribute('data-waktu-pengembalian') || '-';
+                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || '';
+                const waktuPengembalian = button.getAttribute('data-waktu-pengembalian') || '';
                 const statusPengembalian = button.getAttribute('data-status-pengembalian') || '';
-                const kondisiRuang = button.getAttribute('data-kondisi-ruang') || '-';
-                const kondisiProyektor = button.getAttribute('data-kondisi-proyektor') || '-';
+                const kondisiRuang = button.getAttribute('data-kondisi-ruang') || '';
+                const kondisiProyektor = button.getAttribute('data-kondisi-proyektor') || '';
 
-                // Set nilai ke modal (guard with existence checks)
-                const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+                // Set nilai ke modal
+                document.getElementById('detail-tanggal').textContent = tanggal;
+                document.getElementById('detail-waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
+                document.getElementById('detail-ruang').textContent = ruang;
+                document.getElementById('detail-proyektor').textContent = proyektor;
+                document.getElementById('detail-keperluan').textContent = keperluan;
+                document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
+                document.getElementById('detail-nim').textContent = nim;
+                document.getElementById('detail-prodi').textContent = prodi;
+                document.getElementById('detail-no-hp').textContent = noHp;
+                document.getElementById('detail-email').textContent = email;
+                document.getElementById('detail-diajukan').textContent = diajukan;
 
-                setText('detail-tanggal', tanggal);
-                setText('detail-waktu', `${waktuMulai} - ${waktuSelesai}`);
-                setText('detail-ruang', ruang);
-                setText('detail-proyektor', proyektor);
-                setText('detail-keperluan', keperluan);
-                setText('detail-nama-peminjam', namaPeminjam);
-                setText('detail-nim', nim);
-                setText('detail-prodi', prodi);
-                setText('detail-no-hp', noHp);
-                setText('detail-email', email);
-                setText('detail-dosen', dosen);
-                setText('detail-diajukan', diajukan);
-                setText('detail-tanggal-kembali', tanggalPengembalian || '-');
-                setText('detail-waktu-kembali', waktuPengembalian || '-');
-                setText('detail-kondisi-ruang', kondisiRuang || '-');
-                setText('detail-kondisi-proyektor', kondisiProyektor || '-');
+                // Pengembalian / kondisi
+                document.getElementById('detail-tanggal-kembali').textContent = tanggalPengembalian || '-';
+                document.getElementById('detail-waktu-kembali').textContent = waktuPengembalian || '-';
+                document.getElementById('detail-kondisi-ruang').textContent = kondisiRuang || '-';
+                document.getElementById('detail-kondisi-proyektor').textContent = kondisiProyektor || '-';
 
                 // Status pengembalian mapping (show badge + waktu)
                 const pjEl = document.getElementById('detail-status-pengembalian');
-                if (pjEl) {
-                    const pj = (statusPengembalian || '').toString().toLowerCase();
-                    let pjHtml = '';
-                    if (pj === 'verified' || pj === 'disetujui') {
-                        pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                    } else if (pj === 'pending' || pj === 'menunggu') {
-                        pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                    } else if (pj === 'rejected' || pj === 'ditolak') {
-                        pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                    } else if (pj === 'overdue' || pj === 'terlambat') {
-                        pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                    } else if (waktuPengembalian) {
-                        pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + waktuPengembalian + ')</span>';
-                    } else {
-                        pjHtml = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
-                    }
-                    pjEl.innerHTML = pjHtml;
+                const pj = (statusPengembalian || '').toString().toLowerCase();
+                let pjHtml = '';
+                if (pj === 'verified' || pj === 'disetujui') {
+                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (pj === 'pending' || pj === 'menunggu') {
+                    pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (pj === 'rejected' || pj === 'ditolak') {
+                    pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (pj === 'overdue' || pj === 'terlambat') {
+                    pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                } else if (waktuPengembalian) {
+                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + waktuPengembalian + ')</span>';
+                } else {
+                    pjHtml = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
                 }
+                pjEl.innerHTML = pjHtml;
 
                 // Set status dengan badge yang sesuai
                 const statusBadge = document.getElementById('detail-status');
-                if (statusBadge) {
-                    statusBadge.className = 'status-badge';
-                    if (isOngoing) {
-                        statusBadge.classList.add('status-berlangsung');
-                        statusBadge.innerHTML = '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
-                    } else {
-                        switch(status) {
-                            case 'disetujui':
-                                statusBadge.classList.add('status-disetujui');
-                                statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
-                                break;
-                            case 'selesai':
-                                statusBadge.classList.add('status-selesai');
-                                statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
-                                break;
-                            case 'ditolak':
-                                statusBadge.classList.add('status-ditolak');
-                                statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
-                                break;
-                            default:
-                                statusBadge.classList.add('status-menunggu');
-                                statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
-                        }
+                statusBadge.className = 'status-badge';
+                
+                if (isOngoing) {
+                    statusBadge.classList.add('status-berlangsung');
+                    statusBadge.innerHTML = '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
+                } else {
+                    switch(status) {
+                        case 'disetujui':
+                            statusBadge.classList.add('status-disetujui');
+                            statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
+                            break;
+                        case 'selesai':
+                            statusBadge.classList.add('status-selesai');
+                            statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
+                            break;
+                        case 'ditolak':
+                            statusBadge.classList.add('status-ditolak');
+                            statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
+                            break;
+                        default:
+                            statusBadge.classList.add('status-menunggu');
+                            statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
                     }
                 }
 
@@ -2017,30 +2004,25 @@
 
             // Fungsi untuk menutup modal
             function closeDetailModal() {
-                if (!detailModal) return;
                 detailModal.classList.remove('active');
                 document.body.style.overflow = ''; // Kembalikan scroll
             }
 
-            // Event delegation: handle clicks on any .view-detail buttons (works if elements are added later)
-            document.addEventListener('click', function(e) {
-                const btn = e.target.closest && e.target.closest('.view-detail');
-                if (btn) {
-                    populateDetailModalFromButton(btn);
-                }
+            // Event listener untuk tombol lihat detail
+            viewDetailButtons.forEach(button => {
+                button.addEventListener('click', showDetailModal);
             });
 
-            // Close handlers (only add if elements exist)
-            if (closeModal) closeModal.addEventListener('click', closeDetailModal);
-            if (closeModalBtn) closeModalBtn.addEventListener('click', closeDetailModal);
+            // Event listener untuk tombol tutup modal
+            closeModal.addEventListener('click', closeDetailModal);
+            closeModalBtn.addEventListener('click', closeDetailModal);
 
-            if (detailModal) {
-                detailModal.addEventListener('click', (event) => {
-                    if (event.target === detailModal) {
-                        closeDetailModal();
-                    }
-                });
-            }
+            // Tutup modal saat klik di luar konten modal
+            detailModal.addEventListener('click', (event) => {
+                if (event.target === detailModal) {
+                    closeDetailModal();
+                }
+            });
 
             // ===== FILTER TABEL =====
             function filterTable() {
