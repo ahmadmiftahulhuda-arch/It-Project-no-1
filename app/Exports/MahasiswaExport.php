@@ -29,7 +29,7 @@ class MahasiswaExport implements FromCollection, WithHeadings, WithMapping
         return [
             'NIM',
             'Nama',
-            'Jenis Kelamin',
+            'Kordinator Kelas',
         ];
     }
 
@@ -38,7 +38,7 @@ class MahasiswaExport implements FromCollection, WithHeadings, WithMapping
         return [
             $mahasiswa->nim,
             $mahasiswa->nama,
-            $mahasiswa->jenis_kelamin,
+            $mahasiswa->kordinator,
         ];
     }
 }

@@ -1447,6 +1447,7 @@
                             <th>Peminjam</th>
                             <th>Tanggal</th>
                             <th>Ruang</th>
+                            <th>Dosen Pengampu</th>
                             <th>Proyektor</th>
                             <th>Keperluan</th>
                             <th width="140" class="text-center">Status Peminjaman</th>
@@ -1498,6 +1499,10 @@
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
                                     {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
+                                </td>
+
+                                <td>
+                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
                                 </td>
 
                                 <td>
@@ -1557,7 +1562,7 @@
                                     <div class="d-flex justify-content-center gap-1">
                                         <button type="button" class="btn btn-info btn-action view-detail" 
                                             title="Lihat Detail"
-                                            onclick="populateDetailModalFromButton(this)"
+                                            onclick="showDetailModal({currentTarget: this})"
                                             data-id="{{ $peminjaman->id }}"
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
                                             data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}"
@@ -1572,6 +1577,7 @@
                                             data-status-pengembalian="{{ optional($peminjaman->pengembalian)->status ?? '' }}"
                                             data-kondisi-ruang="{{ optional($peminjaman->pengembalian)->kondisi_ruang ?? '' }}"
                                             data-kondisi-proyektor="{{ optional($peminjaman->pengembalian)->kondisi_proyektor ?? '' }}"
+                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '-' }}"
                                             data-nama-peminjam="{{ optional($peminjaman->user)->display_name ?? $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
                                             data-nim="{{ optional($peminjaman->user)->nim ?? $peminjaman->nim ?? 'Tidak tersedia' }}"
                                             data-prodi="{{ optional($peminjaman->user)->prodi ?? $peminjaman->prodi ?? 'Tidak tersedia' }}"
@@ -1600,7 +1606,7 @@
                             </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-5">
+                                    <td colspan="10" class="text-center py-5">
                                         <i class="fas fa-inbox fa-2x text-muted"></i>
                                         <h5 class="mt-2">Belum ada riwayat peminjaman</h5>
                                         <p class="text-muted">Silakan ajukan peminjaman baru untuk melihat riwayat di sini.
@@ -1711,6 +1717,10 @@
                         <div class="detail-row">
                             <div class="detail-label">Proyektor</div>
                             <div class="detail-value" id="detail-proyektor"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Dosen Pengampu</div>
+                            <div class="detail-value" id="detail-dosen">-</div>
                         </div>
                         <div class="detail-row">
                             <div class="detail-label">Tanggal Kembali</div>
@@ -1917,6 +1927,7 @@
                 const waktuSelesai = button.getAttribute('data-waktu-selesai');
                 const ruang = button.getAttribute('data-ruang');
                 const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-proyektor');
+                const dosen = button.getAttribute('data-dosen') || '';
                 const keperluan = button.getAttribute('data-keperluan');
                 const status = button.getAttribute('data-status');
                 const namaPeminjam = button.getAttribute('data-nama-peminjam');
@@ -1937,6 +1948,7 @@
                 document.getElementById('detail-waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
                 document.getElementById('detail-ruang').textContent = ruang;
                 document.getElementById('detail-proyektor').textContent = proyektor;
+                document.getElementById('detail-dosen').textContent = dosen || '-';
                 document.getElementById('detail-keperluan').textContent = keperluan;
                 document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
                 document.getElementById('detail-nim').textContent = nim;

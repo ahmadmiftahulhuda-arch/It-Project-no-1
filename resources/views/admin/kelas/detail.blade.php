@@ -72,7 +72,7 @@
                             <th class="py-3 px-4" style="width: 5%;">No</th>
                             <th class="py-3 px-4" style="width: 15%;">NIM</th>
                             <th class="py-3 px-4" style="width: 30%;">Nama</th>
-                            <th class="py-3 px-4" style="width: 35%;">Jenis Kelamin</th>
+                            <th class="py-3 px-4" style="width: 35%;">Kordinator</th>
                             <th class="py-3 px-4 text-center" style="width: 15%;">Aksi</th>
                         </tr>
                     </thead>
@@ -86,7 +86,7 @@
                             <td class="px-4 text-dark-mode-aware">{{ $m->nama }}</td>
                             
                             <td class="px-4">
-                                {{ $m->jenis_kelamin }}
+                                {{ $m->kordinator }}
                             </td>
                             
                             {{-- AKSI (Ikon ringkas, fungsi tidak diubah) --}}
@@ -122,7 +122,7 @@
                                         <div class="modal-body">
                                             <input type="number" name="nim" value="{{ $m->nim }}" class="form-control mb-2" placeholder="NIM" pattern="[0-9]*">
                                             <input type="text" name="nama" value="{{ $m->nama }}" class="form-control mb-2" placeholder="Nama Lengkap">
-                                            <input type="text" name="jenis_kelamin" value="{{ $m->jenis_kelamin }}" class="form-control mb-2" placeholder="Jenis Kelamin">
+                                            <input type="text" name="kordinator" value="{{ $m->kordinator }}" class="form-control mb-2" placeholder="Kordinator Kelas">
                                             <input type="hidden" name="kelas_id" value="{{ $kela->id }}">
                                         </div>
                                         <div class="modal-footer">
@@ -172,7 +172,7 @@
                 <div class="modal-body">
                     <input type="number" name="nim" placeholder="NIM" class="form-control mb-2" pattern="[0-9]*">
                     <input type="text" name="nama" placeholder="Nama Lengkap" class="form-control mb-2">
-                    <input type="text" name="jenis_kelamin" placeholder="Jenis Kelamin" class="form-control mb-2">
+                    <input type="text" name="kordinator" placeholder="Kordinator Kelas" class="form-control mb-2">
                     <input type="hidden" name="kelas_id" value="{{ $kela->id }}">
                 </div>
                 <div class="modal-footer">

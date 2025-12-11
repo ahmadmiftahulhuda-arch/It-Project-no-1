@@ -12,7 +12,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('nim', 20)->unique();
             $table->string('nama', 100);
-            $table->string('jenis_kelamin', 100);
+            $table->string('kordinator', 100);
             $table->unsignedBigInteger('kelas_id')->nullable();
               $table->timestamps();
 
