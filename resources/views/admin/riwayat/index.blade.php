@@ -1225,17 +1225,13 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="fas fa-filter me-1"></i> Terapkan Filter
-                        </button>
-
                         <a href="{{ route('admin.riwayat') }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-refresh me-1"></i> Reset
                         </a>
                     </div>
 
                     {{-- Tombol Export --}}
-                    <a href="{{ route('admin.riwayat.export', request()->query()) }}" class="btn btn-outline">
+                    <a href="{{ route('admin.riwayat.export', request()->query()) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-file-export"></i> Ekspor
                     </a>
                 </div>

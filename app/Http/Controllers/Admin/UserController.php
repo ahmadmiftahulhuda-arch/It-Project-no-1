@@ -75,10 +75,29 @@ class UserController extends Controller
 
         try {
             $validatedData = $validator->validated();
-            $validatedData['password'] = Hash::make($validatedData['password']);
-            $validatedData['verified'] = true; // Automatically verify users created by admin
 
-            User::create($validatedData);
+            $user = new User();
+            $user->name = $validatedData['name'];
+            $user->email = $validatedData['email'];
+            $user->password = Hash::make($validatedData['password']);
+            
+            // Set optional fields if they exist
+            $user->nim = $validatedData['nim'] ?? null;
+            $user->no_hp = $validatedData['no_hp'] ?? null;
+            $user->status = $validatedData['status'];
+            $user->tanggal_bergabung = $validatedData['tanggal_bergabung'] ?? now();
+            
+            // Automatically verify users created by admin
+            $user->verified = true;
+
+            // Check if email ends with @mhs.politala.ac.id and set peran to Mahasiswa
+            if (str_ends_with(strtolower($validatedData['email']), '@mhs.politala.ac.id')) {
+                $user->peran = 'Mahasiswa';
+            } else {
+                $user->peran = $validatedData['peran'];
+            }
+
+            $user->save();
 
             return response()->json(['success' => 'Pengguna baru berhasil ditambahkan.']);
 

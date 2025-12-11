@@ -65,13 +65,22 @@ class GoogleAuthController extends Controller
                 }
             } else {
                 // Jika user belum ada, buat user baru dengan data dari Google + NIM
-                $user = User::create([
+                $newUser = [
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'nim' => $nim, // Simpan NIM yang diekstrak
                     'password' => Hash::make(uniqid()), // Buat password random
                     'verified' => false, // Set terverifikasi ke false secara default
-                ]);
+                ];
+
+                // Set peran berdasarkan domain email
+                if (str_ends_with($newUser['email'], '@mhs.politala.ac.id')) {
+                    $newUser['peran'] = 'Mahasiswa';
+                } elseif (str_ends_with($newUser['email'], '@politala.ac.id')) {
+                    $newUser['peran'] = 'Dosen';
+                }
+
+                $user = User::create($newUser);
             }
 
             // Login user
