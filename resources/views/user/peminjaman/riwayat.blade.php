@@ -13,6 +13,10 @@
         :root {
             --primary-color: #3b5998;
             --secondary-color: #6d84b4;
+        
+        /* Force a minimum table width to enable horizontal scrolling on smaller screens */
+        .table-responsive-custom table {
+            min-width: 980px;
             --accent-color: #4c6baf;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
@@ -1911,97 +1915,98 @@
             const detailModal = document.getElementById('detailModal');
             const closeModal = document.getElementById('closeModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
-            const viewDetailButtons = document.querySelectorAll('.view-detail');
 
-            // Fungsi untuk menampilkan modal detail
-            function showDetailModal(event) {
-                const button = event.currentTarget;
-                
-                // Ambil data dari atribut data-*
-                const tanggal = button.getAttribute('data-tanggal');
-                const waktuMulai = button.getAttribute('data-waktu-mulai');
-                const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                const ruang = button.getAttribute('data-ruang');
-                const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-proyektor');
-                const keperluan = button.getAttribute('data-keperluan');
-                const status = button.getAttribute('data-status');
-                const namaPeminjam = button.getAttribute('data-nama-peminjam');
-                const nim = button.getAttribute('data-nim');
-                const prodi = button.getAttribute('data-prodi');
-                const noHp = button.getAttribute('data-no-hp');
-                const email = button.getAttribute('data-email');
-            const dosen = button.getAttribute('data-dosen') || '';
-                const diajukan = button.getAttribute('data-diajukan');
+            // Populate detail modal using a button element (safer than relying on currentTarget/event)
+            function populateDetailModalFromButton(button) {
+                if (!button || !detailModal) return;
+
+                const tanggal = button.getAttribute('data-tanggal') || '-';
+                const waktuMulai = button.getAttribute('data-waktu-mulai') || '-';
+                const waktuSelesai = button.getAttribute('data-waktu-selesai') || '-';
+                const ruang = button.getAttribute('data-ruang') || '-';
+                const proyektor = button.getAttribute('data-projector-label') || button.getAttribute('data-projector') || '-';
+                const keperluan = button.getAttribute('data-keperluan') || '-';
+                const status = button.getAttribute('data-status') || '';
+                const namaPeminjam = button.getAttribute('data-nama-peminjam') || '-';
+                const nim = button.getAttribute('data-nim') || '-';
+                const prodi = button.getAttribute('data-prodi') || '-';
+                const noHp = button.getAttribute('data-no-hp') || '-';
+                const email = button.getAttribute('data-email') || '-';
+                const dosen = button.getAttribute('data-dosen') || '-';
+                const diajukan = button.getAttribute('data-diajukan') || '-';
                 const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
-                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || '';
-                const waktuPengembalian = button.getAttribute('data-waktu-pengembalian') || '';
+                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || '-';
+                const waktuPengembalian = button.getAttribute('data-waktu-pengembalian') || '-';
                 const statusPengembalian = button.getAttribute('data-status-pengembalian') || '';
-                const kondisiRuang = button.getAttribute('data-kondisi-ruang') || '';
-                const kondisiProyektor = button.getAttribute('data-kondisi-proyektor') || '';
+                const kondisiRuang = button.getAttribute('data-kondisi-ruang') || '-';
+                const kondisiProyektor = button.getAttribute('data-kondisi-proyektor') || '-';
 
-                // Set nilai ke modal
-                document.getElementById('detail-tanggal').textContent = tanggal;
-                document.getElementById('detail-waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
-                document.getElementById('detail-ruang').textContent = ruang;
-                document.getElementById('detail-proyektor').textContent = proyektor;
-                document.getElementById('detail-keperluan').textContent = keperluan;
-                document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
-                document.getElementById('detail-nim').textContent = nim;
-                document.getElementById('detail-prodi').textContent = prodi;
-                document.getElementById('detail-no-hp').textContent = noHp;
-                document.getElementById('detail-email').textContent = email;
-                document.getElementById('detail-dosen').textContent = dosen || '-';
-                document.getElementById('detail-diajukan').textContent = diajukan;
+                // Set nilai ke modal (guard with existence checks)
+                const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
 
-                // Pengembalian / kondisi
-                document.getElementById('detail-tanggal-kembali').textContent = tanggalPengembalian || '-';
-                document.getElementById('detail-waktu-kembali').textContent = waktuPengembalian || '-';
-                document.getElementById('detail-kondisi-ruang').textContent = kondisiRuang || '-';
-                document.getElementById('detail-kondisi-proyektor').textContent = kondisiProyektor || '-';
+                setText('detail-tanggal', tanggal);
+                setText('detail-waktu', `${waktuMulai} - ${waktuSelesai}`);
+                setText('detail-ruang', ruang);
+                setText('detail-proyektor', proyektor);
+                setText('detail-keperluan', keperluan);
+                setText('detail-nama-peminjam', namaPeminjam);
+                setText('detail-nim', nim);
+                setText('detail-prodi', prodi);
+                setText('detail-no-hp', noHp);
+                setText('detail-email', email);
+                setText('detail-dosen', dosen);
+                setText('detail-diajukan', diajukan);
+                setText('detail-tanggal-kembali', tanggalPengembalian || '-');
+                setText('detail-waktu-kembali', waktuPengembalian || '-');
+                setText('detail-kondisi-ruang', kondisiRuang || '-');
+                setText('detail-kondisi-proyektor', kondisiProyektor || '-');
 
                 // Status pengembalian mapping (show badge + waktu)
                 const pjEl = document.getElementById('detail-status-pengembalian');
-                const pj = (statusPengembalian || '').toString().toLowerCase();
-                let pjHtml = '';
-                if (pj === 'verified' || pj === 'disetujui') {
-                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                } else if (pj === 'pending' || pj === 'menunggu') {
-                    pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                } else if (pj === 'rejected' || pj === 'ditolak') {
-                    pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                } else if (pj === 'overdue' || pj === 'terlambat') {
-                    pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
-                } else if (waktuPengembalian) {
-                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + waktuPengembalian + ')</span>';
-                } else {
-                    pjHtml = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
+                if (pjEl) {
+                    const pj = (statusPengembalian || '').toString().toLowerCase();
+                    let pjHtml = '';
+                    if (pj === 'verified' || pj === 'disetujui') {
+                        pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    } else if (pj === 'pending' || pj === 'menunggu') {
+                        pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    } else if (pj === 'rejected' || pj === 'ditolak') {
+                        pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    } else if (pj === 'overdue' || pj === 'terlambat') {
+                        pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    } else if (waktuPengembalian) {
+                        pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + waktuPengembalian + ')</span>';
+                    } else {
+                        pjHtml = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
+                    }
+                    pjEl.innerHTML = pjHtml;
                 }
-                pjEl.innerHTML = pjHtml;
 
                 // Set status dengan badge yang sesuai
                 const statusBadge = document.getElementById('detail-status');
-                statusBadge.className = 'status-badge';
-                
-                if (isOngoing) {
-                    statusBadge.classList.add('status-berlangsung');
-                    statusBadge.innerHTML = '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
-                } else {
-                    switch(status) {
-                        case 'disetujui':
-                            statusBadge.classList.add('status-disetujui');
-                            statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
-                            break;
-                        case 'selesai':
-                            statusBadge.classList.add('status-selesai');
-                            statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
-                            break;
-                        case 'ditolak':
-                            statusBadge.classList.add('status-ditolak');
-                            statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
-                            break;
-                        default:
-                            statusBadge.classList.add('status-menunggu');
-                            statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
+                if (statusBadge) {
+                    statusBadge.className = 'status-badge';
+                    if (isOngoing) {
+                        statusBadge.classList.add('status-berlangsung');
+                        statusBadge.innerHTML = '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
+                    } else {
+                        switch(status) {
+                            case 'disetujui':
+                                statusBadge.classList.add('status-disetujui');
+                                statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
+                                break;
+                            case 'selesai':
+                                statusBadge.classList.add('status-selesai');
+                                statusBadge.innerHTML = '<i class="fas fa-check-double me-1"></i> Selesai';
+                                break;
+                            case 'ditolak':
+                                statusBadge.classList.add('status-ditolak');
+                                statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Ditolak';
+                                break;
+                            default:
+                                statusBadge.classList.add('status-menunggu');
+                                statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i> Menunggu';
+                        }
                     }
                 }
 
@@ -2012,25 +2017,30 @@
 
             // Fungsi untuk menutup modal
             function closeDetailModal() {
+                if (!detailModal) return;
                 detailModal.classList.remove('active');
                 document.body.style.overflow = ''; // Kembalikan scroll
             }
 
-            // Event listener untuk tombol lihat detail
-            viewDetailButtons.forEach(button => {
-                button.addEventListener('click', showDetailModal);
-            });
-
-            // Event listener untuk tombol tutup modal
-            closeModal.addEventListener('click', closeDetailModal);
-            closeModalBtn.addEventListener('click', closeDetailModal);
-
-            // Tutup modal saat klik di luar konten modal
-            detailModal.addEventListener('click', (event) => {
-                if (event.target === detailModal) {
-                    closeDetailModal();
+            // Event delegation: handle clicks on any .view-detail buttons (works if elements are added later)
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest && e.target.closest('.view-detail');
+                if (btn) {
+                    populateDetailModalFromButton(btn);
                 }
             });
+
+            // Close handlers (only add if elements exist)
+            if (closeModal) closeModal.addEventListener('click', closeDetailModal);
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeDetailModal);
+
+            if (detailModal) {
+                detailModal.addEventListener('click', (event) => {
+                    if (event.target === detailModal) {
+                        closeDetailModal();
+                    }
+                });
+            }
 
             // ===== FILTER TABEL =====
             function filterTable() {
