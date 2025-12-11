@@ -148,7 +148,8 @@ class PeminjamanController extends Controller
 
     public function riwayat(Request $request)
     {
-        $query = Peminjaman::with('feedback')
+        // Eager-load related models including dosen so the view can display nama_dosen
+        $query = Peminjaman::with(['feedback', 'dosen', 'ruangan', 'projector', 'user', 'pengembalian'])
             ->where('user_id', Auth::id());
 
         if ($request->has('search') && $request->search != '') {
