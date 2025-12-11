@@ -33,7 +33,7 @@
                         <i class="fas fa-file-excel"></i> Import Excel
                     </button>
                     <button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modalTambahMahasiswa">
-                        <i class="fas fa-user-plus"></i> Tambah Mahasiswa
+                        <i class="fas fa-plus"></i> Tambah Kordinator Kelas
                     </button>
                 </div>
             </div>
@@ -45,7 +45,7 @@
         <div class="card-header bg-white dark-mode-bg-card border-bottom-0 p-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold d-flex align-items-center text-dark-mode-aware">
-                    <i class="fas fa-list-ul me-2 text-primary"></i> Daftar Mahasiswa
+                    <i class="fas fa-list-ul me-2 text-primary"></i> Daftar Kordinator Kelas
                 </h5>
                 <div class="d-flex align-items-center gap-2">
                     <div class="w-auto">
@@ -139,7 +139,7 @@
                                 <div class="text-center p-4">
                                     <i class="fas fa-box-open fa-3x text-gray mb-3"></i>
                                     <h6 class="mb-1 text-dark-mode-aware">Belum ada mahasiswa di kelas ini.</h6>
-                                    <p class="text-secondary">Klik **Tambah Mahasiswa** untuk memasukkan data.</p>
+                                    <p class="text-secondary">Klik **Tambah Kordinator Kelas** untuk memasukkan data.</p>
                                 </div>
                             </td>
                         </tr>
@@ -166,7 +166,7 @@
             @csrf
             <div class="modal-content rounded-4">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title fw-bold text-white" id="modalTambahMahasiswaLabel"><i class="fas fa-user-plus"></i> Tambah Mahasiswa</h5>
+                    <h5 class="modal-title fw-bold text-white" id="modalTambahMahasiswaLabel"><i class="fas fa-plus"></i> Tambah Kordinator Kelas</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

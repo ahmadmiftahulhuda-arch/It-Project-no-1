@@ -740,6 +740,36 @@
             flex-wrap: nowrap;
         }
 
+        .btn-info-custom:hover {
+            background: #0277bd;
+            transform: translateY(-1px);
+            color: white;
+            box-shadow: 0 2px 5px rgba(2, 136, 209, 0.3);
+        }
+
+        .btn-info-custom {
+            background: #0288d1;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: none !important;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-info-custom:hover {
+            background: #0277bd;
+            transform: translateY(-1px);
+            color: white;
+            box-shadow: 0 2px 5px rgba(2, 136, 209, 0.3);
+        }
+        
         .btn-warning-custom {
             background: #ff9800;
             color: white;
@@ -1835,45 +1865,34 @@
                                 </td>
                                 <td>{{ $barang->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ $barang->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal" data-bs-target="#detailBarangModal"
+                                            data-kode_barang="{{ $barang->kode_barang }}"
+                                            data-nama_barang="{{ $barang->nama_barang }}"
+                                            data-model_barang="{{ $barang->model_barang }}"
+                                            data-merek_barang="{{ $barang->merek_barang }}"
+                                            data-status_barang="{{ $barang->status_barang }}"
+                                            data-keterangan_barang="{{ $barang->keterangan_barang }}"
+                                            data-created_at="{{ $barang->created_at->format('d F Y') }}" title="Detail">
+                                            <i class="fas fa-eye"></i>
                                         </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $barang->id }}">
-                                            <li>
-                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#detailBarangModal"
-                                                    data-kode_barang="{{ $barang->kode_barang }}"
-                                                    data-nama_barang="{{ $barang->nama_barang }}"
-                                                    data-model_barang="{{ $barang->model_barang }}"
-                                                    data-merek_barang="{{ $barang->merek_barang }}"
-                                                    data-status_barang="{{ $barang->status_barang }}"
-                                                    data-keterangan_barang="{{ $barang->keterangan_barang }}"
-                                                    data-created_at="{{ $barang->created_at->format('d F Y') }}">
-                                                    <i class="fas fa-eye"></i> Detail
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editBarangModal"
-                                                    data-barang-id="{{ $barang->id }}"
-                                                    data-kode_barang="{{ $barang->kode_barang }}"
-                                                    data-nama_barang="{{ $barang->nama_barang }}"
-                                                    data-model_barang="{{ $barang->model_barang }}"
-                                                    data-merek_barang="{{ $barang->merek_barang }}"
-                                                    data-status_barang="{{ $barang->status_barang }}"
-                                                    data-keterangan_barang="{{ $barang->keterangan_barang }}">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <form action="{{ route('barangs.destroy', $barang->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus barang {{ $barang->nama_barang }}?')">
-                                                        <i class="fas fa-trash"></i> Hapus
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        </ul>
+                                        <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal" data-bs-target="#editBarangModal"
+                                            data-barang-id="{{ $barang->id }}"
+                                            data-kode_barang="{{ $barang->kode_barang }}"
+                                            data-nama_barang="{{ $barang->nama_barang }}"
+                                            data-model_barang="{{ $barang->model_barang }}"
+                                            data-merek_barang="{{ $barang->merek_barang }}"
+                                            data-status_barang="{{ $barang->status_barang }}"
+                                            data-keterangan_barang="{{ $barang->keterangan_barang }}" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <form action="{{ route('barangs.destroy', $barang->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang {{ $barang->nama_barang }}?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger-custom btn-sm" title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
