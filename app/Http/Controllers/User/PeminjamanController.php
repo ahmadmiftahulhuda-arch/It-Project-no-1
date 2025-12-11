@@ -106,7 +106,9 @@ class PeminjamanController extends Controller
         $ruangan = Ruangan::all();
         $projectors = Projector::where('status', 'tersedia')->get();
         $dosens = Dosen::orderBy('nama_dosen')->get();
-        return view('user.peminjaman.edit', compact('peminjaman', 'ruangan', 'projectors', 'dosens'));
+        // Ambil slot waktu agar form edit memakai pilihan slot yang sama seperti form create
+        $slotwaktu = SlotWaktu::all();
+        return view('user.peminjaman.edit', compact('peminjaman', 'ruangan', 'projectors', 'dosens', 'slotwaktu'));
     }
 
     public function update(Request $request, $id)

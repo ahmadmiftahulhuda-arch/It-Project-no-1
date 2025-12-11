@@ -843,11 +843,17 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label">Waktu Mulai</label>
-                                    <div class="input-icon">
-                                        <i class="fas fa-clock"></i>
-                                        <input type="time" name="waktu_mulai" class="form-control" value="{{ old('waktu_mulai', $peminjaman->waktu_mulai) }}" 
-                                               {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
-                                    </div>
+                                        <div class="input-icon">
+                                            <i class="fas fa-clock"></i>
+                                            <select name="waktu_mulai" class="form-select @error('waktu_mulai') is-invalid @enderror" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                                <option value="">Pilih Waktu Mulai</option>
+                                                @if(!empty($slotwaktu))
+                                                    @foreach($slotwaktu as $slot)
+                                                        <option value="{{ $slot->waktu }}" {{ old('waktu_mulai', $peminjaman->waktu_mulai) == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
                                     @error('waktu_mulai')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -857,8 +863,14 @@
                                     <label class="form-label">Waktu Selesai</label>
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
-                                        <input type="time" name="waktu_selesai" class="form-control" value="{{ old('waktu_selesai', $peminjaman->waktu_selesai) }}" 
-                                               {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                        <select name="waktu_selesai" class="form-select @error('waktu_selesai') is-invalid @enderror" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                            <option value="">Pilih Waktu Selesai</option>
+                                            @if(!empty($slotwaktu))
+                                                @foreach($slotwaktu as $slot)
+                                                    <option value="{{ $slot->waktu }}" {{ old('waktu_selesai', $peminjaman->waktu_selesai) == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                     </div>
                                     @error('waktu_selesai')
                                         <div class="text-danger mt-1">{{ $message }}</div>
@@ -909,18 +921,18 @@
                                         </label>
                                         <div class="input-icon">
                                             <i class="fas fa-chalkboard-teacher"></i>
-                                            <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror">
+                                            <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
                                                 <option value="">-- Pilih Dosen Pengampu --</option>
                                                 @if(!empty($dosens) && $dosens->count())
                                                     @foreach($dosens as $dosen)
-                                                        <option value="{{ $dosen->nama_dosen }}" {{ old('dosen_nama') == $dosen->nama_dosen ? 'selected' : '' }}>
+                                                        <option value="{{ $dosen->nip }}" {{ old('dosen_nip', $peminjaman->dosen_nip) == $dosen->nip ? 'selected' : '' }}>
                                                             {{ $dosen->nama_dosen }}
                                                         </option>
                                                     @endforeach
                                                 @endif
                                             </select>
                                         </div>
-                                        @error('dosen_nama')
+                                        @error('dosen_nip')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                             </div>
@@ -1126,27 +1138,23 @@
             const form = document.querySelector('form');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    const ruang = document.querySelector('select[name="ruang"]').value;
-                    const keperluan = document.querySelector('textarea[name="keperluan"]').value;
-                    const proyektor = document.querySelector('select[name="proyektor"]').value;
-                    
+                    const ruang = document.querySelector('select[name="ruangan_id"]') ? document.querySelector('select[name="ruangan_id"]').value : '';
+                    const keperluan = document.querySelector('textarea[name="keperluan"]') ? document.querySelector('textarea[name="keperluan"]').value : '';
+                    const proyektor = document.querySelector('select[name="projector_id"]') ? document.querySelector('select[name="projector_id"]').value : '';
+
                     if (ruang === '') {
                         e.preventDefault();
                         alert('Pilih ruang terlebih dahulu');
                         return false;
                     }
-                    
+
                     if (keperluan.trim() === '') {
                         e.preventDefault();
                         alert('Keperluan tidak boleh kosong');
                         return false;
                     }
-                    
-                    if (proyektor === '') {
-                        e.preventDefault();
-                        alert('Pilih ketersediaan proyektor');
-                        return false;
-                    }
+
+                    // Proyektor optional: no need to force selection
 
                     // Cek status peminjaman
                     const status = "{{ $peminjaman->status }}";

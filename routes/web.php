@@ -164,6 +164,7 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
 
     // Projector 
     Route::resource('projectors', ProjectorController::class)->except(['show']);
+    Route::resource('barangs', \App\Http\Controllers\Admin\BarangController::class)->except(['show']);
 
     // Jadwal Perkuliahan
     Route::resource('jadwal-perkuliahan', JadwalPerkuliahanController::class);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin TI - Manajemen Proyektor</title>
+    <title>Admin TI - Manajemen Barang</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -1255,7 +1255,6 @@
             margin-left: -10px;
             margin-top: -10px;
             border: 2px solid #ffffff;
-            border-radius: 50%;
             border-top-color: transparent;
             animation: spin 1s ease-in-out infinite;
         }
@@ -1531,16 +1530,16 @@
             
             <!-- Manajemen Aset - DROPDOWN -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#asetMenu" aria-expanded="true" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse" id="asetMenu">
-                    <a href="{{ route('projectors.index') }}" class="dropdown-item active">
+                <div class="dropdown-items collapse show" id="asetMenu">
+                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                      <a href="{{ route('barangs.index') }}" class="dropdown-item">
+                    <a href="{{ route('barangs.index') }}" class="dropdown-item active">
                         <i class="fas fa-box"></i>
                         <span>Barang</span>
                     </a>
@@ -1636,7 +1635,7 @@
         <div class="header">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari kode/merk/model..." id="globalSearch">
+                <input type="text" placeholder="Cari kode/nama/merk..." id="globalSearch">
             </div>
 
             <div class="user-actions">
@@ -1696,28 +1695,28 @@
         <!-- Page Title -->
         <div class="page-title">
             <div>
-                <h1>Manajemen Proyektor</h1>
-                <p>Kelola data proyektor Lab Teknologi Informasi</p>
+                <h1>Manajemen Barang</h1>
+                <p>Kelola data barang Lab Teknologi Informasi</p>
             </div>
             <div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectorModal">
-                    <i class="fas fa-plus-circle"></i> Tambah Proyektor
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBarangModal">
+                    <i class="fas fa-plus-circle"></i> Tambah Barang
                 </button>
             </div>
         </div>
 
         <!-- Stats Cards -->
         <div class="stats-container">
-            <div class="stat-card {{ !request('status') ? 'active' : '' }}" onclick="filterByStatus('')">
+            <div class="stat-card {{ !request('status_barang') ? 'active' : '' }}" onclick="filterByStatus('')">
                 <div class="stat-icon total">
-                    <i class="fas fa-video"></i>
+                    <i class="fas fa-box"></i>
                 </div>
                 <div class="stat-info">
                     <h3>{{ $totalCount ?? 0 }}</h3>
-                    <p>Total Proyektor</p>
+                    <p>Total Barang</p>
                 </div>
             </div>
-            <div class="stat-card {{ request('status') == 'tersedia' ? 'active' : '' }}" onclick="filterByStatus('tersedia')">
+            <div class="stat-card {{ request('status_barang') == 'tersedia' ? 'active' : '' }}" onclick="filterByStatus('tersedia')">
                 <div class="stat-icon tersedia">
                     <i class="fas fa-check-circle"></i>
                 </div>
@@ -1726,7 +1725,7 @@
                     <p>Tersedia</p>
                 </div>
             </div>
-            <div class="stat-card {{ request('status') == 'dipinjam' ? 'active' : '' }}" onclick="filterByStatus('dipinjam')">
+            <div class="stat-card {{ request('status_barang') == 'dipinjam' ? 'active' : '' }}" onclick="filterByStatus('dipinjam')">
                 <div class="stat-icon dipinjam">
                     <i class="fas fa-hand-holding"></i>
                 </div>
@@ -1735,7 +1734,7 @@
                     <p>Dipinjam</p>
                 </div>
             </div>
-            <div class="stat-card {{ request('status') == 'rusak' ? 'active' : '' }}" onclick="filterByStatus('rusak')">
+            <div class="stat-card {{ request('status_barang') == 'rusak' ? 'active' : '' }}" onclick="filterByStatus('rusak')">
                 <div class="stat-icon rusak">
                     <i class="fas fa-times-circle"></i>
                 </div>
@@ -1751,29 +1750,29 @@
             <!-- Table Header dengan Filter -->
             <div class="table-header">
                 <div class="table-title">
-                    Daftar Proyektor
+                    Daftar Barang
                 </div>
-                <form id="filterForm" method="GET" action="{{ route('projectors.index') }}" class="table-filters">
+                <form id="filterForm" method="GET" action="{{ route('barangs.index') }}" class="table-filters">
                     <div class="filter-group">
                         <label for="search">Cari</label>
-                        <input type="text" id="search" name="search" placeholder="Kode/Merk/Model" 
+                        <input type="text" id="search" name="search" placeholder="Kode/Nama/Merk" 
                                value="{{ request('search') }}">
                     </div>
                     <div class="filter-group">
-                        <label for="status">Status</label>
-                        <select id="status" name="status">
+                        <label for="status_barang">Status</label>
+                        <select id="status_barang" name="status_barang">
                             <option value="">Semua Status</option>
-                            <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
-                            <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                            <option value="rusak" {{ request('status') == 'rusak' ? 'selected' : '' }}>Rusak</option>
+                            <option value="tersedia" {{ request('status_barang') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                            <option value="dipinjam" {{ request('status_barang') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
+                            <option value="rusak" {{ request('status_barang') == 'rusak' ? 'selected' : '' }}>Rusak</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="merk">Merk</label>
-                        <select id="merk" name="merk">
+                        <label for="merek_barang">Merk</label>
+                        <select id="merek_barang" name="merek_barang">
                             <option value="">Semua Merk</option>
-                            @foreach($merks as $merk)
-                                <option value="{{ $merk }}" {{ request('merk') == $merk ? 'selected' : '' }}>{{ $merk }}</option>
+                            @foreach($mereks as $merek)
+                                <option value="{{ $merek }}" {{ request('merek_barang') == $merek ? 'selected' : '' }}>{{ $merek }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -1789,7 +1788,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-filter"></i> Filter
                         </button>
-                        <a href="{{ route('projectors.index') }}" class="btn btn-outline">
+                        <a href="{{ route('barangs.index') }}" class="btn btn-outline">
                             <i class="fas fa-refresh"></i> Reset
                         </a>
                     </div>
@@ -1802,9 +1801,10 @@
                     <thead>
                         <tr>
                             <th width="50">No</th>
-                            <th width="150">Kode Proyektor</th>
+                            <th width="150">Kode Barang</th>
+                            <th width="120">Nama Barang</th>
+                            <th width="120">Model Barang</th>
                             <th width="120">Merk</th>
-                            <th width="120">Model</th>
                             <th width="100">Status</th>
                             <th>Keterangan</th>
                             <th width="120">Tanggal Dibuat</th>
@@ -1812,58 +1812,79 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($projectors as $projector)
+                        @forelse($barangs as $barang)
                             <tr>
-                                <td>{{ $loop->iteration + ($projectors->currentPage() - 1) * $projectors->perPage() }}</td>
-                                <td><strong>{{ $projector->kode_proyektor }}</strong></td>
-                                <td>{{ $projector->merk }}</td>
-                                <td>{{ $projector->model }}</td>
+                                <td>{{ $loop->iteration + ($barangs->currentPage() - 1) * $barangs->perPage() }}</td>
+                                <td><strong>{{ $barang->kode_barang }}</strong></td>
+                                <td>{{ $barang->nama_barang }}</td>
+                                <td>{{ $barang->model_barang }}</td>
+                                <td>{{ $barang->merek_barang }}</td>
                                 <td>
-                                    @if($projector->status == 'tersedia')
+                                    @if($barang->status_barang == 'tersedia')
                                         <span class="badge status-tersedia">Tersedia</span>
-                                    @elseif($projector->status == 'dipinjam')
+                                    @elseif($barang->status_barang == 'dipinjam')
                                         <span class="badge status-dipinjam">Dipinjam</span>
                                     @else
                                         <span class="badge status-rusak">Rusak</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <span title="{{ $projector->keterangan }}">
-                                        {{ Str::limit($projector->keterangan, 50) ?: '-' }}
+                                    <span title="{{ $barang->keterangan_barang }}">
+                                        {{ Str::limit($barang->keterangan_barang, 50) ?: '-' }}
                                     </span>
                                 </td>
-                                <td>{{ $projector->created_at->format('d/m/Y') }}</td>
+                                <td>{{ $barang->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <div class="action-buttons">
-                                        <button type="button" class="btn-warning-custom" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#editProjectorModal"
-                                                data-projector-id="{{ $projector->id }}"
-                                                data-kode-proyektor="{{ $projector->kode_proyektor }}"
-                                                data-merk="{{ $projector->merk }}"
-                                                data-model="{{ $projector->model }}"
-                                                data-status="{{ $projector->status }}"
-                                                data-keterangan="{{ $projector->keterangan }}">
-                                            <i class="fas fa-edit"></i> Edit
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ $barang->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
                                         </button>
-                                        <form action="{{ route('projectors.destroy', $projector->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-danger-custom" onclick="return confirm('Apakah Anda yakin ingin menghapus proyektor {{ $projector->kode_proyektor }}?')">
-                                                <i class="fas fa-trash"></i> Hapus
-                                            </button>
-                                        </form>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $barang->id }}">
+                                            <li>
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#detailBarangModal"
+                                                    data-kode_barang="{{ $barang->kode_barang }}"
+                                                    data-nama_barang="{{ $barang->nama_barang }}"
+                                                    data-model_barang="{{ $barang->model_barang }}"
+                                                    data-merek_barang="{{ $barang->merek_barang }}"
+                                                    data-status_barang="{{ $barang->status_barang }}"
+                                                    data-keterangan_barang="{{ $barang->keterangan_barang }}"
+                                                    data-created_at="{{ $barang->created_at->format('d F Y') }}">
+                                                    <i class="fas fa-eye"></i> Detail
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editBarangModal"
+                                                    data-barang-id="{{ $barang->id }}"
+                                                    data-kode_barang="{{ $barang->kode_barang }}"
+                                                    data-nama_barang="{{ $barang->nama_barang }}"
+                                                    data-model_barang="{{ $barang->model_barang }}"
+                                                    data-merek_barang="{{ $barang->merek_barang }}"
+                                                    data-status_barang="{{ $barang->status_barang }}"
+                                                    data-keterangan_barang="{{ $barang->keterangan_barang }}">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('barangs.destroy', $barang->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus barang {{ $barang->nama_barang }}?')">
+                                                        <i class="fas fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="empty-state">
-                                    <i class="fas fa-video-slash"></i><br>
-                                    @if(request()->anyFilled(['search', 'status', 'merk']))
-                                        Tidak ada data proyektor yang sesuai dengan filter
+                                <td colspan="9" class="empty-state">
+                                    <i class="fas fa-box-open"></i><br>
+                                    @if(request()->anyFilled(['search', 'status_barang', 'merek_barang']))
+                                        Tidak ada data barang yang sesuai dengan filter
                                     @else
-                                        Belum ada data proyektor. <a href="#" data-bs-toggle="modal" data-bs-target="#createProjectorModal" style="color: var(--primary);">Tambahkan proyektor pertama</a>
+                                        Belum ada data barang. <a href="#" data-bs-toggle="modal" data-bs-target="#createBarangModal" style="color: var(--primary);">Tambahkan barang pertama</a>
                                     @endif
                                 </td>
                             </tr>
@@ -1874,56 +1895,17 @@
         </div>
 
         <!-- Pagination -->
-        @if($projectors->hasPages())
+        @if($barangs->hasPages())
         <div class="pagination-container">
             <nav>
-                <ul class="pagination">
-                    {{-- Previous Page Link --}}
-                    @if($projectors->onFirstPage())
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-chevron-left"></i> Sebelumnya</span>
-                        </li>
-                    @else
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $projectors->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">
-                                <i class="fas fa-chevron-left"></i> Sebelumnya
-                            </a>
-                        </li>
-                    @endif
-
-                    {{-- Pagination Elements --}}
-                    @foreach($projectors->getUrlRange(1, $projectors->lastPage()) as $page => $url)
-                        @if($page == $projectors->currentPage())
-                            <li class="page-item active">
-                                <span class="page-link">{{ $page }}</span>
-                            </li>
-                        @else
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $url }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">{{ $page }}</a>
-                            </li>
-                        @endif
-                    @endforeach
-
-                    {{-- Next Page Link --}}
-                    @if($projectors->hasMorePages())
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $projectors->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}">
-                                Selanjutnya <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                    @else
-                        <li class="page-item disabled">
-                            <span class="page-link">Selanjutnya <i class="fas fa-chevron-right"></i></span>
-                        </li>
-                    @endif
-                </ul>
+                {{ $barangs->links() }}
             </nav>
         </div>
         @endif
 
         <!-- Info Jumlah Data -->
         <div class="data-info">
-            Menampilkan <strong>{{ $projectors->firstItem() ?? 0 }}</strong> - <strong>{{ $projectors->lastItem() ?? 0 }}</strong> dari <strong>{{ $projectors->total() }}</strong> data proyektor
+            Menampilkan <strong>{{ $barangs->firstItem() ?? 0 }}</strong> - <strong>{{ $barangs->lastItem() ?? 0 }}</strong> dari <strong>{{ $barangs->total() }}</strong> data barang
         </div>
 
         <!-- Success Message dengan Auto-hide -->
@@ -1937,10 +1919,10 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     @if(session('form_type') == 'create')
-                        const createModal = new bootstrap.Modal(document.getElementById('createProjectorModal'));
+                        const createModal = new bootstrap.Modal(document.getElementById('createBarangModal'));
                         createModal.show();
                     @elseif(session('form_type') == 'edit')
-                        const editModal = new bootstrap.Modal(document.getElementById('editProjectorModal'));
+                        const editModal = new bootstrap.Modal(document.getElementById('editBarangModal'));
                         editModal.show();
                     @endif
                 });
@@ -1948,426 +1930,213 @@
         @endif
     </div>
 
-    <!-- Create Projector Modal -->
-    <div class="modal fade" id="createProjectorModal" tabindex="-1" aria-labelledby="createProjectorModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <!-- Create Barang Modal -->
+    <div class="modal fade" id="createBarangModal" tabindex="-1" aria-labelledby="createBarangModalLabel" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createProjectorModalLabel">
-                        <i class="fas fa-plus-circle"></i> Tambah Proyektor Baru
+                    <h5 class="modal-title" id="createBarangModalLabel">
+                        <i class="fas fa-plus-circle"></i> Tambah Barang Baru
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('projectors.store') }}" method="POST" id="createProjectorForm">
+                <form action="{{ route('barangs.store') }}" method="POST" id="createBarangForm">
                     @csrf
-                    <input type="hidden" name="form_type" value="create">
                     <div class="modal-body">
-                        <p class="text-muted mb-4">Tambahkan data proyektor baru ke dalam sistem inventory</p>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="kode_proyektor" class="form-label">
-                                    Kode Proyektor <span class="required-star">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="kode_proyektor" name="kode_proyektor" 
-                                       value="{{ old('kode_proyektor') }}" placeholder="PROJ-001" required>
-                                @error('kode_proyektor')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="kode_barang" class="form-label">Kode Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="kode_barang" name="kode_barang" required>
                             </div>
-
-                            <div class="form-group">
-                                <label for="merk" class="form-label">
-                                    Merk <span class="required-star">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="merk" name="merk" 
-                                       value="{{ old('merk') }}" placeholder="Epson, Sony, Panasonic" required>
-                                @error('merk')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
+                            <div class="col-md-6 mb-3">
+                                <label for="nama_barang" class="form-label">Nama Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
                             </div>
-
-                            <div class="form-group">
-                                <label for="model" class="form-label">
-                                    Model <span class="required-star">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="model" name="model" 
-                                       value="{{ old('model') }}" placeholder="EB-X06, VPL-DX120, PT-LB30" required>
-                                @error('model')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
+                            <div class="col-md-6 mb-3">
+                                <label for="model_barang" class="form-label">Model Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="model_barang" name="model_barang" required>
                             </div>
-
-                            <div class="form-group">
-                                <label for="status" class="form-label">
-                                    Status <span class="required-star">*</span>
-                                </label>
-                                <div class="select-wrapper">
-                                    <select class="form-control select-dropdown" id="status" name="status" required>
-                                        <option value="">Pilih Status</option>
-                                        <option value="tersedia" {{ old('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
-                                        <option value="dipinjam" {{ old('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                                        <option value="rusak" {{ old('status') == 'rusak' ? 'selected' : '' }}>Rusak</option>
-                                    </select>
-                                </div>
-                                @error('status')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
+                            <div class="col-md-6 mb-3">
+                                <label for="merek_barang" class="form-label">Merek Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="merek_barang" name="merek_barang" required>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" 
-                                      rows="3" placeholder="Keterangan tambahan mengenai kondisi atau spesifikasi proyektor...">{{ old('keterangan') }}</textarea>
-                            @error('keterangan')
-                                <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                            @enderror
+                            <div class="col-md-6 mb-3">
+                                <label for="status_barang" class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" id="status_barang" name="status_barang" required>
+                                    <option value="tersedia">Tersedia</option>
+                                    <option value="dipinjam">Dipinjam</option>
+                                    <option value="rusak">Rusak</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="keterangan_barang" class="form-label">Keterangan</label>
+                                <textarea class="form-control" id="keterangan_barang" name="keterangan_barang" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
-                            <i class="fas fa-times"></i> Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary" id="createSubmitBtn">
-                            <i class="fas fa-save"></i> Simpan Proyektor
-                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Barang Modal -->
+    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="editBarangModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBarangModalLabel">
+                        <i class="fas fa-edit"></i> Edit Barang
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editBarangForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_kode_barang" class="form-label">Kode Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_kode_barang" name="kode_barang" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_nama_barang" class="form-label">Nama Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_nama_barang" name="nama_barang" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_model_barang" class="form-label">Model Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_model_barang" name="model_barang" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_merek_barang" class="form-label">Merek Barang <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_merek_barang" name="merek_barang" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_status_barang" class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" id="edit_status_barang" name="status_barang" required>
+                                    <option value="tersedia">Tersedia</option>
+                                    <option value="dipinjam">Dipinjam</option>
+                                    <option value="rusak">Rusak</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="edit_keterangan_barang" class="form-.label">Keterangan</label>
+                                <textarea class="form-control" id="edit_keterangan_barang" name="keterangan_barang" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Edit Projector Modal -->
-    <div class="modal fade" id="editProjectorModal" tabindex="-1" aria-labelledby="editProjectorModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <!-- Detail Barang Modal -->
+    <div class="modal fade" id="detailBarangModal" tabindex="-1" aria-labelledby="detailBarangModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProjectorModalLabel">
-                        <i class="fas fa-edit"></i> Edit Data Proyektor
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="detailBarangModalLabel">Detail Barang</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="editProjectorForm" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <input type="hidden" name="form_type" value="edit">
-                    <div class="modal-body">
-                        <p class="text-muted mb-4">Perbarui informasi data proyektor</p>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="edit_kode_proyektor" class="form-label">
-                                    Kode Proyektor <span class="required-star">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="edit_kode_proyektor" name="kode_proyektor" 
-                                       placeholder="PROJ-001" required>
-                                @error('kode_proyektor')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_merk" class="form-label">
-                                    Merk <span class="required-star">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="edit_merk" name="merk" 
-                                       placeholder="Epson, Sony, Panasonic" required>
-                                @error('merk')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_model" class="form-label">
-                                    Model <span class="required-star">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="edit_model" name="model" 
-                                       placeholder="EB-X06, VPL-DX120, PT-LB30" required>
-                                @error('model')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_status" class="form-label">
-                                    Status <span class="required-star">*</span>
-                                </label>
-                                <div class="select-wrapper">
-                                    <select class="form-control select-dropdown" id="edit_status" name="status" required>
-                                        <option value="">Pilih Status</option>
-                                        <option value="tersedia">Tersedia</option>
-                                        <option value="dipinjam">Dipinjam</option>
-                                        <option value="rusak">Rusak</option>
-                                    </select>
-                                </div>
-                                @error('status')
-                                    <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="edit_keterangan" name="keterangan" 
-                                      rows="3" placeholder="Keterangan tambahan mengenai kondisi atau spesifikasi proyektor..."></textarea>
-                            @error('keterangan')
-                                <div class="text-danger mt-1" style="font-size: 0.875rem;">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
-                            <i class="fas fa-times"></i> Batal
-                        </button>
-                        <button type="submit" class="btn btn-warning" id="editSubmitBtn">
-                            <i class="fas fa-save"></i> Perbarui Data
-                        </button>
-                    </div>
-                </form>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Kode Barang</th>
+                                <td id="detail_kode_barang"></td>
+                            </tr>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <td id="detail_nama_barang"></td>
+                            </tr>
+                            <tr>
+                                <th>Model Barang</th>
+                                <td id="detail_model_barang"></td>
+                            </tr>
+                             <tr>
+                                <th>Merek Barang</th>
+                                <td id="detail_merek_barang"></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td id="detail_status_barang"></td>
+                            </tr>
+                            <tr>
+                                <th>Keterangan</th>
+                                <td id="detail_keterangan_barang"></td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Dibuat</th>
+                                <td id="detail_created_at"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle Dark Mode
-        const themeToggle = document.getElementById('theme-toggle');
-        
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                themeToggle.title = 'Toggle Light Mode';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                themeToggle.title = 'Toggle Dark Mode';
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        }
+        // JavaScript for handling modals
+        document.addEventListener('DOMContentLoaded', function () {
+            var editBarangModal = document.getElementById('editBarangModal');
+            editBarangModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var barangId = button.getAttribute('data-barang-id');
+                var kodeBarang = button.getAttribute('data-kode_barang');
+                var namaBarang = button.getAttribute('data-nama_barang');
+                var modelBarang = button.getAttribute('data-model_barang');
+                var merekBarang = button.getAttribute('data-merek_barang');
+                var statusBarang = button.getAttribute('data-status_barang');
+                var keteranganBarang = button.getAttribute('data-keterangan_barang');
 
-        themeToggle.addEventListener('click', toggleDarkMode);
+                var modalForm = editBarangModal.querySelector('#editBarangForm');
+                modalForm.action = '/admin/barangs/' + barangId;
 
-        // Load saved theme preference
-        document.addEventListener('DOMContentLoaded', function() {
-            const darkMode = localStorage.getItem('darkMode');
-            if (darkMode === 'enabled') {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                themeToggle.title = 'Toggle Light Mode';
-            }
+                var modalBodyInputKode = editBarangModal.querySelector('#edit_kode_barang');
+                var modalBodyInputNama = editBarangModal.querySelector('#edit_nama_barang');
+                var modalBodyInputModel = editBarangModal.querySelector('#edit_Model_barang');
+                var modalBodyInputMerek = editBarangModal.querySelector('#edit_merek_barang');
+                var modalBodyInputStatus = editBarangModal.querySelector('#edit_status_barang');
+                var modalBodyInputKeterangan = editBarangModal.querySelector('#edit_keterangan_barang');
 
-            // Auto-hide success message setelah 5 detik
-            const successAlert = document.getElementById('successAlert');
-            if (successAlert) {
-                setTimeout(() => {
-                    successAlert.classList.add('hiding');
-                    setTimeout(() => {
-                        successAlert.remove();
-                    }, 300);
-                }, 5000);
-            }
-
-            // Set nilai global search dari filter search
-            const searchValue = document.getElementById('search').value;
-            document.getElementById('globalSearch').value = searchValue;
-
-            // Setup edit modal event listeners
-            setupEditModal();
-
-            // Setup form submission handlers
-            setupFormHandlers();
-
-            // Auto open modal if there are errors
-            @if($errors->any() && session('form_type') == 'create')
-                const createModal = new bootstrap.Modal(document.getElementById('createProjectorModal'));
-                createModal.show();
-            @elseif($errors->any() && session('form_type') == 'edit')
-                const editModal = new bootstrap.Modal(document.getElementById('editProjectorModal'));
-                editModal.show();
-            @endif
-
-            // DISABLE ALL BOOTSTRAP ANIMATIONS
-            disableAllAnimations();
-        });
-
-        // Function to disable all animations
-        function disableAllAnimations() {
-            // Remove all transition and animation styles
-            const allElements = document.querySelectorAll('*');
-            allElements.forEach(element => {
-                element.style.animation = 'none !important';
-                element.style.transition = 'none !important';
-                element.style.transform = 'none !important';
+                modalBodyInputKode.value = kodeBarang;
+                modalBodyInputNama.value = namaBarang;
+                modalBodyInputModel.value = modelBarang;
+                modalBodyInputMerek.value = merekBarang;
+                modalBodyInputStatus.value = statusBarang;
+                modalBodyInputKeterangan.value = keteranganBarang;
             });
-
-            // Override Bootstrap modal animations
-            const style = document.createElement('style');
-            style.textContent = `
-                .modal.fade .modal-dialog {
-                    transition: none !important;
-                    transform: none !important;
-                    animation: none !important;
-                }
-                .modal.show .modal-dialog {
-                    transform: none !important;
-                    animation: none !important;
-                }
-                .fade {
-                    transition: none !important;
-                    animation: none !important;
-                }
-                .modal-backdrop.fade {
-                    transition: none !important;
-                    animation: none !important;
-                    opacity: 0.5 !important;
-                }
-                .modal-backdrop.show {
-                    opacity: 0.5 !important;
-                }
-                * {
-                    animation: none !important;
-                    transition: none !important;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // Auto submit filter changes
-        document.getElementById('status').addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
+            
+            var detailBarangModal = document.getElementById('detailBarangModal');
+            detailBarangModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                document.getElementById('detail_kode_barang').textContent = button.getAttribute('data-kode_barang');
+                document.getElementById('detail_nama_barang').textContent = button.getAttribute('data-nama_barang');
+                document.getElementById('detail_model_barang').textContent = button.getAttribute('data-model_barang');
+                document.getElementById('detail_merek_barang').textContent = button.getAttribute('data-merek_barang');
+                document.getElementById('detail_status_barang').textContent = button.getAttribute('data-status_barang');
+                document.getElementById('detail_keterangan_barang').textContent = button.getAttribute('data-keterangan_barang');
+                document.getElementById('detail_created_at').textContent = button.getAttribute('data-created_at');
+            });
         });
 
-        document.getElementById('merk').addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
-        });
-
-        document.getElementById('sort').addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
-        });
-
-        // Auto submit search dengan debounce
-        let searchTimeout;
-        document.getElementById('search').addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                document.getElementById('filterForm').submit();
-            }, 800);
-        });
-
-        // Global search
-        document.getElementById('globalSearch').addEventListener('input', function() {
-            document.getElementById('search').value = this.value;
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                document.getElementById('filterForm').submit();
-            }, 800);
-        });
-
-        // Filter dari stats cards
         function filterByStatus(status) {
-            document.getElementById('status').value = status;
-            document.getElementById('filterForm').submit();
+            const url = new URL(window.location);
+            url.searchParams.set('status_barang', status);
+            window.location.href = url.toString();
         }
-
-        // Setup edit modal functionality
-        function setupEditModal() {
-            const editModal = document.getElementById('editProjectorModal');
-            
-            editModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                
-                // Extract data from button attributes
-                const projectorId = button.getAttribute('data-projector-id');
-                const kodeProyektor = button.getAttribute('data-kode-proyektor');
-                const merk = button.getAttribute('data-merk');
-                const model = button.getAttribute('data-model');
-                const status = button.getAttribute('data-status');
-                const keterangan = button.getAttribute('data-keterangan');
-                
-                // Update modal content
-                document.getElementById('editProjectorForm').action = `/admin/projectors/${projectorId}`;                document.getElementById('edit_kode_proyektor').value = kodeProyektor;
-                document.getElementById('edit_merk').value = merk;
-                document.getElementById('edit_model').value = model;
-                document.getElementById('edit_status').value = status;
-                document.getElementById('edit_keterangan').value = keterangan || '';
-                
-                // Update modal title dengan kode proyektor
-                document.getElementById('editProjectorModalLabel').innerHTML = 
-                    `<i class="fas fa-edit"></i> Edit Proyektor - ${kodeProyektor}`;
-            });
-            
-            // Reset form when modal is hidden
-            editModal.addEventListener('hidden.bs.modal', function () {
-                document.getElementById('editProjectorForm').reset();
-                document.getElementById('editProjectorModalLabel').innerHTML = 
-                    `<i class="fas fa-edit"></i> Edit Data Proyektor`;
-            });
-        }
-
-        // Setup form submission handlers
-        function setupFormHandlers() {
-            const createForm = document.getElementById('createProjectorForm');
-            const editForm = document.getElementById('editProjectorForm');
-            const createSubmitBtn = document.getElementById('createSubmitBtn');
-            const editSubmitBtn = document.getElementById('editSubmitBtn');
-
-            if (createForm) {
-                createForm.addEventListener('submit', function() {
-                    createSubmitBtn.disabled = true;
-                    createSubmitBtn.classList.add('btn-loading');
-                });
-            }
-
-            if (editForm) {
-                editForm.addEventListener('submit', function() {
-                    editSubmitBtn.disabled = true;
-                    editSubmitBtn.classList.add('btn-loading');
-                });
-            }
-        }
-
-        // Reset create modal ketika ditutup
-        document.getElementById('createProjectorModal').addEventListener('hidden.bs.modal', function () {
-            const form = document.getElementById('createProjectorForm');
-            form.reset();
-            const submitBtn = document.getElementById('createSubmitBtn');
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('btn-loading');
-            
-            // Clear error messages
-            const errorMessages = form.querySelectorAll('.text-danger');
-            errorMessages.forEach(error => error.remove());
-        });
-
-        // Reset edit modal ketika ditutup
-        document.getElementById('editProjectorModal').addEventListener('hidden.bs.modal', function () {
-            const submitBtn = document.getElementById('editSubmitBtn');
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('btn-loading');
-            
-            // Clear error messages
-            const form = document.getElementById('editProjectorForm');
-            const errorMessages = form.querySelectorAll('.text-danger');
-            errorMessages.forEach(error => error.remove());
-        });
-
-        // Enhanced search functionality
-        document.getElementById('globalSearch').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('filterForm').submit();
-            }
-        });
-
-        // Auto-focus on first input when modal opens
-        document.getElementById('createProjectorModal').addEventListener('shown.bs.modal', function () {
-            document.getElementById('kode_proyektor').focus();
-        });
-
-        document.getElementById('editProjectorModal').addEventListener('shown.bs.modal', function () {
-            document.getElementById('edit_kode_proyektor').focus();
-        });
     </script>
 </body>
 </html>

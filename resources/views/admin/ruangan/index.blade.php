@@ -998,7 +998,7 @@
                     </a>
                     <a href="/admin/dosen" class="dropdown-item">
                         <i class="fas fa-user-tie"></i>
-                        <span>Dosen</span>
+                        <span>pa dosen</span>
                     </a>
                 </div>
             </div>
