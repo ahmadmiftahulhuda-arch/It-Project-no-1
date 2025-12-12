@@ -138,6 +138,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -193,17 +194,17 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
         }
 
-         /* ===== TOMBOL LOGIN ===== */
+        /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -709,17 +710,15 @@
         }
 
         .table td:last-child {
-            width: 150px;
-            min-width: 150px;
+            white-space: nowrap;
         }
 
-        .text-truncate-custom {
-            max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            display: inline-block;
+        .col-keperluan {
+            width: 25%;
+            white-space: normal;
+            word-break: break-word;
         }
+
 
         /* ===== MODAL DETAIL ===== */
         .modal-detail {
@@ -756,6 +755,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1016,7 +1016,7 @@
             }
 
             .table {
-                min-width: 800px;
+                table-layout: auto !important;
             }
 
             .btn-action {
@@ -1153,8 +1153,9 @@
         }
 
         .text-truncate-custom {
-            max-width: 250px;
+            max-width: none !important;
         }
+
 
         .filter-controls {
             display: flex;
@@ -1208,7 +1209,7 @@
                                     <i class="fas fa-clock me-2"></i> Jadwal Kuliah
                                 </a>
                             </li>
-                         
+
                             <li>
                                 <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
@@ -1288,7 +1289,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}"
+                                        href="{{ route('user.settings.index') }}">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -1449,10 +1451,11 @@
                             <th>Ruang</th>
                             <th>Dosen Pengampu</th>
                             <th>Proyektor</th>
-                            <th>Keperluan</th>
-                            <th width="140" class="text-center">Status Peminjaman</th>
-                            <th width="160" class="text-center">Status Pengembalian</th>
-                            <th width="100" class="text-center">Aksi</th>
+                            <th class="col-keperluan">Keperluan</th>
+                            <th class="col-status text-center">Status Peminjaman</th>
+                            <th class="col-status text-center">Status Pengembalian</th>
+                            <th class="col-aksi text-center">Aksi</th>
+
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -1467,9 +1470,8 @@
                                 $selisih = $waktuPengajuan->diffForHumans($now, true);
                             @endphp
 
-                            <tr class="{{ $isOngoing ? 'table-success' : '' }}" 
-                                data-status="{{ $peminjaman->status }}" 
-                                data-ruang="{{ $peminjaman->ruang }}" 
+                            <tr class="{{ $isOngoing ? 'table-success' : '' }}"
+                                data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
                                 data-tanggal="{{ $peminjaman->tanggal }}"
                                 data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '') }}"
                                 data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '') }}"
@@ -1479,7 +1481,7 @@
                                     {{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                 </td>
                                 <td>
-                                    {{ optional($peminjaman->user)->display_name ?? $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}
+                                    {{ optional($peminjaman->user)->display_name ?? ($peminjaman->nama_peminjam ?? 'Tidak tersedia') }}
                                 </td>
 
                                 <td>
@@ -1490,7 +1492,8 @@
                                     <div>
                                         <small class="text-muted">
                                             <i class="fas fa-clock me-1"></i>
-                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }} -
+                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}
+                                            -
                                             {{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}
                                         </small>
                                     </div>
@@ -1506,20 +1509,21 @@
                                 </td>
 
                                 <td>
-                                    <strong>{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor ?? '-') : 'Tidak' }}</strong>
+                                    <strong>{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor ?? '-' : 'Tidak' }}</strong>
                                     <div class="text-muted small mt-1">{{ $peminjaman->projector->merk ?? '' }}</div>
                                 </td>
 
-                                <td>
-                                    <div class="text-truncate-custom">{{ $peminjaman->keperluan ?? '-' }}</div>
+                                <td class="col-keperluan">
+                                    {{ $peminjaman->keperluan ?? '-' }}
                                 </td>
+
 
                                 <td class="text-center">
                                     @php
                                         $pjStatus = optional($peminjaman->pengembalian)->status;
                                     @endphp
 
-                                    @if($isOngoing && $peminjaman->status === 'disetujui')
+                                    @if ($isOngoing && $peminjaman->status === 'disetujui')
                                         <span class="badge status-badge status-berlangsung">
                                             <span class="pulse-dot"></span>
                                             <i class="fas fa-play-circle me-1"></i> Berlangsung
@@ -1527,16 +1531,23 @@
                                     @else
                                         @switch($peminjaman->status)
                                             @case('disetujui')
-                                                <span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                                <span class="badge status-badge status-disetujui"><i
+                                                        class="fas fa-check-circle me-1"></i> Disetujui</span>
                                             @break
+
                                             @case('selesai')
-                                                <span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>
+                                                <span class="badge status-badge status-selesai"><i
+                                                        class="fas fa-check-double me-1"></i> Selesai</span>
                                             @break
+
                                             @case('ditolak')
-                                                <span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                                <span class="badge status-badge status-ditolak"><i
+                                                        class="fas fa-times-circle me-1"></i> Ditolak</span>
                                             @break
+
                                             @default
-                                                <span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>
+                                                <span class="badge status-badge status-menunggu"><i
+                                                        class="fas fa-clock me-1"></i> Menunggu</span>
                                         @endswitch
                                     @endif
                                 </td>
@@ -1545,31 +1556,35 @@
                                     @php
                                         $pj = strtolower($pjStatus ?? '');
                                     @endphp
-                                    @if(in_array($pj, ['overdue','terlambat']))
-                                        <span class="badge status-badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
-                                    @elseif(in_array($pj, ['verified','disetujui']))
-                                        <span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
-                                    @elseif(in_array($pj, ['rejected','ditolak']))
-                                        <span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
-                                    @elseif(in_array($pj, ['pending','menunggu','']))
-                                        <span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
+                                    @if (in_array($pj, ['overdue', 'terlambat']))
+                                        <span class="badge status-badge status-terlambat"><i
+                                                class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                    @elseif(in_array($pj, ['verified', 'disetujui']))
+                                        <span class="badge status-badge status-disetujui"><i
+                                                class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                    @elseif(in_array($pj, ['rejected', 'ditolak']))
+                                        <span class="badge status-badge status-ditolak"><i
+                                                class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                    @elseif(in_array($pj, ['pending', 'menunggu', '']))
+                                        <span class="badge status-badge status-menunggu"><i
+                                                class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
                                     @else
-                                        <span class="badge status-badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
+                                        <span class="badge status-badge status-belum-dikembalikan"><i
+                                                class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
                                     @endif
                                 </td>
 
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-1">
-                                        <button type="button" class="btn btn-info btn-action view-detail" 
-                                            title="Lihat Detail"
-                                            onclick="showDetailModal({currentTarget: this})"
+                                        <button type="button" class="btn btn-info btn-action view-detail"
+                                            title="Lihat Detail" onclick="showDetailModal({currentTarget: this})"
                                             data-id="{{ $peminjaman->id }}"
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
                                             data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}"
                                             data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
                                             data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
-                                            data-projector-label="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '')) : 'Tidak' }}"
+                                            data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}"
                                             data-tanggal-pengembalian="{{ optional($peminjaman->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($peminjaman->pengembalian)->tanggal_pengembalian)->format('d M Y') : '' }}"
@@ -1578,11 +1593,11 @@
                                             data-kondisi-ruang="{{ optional($peminjaman->pengembalian)->kondisi_ruang ?? '' }}"
                                             data-kondisi-proyektor="{{ optional($peminjaman->pengembalian)->kondisi_proyektor ?? '' }}"
                                             data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '-' }}"
-                                            data-nama-peminjam="{{ optional($peminjaman->user)->display_name ?? $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
-                                            data-nim="{{ optional($peminjaman->user)->nim ?? $peminjaman->nim ?? 'Tidak tersedia' }}"
-                                            data-prodi="{{ optional($peminjaman->user)->prodi ?? $peminjaman->prodi ?? 'Tidak tersedia' }}"
-                                            data-no-hp="{{ optional($peminjaman->user)->no_hp ?? $peminjaman->no_hp ?? 'Tidak tersedia' }}"
-                                            data-email="{{ optional($peminjaman->user)->email ?? $peminjaman->email ?? 'Tidak tersedia' }}"
+                                            data-nama-peminjam="{{ optional($peminjaman->user)->display_name ?? ($peminjaman->nama_peminjam ?? 'Tidak tersedia') }}"
+                                            data-nim="{{ optional($peminjaman->user)->nim ?? ($peminjaman->nim ?? 'Tidak tersedia') }}"
+                                            data-prodi="{{ optional($peminjaman->user)->prodi ?? ($peminjaman->prodi ?? 'Tidak tersedia') }}"
+                                            data-no-hp="{{ optional($peminjaman->user)->no_hp ?? ($peminjaman->no_hp ?? 'Tidak tersedia') }}"
+                                            data-email="{{ optional($peminjaman->user)->email ?? ($peminjaman->email ?? 'Tidak tersedia') }}"
                                             data-diajukan="{{ $waktuPengajuan->format('d M Y H:i') }}"
                                             data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
                                             <i class="fas fa-eye"></i>
@@ -1676,7 +1691,7 @@
                 </div>
                 <div class="modal-body-custom">
 
-                                        <div class="detail-section">
+                    <div class="detail-section">
                         <h4><i class="fas fa-user"></i> Informasi Peminjam</h4>
                         <div class="detail-row">
                             <div class="detail-label">Nama Peminjam</div>
@@ -1686,7 +1701,7 @@
                             <div class="detail-label">NIM</div>
                             <div class="detail-value" id="detail-nim"></div>
                         </div>
-                        <div class="detail-row">
+                        <div class="detail-row" id="row-prodi">
                             <div class="detail-label">Program Studi</div>
                             <div class="detail-value" id="detail-prodi"></div>
                         </div>
@@ -1865,12 +1880,13 @@
             document.addEventListener('DOMContentLoaded', function() {
                 // Handle dropdown toggle animation
                 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-                
+
                 dropdownToggles.forEach(toggle => {
                     toggle.addEventListener('click', function() {
                         // Close other open dropdowns
                         dropdownToggles.forEach(otherToggle => {
-                            if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                            if (otherToggle !== toggle && otherToggle.classList.contains(
+                                    'show')) {
                                 otherToggle.classList.remove('show');
                                 const otherMenu = otherToggle.nextElementSibling;
                                 if (otherMenu && otherMenu.classList.contains('show')) {
@@ -1880,11 +1896,12 @@
                         });
                     });
                 });
-                
+
                 // Close dropdowns when clicking outside
                 document.addEventListener('click', function(e) {
                     if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                        const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                        const openDropdowns = document.querySelectorAll(
+                            '.dropdown-toggle.show, .dropdown-menu.show');
                         openDropdowns.forEach(element => {
                             element.classList.remove('show');
                         });
@@ -1920,7 +1937,7 @@
             // Fungsi untuk menampilkan modal detail
             function showDetailModal(event) {
                 const button = event.currentTarget;
-                
+
                 // Ambil data dari atribut data-*
                 const tanggal = button.getAttribute('data-tanggal');
                 const waktuMulai = button.getAttribute('data-waktu-mulai');
@@ -1952,7 +1969,11 @@
                 document.getElementById('detail-keperluan').textContent = keperluan;
                 document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
                 document.getElementById('detail-nim').textContent = nim;
-                document.getElementById('detail-prodi').textContent = prodi;
+                // SEMBUNYIKAN PROGRAM STUDI DI MODAL
+                const rowProdi = document.getElementById('row-prodi');
+                if (rowProdi) {
+                    rowProdi.style.display = 'none';
+                }
                 document.getElementById('detail-no-hp').textContent = noHp;
                 document.getElementById('detail-email').textContent = email;
                 document.getElementById('detail-diajukan').textContent = diajukan;
@@ -1968,29 +1989,36 @@
                 const pj = (statusPengembalian || '').toString().toLowerCase();
                 let pjHtml = '';
                 if (pj === 'verified' || pj === 'disetujui') {
-                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (
+                        waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
                 } else if (pj === 'pending' || pj === 'menunggu') {
-                    pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    pjHtml = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (
+                        waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
                 } else if (pj === 'rejected' || pj === 'ditolak') {
-                    pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    pjHtml = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (
+                        waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
                 } else if (pj === 'overdue' || pj === 'terlambat') {
-                    pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
+                    pjHtml = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (
+                        waktuPengembalian ? ' (' + waktuPengembalian + ')' : '') + '</span>';
                 } else if (waktuPengembalian) {
-                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + waktuPengembalian + ')</span>';
+                    pjHtml = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' +
+                        waktuPengembalian + ')</span>';
                 } else {
-                    pjHtml = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
+                    pjHtml =
+                        '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
                 }
                 pjEl.innerHTML = pjHtml;
 
                 // Set status dengan badge yang sesuai
                 const statusBadge = document.getElementById('detail-status');
                 statusBadge.className = 'status-badge';
-                
+
                 if (isOngoing) {
                     statusBadge.classList.add('status-berlangsung');
-                    statusBadge.innerHTML = '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
+                    statusBadge.innerHTML =
+                        '<span class="pulse-dot"></span><i class="fas fa-play-circle me-1"></i> Berlangsung';
                 } else {
-                    switch(status) {
+                    switch (status) {
                         case 'disetujui':
                             statusBadge.classList.add('status-disetujui');
                             statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i> Disetujui';
