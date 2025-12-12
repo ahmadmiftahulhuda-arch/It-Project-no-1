@@ -1269,16 +1269,14 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Peminjam</th>
-                                    <th>Dosen Pengampu</th>
                                     <th>Tanggal</th>
                                     <th>Ruang</th>
                                     <th>Proyektor</th>
-                                    <th>Keperluan</th>
                                     <th>Status Peminjaman</th>
                                     <th>Status Pengembalian</th>
                                     <th>Aksi</th>
-                                <tr>
-                                <td colspan="10" class="empty-state">
+                                </tr>
+                            </thead>
                             <tbody id="riwayat-table-body">
                                 @forelse($riwayat as $item)
                                     @php
@@ -1290,9 +1288,13 @@
                                         $isLate = false;
                                         try {
                                             // Compute booking end datetime using waktu_selesai when available
-                                            $end = $item->waktu_selesai ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai) : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
+                                            $end = $item->waktu_selesai
+                                                ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai)
+                                                : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
                                             if ($pj && $pj->tanggal_pengembalian) {
-                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->greaterThan($end);
+                                                $isLate = \Carbon\Carbon::parse($pj->tanggal_pengembalian)->greaterThan(
+                                                    $end,
+                                                );
                                             }
                                         } catch (\Exception $e) {
                                             $isLate = false;
@@ -1300,8 +1302,13 @@
 
                                         $duePassed = false;
                                         try {
-                                            $end = $item->waktu_selesai ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai) : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
-                                            $duePassed = !$pj && \Carbon\Carbon::now()->greaterThan($end) && $item->status == 'disetujui';
+                                            $end = $item->waktu_selesai
+                                                ? \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai)
+                                                : \Carbon\Carbon::parse($item->tanggal)->endOfDay();
+                                            $duePassed =
+                                                !$pj &&
+                                                \Carbon\Carbon::now()->greaterThan($end) &&
+                                                $item->status == 'disetujui';
                                         } catch (\Exception $e) {
                                             $duePassed = false;
                                         }
@@ -1323,7 +1330,6 @@
                                                 {{ $item->user->name ?? 'Guest' }}
                                             </div>
                                         </td>
-                                        <td>{{ $item->dosen->nama_dosen ?? '-' }}</td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                                             <br>
@@ -1338,15 +1344,13 @@
                                             @if ($item->projector)
                                                 <div>
                                                     <strong>{{ $item->projector->kode_proyektor ?? 'ID:' . $item->projector->id }}</strong>
-                                                    <div class="text-muted small">{{ $item->projector->merk ?? '' }}
+                                                    <div class="text-muted small">
+                                                        {{ $item->projector->merk ?? '' }}
                                                         {{ $item->projector->model ?? '' }}</div>
                                                 </div>
                                             @else
                                                 <span class="badge bg-secondary">Tidak</span>
                                             @endif
-                                        </td>
-                                        <td title="{{ $item->keperluan }}">
-                                            {{ \Illuminate\Support\Str::limit($item->keperluan, 40) }}
                                         </td>
                                         <td>
                                             @if ($isOngoing)
@@ -1380,27 +1384,41 @@
                                         <td>
                                             @if ($pj)
                                                 @php $pjStatus = $pj->status; @endphp
-                                                @if (in_array($pjStatus, ['verified','disetujui']))
-                                                    <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                                @if (in_array($pjStatus, ['verified', 'disetujui']))
+                                                    <span class="badge status-disetujui"><i
+                                                            class="fas fa-check-circle me-1"></i> Disetujui</span>
                                                 @elseif (in_array($pjStatus, ['pending']))
-                                                    <span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
-                                                @elseif (in_array($pjStatus, ['rejected','ditolak']))
-                                                    <span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
-                                                @elseif (in_array($pjStatus, ['overdue','terlambat']))
-                                                    <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                                    <span class="badge status-menunggu"><i
+                                                            class="fas fa-clock me-1"></i> Menunggu
+                                                        Verifikasi</span>
+                                                @elseif (in_array($pjStatus, ['rejected', 'ditolak']))
+                                                    <span class="badge status-ditolak"><i
+                                                            class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                                @elseif (in_array($pjStatus, ['overdue', 'terlambat']))
+                                                    <span class="badge status-terlambat"><i
+                                                            class="fas fa-exclamation-circle me-1"></i>
+                                                        Terlambat</span>
                                                 @elseif ($isLate)
-                                                    <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                                    <span class="badge status-terlambat"><i
+                                                            class="fas fa-exclamation-circle me-1"></i>
+                                                        Terlambat</span>
                                                 @else
-                                                    <span class="badge status-badge">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
+                                                    <span
+                                                        class="badge status-badge">{{ ucfirst(str_replace('_', ' ', $pjStatus)) }}</span>
                                                 @endif
                                             @else
                                                 {{-- Tidak ada pengembalian yang tercatat untuk peminjaman ini --}}
                                                 @if ($duePassed)
-                                                    <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                                    <span class="badge status-terlambat"><i
+                                                            class="fas fa-exclamation-circle me-1"></i>
+                                                        Terlambat</span>
                                                 @elseif($item->status == 'selesai')
-                                                    <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                                    <span class="badge status-disetujui"><i
+                                                            class="fas fa-check-circle me-1"></i> Disetujui</span>
                                                 @else
-                                                    <span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
+                                                    <span class="badge status-belum-dikembalikan"><i
+                                                            class="fas fa-box-open me-1"></i> Belum
+                                                        Dikembalikan</span>
                                                 @endif
                                             @endif
                                         </td>
@@ -1408,24 +1426,36 @@
                                             <div class="d-flex gap-2 action-buttons">
                                                 <!-- Tombol Detail -->
                                                 <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#detailModal" data-id="{{ $item->id }}"
+                                                    data-bs-target="#detailModal" {{-- ID --}}
+                                                    data-id="{{ $item->id }}" {{-- Peminjam --}}
                                                     data-peminjam="{{ $item->user->name ?? 'Guest' }}"
-                                                    data-dosen="{{ $item->dosen->nama_dosen ?? '' }}"
-                                                    data-dosen-nip="{{ $item->dosen_nip ?? '' }}"
-                                                    data-tanggal="{{ $item->tanggal }}"
-                                                    data-waktu-mulai="{{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '') }}"
-                                                    data-waktu-selesai="{{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '') }}"
-                                                    data-ruang="{{ $item->ruangan->nama_ruangan ?? $item->ruang }}"
-                                                    data-projector-id="{{ $item->projector->id ?? '' }}"
-                                                    data-projector-label="{{ $item->projector ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') : 'Tidak' }}"
-                                                    data-keperluan="{{ $item->keperluan }}"
-                                                    data-status="{{ $item->status }}"
-                                                    data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '' }}"
-                                                    data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '' }}"
-                                                    data-waktu-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($item->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}"
-                                                    data-keterangan="{{ $item->catatan ?? '-' }}">
+                                                    {{-- Dosen --}}
+                                                    data-dosen="{{ $item->dosen->nama_dosen ?? '-' }}"
+                                                    data-dosen-nip="{{ $item->dosen->nip ?? '-' }}"
+                                                    {{-- Tanggal & Waktu --}} data-tanggal="{{ $item->tanggal }}"
+                                                    data-waktu-mulai="{{ $item->display_waktu_mulai ?? ($item->waktu_mulai ?? '-') }}"
+                                                    data-waktu-selesai="{{ $item->display_waktu_selesai ?? ($item->waktu_selesai ?? '-') }}"
+                                                    {{-- Ruang & Proyektor --}}
+                                                    data-ruang="{{ $item->ruangan->nama_ruangan ?? ($item->ruang ?? '-') }}"
+                                                    data-projector-label="{{ $item->projector
+                                                        ? $item->projector->kode_proyektor . ' - ' . ($item->projector->merk ?? '') . ' ' . ($item->projector->model ?? '')
+                                                        : 'Tidak ada' }}"
+                                                    {{-- Keperluan --}}
+                                                    data-keperluan="{{ $item->keperluan ?? '-' }}"
+                                                    {{-- Status --}} data-status="{{ $item->status }}"
+                                                    data-status-pengembalian="{{ optional($item->pengembalian)->status ?? '-' }}"
+                                                    {{-- Pengembalian --}}
+                                                    data-tanggal-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ?? '-' }}"
+                                                    data-waktu-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian
+                                                        ? \Carbon\Carbon::parse(optional($item->pengembalian)->tanggal_pengembalian)->format('H:i')
+                                                        : '-' }}"
+                                                    {{-- Catatan --}}
+                                                    data-keterangan="{{ $item->catatan ?? '-' }}"
+                                                    {{-- Audit --}} data-created="{{ $item->created_at }}"
+                                                    data-updated="{{ $item->updated_at }}">
                                                     <i class="fas fa-eye me-1"></i> Detail
                                                 </button>
+
 
                                                 <!-- Tombol Edit -->
                                                 <button class="btn btn-edit-custom btn-sm" data-bs-toggle="modal"
@@ -1568,28 +1598,37 @@
                                     <div class="col-md-6">
                                         <strong>Status Pengembalian:</strong>
                                         @php $pj = $item->pengembalian ?? null; @endphp
-                                        @if($pj)
+                                        @if ($pj)
                                             @php $pjStatus = $pj->status; @endphp
-                                            @if(in_array($pjStatus, ['verified','disetujui']))
-                                                <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                            @if (in_array($pjStatus, ['verified', 'disetujui']))
+                                                <span class="badge status-disetujui"><i
+                                                        class="fas fa-check-circle me-1"></i> Disetujui</span>
                                             @elseif(in_array($pjStatus, ['pending']))
-                                                <span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
-                                            @elseif(in_array($pjStatus, ['rejected','ditolak']))
-                                                <span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>
-                                            @elseif(in_array($pjStatus, ['overdue','terlambat']))
-                                                <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                                <span class="badge status-menunggu"><i class="fas fa-clock me-1"></i>
+                                                    Menunggu Verifikasi</span>
+                                            @elseif(in_array($pjStatus, ['rejected', 'ditolak']))
+                                                <span class="badge status-ditolak"><i
+                                                        class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                            @elseif(in_array($pjStatus, ['overdue', 'terlambat']))
+                                                <span class="badge status-terlambat"><i
+                                                        class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                             @else
-                                                <span class="badge status-badge">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
+                                                <span
+                                                    class="badge status-badge">{{ ucfirst(str_replace('_', ' ', $pjStatus)) }}</span>
                                             @endif
                                         @else
-                                            @if(
-                                                (!optional($item->pengembalian)->status && \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) && $item->status == 'disetujui')
-                                            )
-                                                <span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                            @if (
+                                                !optional($item->pengembalian)->status &&
+                                                    \Carbon\Carbon::parse($item->tanggal)->lt(\Carbon\Carbon::now()) &&
+                                                    $item->status == 'disetujui')
+                                                <span class="badge status-terlambat"><i
+                                                        class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
                                             @elseif($item->status == 'selesai')
-                                                <span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                                <span class="badge status-disetujui"><i
+                                                        class="fas fa-check-circle me-1"></i> Disetujui</span>
                                             @else
-                                                <span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
+                                                <span class="badge status-belum-dikembalikan"><i
+                                                        class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
                                             @endif
                                         @endif
                                     </div>
@@ -1655,10 +1694,116 @@
         <!-- Modal Detail Riwayat -->
         <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-eye me-2"></i> Detail Riwayat
+                        <h5 class="modal-title" id="detailModalLabel">
+                            <i class="fas fa-eye me-2"></i> Detail Riwayat Peminjaman
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <!-- ================= IDENTITAS ================= -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">ID Peminjaman</label>
+                                <p id="detail_id"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Peminjam</label>
+                                <p id="detail_peminjam"></p>
+                            </div>
+
+                            <!-- ================= DOSEN & WAKTU ================= -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dosen Pengampu</label>
+                                <p id="detail_dosen"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tanggal Peminjaman</label>
+                                <p id="detail_tanggal"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Waktu</label>
+                                <p id="detail_waktu"></p>
+                            </div>
+
+                            <!-- ================= LOKASI & SARANA ================= -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Ruang</label>
+                                <p id="detail_ruang"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Proyektor</label>
+                                <p id="detail_proyektor"></p>
+                            </div>
+
+                            <!-- ================= KEPERLUAN ================= -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Keperluan</label>
+                                <p id="detail_keperluan"></p>
+                            </div>
+
+                            <!-- ================= STATUS ================= -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Status Peminjaman</label>
+                                <p id="detail_status"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Status Pengembalian</label>
+                                <p id="detail_status_pengembalian"></p>
+                            </div>
+
+                            <!-- ================= CATATAN ================= -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Catatan / Keterangan</label>
+                                <p id="detail_keterangan"></p>
+                            </div>
+
+                            <!-- ================= AUDIT ================= -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dibuat Pada</label>
+                                <p id="detail_created"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Terakhir Diubah</label>
+                                <p id="detail_updated"></p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+    <!-- Modal Edit Riwayat -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel"><i class="fas fa-edit me-2"></i> Edit Riwayat
                             Peminjaman</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
@@ -1667,541 +1812,507 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Peminjam</label>
-                                <p id="detail_peminjam"></p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Dosen Pengampu</label>
-                                <p id="detail_dosen"></p>
+                                <input type="text" class="form-control" id="edit_peminjam" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Tanggal Peminjaman</label>
-                                <p id="detail_tanggal"></p>
+                                <input type="date" class="form-control" id="edit_tanggal" name="tanggal"
+                                    required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Ruang</label>
-                                <p id="detail_ruang"></p>
+                                <label class="form-label fw-bold">Ruangan</label>
+                                <select class="form-select" id="edit_ruangan_id" name="ruangan_id" required>
+                                    <option value="">-- Pilih Ruangan --</option>
+                                    @foreach ($ruangans as $ruangan)
+                                        <option value="{{ $ruangan->id }}">{{ $ruangan->nama_ruangan }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Proyektor</label>
-                                <p id="detail_proyektor"></p>
+                                <select class="form-select" id="edit_projector_id" name="projector_id">
+                                    <option value="">-- Tidak Ada --</option>
+                                    @foreach ($projectors as $projector)
+                                        <option value="{{ $projector->id }}">{{ $projector->kode_proyektor }} -
+                                            {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Keperluan</label>
-                                <p id="detail_keperluan"></p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Status Peminjaman</label>
-                                <p id="detail_status"></p>
+                                <textarea class="form-control" id="edit_keperluan" name="keperluan" rows="3" required></textarea>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Status Pengembalian</label>
-                                <p id="detail_status_pengembalian"></p>
+                                <select class="form-select" id="edit_pengembalian_status" name="pengembalian_status">
+                                    <option value="">-- Tidak Ada Pengembalian --</option>
+                                    <option value="pending">Menunggu</option>
+                                    <option value="verified">Disetujui</option>
+                                    <option value="rejected">Ditolak</option>
+                                    <option value="overdue">Terlambat</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tanggal Pengembalian</label>
+                                <input type="date" class="form-control" id="edit_tanggal_pengembalian"
+                                    name="tanggal_pengembalian">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Status Peminjaman</label>
+                                <select class="form-select" id="edit_status" name="status" required>
+                                    <option value="pending">Menunggu</option>
+                                    <option value="disetujui">Disetujui</option>
+                                    <option value="berlangsung">Berlangsung</option>
+                                    <option value="ditolak">Ditolak</option>
+                                    <option value="selesai">Selesai</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Waktu Mulai</label>
+                                <input type="time" class="form-control" id="edit_waktu_mulai" name="waktu_mulai">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Waktu Selesai</label>
+                                <input type="time" class="form-control" id="edit_waktu_selesai"
+                                    name="waktu_selesai">
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label fw-bold">Keterangan</label>
-                                <p id="detail_keterangan"></p>
+                                <label class="form-label fw-bold">Catatan</label>
+                                <textarea class="form-control" id="edit_catatan" name="catatan" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary" onclick="cetakDetail()">
-                            <i class="fas fa-print me-1"></i> Cetak
+                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Simpan Perubahan
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Modal Edit Riwayat -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form id="editForm" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel"><i class="fas fa-edit me-2"></i> Edit Riwayat
-                                Peminjaman</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+    <!-- Modal Hapus Riwayat -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel"><i class="fas fa-trash me-2"></i> Hapus
+                            Riwayat Peminjaman</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Apakah Anda yakin ingin menghapus riwayat peminjaman ini?</p>
+                        <div class="alert alert-warning">
+                            <strong>Peminjam:</strong> <span id="delete_peminjam"></span><br>
+                            <strong>Tanggal:</strong> <span id="delete_tanggal"></span>
                         </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Peminjam</label>
-                                    <input type="text" class="form-control" id="edit_peminjam" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Tanggal Peminjaman</label>
-                                    <input type="date" class="form-control" id="edit_tanggal" name="tanggal"
-                                        required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Ruangan</label>
-                                    <select class="form-select" id="edit_ruangan_id" name="ruangan_id" required>
-                                        <option value="">-- Pilih Ruangan --</option>
-                                        @foreach ($ruangans as $ruangan)
-                                            <option value="{{ $ruangan->id }}">{{ $ruangan->nama_ruangan }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Proyektor</label>
-                                    <select class="form-select" id="edit_projector_id" name="projector_id">
-                                        <option value="">-- Tidak Ada --</option>
-                                        @foreach ($projectors as $projector)
-                                            <option value="{{ $projector->id }}">{{ $projector->kode_proyektor }} -
-                                                {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label fw-bold">Keperluan</label>
-                                    <textarea class="form-control" id="edit_keperluan" name="keperluan" rows="3" required></textarea>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Status Pengembalian</label>
-                                    <select class="form-select" id="edit_pengembalian_status"
-                                        name="pengembalian_status">
-                                        <option value="">-- Tidak Ada Pengembalian --</option>
-                                        <option value="pending">Menunggu</option>
-                                        <option value="verified">Disetujui</option>
-                                        <option value="rejected">Ditolak</option>
-                                        <option value="overdue">Terlambat</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Tanggal Pengembalian</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_pengembalian"
-                                        name="tanggal_pengembalian">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Status Peminjaman</label>
-                                    <select class="form-select" id="edit_status" name="status" required>
-                                        <option value="pending">Menunggu</option>
-                                        <option value="disetujui">Disetujui</option>
-                                        <option value="berlangsung">Berlangsung</option>
-                                        <option value="ditolak">Ditolak</option>
-                                        <option value="selesai">Selesai</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_mulai"
-                                        name="waktu_mulai">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_selesai"
-                                        name="waktu_selesai">
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label fw-bold">Catatan</label>
-                                    <textarea class="form-control" id="edit_catatan" name="catatan" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Simpan Perubahan
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                        <p class="text-danger">Tindakan ini tidak dapat dibatalkan!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Hapus
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Modal Hapus Riwayat -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel"><i class="fas fa-trash me-2"></i> Hapus
-                                Riwayat Peminjaman</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Apakah Anda yakin ingin menghapus riwayat peminjaman ini?</p>
-                            <div class="alert alert-warning">
-                                <strong>Peminjam:</strong> <span id="delete_peminjam"></span><br>
-                                <strong>Tanggal:</strong> <span id="delete_tanggal"></span>
-                            </div>
-                            <p class="text-danger">Tindakan ini tidak dapat dibatalkan!</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash me-1"></i> Hapus
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
 
-        <div class="menu-toggle" id="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle theme
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Toggle theme
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
 
-                if (document.body.classList.contains('dark-mode')) {
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                    localStorage.setItem('darkMode', 'enabled');
+        // Toggle sidebar on mobile
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Auto-submit form search ketika mengetik (dengan debounce)
+        let searchTimeout;
+        const searchInputs = document.querySelectorAll('input[name="search"]');
+
+        searchInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    console.log('Auto-submitting search:', this.value);
+                    const form = this.closest('form');
+                    if (form) {
+                        form.submit();
+                    }
+                }, 800);
+            });
+        });
+
+        // Auto-submit filter ketika perubahan select box
+        const filterSelects = document.querySelectorAll('#filterForm select');
+        filterSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                console.log('Filter changed:', this.name, this.value);
+                document.getElementById('filterForm').submit();
+            });
+        });
+
+        // Handler untuk modal detail
+        const detailModal = document.getElementById('detailModal');
+        if (detailModal) {
+            detailModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const peminjam = button.getAttribute('data-peminjam');
+                const dosen = button.getAttribute('data-dosen');
+                const dosenNip = button.getAttribute('data-dosen-nip');
+                const tanggal = button.getAttribute('data-tanggal');
+                const waktuMulai = button.getAttribute('data-waktu-mulai');
+                const waktuSelesai = button.getAttribute('data-waktu-selesai');
+                const ruang = button.getAttribute('data-ruang');
+                const proyektor = button.getAttribute('data-projector-label');
+                const keperluan = button.getAttribute('data-keperluan');
+                const status = button.getAttribute('data-status');
+                const statusPengembalian = button.getAttribute('data-status-pengembalian');
+                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
+                const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
+                const keterangan = button.getAttribute('data-keterangan');
+                const created = button.getAttribute('data-created');
+                const updated = button.getAttribute('data-updated');
+
+                // Isi data detail 
+                document.getElementById('detail_id').textContent = id;
+                document.getElementById('detail_peminjam').textContent = peminjam;
+                document.getElementById('detail_dosen').textContent = dosen + (dosenNip !== '-' ? ` (${dosenNip})` :
+                    '');
+                document.getElementById('detail_tanggal').textContent = formatDate(tanggal);
+                document.getElementById('detail_waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
+                document.getElementById('detail_ruang').textContent = ruang;
+                document.getElementById('detail_proyektor').textContent = proyektor;
+                document.getElementById('detail_keperluan').textContent = keperluan;
+                document.getElementById('detail_keterangan').textContent = keterangan;
+                document.getElementById('detail_created').textContent = formatDate(created);
+                document.getElementById('detail_updated').textContent = formatDate(updated);
+
+
+                // Tampilkan juga waktu jatuh tempo / pengembalian jika ada
+                if (waktuSelesai) {
+                    const el = document.getElementById('detail_tanggal');
+                    el.innerHTML += '<br><small class="text-muted">Slot: ' + formatTime(waktuMulai) + ' - ' +
+                        formatTime(waktuSelesai) + '</small>';
+                }
+
+                // Format status peminjaman
+                let statusText = '';
+                if (status === 'selesai') {
+                    statusText =
+                        '<span class="badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
+                } else if (status === 'disetujui') {
+                    statusText =
+                        '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                } else if (status === 'berlangsung') {
+                    statusText =
+                        '<span class="badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
+                } else if (status === 'ditolak') {
+                    statusText =
+                        '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
                 } else {
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                    localStorage.setItem('darkMode', 'disabled');
+                    statusText =
+                        '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
                 }
+                document.getElementById('detail_status').innerHTML = statusText;
+
+                // Format status pengembalian (gunakan nilai DB canonical)
+                let statusPengembalianText = '';
+                const pj = (statusPengembalian || '').toString().toLowerCase();
+                if (pj === 'verified' || pj === 'disetujui') {
+                    statusPengembalianText =
+                        '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' +
+                        (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                } else if (pj === 'pending' || pj === 'menunggu') {
+                    statusPengembalianText =
+                        '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' +
+                        (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                } else if (pj === 'rejected' || pj === 'ditolak') {
+                    statusPengembalianText =
+                        '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (
+                            waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                } else if (pj === 'overdue' || pj === 'terlambat') {
+                    statusPengembalianText =
+                        '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' +
+                        (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                } else if (waktuPengembalian) {
+                    statusPengembalianText =
+                        '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' +
+                        formatTime(waktuPengembalian) + ')</span>';
+                } else {
+                    statusPengembalianText =
+                        '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
+                }
+                document.getElementById('detail_status_pengembalian').innerHTML = statusPengembalianText;
+
+                document.getElementById('detail_keterangan').textContent = keterangan || '-';
             });
+        }
 
-            // Toggle sidebar on mobile
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.querySelector('.sidebar');
+        // Handler untuk modal edit
+        const editModal = document.getElementById('editModal');
+        if (editModal) {
+            editModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const peminjam = button.getAttribute('data-peminjam');
+                const tanggal = button.getAttribute('data-tanggal');
+                const ruanganId = button.getAttribute('data-ruangan-id') || button.getAttribute('data-ruang-id') ||
+                    button.getAttribute('data-ruang');
+                const projectorId = button.getAttribute('data-projector-id') || button.getAttribute(
+                    'data-projector') || '';
+                const waktuMulai = button.getAttribute('data-waktu_mulai') || button.getAttribute(
+                    'data-waktu-mulai') || '';
+                const waktuSelesai = button.getAttribute('data-waktu_selesai') || button.getAttribute(
+                    'data-waktu-selesai') || '';
+                let statusPengembalian = button.getAttribute('data-status-pengembalian') || button.getAttribute(
+                    'data-status_pengembalian') || '';
+                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || button.getAttribute(
+                    'data-tanggal_pengembalian') || '';
+                const keperluan = button.getAttribute('data-keperluan') || button.getAttribute('data-keperluan') ||
+                    '';
+                const status = button.getAttribute('data-status') || '';
+                const catatan = button.getAttribute('data-catatan') || button.getAttribute('data-keterangan') || '';
 
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
+                // Normalize display value 'terlambat' to DB-safe 'overdue' for the select
+                if (statusPengembalian === 'terlambat') {
+                    statusPengembalian = 'overdue';
+                }
+
+                // Update form action URL
+                const form = document.getElementById('editForm');
+                form.action = `/admin/riwayat/${id}`;
+
+                // Normalize date to YYYY-MM-DD for input[type=date]
+                function normalizeDateForInput(d) {
+                    if (!d) return '';
+                    // If already in YYYY-MM-DD format, return as-is
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+                    // Try parsing with Date
+                    const parsed = new Date(d);
+                    if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
+                    // Fallback: try common US format MM/DD/YYYY
+                    const parts = d.split('/');
+                    if (parts.length === 3) {
+                        const mm = parts[0].padStart(2, '0');
+                        const dd = parts[1].padStart(2, '0');
+                        const yyyy = parts[2];
+                        return `${yyyy}-${mm}-${dd}`;
+                    }
+                    return '';
+                }
+
+                // Normalize time to HH:MM (24-hour) for input[type=time]
+                function normalizeTimeForInput(t) {
+                    if (!t) return '';
+                    t = t.trim();
+                    // If contains AM/PM, convert
+                    const ampmMatch = t.match(/(\d{1,2}:\d{2})(?:[:\d{2}]*)?\s*(AM|PM)/i);
+                    if (ampmMatch) {
+                        let [, timePart, ampm] = ampmMatch;
+                        let [hh, mm] = timePart.split(':').map(s => parseInt(s, 10));
+                        if (ampm.toUpperCase() === 'PM' && hh < 12) hh += 12;
+                        if (ampm.toUpperCase() === 'AM' && hh === 12) hh = 0;
+                        return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+                    }
+                    // If time includes seconds like 15:30:00, strip seconds
+                    const secMatch = t.match(/^(\d{1,2}:\d{2}):\d{2}$/);
+                    if (secMatch) return secMatch[1].padStart(5, '0');
+                    // If already HH:MM or H:MM, pad
+                    const simpleMatch = t.match(/^(\d{1,2}:\d{2})$/);
+                    if (simpleMatch) {
+                        const [hh, mm] = simpleMatch[1].split(':').map(s => s.padStart(2, '0'));
+                        return `${hh}:${mm}`;
+                    }
+                    // Last resort: try parsing as Date and extract time
+                    const dt = new Date(`1970-01-01T${t}`);
+                    if (!isNaN(dt)) return dt.toTimeString().slice(0, 5);
+                    return '';
+                }
+
+                // Isi data form
+                document.getElementById('edit_peminjam').value = peminjam;
+                document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
+                document.getElementById('edit_ruangan_id').value = ruanganId || '';
+                document.getElementById('edit_projector_id').value = projectorId || '';
+                document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai) || '';
+                document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai) || '';
+                document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
+                document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
+                document.getElementById('edit_keperluan').value = keperluan;
+                document.getElementById('edit_catatan').value = catatan || '';
+
+                // Handle status peminjaman
+                let statusValue = status;
+                const today = new Date().toISOString().split('T')[0];
+
+                // Jika status adalah disetujui dan tanggal hari ini, tampilkan sebagai berlangsung
+                if (status === 'disetujui' && tanggal === today) {
+                    statusValue = 'berlangsung';
+                }
+                document.getElementById('edit_status').value = statusValue;
+
+                // Debug log
+                console.log('Data yang akan diisi:', {
+                    id,
+                    peminjam,
+                    tanggal,
+                    ruanganId,
+                    projectorId,
+                    keperluan,
+                    status,
+                    catatan,
+                    selectedStatus: statusValue
+                });
             });
+        }
 
-            // Auto-submit form search ketika mengetik (dengan debounce)
-            let searchTimeout;
-            const searchInputs = document.querySelectorAll('input[name="search"]');
+        // Handler untuk modal hapus
+        const deleteModal = document.getElementById('deleteModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const peminjam = button.getAttribute('data-peminjam');
+                const tanggal = button.getAttribute('data-tanggal');
 
-            searchInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        console.log('Auto-submitting search:', this.value);
-                        const form = this.closest('form');
-                        if (form) {
-                            form.submit();
-                        }
-                    }, 800);
-                });
+                // Update form action URL
+                const form = document.getElementById('deleteForm');
+                form.action = `/admin/riwayat/${id}`;
+
+                // Isi data konfirmasi
+                document.getElementById('delete_peminjam').textContent = peminjam;
+                document.getElementById('delete_tanggal').textContent = formatDate(tanggal);
             });
+        }
 
-            // Auto-submit filter ketika perubahan select box
-            const filterSelects = document.querySelectorAll('#filterForm select');
-            filterSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    console.log('Filter changed:', this.name, this.value);
-                    document.getElementById('filterForm').submit();
-                });
+        // Format tanggal
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
             });
+        }
 
-            // Handler untuk modal detail
-            const detailModal = document.getElementById('detailModal');
-            if (detailModal) {
-                detailModal.addEventListener('show.bs.modal', function(event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const peminjam = button.getAttribute('data-peminjam');
-                    const tanggal = button.getAttribute('data-tanggal');
-                    const ruang = button.getAttribute('data-ruang');
-                    const proyektor = button.getAttribute('data-projector-label') || button.getAttribute(
-                        'data-proyektor');
-                    const waktuMulai = button.getAttribute('data-waktu-mulai');
-                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                    const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
-                    const keperluan = button.getAttribute('data-keperluan');
-                    const status = button.getAttribute('data-status');
-                    const statusPengembalian = button.getAttribute('data-status-pengembalian');
-                    const keterangan = button.getAttribute('data-keterangan');
-                    const dosen = button.getAttribute('data-dosen');
-
-                    // Isi data detail (tanggal + waktu)
-                    document.getElementById('detail_peminjam').textContent = peminjam;
-                    document.getElementById('detail_dosen').textContent = dosen || '-';
-                    document.getElementById('detail_tanggal').textContent = formatDate(tanggal) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
-                    document.getElementById('detail_ruang').textContent = ruang;
-                    document.getElementById('detail_proyektor').textContent = proyektor;
-                    document.getElementById('detail_keperluan').textContent = keperluan;
-
-                    // Tampilkan juga waktu jatuh tempo / pengembalian jika ada
-                    if (waktuSelesai) {
-                        const el = document.getElementById('detail_tanggal');
-                        el.innerHTML += '<br><small class="text-muted">Slot: ' + formatTime(waktuMulai) + ' - ' + formatTime(waktuSelesai) + '</small>';
-                    }
-
-                    // Format status peminjaman
-                    let statusText = '';
-                    if (status === 'selesai') {
-                        statusText =
-                            '<span class="badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
-                    } else if (status === 'disetujui') {
-                        statusText =
-                            '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
-                    } else if (status === 'berlangsung') {
-                        statusText =
-                            '<span class="badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
-                    } else if (status === 'ditolak') {
-                        statusText =
-                            '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
-                    } else {
-                        statusText =
-                            '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
-                    }
-                    document.getElementById('detail_status').innerHTML = statusText;
-
-                    // Format status pengembalian (gunakan nilai DB canonical)
-                    let statusPengembalianText = '';
-                    const pj = (statusPengembalian || '').toString().toLowerCase();
-                    if (pj === 'verified' || pj === 'disetujui') {
-                        statusPengembalianText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                    } else if (pj === 'pending' || pj === 'menunggu') {
-                        statusPengembalianText = '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                    } else if (pj === 'rejected' || pj === 'ditolak') {
-                        statusPengembalianText = '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                    } else if (pj === 'overdue' || pj === 'terlambat') {
-                        statusPengembalianText = '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' + (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                    } else if (waktuPengembalian) {
-                        statusPengembalianText = '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' + formatTime(waktuPengembalian) + ')</span>';
-                    } else {
-                        statusPengembalianText = '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
-                    }
-                    document.getElementById('detail_status_pengembalian').innerHTML = statusPengembalianText;
-
-                    document.getElementById('detail_keterangan').textContent = keterangan || '-';
+        // Format waktu sederhana (HH:mm)
+        function formatTime(timeString) {
+            if (!timeString) return '-';
+            if (typeof timeString !== 'string') return String(timeString);
+            if (timeString.indexOf(':') > -1) {
+                const parts = timeString.split(':');
+                return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
+            }
+            try {
+                const d = new Date(timeString);
+                return d.toLocaleTimeString('id-ID', {
+                    hour: '2-digit',
+                    minute: '2-digit'
                 });
+            } catch (e) {
+                return timeString;
+            }
+        }
+
+        // Fungsi cetak riwayat
+        function cetakRiwayat(id) {
+            console.log('Mencetak riwayat dengan ID:', id);
+            // Implementasi cetak riwayat
+            alert(`Fitur cetak untuk riwayat ID ${id} akan segera tersedia!`);
+        }
+
+        function cetakDetail() {
+            console.log('Mencetak detail riwayat');
+            // Implementasi cetak detail
+            alert('Fitur cetak detail akan segera tersedia!');
+        }
+
+        // Tampilkan parameter filter yang aktif
+        function showActiveFilters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeFilters = [];
+
+            if (urlParams.get('search')) {
+                activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
+            }
+            if (urlParams.get('status')) {
+                const statusText = {
+                    'disetujui': 'Disetujui',
+                    'ditolak': 'Ditolak',
+                    'pending': 'Menunggu',
+                    'selesai': 'Selesai',
+                    'berlangsung': 'Berlangsung'
+                } [urlParams.get('status')] || urlParams.get('status');
+                activeFilters.push(`Status: ${statusText}`);
+            }
+            if (urlParams.get('date_from') || urlParams.get('date_to')) {
+                const dateFrom = urlParams.get('date_from') || '';
+                const dateTo = urlParams.get('date_to') || '';
+                activeFilters.push(`Periode: ${dateFrom} - ${dateTo}`);
             }
 
-            // Handler untuk modal edit
-            const editModal = document.getElementById('editModal');
-            if (editModal) {
-                editModal.addEventListener('show.bs.modal', function(event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const peminjam = button.getAttribute('data-peminjam');
-                    const tanggal = button.getAttribute('data-tanggal');
-                    const ruanganId = button.getAttribute('data-ruangan-id') || button.getAttribute('data-ruang-id') || button.getAttribute('data-ruang');
-                    const projectorId = button.getAttribute('data-projector-id') || button.getAttribute('data-projector') || '';
-                    const waktuMulai = button.getAttribute('data-waktu_mulai') || button.getAttribute('data-waktu-mulai') || '';
-                    const waktuSelesai = button.getAttribute('data-waktu_selesai') || button.getAttribute('data-waktu-selesai') || '';
-                    let statusPengembalian = button.getAttribute('data-status-pengembalian') || button.getAttribute('data-status_pengembalian') || '';
-                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || button.getAttribute('data-tanggal_pengembalian') || '';
-                    const keperluan = button.getAttribute('data-keperluan') || button.getAttribute('data-keperluan') || '';
-                    const status = button.getAttribute('data-status') || '';
-                    const catatan = button.getAttribute('data-catatan') || button.getAttribute('data-keterangan') || '';
-
-                    // Normalize display value 'terlambat' to DB-safe 'overdue' for the select
-                    if (statusPengembalian === 'terlambat') {
-                        statusPengembalian = 'overdue';
-                    }
-
-                    // Update form action URL
-                    const form = document.getElementById('editForm');
-                    form.action = `/admin/riwayat/${id}`;
-
-                    // Normalize date to YYYY-MM-DD for input[type=date]
-                    function normalizeDateForInput(d) {
-                        if (!d) return '';
-                        // If already in YYYY-MM-DD format, return as-is
-                        if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-                        // Try parsing with Date
-                        const parsed = new Date(d);
-                        if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
-                        // Fallback: try common US format MM/DD/YYYY
-                        const parts = d.split('/');
-                        if (parts.length === 3) {
-                            const mm = parts[0].padStart(2, '0');
-                            const dd = parts[1].padStart(2, '0');
-                            const yyyy = parts[2];
-                            return `${yyyy}-${mm}-${dd}`;
-                        }
-                        return '';
-                    }
-
-                    // Normalize time to HH:MM (24-hour) for input[type=time]
-                    function normalizeTimeForInput(t) {
-                        if (!t) return '';
-                        t = t.trim();
-                        // If contains AM/PM, convert
-                        const ampmMatch = t.match(/(\d{1,2}:\d{2})(?:[:\d{2}]*)?\s*(AM|PM)/i);
-                        if (ampmMatch) {
-                            let [ , timePart, ampm ] = ampmMatch;
-                            let [hh, mm] = timePart.split(':').map(s => parseInt(s, 10));
-                            if (ampm.toUpperCase() === 'PM' && hh < 12) hh += 12;
-                            if (ampm.toUpperCase() === 'AM' && hh === 12) hh = 0;
-                            return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
-                        }
-                        // If time includes seconds like 15:30:00, strip seconds
-                        const secMatch = t.match(/^(\d{1,2}:\d{2}):\d{2}$/);
-                        if (secMatch) return secMatch[1].padStart(5, '0');
-                        // If already HH:MM or H:MM, pad
-                        const simpleMatch = t.match(/^(\d{1,2}:\d{2})$/);
-                        if (simpleMatch) {
-                            const [hh, mm] = simpleMatch[1].split(':').map(s => s.padStart(2,'0'));
-                            return `${hh}:${mm}`;
-                        }
-                        // Last resort: try parsing as Date and extract time
-                        const dt = new Date(`1970-01-01T${t}`);
-                        if (!isNaN(dt)) return dt.toTimeString().slice(0,5);
-                        return '';
-                    }
-
-                    // Isi data form
-                    document.getElementById('edit_peminjam').value = peminjam;
-                    document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
-                    document.getElementById('edit_ruangan_id').value = ruanganId || '';
-                    document.getElementById('edit_projector_id').value = projectorId || '';
-                    document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai) || '';
-                    document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai) || '';
-                    document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
-                    document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
-                    document.getElementById('edit_keperluan').value = keperluan;
-                    document.getElementById('edit_catatan').value = catatan || '';
-
-                    // Handle status peminjaman
-                    let statusValue = status;
-                    const today = new Date().toISOString().split('T')[0];
-
-                    // Jika status adalah disetujui dan tanggal hari ini, tampilkan sebagai berlangsung
-                    if (status === 'disetujui' && tanggal === today) {
-                        statusValue = 'berlangsung';
-                    }
-                    document.getElementById('edit_status').value = statusValue;
-
-                    // Debug log
-                    console.log('Data yang akan diisi:', {
-                        id,
-                        peminjam,
-                        tanggal,
-                        ruanganId,
-                        projectorId,
-                        keperluan,
-                        status,
-                        catatan,
-                        selectedStatus: statusValue
-                    });
-                });
-            }
-
-            // Handler untuk modal hapus
-            const deleteModal = document.getElementById('deleteModal');
-            if (deleteModal) {
-                deleteModal.addEventListener('show.bs.modal', function(event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const peminjam = button.getAttribute('data-peminjam');
-                    const tanggal = button.getAttribute('data-tanggal');
-
-                    // Update form action URL
-                    const form = document.getElementById('deleteForm');
-                    form.action = `/admin/riwayat/${id}`;
-
-                    // Isi data konfirmasi
-                    document.getElementById('delete_peminjam').textContent = peminjam;
-                    document.getElementById('delete_tanggal').textContent = formatDate(tanggal);
-                });
-            }
-
-            // Format tanggal
-            function formatDate(dateString) {
-                if (!dateString) return '-';
-                const date = new Date(dateString);
-                return date.toLocaleDateString('id-ID', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
-            }
-
-            // Format waktu sederhana (HH:mm)
-            function formatTime(timeString) {
-                if (!timeString) return '-';
-                if (typeof timeString !== 'string') return String(timeString);
-                if (timeString.indexOf(':') > -1) {
-                    const parts = timeString.split(':');
-                    return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
-                }
-                try {
-                    const d = new Date(timeString);
-                    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                } catch (e) {
-                    return timeString;
-                }
-            }
-
-            // Fungsi cetak riwayat
-            function cetakRiwayat(id) {
-                console.log('Mencetak riwayat dengan ID:', id);
-                // Implementasi cetak riwayat
-                alert(`Fitur cetak untuk riwayat ID ${id} akan segera tersedia!`);
-            }
-
-            function cetakDetail() {
-                console.log('Mencetak detail riwayat');
-                // Implementasi cetak detail
-                alert('Fitur cetak detail akan segera tersedia!');
-            }
-
-            // Tampilkan parameter filter yang aktif
-            function showActiveFilters() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const activeFilters = [];
-
-                if (urlParams.get('search')) {
-                    activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
-                }
-                if (urlParams.get('status')) {
-                    const statusText = {
-                        'disetujui': 'Disetujui',
-                        'ditolak': 'Ditolak',
-                        'pending': 'Menunggu',
-                        'selesai': 'Selesai',
-                        'berlangsung': 'Berlangsung'
-                    } [urlParams.get('status')] || urlParams.get('status');
-                    activeFilters.push(`Status: ${statusText}`);
-                }
-                if (urlParams.get('date_from') || urlParams.get('date_to')) {
-                    const dateFrom = urlParams.get('date_from') || '';
-                    const dateTo = urlParams.get('date_to') || '';
-                    activeFilters.push(`Periode: ${dateFrom} - ${dateTo}`);
+            if (activeFilters.length > 0) {
+                const existingAlert = document.querySelector('.filter-alert');
+                if (existingAlert) {
+                    existingAlert.remove();
                 }
 
-                if (activeFilters.length > 0) {
-                    const existingAlert = document.querySelector('.filter-alert');
-                    if (existingAlert) {
-                        existingAlert.remove();
-                    }
-
-                    const filterInfo = document.createElement('div');
-                    filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
-                    filterInfo.innerHTML = `
+                const filterInfo = document.createElement('div');
+                filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
+                filterInfo.innerHTML = `
                         <strong>Filter Aktif:</strong> ${activeFilters.join(', ')}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     `;
-                    document.querySelector('.filter-section').appendChild(filterInfo);
-                }
+                document.querySelector('.filter-section').appendChild(filterInfo);
             }
+        }
 
-            // Panggil fungsi saat halaman dimuat
-            document.addEventListener('DOMContentLoaded', function() {
-                showActiveFilters();
+        // Panggil fungsi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            showActiveFilters();
 
-                // Debug: Tampilkan jumlah data yang difilter
-                const tableRows = document.querySelectorAll('tbody tr');
-                console.log('Jumlah data yang ditampilkan:', tableRows.length);
+            // Debug: Tampilkan jumlah data yang difilter
+            const tableRows = document.querySelectorAll('tbody tr');
+            console.log('Jumlah data yang ditampilkan:', tableRows.length);
 
-                // Terapkan dark mode jika sebelumnya diaktifkan
-                if (localStorage.getItem('darkMode') === 'enabled') {
-                    document.body.classList.add('dark-mode');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
-            });
-        </script>
+            // Terapkan dark mode jika sebelumnya diaktifkan
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+    </script>
     </div>
 </body>
 
