@@ -713,13 +713,6 @@
             white-space: nowrap;
         }
 
-        .col-keperluan {
-            width: 25%;
-            white-space: normal;
-            word-break: break-word;
-        }
-
-
         /* ===== MODAL DETAIL ===== */
         .modal-detail {
             display: none;
@@ -1451,7 +1444,6 @@
                             <th>Ruang</th>
                             <th>Dosen Pengampu</th>
                             <th>Proyektor</th>
-                            <th class="col-keperluan">Keperluan</th>
                             <th class="col-status text-center">Status Peminjaman</th>
                             <th class="col-status text-center">Status Pengembalian</th>
                             <th class="col-aksi text-center">Aksi</th>
@@ -1512,11 +1504,6 @@
                                     <strong>{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor ?? '-' : 'Tidak' }}</strong>
                                     <div class="text-muted small mt-1">{{ $peminjaman->projector->merk ?? '' }}</div>
                                 </td>
-
-                                <td class="col-keperluan">
-                                    {{ $peminjaman->keperluan ?? '-' }}
-                                </td>
-
 
                                 <td class="text-center">
                                     @php
