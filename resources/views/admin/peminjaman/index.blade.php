@@ -1181,10 +1181,8 @@
                             <th>No</th>
                             <th>Peminjam</th>
                             <th>Tanggal & Waktu</th>
-                            <th>Dosen Pengampu</th>
                             <th>Ruang</th>
                             <th>Proyektor</th>
-                            <th>Keperluan</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -1232,9 +1230,6 @@
                                     {{-- debug info removed --}}
                                 </td>
                                 <td>
-                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
-                                </td>
-                                <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
                                     {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
                                 </td>
@@ -1248,9 +1243,6 @@
                                     @else
                                         <span class="badge bg-secondary">Tidak</span>
                                     @endif
-                                </td>
-                                <td title="{{ $peminjaman->keperluan }}">
-                                    {{ \Illuminate\Support\Str::limit($peminjaman->keperluan, 40) }}
                                 </td>
                                 <td>
                                     @php $pjStatus = optional($peminjaman->pengembalian)->status; @endphp
