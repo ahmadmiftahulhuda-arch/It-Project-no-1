@@ -1167,13 +1167,11 @@
                         <tr>
                             <th>No</th>
                             <th>Peminjam</th>
-                            <th>Dosen Pengampu</th>
                             <th>Ruang & Barang</th>
                             <th>Tanggal Pinjam</th>
                             <th>Tanggal Kembali</th>
                             <th>Status</th>
                             <th>Kondisi</th>
-                            <th>Keterangan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -1203,15 +1201,14 @@
                                     <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
                                     </td>
                                     <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="user-avatar me-2"
-                                                    style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                                    {{ substr($pengembalian->user->name ?? 'G', 0, 1) }}
-                                                </div>
-                                                {{ $pengembalian->user->name ?? 'Guest' }}
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar me-2"
+                                                style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                                {{ substr($pengembalian->user->name ?? 'G', 0, 1) }}
                                             </div>
-                                        </td>
-                                        <td>{{ $pengembalian->peminjaman->dosen->nama_dosen ?? '-' }}</td>
+                                            {{ $pengembalian->user->name ?? 'Guest' }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <strong>{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? ($pengembalian->peminjaman->ruang ?? 'N/A') }}</strong><br>
                                         @if ($pengembalian->peminjaman->projector)
@@ -1245,12 +1242,13 @@
                                         @else
                                             <span class="text-muted">-</span>
                                             <br>
-                                            <small class="text-muted">Jatuh tempo: {{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '-') }}</small>
+                                            <small class="text-muted">Jatuh tempo:
+                                                {{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '-') }}</small>
                                         @endif
                                     </td>
                                     <td>
                                         @php $pjStatus = $pengembalian->status; @endphp
-                                        @if (in_array($pjStatus, ['verified','disetujui']))
+                                        @if (in_array($pjStatus, ['verified', 'disetujui']))
                                             <span class="badge status-badge status-disetujui">
                                                 <i class="fas fa-check-circle me-1"></i> Disetujui
                                             </span>
@@ -1258,11 +1256,11 @@
                                             <span class="badge status-badge status-menunggu">
                                                 <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
                                             </span>
-                                        @elseif (in_array($pjStatus, ['rejected','ditolak']))
+                                        @elseif (in_array($pjStatus, ['rejected', 'ditolak']))
                                             <span class="badge status-badge status-ditolak">
                                                 <i class="fas fa-times-circle me-1"></i> Ditolak
                                             </span>
-                                        @elseif (in_array($pjStatus, ['overdue','terlambat']))
+                                        @elseif (in_array($pjStatus, ['overdue', 'terlambat']))
                                             <span class="badge status-badge status-terlambat">
                                                 <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                             </span>
@@ -1271,7 +1269,8 @@
                                                 <i class="fas fa-exclamation-circle me-1"></i> Terlambat
                                             </span>
                                         @else
-                                            <span class="badge bg-secondary">{{ ucfirst(str_replace('_',' ',$pjStatus)) }}</span>
+                                            <span
+                                                class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $pjStatus)) }}</span>
                                         @endif
                                     </td>
                                     <td>
@@ -1285,9 +1284,6 @@
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
-                                    </td>
-                                    <td title="{{ $pengembalian->catatan ?? '-' }}">
-                                        {{ \Illuminate\Support\Str::limit($pengembalian->catatan ?? '-', 30) }}
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2 action-buttons">
@@ -1315,32 +1311,47 @@
                                             @endif
 
                                             {{-- Tombol Edit --}}
-                                            <button class="btn btn-warning-custom btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#editModal" data-id="{{ $pengembalian->id }}"
+                                            <button type="button" class="btn btn-warning-custom btn-sm"
+                                                data-bs-toggle="modal" data-bs-target="#editModal"
+                                                {{-- ID pengembalian --}} data-id="{{ $pengembalian->id }}"
+                                                {{-- Kondisi --}}
                                                 data-kondisi-ruang="{{ $pengembalian->kondisi_ruang ?? '' }}"
                                                 data-kondisi-proyektor="{{ $pengembalian->kondisi_proyektor ?? '' }}"
+                                                {{-- Catatan --}}
                                                 data-catatan="{{ $pengembalian->catatan ?? '' }}"
+                                                {{-- Tanggal & waktu pengembalian --}}
                                                 data-tanggal-pengembalian="{{ $pengembalian->tanggal_pengembalian ?? '' }}"
-                                                data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}"
+                                                data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian
+                                                    ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i')
+                                                    : '' }}"
+                                                {{-- Waktu peminjaman --}}
                                                 data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
                                                 data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '') }}"
+                                                {{-- Dosen --}}
                                                 data-dosen-nip="{{ $pengembalian->peminjaman->dosen_nip ?? '' }}"
-                                                data-status="{{ $pengembalian->status }}">
-                                                <i class="fas fa-edit"></i> Edit
+                                                {{-- Status --}} data-status="{{ $pengembalian->status }}">
+                                                <i class="fas fa-edit me-1"></i> Edit
                                             </button>
 
+
                                             {{-- Tombol Detail --}}
-                                                <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
+                                            <button class="btn btn-info-custom btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#detailModal" data-id="{{ $pengembalian->id }}"
                                                 data-peminjam="{{ $pengembalian->user->name ?? 'Guest' }}"
-                                                data-dosen="{{ $pengembalian->peminjaman->dosen->nama_dosen ?? '' }}"
-                                                data-barang="{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? 'N/A' }}"
+                                                data-dosen="{{ $pengembalian->peminjaman->dosen->nama_dosen ?? '-' }}"
+                                                data-ruang="{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? '-' }}"
+                                                data-proyektor="{{ $pengembalian->peminjaman->projector
+                                                    ? $pengembalian->peminjaman->projector->kode_proyektor . ' - ' . ($pengembalian->peminjaman->projector->merk ?? '')
+                                                    : 'Tanpa Proyektor' }}"
                                                 data-tanggal-pinjam="{{ $pengembalian->peminjaman->tanggal ?? '' }}"
-                                                data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? ($pengembalian->peminjaman->waktu_mulai ?? '') }}"
-                                                data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? ($pengembalian->peminjaman->waktu_selesai ?? '') }}"
+                                                data-waktu-mulai="{{ $pengembalian->peminjaman->display_waktu_mulai ?? '' }}"
+                                                data-waktu-selesai="{{ $pengembalian->peminjaman->display_waktu_selesai ?? '' }}"
                                                 data-tanggal-pengembalian="{{ $pengembalian->tanggal_pengembalian ?? '' }}"
-                                                data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}"
-                                                data-kondisi="Ruang: {{ $pengembalian->kondisi_ruang ?? '-' }} | Proyektor: {{ $pengembalian->kondisi_proyektor ?? '-' }}"
+                                                data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian
+                                                    ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i')
+                                                    : '' }}"
+                                                data-kondisi-ruang="{{ $pengembalian->kondisi_ruang ?? '-' }}"
+                                                data-kondisi-proyektor="{{ $pengembalian->kondisi_proyektor ?? '-' }}"
                                                 data-keterangan="{{ $pengembalian->catatan ?? '-' }}"
                                                 data-status="{{ $pengembalian->status }}">
                                                 <i class="fas fa-eye"></i> Detail
@@ -1412,7 +1423,7 @@
         <!-- Modal Kembalikan Barang -->
         <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="returnModalLabel"><i class="fas fa-undo me-2"></i> Proses
@@ -1453,17 +1464,19 @@
                                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
                             </div>
                         </div>
-                    <div class="filter-group">
-                        <label for="ruang_filter">Ruang</label>
-                        <select id="ruang_filter" name="ruangan_id" class="form-select">
-                            <option value="">Semua Ruang</option>
-                            @if(isset($ruangans) && $ruangans->count())
-                                @foreach($ruangans as $r)
-                                    <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>{{ $r->nama_ruangan }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
+                        <div class="filter-group">
+                            <label for="ruang_filter">Ruang</label>
+                            <select id="ruang_filter" name="ruangan_id" class="form-select">
+                                <option value="">Semua Ruang</option>
+                                @if (isset($ruangans) && $ruangans->count())
+                                    @foreach ($ruangans as $r)
+                                        <option value="{{ $r->id }}"
+                                            {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
+                                            {{ $r->nama_ruangan }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary">Simpan Pengembalian</button>
@@ -1487,39 +1500,52 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Peminjam</label>
+                                <label class="fw-bold">ID Pengembalian</label>
+                                <p id="detail_id"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="fw-bold">Peminjam</label>
                                 <p id="detail_peminjam"></p>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Barang</label>
-                                <p id="detail_barang"></p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Dosen Pengampu</label>
+                                <label class="fw-bold">Dosen Pengampu</label>
                                 <p id="detail_dosen"></p>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Pinjam</label>
-                                <p id="detail_tanggal_pinjam"></p>
+                                <label class="fw-bold">Ruang</label>
+                                <p id="detail_ruang"></p>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Jatuh Tempo</label>
-                                <p id="detail_tanggal_jatuh_tempo"></p>
+                                <label class="fw-bold">Proyektor</label>
+                                <p id="detail_proyektor"></p>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Kembali</label>
-                                <p id="detail_tanggal_kembali"></p>
+                                <label class="fw-bold">Waktu Peminjaman</label>
+                                <p id="detail_waktu_pinjam"></p>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Status</label>
+                                <label class="fw-bold">Waktu Pengembalian</label>
+                                <p id="detail_waktu_kembali"></p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="fw-bold">Status Pengembalian</label>
                                 <p id="detail_status"></p>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Kondisi Barang</label>
+                                <label class="fw-bold">Kondisi</label>
                                 <p id="detail_kondisi"></p>
                             </div>
+
                             <div class="col-12 mb-3">
-                                <label class="form-label fw-bold">Keterangan</label>
+                                <label class="fw-bold">Catatan / Keterangan</label>
                                 <p id="detail_keterangan"></p>
                             </div>
                         </div>
@@ -1574,8 +1600,8 @@
                                 <select id="edit_status" name="status" class="form-select" required>
                                     <option value="pending">Menunggu</option>
                                     <option value="verified">Disetujui</option>
-                                        <option value="rejected">Ditolak</option>
-                                        <option value="overdue">Terlambat</option>
+                                    <option value="rejected">Ditolak</option>
+                                    <option value="overdue">Terlambat</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -1729,8 +1755,10 @@
                     // Isi form dengan data yang ada
                     document.getElementById('return_peminjam').value = peminjam;
                     document.getElementById('return_barang').value = barang;
-                    document.getElementById('return_tanggal_pinjam').value = formatDate(tanggalPinjam) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
-                    document.getElementById('return_tanggal_jatuh_tempo').value = formatDate(tanggalJatuhTempo) + (waktuSelesai ? ' ' + formatTime(waktuSelesai) : '');
+                    document.getElementById('return_tanggal_pinjam').value = formatDate(tanggalPinjam) + (waktuMulai ?
+                        ' ' + formatTime(waktuMulai) : '');
+                    document.getElementById('return_tanggal_jatuh_tempo').value = formatDate(tanggalJatuhTempo) + (
+                        waktuSelesai ? ' ' + formatTime(waktuSelesai) : '');
                 });
             }
 
@@ -1739,76 +1767,94 @@
             if (detailModal) {
                 detailModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
+
                     const id = button.getAttribute('data-id');
                     const peminjam = button.getAttribute('data-peminjam');
-                    const barang = button.getAttribute('data-barang');
+                    const dosen = button.getAttribute('data-dosen');
+                    const ruang = button.getAttribute('data-ruang');
+                    const proyektor = button.getAttribute('data-proyektor');
+
                     const tanggalPinjam = button.getAttribute('data-tanggal-pinjam');
-                    const tanggalJatuhTempo = button.getAttribute('data-tanggal-jatuh-tempo');
-                    const tanggalKembali = button.getAttribute('data-tanggal-pengembalian');
                     const waktuMulai = button.getAttribute('data-waktu-mulai');
                     const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                    const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
-                    const kondisi = button.getAttribute('data-kondisi');
+
+                    const tanggalKembali = button.getAttribute('data-tanggal-pengembalian');
+                    const waktuKembali = button.getAttribute('data-waktu-pengembalian');
+
+                    const kondisiRuang = button.getAttribute('data-kondisi-ruang');
+                    const kondisiProyektor = button.getAttribute('data-kondisi-proyektor');
                     const keterangan = button.getAttribute('data-keterangan');
-                    const dosen = button.getAttribute('data-dosen');
                     const status = button.getAttribute('data-status');
 
-                    // Isi data detail
-                    document.getElementById('detail_peminjam').textContent = peminjam;
-                    document.getElementById('detail_barang').textContent = barang;
-                    document.getElementById('detail_tanggal_pinjam').textContent = formatDate(tanggalPinjam) + (waktuMulai ? ' ' + formatTime(waktuMulai) : '');
-                    document.getElementById('detail_tanggal_jatuh_tempo').textContent = formatDate(tanggalJatuhTempo) + (waktuSelesai ? ' ' + formatTime(waktuSelesai) : '');
-                    document.getElementById('detail_tanggal_kembali').textContent = tanggalKembali ? (formatDate(tanggalKembali) + (waktuPengembalian ? ' ' + formatTime(waktuPengembalian) : '')) : '-';
-                    document.getElementById('detail_kondisi').textContent = kondisi || '-';
-                    document.getElementById('detail_keterangan').textContent = keterangan || '-';
+                    document.getElementById('detail_id').textContent = `#${id}`;
+                    document.getElementById('detail_peminjam').textContent = peminjam || '-';
                     document.getElementById('detail_dosen').textContent = dosen || '-';
+                    document.getElementById('detail_ruang').textContent = ruang || '-';
+                    document.getElementById('detail_proyektor').textContent = proyektor || '-';
 
-                    // Map status values to labels
-                    let statusText = '';
+                    document.getElementById('detail_waktu_pinjam').textContent =
+                        formatDate(tanggalPinjam) + ' ' + formatTime(waktuMulai) + ' - ' + formatTime(waktuSelesai);
+
+                    document.getElementById('detail_waktu_kembali').textContent =
+                        tanggalKembali ?
+                        formatDate(tanggalKembali) + ' ' + formatTime(waktuKembali) :
+                        '-';
+
+                    document.getElementById('detail_kondisi').textContent =
+                        `Ruang: ${kondisiRuang} | Proyektor: ${kondisiProyektor}`;
+
+                    document.getElementById('detail_keterangan').textContent = keterangan || '-';
+
+                    let statusHtml = '';
                     switch (status) {
                         case 'verified':
-                            statusText =
-                                '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                            statusHtml = `<span class="badge status-disetujui">
+                    <i class="fas fa-check-circle me-1"></i> Disetujui
+                </span>`;
                             break;
                         case 'rejected':
-                            statusText =
-                                '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
+                            statusHtml = `<span class="badge status-ditolak">
+                    <i class="fas fa-times-circle me-1"></i> Ditolak
+                </span>`;
                             break;
-                        case 'pending':
+                        case 'overdue':
+                            statusHtml = `<span class="badge status-terlambat">
+                    <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                </span>`;
+                            break;
                         default:
-                            statusText =
-                                '<span class="badge status-pending"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>';
-                            break;
+                            statusHtml = `<span class="badge status-menunggu">
+                    <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
+                </span>`;
                     }
-                    document.getElementById('detail_status').innerHTML = statusText;
+
+                    document.getElementById('detail_status').innerHTML = statusHtml;
                 });
             }
-            // Handle Edit Modal
+
+            // Handler untuk modal edit
             const editModal = document.getElementById('editModal');
             if (editModal) {
                 editModal.addEventListener('show.bs.modal', function(event) {
                     const button = event.relatedTarget;
                     const id = button.getAttribute('data-id');
-                    const kondisiRuang = button.getAttribute('data-kondisi-ruang');
-                    const kondisiProyektor = button.getAttribute('data-kondisi-proyektor');
-                    const catatan = button.getAttribute('data-catatan');
-                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
-                    const status = button.getAttribute('data-status');
 
-                    // Set form action
                     document.getElementById('editForm').action = `/admin/pengembalian/${id}`;
 
-                    // Set values
-                    document.getElementById('edit_kondisi_ruang').value = kondisiRuang || '';
-                    document.getElementById('edit_kondisi_proyektor').value = kondisiProyektor || '';
-                    document.getElementById('edit_catatan').value = catatan || '';
-                    if (document.getElementById('edit_tanggal_pengembalian')) {
-                        document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian ?
-                            tanggalPengembalian.split(' ')[0] : '';
-                    }
-                    if (document.getElementById('edit_status')) {
-                        document.getElementById('edit_status').value = status || 'pending';
-                    }
+                    document.getElementById('edit_kondisi_ruang').value =
+                        button.getAttribute('data-kondisi-ruang') || '';
+
+                    document.getElementById('edit_kondisi_proyektor').value =
+                        button.getAttribute('data-kondisi-proyektor') || '';
+
+                    document.getElementById('edit_catatan').value =
+                        button.getAttribute('data-catatan') || '';
+
+                    document.getElementById('edit_tanggal_pengembalian').value =
+                        button.getAttribute('data-tanggal-pengembalian') || '';
+
+                    document.getElementById('edit_status').value =
+                        button.getAttribute('data-status') || 'pending';
                 });
             }
 
@@ -1853,7 +1899,10 @@
                 }
                 try {
                     const d = new Date(timeString);
-                    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    return d.toLocaleTimeString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                 } catch (e) {
                     return timeString;
                 }

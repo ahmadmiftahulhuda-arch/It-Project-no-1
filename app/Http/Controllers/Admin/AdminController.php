@@ -131,11 +131,12 @@ class AdminController extends Controller
         // 2. Pengembalian yang diajukan user - dengan filter
         $query = \App\Models\Pengembalian::with(['peminjaman', 'user', 'peminjaman.ruangan', 'peminjaman.projector']);
 
-        // Filter ruangan (optional)
-        if ($request->has('ruangan_id') && $request->ruangan_id != '') {
-            $ruanganId = $request->ruangan_id;
-            $query->whereHas('peminjaman', function ($q) use ($ruanganId) {
-                $q->where('ruangan_id', $ruanganId);
+        // Filter ruangan
+        if ($request->has('projector_id') && $request->projector_id != '') {
+            $projectorId = $request->projector_id;
+
+            $query->whereHas('peminjaman', function ($q) use ($projectorId) {
+                $q->where('projector_id', $projectorId);
             });
         }
 
@@ -202,6 +203,7 @@ class AdminController extends Controller
 
         // Ambil daftar ruang untuk filter dropdown
         $ruangans = Ruangan::orderBy('nama_ruangan')->get();
+        $projectors = Projector::orderBy('kode_proyektor')->get();
 
         // Hitung statistik
         $pendingReturns = Pengembalian::where('status', 'pending')->count();
@@ -218,7 +220,8 @@ class AdminController extends Controller
             'returnedCount',
             'overdueCount',
             'totalReturns',
-            'ruangans'
+            'ruangans',
+            'projectors',
         ));
     }
 
@@ -756,157 +759,158 @@ class AdminController extends Controller
         return view('admin.laporan', compact('years'));
     }
 
-        public function getReportData(Request $request)
-        {
-            $reportType = $request->input('report_type', 'peminjaman');
-            $dateRange = $request->input('date_range', 'month');
-            $year = $request->input('year', now()->year);
-            $today = Carbon::now();
-    
-            $startDate = $today->copy()->startOfMonth();
-            $endDate = $today->copy()->endOfMonth();
-    
-            switch ($dateRange) {
-                case 'week':
-                    $startDate = $today->copy()->startOfWeek();
-                    $endDate = $today->copy()->endOfWeek();
-                    break;
-                case 'month':
-                    // default is this month
-                    break;
-                case 'quarter':
-                    $startDate = $today->copy()->startOfQuarter();
-                    $endDate = $today->copy()->endOfQuarter();
-                    break;
-                case 'year':
-                    $startDate = $today->copy()->startOfYear();
-                    $endDate = $today->copy()->endOfYear();
-                    break;
-            }
-    
-            $stats = [];
-            $monthlyChartData = [];
-            $distributionChartData = [];
-            $uiConfig = [];
-    
-            switch ($reportType) {
-                case 'penggunaan':
-                    $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
-    
-                    $ruanganUsage = $peminjamanQuery->select('ruangan_id', DB::raw('COUNT(*) as count'))
-                        ->groupBy('ruangan_id')->orderBy('count', 'desc')->with('ruangan')->first();
-                    $proyektorUsage = $peminjamanQuery->whereNotNull('projector_id')
-                        ->select('projector_id', DB::raw('COUNT(*) as count'))
-                        ->groupBy('projector_id')->orderBy('count', 'desc')->with('projector')->first();
-    
-                    $stats = [
-                        'Total Peminjaman' => $peminjamanQuery->count(),
-                        'Ruangan Terpopuler' => $ruanganUsage->ruangan->nama_ruangan ?? 'N/A',
-                        'Proyektor Terpopuler' => $proyektorUsage->projector->kode_proyektor ?? 'N/A',
-                        'Pengguna Aktif' => $peminjamanQuery->distinct('user_id')->count()
-                    ];
-    
-                    $distribusiRuangan = Peminjaman::whereBetween('tanggal', [$startDate, $endDate])->select('ruangan_id', DB::raw('COUNT(*) as count'))
-                        ->groupBy('ruangan_id')->with('ruangan')->get();
-    
-                    $distributionChartData = [
-                        'labels' => $distribusiRuangan->map(fn($item) => $item->ruangan->nama_ruangan ?? 'N/A'),
-                        'data' => $distribusiRuangan->pluck('count')
-                    ];
-                    $uiConfig = [
-                        'stat_titles' => ['Total Peminjaman', 'Ruangan Terpopuler', 'Proyektor Terpopuler', 'Pengguna Aktif'],
-                        'chart_titles' => ['Peminjaman Bulanan', 'Distribusi Peminjaman per Ruangan']
-                    ];
-                    break;
-    
-                case 'inventaris':
-                    $stats = [
-                        'Total Ruangan' => Ruangan::count(),
-                        'Ruangan Tersedia' => Ruangan::where('status', 'Tersedia')->count(),
-                        'Total Proyektor' => Projector::count(),
-                        'Proyektor Tersedia' => Projector::where('status', 'tersedia')->count(),
-                    ];
-                    $statusRuangan = Ruangan::select('status', DB::raw('COUNT(*) as count'))->groupBy('status')->pluck('count', 'status');
-                    $statusProyektor = Projector::select('status', DB::raw('COUNT(*) as count'))->groupBy('status')->pluck('count', 'status');
-    
-                    $monthlyChartData = $statusRuangan->values()->all();
-                    $distributionChartData = [
-                        'labels' => $statusProyektor->keys()->all(),
-                        'data' => $statusProyektor->values()->all()
-                    ];
-                    $uiConfig = [
-                        'stat_titles' => ['Total Ruangan', 'Ruangan Tersedia', 'Total Proyektor', 'Proyektor Tersedia'],
-                        'chart_titles' => ['Status Ruangan', 'Status Proyektor']
-                    ];
-                    break;
-    
-                case 'pengguna':
-                    $userQuery = User::whereHas('peminjaman', fn($q) => $q->whereBetween('tanggal', [$startDate, $endDate]));
-                    $topUser = User::withCount('peminjaman')->orderBy('peminjaman_count', 'desc')->first();
-    
-                    $stats = [
-                        'Total Pengguna' => User::count(),
-                        'Pengguna Aktif' => $userQuery->count(),
-                        'Pengguna Baru' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
-                        'Peminjam Teratas' => $topUser->name ?? 'N/A'
-                    ];
-                    $top10Users = User::withCount('peminjaman')->orderBy('peminjaman_count', 'desc')->take(10)->get();
-                    $monthlyChartData = $top10Users->pluck('peminjaman_count')->all();
-                    $distributionChartData = [
-                        'labels' => $top10Users->pluck('name')->all(),
-                        'data' => $top10Users->pluck('peminjaman_count')->all()
-                    ];
-                     $uiConfig = [
-                        'stat_titles' => ['Total Pengguna', 'Pengguna Aktif', 'Pengguna Baru', 'Peminjam Teratas'],
-                        'chart_titles' => ['Top 10 Peminjam', 'Distribusi Peminjaman Pengguna']
-                    ];
-                    break;
-                
-                case 'peminjaman':
-                default:
-                    $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
-                    $stats = [
-                        'Total Peminjaman' => $peminjamanQuery->count(),
-                        'Barang Dipinjam' => $peminjamanQuery->clone()->whereIn('status', ['disetujui', 'selesai'])->count(),
-                        'Pengguna Aktif' => $peminjamanQuery->clone()->distinct('user_id')->count('user_id'),
-                        'Barang Rusak' => Pengembalian::whereBetween('created_at', [$startDate, $endDate])
-                            ->where(fn ($q) => $q->where('kondisi_ruang', 'like', 'rusak%')->orWhere('kondisi_proyektor', 'like', 'rusak%'))->count()
-                    ];
-    
-                    $monthlyData = Peminjaman::select(DB::raw('MONTH(tanggal) as month'), DB::raw('COUNT(*) as count'))
-                        ->whereYear('tanggal', $year)->groupBy('month')->orderBy('month')->pluck('count', 'month')->all();
-                    for ($m = 1; $m <= 12; $m++) {
-                        $monthlyChartData[] = $monthlyData[$m] ?? 0;
-                    }
-    
-                    $distribusiData = Peminjaman::whereBetween('tanggal', [$startDate, $endDate])->select(
-                        DB::raw('SUM(CASE WHEN projector_id IS NOT NULL THEN 1 ELSE 0 END) as proyektor'),
-                        DB::raw('SUM(CASE WHEN projector_id IS NULL THEN 1 ELSE 0 END) as ruangan_saja')
-                    )->first();
-                    $distributionChartData = [
-                        'labels' => ['Dengan Proyektor', 'Ruangan Saja'],
-                        'data' => [$distribusiData->proyektor ?? 0, $distribusiData->ruangan_saja ?? 0]
-                    ];
-                     $uiConfig = [
-                        'stat_titles' => ['Total Peminjaman', 'Barang Dipinjam', 'Pengguna Aktif', 'Barang Rusak'],
-                        'chart_titles' => ['Peminjaman Bulanan', 'Distribusi Peminjaman']
-                    ];
-                    break;
-            }
-            
-            $recentActivity = Peminjaman::with('user', 'ruangan')->orderBy('created_at', 'desc')->take(5)
-                ->get()->map(fn ($item) => [
-                    'title' => 'Peminjaman ' . $item->status,
-                    'description' => ($item->user->name ?? 'User') . ' meminjam ' . ($item->ruangan->nama_ruangan ?? 'ruangan'),
-                    'time' => $item->created_at->diffForHumans(),
-                    'status' => $item->status
-                ]);
-    
-            return response()->json([
-                'stats' => $stats,
-                'monthlyChart' => $monthlyChartData,
-                'distributionChart' => $distributionChartData,
-                'recentActivity' => $recentActivity,
-                'uiConfig' => $uiConfig
+    public function getReportData(Request $request)
+    {
+        $reportType = $request->input('report_type', 'peminjaman');
+        $dateRange = $request->input('date_range', 'month');
+        $year = $request->input('year', now()->year);
+        $today = Carbon::now();
+
+        $startDate = $today->copy()->startOfMonth();
+        $endDate = $today->copy()->endOfMonth();
+
+        switch ($dateRange) {
+            case 'week':
+                $startDate = $today->copy()->startOfWeek();
+                $endDate = $today->copy()->endOfWeek();
+                break;
+            case 'month':
+                // default is this month
+                break;
+            case 'quarter':
+                $startDate = $today->copy()->startOfQuarter();
+                $endDate = $today->copy()->endOfQuarter();
+                break;
+            case 'year':
+                $startDate = $today->copy()->startOfYear();
+                $endDate = $today->copy()->endOfYear();
+                break;
+        }
+
+        $stats = [];
+        $monthlyChartData = [];
+        $distributionChartData = [];
+        $uiConfig = [];
+
+        switch ($reportType) {
+            case 'penggunaan':
+                $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
+
+                $ruanganUsage = $peminjamanQuery->select('ruangan_id', DB::raw('COUNT(*) as count'))
+                    ->groupBy('ruangan_id')->orderBy('count', 'desc')->with('ruangan')->first();
+                $proyektorUsage = $peminjamanQuery->whereNotNull('projector_id')
+                    ->select('projector_id', DB::raw('COUNT(*) as count'))
+                    ->groupBy('projector_id')->orderBy('count', 'desc')->with('projector')->first();
+
+                $stats = [
+                    'Total Peminjaman' => $peminjamanQuery->count(),
+                    'Ruangan Terpopuler' => $ruanganUsage->ruangan->nama_ruangan ?? 'N/A',
+                    'Proyektor Terpopuler' => $proyektorUsage->projector->kode_proyektor ?? 'N/A',
+                    'Pengguna Aktif' => $peminjamanQuery->distinct('user_id')->count()
+                ];
+
+                $distribusiRuangan = Peminjaman::whereBetween('tanggal', [$startDate, $endDate])->select('ruangan_id', DB::raw('COUNT(*) as count'))
+                    ->groupBy('ruangan_id')->with('ruangan')->get();
+
+                $distributionChartData = [
+                    'labels' => $distribusiRuangan->map(fn($item) => $item->ruangan->nama_ruangan ?? 'N/A'),
+                    'data' => $distribusiRuangan->pluck('count')
+                ];
+                $uiConfig = [
+                    'stat_titles' => ['Total Peminjaman', 'Ruangan Terpopuler', 'Proyektor Terpopuler', 'Pengguna Aktif'],
+                    'chart_titles' => ['Peminjaman Bulanan', 'Distribusi Peminjaman per Ruangan']
+                ];
+                break;
+
+            case 'inventaris':
+                $stats = [
+                    'Total Ruangan' => Ruangan::count(),
+                    'Ruangan Tersedia' => Ruangan::where('status', 'Tersedia')->count(),
+                    'Total Proyektor' => Projector::count(),
+                    'Proyektor Tersedia' => Projector::where('status', 'tersedia')->count(),
+                ];
+                $statusRuangan = Ruangan::select('status', DB::raw('COUNT(*) as count'))->groupBy('status')->pluck('count', 'status');
+                $statusProyektor = Projector::select('status', DB::raw('COUNT(*) as count'))->groupBy('status')->pluck('count', 'status');
+
+                $monthlyChartData = $statusRuangan->values()->all();
+                $distributionChartData = [
+                    'labels' => $statusProyektor->keys()->all(),
+                    'data' => $statusProyektor->values()->all()
+                ];
+                $uiConfig = [
+                    'stat_titles' => ['Total Ruangan', 'Ruangan Tersedia', 'Total Proyektor', 'Proyektor Tersedia'],
+                    'chart_titles' => ['Status Ruangan', 'Status Proyektor']
+                ];
+                break;
+
+            case 'pengguna':
+                $userQuery = User::whereHas('peminjaman', fn($q) => $q->whereBetween('tanggal', [$startDate, $endDate]));
+                $topUser = User::withCount('peminjaman')->orderBy('peminjaman_count', 'desc')->first();
+
+                $stats = [
+                    'Total Pengguna' => User::count(),
+                    'Pengguna Aktif' => $userQuery->count(),
+                    'Pengguna Baru' => User::whereBetween('created_at', [$startDate, $endDate])->count(),
+                    'Peminjam Teratas' => $topUser->name ?? 'N/A'
+                ];
+                $top10Users = User::withCount('peminjaman')->orderBy('peminjaman_count', 'desc')->take(10)->get();
+                $monthlyChartData = $top10Users->pluck('peminjaman_count')->all();
+                $distributionChartData = [
+                    'labels' => $top10Users->pluck('name')->all(),
+                    'data' => $top10Users->pluck('peminjaman_count')->all()
+                ];
+                $uiConfig = [
+                    'stat_titles' => ['Total Pengguna', 'Pengguna Aktif', 'Pengguna Baru', 'Peminjam Teratas'],
+                    'chart_titles' => ['Top 10 Peminjam', 'Distribusi Peminjaman Pengguna']
+                ];
+                break;
+
+            case 'peminjaman':
+            default:
+                $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
+                $stats = [
+                    'Total Peminjaman' => $peminjamanQuery->count(),
+                    'Barang Dipinjam' => $peminjamanQuery->clone()->whereIn('status', ['disetujui', 'selesai'])->count(),
+                    'Pengguna Aktif' => $peminjamanQuery->clone()->distinct('user_id')->count('user_id'),
+                    'Barang Rusak' => Pengembalian::whereBetween('created_at', [$startDate, $endDate])
+                        ->where(fn($q) => $q->where('kondisi_ruang', 'like', 'rusak%')->orWhere('kondisi_proyektor', 'like', 'rusak%'))->count()
+                ];
+
+                $monthlyData = Peminjaman::select(DB::raw('MONTH(tanggal) as month'), DB::raw('COUNT(*) as count'))
+                    ->whereYear('tanggal', $year)->groupBy('month')->orderBy('month')->pluck('count', 'month')->all();
+                for ($m = 1; $m <= 12; $m++) {
+                    $monthlyChartData[] = $monthlyData[$m] ?? 0;
+                }
+
+                $distribusiData = Peminjaman::whereBetween('tanggal', [$startDate, $endDate])->select(
+                    DB::raw('SUM(CASE WHEN projector_id IS NOT NULL THEN 1 ELSE 0 END) as proyektor'),
+                    DB::raw('SUM(CASE WHEN projector_id IS NULL THEN 1 ELSE 0 END) as ruangan_saja')
+                )->first();
+                $distributionChartData = [
+                    'labels' => ['Dengan Proyektor', 'Ruangan Saja'],
+                    'data' => [$distribusiData->proyektor ?? 0, $distribusiData->ruangan_saja ?? 0]
+                ];
+                $uiConfig = [
+                    'stat_titles' => ['Total Peminjaman', 'Barang Dipinjam', 'Pengguna Aktif', 'Barang Rusak'],
+                    'chart_titles' => ['Peminjaman Bulanan', 'Distribusi Peminjaman']
+                ];
+                break;
+        }
+
+        $recentActivity = Peminjaman::with('user', 'ruangan')->orderBy('created_at', 'desc')->take(5)
+            ->get()->map(fn($item) => [
+                'title' => 'Peminjaman ' . $item->status,
+                'description' => ($item->user->name ?? 'User') . ' meminjam ' . ($item->ruangan->nama_ruangan ?? 'ruangan'),
+                'time' => $item->created_at->diffForHumans(),
+                'status' => $item->status
             ]);
-        }}
+
+        return response()->json([
+            'stats' => $stats,
+            'monthlyChart' => $monthlyChartData,
+            'distributionChart' => $distributionChartData,
+            'recentActivity' => $recentActivity,
+            'uiConfig' => $uiConfig
+        ]);
+    }
+}
