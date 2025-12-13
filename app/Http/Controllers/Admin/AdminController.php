@@ -608,47 +608,57 @@ class AdminController extends Controller
             'kondisi_proyektor' => 'nullable|in:baik,rusak_ringan,rusak_berat',
             'catatan' => 'nullable|string|max:500',
             'tanggal_pengembalian' => 'nullable|date',
-            // saveable statuses use 'pending','verified','rejected','overdue' in DB
             'status' => 'required|in:pending,verified,rejected,overdue',
         ]);
 
-        $pengembalian = \App\Models\Pengembalian::findOrFail($id);
+        $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
+        $peminjaman = $pengembalian->peminjaman;
 
-        $data = [
+        // 1️⃣ DEADLINE PEMINJAMAN (tanggal + jam selesai)
+        $deadline = \Carbon\Carbon::parse(
+            $peminjaman->tanggal . ' ' . ($peminjaman->waktu_selesai ?? '23:59')
+        );
+
+        // 2️⃣ WAKTU PENGEMBALIAN (PASTI ADA JAM)
+        $waktuPengembalian = $request->filled('tanggal_pengembalian')
+            ? \Carbon\Carbon::parse($request->tanggal_pengembalian . ' ' . now()->format('H:i'))
+            : now();
+
+        // 3️⃣ STATUS FINAL
+        // default: status dari admin
+        $statusFinal = $request->status;
+
+        // 🔥 OVERRIDE JIKA LEWAT WAKTU
+        if ($waktuPengembalian->gt($deadline)) {
+            $statusFinal = 'overdue';
+        }
+
+        // 4️⃣ UPDATE PENGEMBALIAN
+        $pengembalian->update([
             'kondisi_ruang' => $request->kondisi_ruang,
             'kondisi_proyektor' => $request->kondisi_proyektor ?? null,
             'catatan' => $request->catatan,
-            'status' => $request->status,
-        ];
+            'tanggal_pengembalian' => $waktuPengembalian,
+            'status' => $statusFinal,
+        ]);
 
-        if ($request->filled('tanggal_pengembalian')) {
-            $data['tanggal_pengembalian'] = $request->tanggal_pengembalian;
+        // 5️⃣ JIKA SUDAH DIKEMBALIKAN → PEMINJAMAN SELESAI
+        if (in_array($statusFinal, ['verified', 'overdue'])) {
+            $peminjaman->update([
+                'status' => 'selesai',
+                'tanggal_kembali' => $waktuPengembalian,
+                'status_pengembalian' => 'sudah dikembalikan',
+            ]);
         }
 
-        // If admin marks as 'overdue' (Terlambat) and no tanggal_pengembalian provided, set it to today
-        if ($request->status === 'overdue' && empty($data['tanggal_pengembalian'])) {
-            $data['tanggal_pengembalian'] = Carbon::now()->toDateString();
-        }
-
-        $pengembalian->update($data);
-
-        // propagate to peminjaman: if pengembalian is verified or terlambat, mark peminjaman as selesai
-        try {
-            $peminjaman = $pengembalian->peminjaman;
-            if ($peminjaman && in_array($pengembalian->status, ['verified', 'overdue', 'terlambat'])) {
-                $peminjaman->update([
-                    'status' => 'selesai',
-                    'tanggal_kembali' => $pengembalian->tanggal_pengembalian ?? Carbon::now(),
-                    'status_pengembalian' => 'sudah dikembalikan'
-                ]);
-            }
-        } catch (\Exception $e) {
-            // ignore, not critical
-        }
         return redirect()->route('admin.pengembalian')
-            ->with('success', 'Pengembalian berhasil diperbarui.');
+            ->with(
+                'success',
+                $statusFinal === 'overdue'
+                ? 'Pengembalian disimpan (TERLAMBAT).'
+                : 'Pengembalian berhasil diperbarui.'
+            );
     }
-
 
     /**
      * Update riwayat peminjaman

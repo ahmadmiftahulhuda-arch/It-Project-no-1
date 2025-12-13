@@ -249,7 +249,7 @@ class PeminjamanController extends Controller
                 ->findOrFail($id);
 
             // Always record tanggal_pengembalian as server time (current datetime)
-            $tanggalPengembalian = Carbon::now()->toDateString();
+            $tanggalPengembalian = Carbon::now();
 
             // Determine if this submission is late relative to the peminjaman end time
             try {
