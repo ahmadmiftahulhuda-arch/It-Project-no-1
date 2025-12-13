@@ -7,6 +7,7 @@
     <title>Pengembalian - Sistem Manajemen Peminjaman</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <style>
         :root {
             --primary: #3b5998;
@@ -1103,7 +1104,7 @@
                 <div class="filter-grid">
                     <div class="filter-group">
                         <label for="status_filter">Status Pengembalian</label>
-                        <select id="status_filter" name="status">
+                        <select id="status_filter" name="status" class="form-select js-choice">
                             <option value="">Semua Status</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu
                                 Verifikasi
@@ -1119,7 +1120,7 @@
 
                     <div class="filter-group">
                         <label for="ruang_filter">Ruang</label>
-                        <select id="ruang_filter" name="ruangan_id" class="form-select">
+                        <select id="ruang_filter" name="ruangan_id" class="form-select js-choice">
                             <option value="">Semua Ruang</option>
                             @foreach ($ruangans as $r)
                                 <option value="{{ $r->id }}"
@@ -1132,7 +1133,7 @@
 
                     <div class="filter-group">
                         <label for="projector_filter">Proyektor</label>
-                        <select id="projector_filter" name="projector_id" class="form-select">
+                        <select id="projector_filter" name="projector_id" class="form-select js-choice">
                             <option value="">Semua Proyektor</option>
                             @if (isset($projectors) && $projectors->count())
                                 @foreach ($projectors as $p)
@@ -1676,6 +1677,7 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
         <script>
             // Toggle theme
             const themeToggle = document.getElementById('theme-toggle');
@@ -1689,6 +1691,11 @@
                     themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                     localStorage.setItem('darkMode', 'disabled');
                 }
+            });
+
+            // Auto relod untuk filter tanggal 
+            document.getElementById('date_filter')?.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
             });
 
             // Toggle sidebar on mobile
@@ -1960,6 +1967,18 @@
                 // Debug: Tampilkan jumlah data yang difilter
                 const tableRows = document.querySelectorAll('tbody tr');
                 console.log('Jumlah data yang ditampilkan:', tableRows.length);
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.js-choice').forEach(function(el) {
+                    new Choices(el, {
+                        searchEnabled: true,
+                        shouldSort: false,
+                        position: 'bottom',
+                        itemSelectText: '',
+                    });
+                });
             });
         </script>
     </div>

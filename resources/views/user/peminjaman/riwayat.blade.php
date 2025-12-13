@@ -1439,8 +1439,7 @@
                     <thead>
                         <tr>
                             <th width="50" class="text-center">No</th>
-                            <th>Peminjam</th>
-                            <th>Tanggal</th>
+                            <th>Tanggal & Waktu</th>
                             <th>Ruang</th>
                             <th>Dosen Pengampu</th>
                             <th>Proyektor</th>
@@ -1472,22 +1471,24 @@
                                 <td class="fw-bold text-center">
                                     {{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                 </td>
-                                <td>
-                                    {{ optional($peminjaman->user)->display_name ?? ($peminjaman->nama_peminjam ?? 'Tidak tersedia') }}
-                                </td>
 
                                 <td>
                                     <div>
                                         <i class="fas fa-calendar-day text-primary me-1"></i>
                                         {{ $tanggal->format('d M Y') }}
                                     </div>
+
                                     <div>
-                                        <small class="text-muted">
+                                        <span class="time-badge">
                                             <i class="fas fa-clock me-1"></i>
-                                            {{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '08:00') }}
-                                            -
-                                            {{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '17:00') }}
-                                        </small>
+                                            {{ $peminjaman->display_waktu_mulai ?? '08:00' }} -
+                                            {{ $peminjaman->display_waktu_selesai ?? '17:00' }}
+                                        </span>
+                                    </div>
+
+                                    <div class="text-muted small mt-1">
+                                        <i class="fas fa-paper-plane me-1"></i>
+                                        {{ $waktuPengajuan->diffForHumans() }}
                                     </div>
                                 </td>
 
