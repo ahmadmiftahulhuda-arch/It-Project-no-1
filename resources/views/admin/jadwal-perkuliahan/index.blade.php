@@ -1359,7 +1359,7 @@
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                    <a href="{{ route('barangs.index') }}" class="dropdown-item active">
+                    <a href="{{ route('barangs.index') }}" class="dropdown-item">
                         <i class="fas fa-box"></i>
                         <span>Barang</span>
                     </a>
@@ -1428,7 +1428,7 @@
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item">
+                    <a href="/admin/settings" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>

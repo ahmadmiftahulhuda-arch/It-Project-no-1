@@ -1518,7 +1518,7 @@
                         <i class="fas fa-undo"></i>
                         <span>Pengembalian</span>
                     </a>
-                    <a href="/admin/riwayat" class="dropdown-item active">
+                    <a href="/admin/riwayat" class="dropdown-item">
                         <i class="fas fa-history"></i>
                         <span>Riwayat Peminjaman</span>
                     </a>
@@ -1606,7 +1606,7 @@
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item">
+                    <a href="/admin/settings" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>

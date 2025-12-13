@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -626,7 +627,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             justify-content: center;
             align-items: center;
@@ -641,7 +642,7 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 25px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             position: relative;
         }
 
@@ -711,12 +712,12 @@
             transition: all 0.3s ease;
         }
 
-        .radio-label input:checked + .radio-custom {
+        .radio-label input:checked+.radio-custom {
             border-color: var(--primary);
             background: var(--primary);
         }
 
-        .radio-label input:checked + .radio-custom::after {
+        .radio-label input:checked+.radio-custom::after {
             content: '';
             width: 8px;
             height: 8px;
@@ -855,11 +856,11 @@
                 width: 95%;
                 margin: 10px;
             }
-            
+
             .form-actions {
                 flex-direction: column;
             }
-            
+
             .form-actions .btn {
                 width: 100%;
                 margin-bottom: 10px;
@@ -1043,7 +1044,11 @@
                     <a href="{{ route('projectors.index') }}" class="dropdown-item">
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
-                    </a> 
+                    </a>
+                    <a href="{{ route('barangs.index') }}" class="dropdown-item">
+                        <i class="fas fa-box"></i>
+                        <span>Barang</span>
+                    </a>
                     <a href="/admin/ruangan" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
@@ -1152,7 +1157,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -1178,11 +1185,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1250,13 +1268,15 @@
             <div class="filter-grid">
                 <div class="filter-group">
                     <label for="search">Cari Feedback</label>
-                    <input type="text" id="search" name="search" placeholder="Cari..." value="{{ request('search') }}">
+                    <input type="text" id="search" name="search" placeholder="Cari..."
+                        value="{{ request('search') }}">
                 </div>
                 <div class="filter-group">
                     <label for="status_filter">Status</label>
                     <select id="status_filter" name="status">
                         <option value="">Semua Status</option>
-                        <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Dipublikasikan</option>
+                        <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>
+                            Dipublikasikan</option>
                         <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                     </select>
                 </div>
@@ -1305,36 +1325,36 @@
                         </tr>
                     </thead>
                     <tbody id="feedbackTableBody">
-                        @foreach($feedback as $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->peminjaman->user->name ?? '-' }}</td>
-                            <td>{{ $item->kategori }}</td>
-                            <td>
-                                {{ \Illuminate\Support\Str::limit($item->detail_feedback ?? '-', 50) }}
-                            </td>
-                            <td>
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= $item->rating)
-                                        <i class="fas fa-star text-warning"></i>
+                        @foreach ($feedback as $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->peminjaman->user->name ?? '-' }}</td>
+                                <td>{{ $item->kategori }}</td>
+                                <td>
+                                    {{ \Illuminate\Support\Str::limit($item->detail_feedback ?? '-', 50) }}
+                                </td>
+                                <td>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $item->rating)
+                                            <i class="fas fa-star text-warning"></i>
+                                        @else
+                                            <i class="far fa-star text-warning"></i>
+                                        @endif
+                                    @endfor
+                                    <small class="text-muted">({{ $item->rating }})</small>
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>
+                                <td>
+                                    @if ($item->status == 'Dipublikasikan')
+                                        <span class="badge status-disetujui">Dipublikasikan</span>
                                     @else
-                                        <i class="far fa-star text-warning"></i>
+                                        <span class="badge status-menunggu">Draft</span>
                                     @endif
-                                @endfor
-                                <small class="text-muted">({{ $item->rating }})</small>
-                            </td>
-                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>
-                            <td>
-                                @if($item->status == 'Dipublikasikan')
-                                    <span class="badge status-disetujui">Dipublikasikan</span>
-                                @else
-                                    <span class="badge status-menunggu">Draft</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2 action-buttons">
-                                    <!-- Tombol Edit -->
-                                    <button class="btn btn-warning-custom btn-sm" 
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 action-buttons">
+                                        <!-- Tombol Edit -->
+                                        <button class="btn btn-warning-custom btn-sm"
                                             onclick="showEditModal(
                                                 {{ $item->id }},
                                                 '{{ $item->peminjaman->user->name ?? '-' }}',
@@ -1343,20 +1363,23 @@
                                                 {{ $item->rating }},
                                                 '{{ $item->status }}'
                                             )">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-
-                                    <!-- Tombol Hapus -->
-                                    <form action="{{ route('admin.feedback.destroy', ['feedback' => $item->id]) }}" method="POST" class="d-inline">
-                                        @csrf 
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger-custom btn-sm" onclick="return confirm('Yakin mau hapus feedback ini?')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-edit"></i>
                                         </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+
+                                        <!-- Tombol Hapus -->
+                                        <form
+                                            action="{{ route('admin.feedback.destroy', ['feedback' => $item->id]) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger-custom btn-sm"
+                                                onclick="return confirm('Yakin mau hapus feedback ini?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -1497,12 +1520,12 @@
                         </form>
                     </div>
                 `;
-                
+
                 // Tampilkan modal
                 const modal = document.getElementById('editModal');
                 modal.innerHTML = modalContent;
                 modal.style.display = "flex";
-                
+
                 // Setup event listeners
                 setupModalListeners(rating);
             }
@@ -1519,28 +1542,28 @@
                         }
                     });
                 }
-                
+
                 // Star rating
                 const stars = document.querySelectorAll('.star-rating .star');
                 const ratingInput = document.getElementById('editRating');
-                
+
                 if (stars.length && ratingInput) {
                     // Set initial rating
                     updateStarRating(initialRating);
-                    
+
                     stars.forEach(star => {
                         star.addEventListener('click', function() {
                             const value = this.getAttribute('data-value');
                             ratingInput.value = value;
                             updateStarRating(value);
                         });
-                        
+
                         star.addEventListener('mouseover', function() {
                             const value = this.getAttribute('data-value');
                             updateStarRating(value);
                         });
                     });
-                    
+
                     // Reset rating saat mouse leave
                     const starRatingDiv = document.querySelector('.star-rating');
                     if (starRatingDiv) {
@@ -1550,27 +1573,27 @@
                         });
                     }
                 }
-                
+
                 // Form submission
                 const editForm = document.getElementById('editForm');
                 if (editForm) {
                     editForm.addEventListener('submit', async function(e) {
                         e.preventDefault();
-                        
+
                         // Validasi form
                         if (!validateForm()) {
                             return;
                         }
-                        
+
                         const formData = new FormData(this);
-                        
+
                         try {
                             // Tampilkan loading
                             const submitBtn = this.querySelector('button[type="submit"]');
                             const originalText = submitBtn.innerHTML;
                             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
                             submitBtn.disabled = true;
-                            
+
                             const response = await fetch(this.action, {
                                 method: 'POST',
                                 headers: {
@@ -1580,7 +1603,7 @@
                                 },
                                 body: formData
                             });
-                            
+
                             if (response.ok) {
                                 const result = await response.json();
                                 alert('Feedback berhasil diperbarui!');
@@ -1599,7 +1622,7 @@
                         } catch (error) {
                             console.error('Error:', error);
                             alert('Terjadi kesalahan saat menyimpan perubahan: ' + error.message);
-                            
+
                             // Reset button
                             const submitBtn = editForm.querySelector('button[type="submit"]');
                             submitBtn.innerHTML = 'Simpan Perubahan';
@@ -1616,12 +1639,12 @@
                     alert('Detail feedback harus diisi');
                     return false;
                 }
-                
+
                 if (detailFeedback.length > 1000) {
                     alert('Detail feedback maksimal 1000 karakter');
                     return false;
                 }
-                
+
                 return true;
             }
 
@@ -1704,7 +1727,7 @@
                     document.body.classList.add('dark-mode');
                     themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 }
-                
+
                 // Tutup modal saat klik di luar modal
                 window.addEventListener('click', function(event) {
                     const modal = document.getElementById('editModal');
@@ -1712,7 +1735,7 @@
                         closeEditModal();
                     }
                 });
-                
+
                 // Tutup modal dengan tombol ESC
                 document.addEventListener('keydown', function(event) {
                     if (event.key === 'Escape') {
@@ -1723,4 +1746,5 @@
         </script>
     </div>
 </body>
+
 </html>

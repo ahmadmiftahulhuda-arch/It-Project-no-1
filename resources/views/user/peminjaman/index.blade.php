@@ -1576,14 +1576,17 @@
                                 </td>
                             </tr>
                             @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-5">
-                                        <i class="fas fa-inbox fa-2x text-muted"></i>
-                                        <h5 class="mt-2">Belum ada data peminjaman</h5>
-                                        <p class="text-muted">Silakan ajukan peminjaman baru</p>
+                                <tr class="no-data-row">
+                                    <td colspan="8">
+                                        <div class="empty-state">
+                                            <i class="fas fa-inbox"></i>
+                                            <h5 class="mt-3 mb-1">Belum ada data peminjaman</h5>
+                                            <p class="mb-3">Silakan ajukan peminjaman baru</p>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforelse
+
                         </tbody>
                     </table>
                 </div>
@@ -1841,7 +1844,7 @@
                         // Close other open dropdowns
                         dropdownToggles.forEach(otherToggle => {
                             if (otherToggle !== toggle && otherToggle.classList.contains(
-                                'show')) {
+                                    'show')) {
                                 otherToggle.classList.remove('show');
                                 const otherMenu = otherToggle.nextElementSibling;
                                 if (otherMenu && otherMenu.classList.contains('show')) {

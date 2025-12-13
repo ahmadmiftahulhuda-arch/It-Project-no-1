@@ -1005,7 +1005,7 @@
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
-                    <a href="{{ route('barangs.index') }}" class="dropdown-item active">
+                    <a href="{{ route('barangs.index') }}" class="dropdown-item">
                         <i class="fas fa-box"></i>
                         <span>Barang</span>
                     </a>
