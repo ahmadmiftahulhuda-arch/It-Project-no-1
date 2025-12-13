@@ -211,8 +211,8 @@ class AdminController extends Controller
         // Hitung statistik
         $pendingReturns = Pengembalian::where('status', 'pending')->count();
         $returnedCount = Pengembalian::where('status', 'verified')->count();
-        $overdueCount  = Pengembalian::where('status', 'overdue')->count();
-        $totalReturns  = Pengembalian::count();
+        $overdueCount = Pengembalian::where('status', 'overdue')->count();
+        $totalReturns = Pengembalian::count();
 
         $totalReturns = \App\Models\Pengembalian::count();
 
@@ -488,22 +488,45 @@ class AdminController extends Controller
     public function storePengembalian(Request $request)
     {
         $request->validate([
-            'peminjaman_id' => 'required|exists:peminjaman,id',
+            'peminjaman_id' => 'required|exists:peminjamans,id',
             'kondisi' => 'required|string|max:255',
             'keterangan' => 'nullable|string|max:500',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
+
+        // Hitung batas waktu pengembalian
+        $batas = Carbon::parse(
+            $peminjaman->tanggal . ' ' . ($peminjaman->waktu_selesai ?? '23:59')
+        );
+
+        $now = Carbon::now();
+
+        // Tentukan status otomatis
+        $statusPengembalian = $now->gt($batas) ? 'overdue' : 'verified';
+
+        Pengembalian::create([
+            'peminjaman_id' => $peminjaman->id,
+            'user_id' => $peminjaman->user_id,
+            'tanggal_pengembalian' => $now,
+            'status' => $statusPengembalian,
+            'kondisi_ruang' => $request->kondisi,
+            'catatan' => $request->keterangan,
+        ]);
+
+        // Update peminjaman → selalu selesai
         $peminjaman->update([
             'status' => 'selesai',
-            'tanggal_kembali' => Carbon::now(),
-            'kondisi_kembali' => $request->kondisi,
-            'keterangan_kembali' => $request->keterangan
+            'tanggal_kembali' => $now,
+            'status_pengembalian' => 'sudah dikembalikan',
         ]);
 
         return redirect()->route('admin.pengembalian')
-            ->with('success', 'Pengembalian berhasil dicatat.');
+            ->with('success', $statusPengembalian === 'overdue'
+                ? 'Pengembalian dicatat (TERLAMBAT).'
+                : 'Pengembalian dicatat tepat waktu.');
     }
+
 
     public function prosesPengembalian(Request $request, $id)
     {
@@ -511,10 +534,10 @@ class AdminController extends Controller
         $peminjaman = \App\Models\Peminjaman::findOrFail($id);
 
         $peminjaman->update([
-            'status'             => 'selesai',
+            'status' => 'selesai',
             'status_pengembalian' => 'sudah dikembalikan',
-            'tanggal_kembali'    => now(),
-            'kondisi_kembali'    => $request->kondisi_barang,
+            'tanggal_kembali' => now(),
+            'kondisi_kembali' => $request->kondisi_barang,
             'keterangan_kembali' => $request->keterangan,
         ]);
 

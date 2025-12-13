@@ -1299,16 +1299,6 @@
                                                         <i class="fas fa-check"></i> Setujui
                                                     </button>
                                                 </form>
-
-                                                <form
-                                                    action="{{ route('admin.pengembalian.reject', $pengembalian->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit" class="btn btn-danger-custom btn-sm">
-                                                        <i class="fas fa-times"></i> Tolak
-                                                    </button>
-                                                </form>
                                             @endif
 
                                             {{-- Tombol Edit --}}
@@ -1601,7 +1591,6 @@
                                 <select id="edit_status" name="status" class="form-select" required>
                                     <option value="pending">Menunggu</option>
                                     <option value="verified">Disetujui</option>
-                                    <option value="rejected">Ditolak</option>
                                     <option value="overdue">Terlambat</option>
                                 </select>
                             </div>
