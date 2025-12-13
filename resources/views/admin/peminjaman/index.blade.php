@@ -1155,7 +1155,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
 
                     <!-- Tombol kiri (Reset) -->
-                    <div class="d-flex gap-2">  
+                    <div class="d-flex gap-2">
 
                         <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-outline btn-sm">
                             <i class="fas fa-refresh me-1"></i> Reset
@@ -1298,7 +1298,6 @@
                                             data-id="{{ $peminjaman->id }}"
                                             data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
                                             data-nim="{{ $peminjaman->user->nim ?? '-' }}"
-                                            data-prodi="{{ $peminjaman->user->prodi ?? '-' }}"
                                             data-email="{{ $peminjaman->user->email ?? '-' }}"
                                             data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"
                                             data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
@@ -1321,7 +1320,6 @@
                                             data-bs-target="#editModal" data-id="{{ $peminjaman->id }}"
                                             data-peminjam="{{ $peminjaman->user->name ?? 'Guest' }}"
                                             data-nim="{{ $peminjaman->user->nim ?? '' }}"
-                                            data-prodi="{{ $peminjaman->user->prodi ?? '' }}"
                                             data-email="{{ $peminjaman->user->email ?? '' }}"
                                             data-no-hp="{{ $peminjaman->user->no_hp ?? '' }}"
                                             data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
@@ -1453,11 +1451,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="edit_nim" class="form-label">NIM</label>
                                     <input type="text" class="form-control" id="edit_nim" name="nim"
-                                        readonly>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="edit_prodi" class="form-label">Program Studi</label>
-                                    <input type="text" class="form-control" id="edit_prodi" name="prodi"
                                         readonly>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -1684,6 +1677,16 @@
                 sidebar.classList.toggle('active');
             });
 
+            // waktu
+            function formatJamMenit(waktu) {
+                if (!waktu) return '-';
+                // jika format HH:mm:ss → ambil HH:mm
+                if (waktu.length >= 5) {
+                    return waktu.substring(0, 5);
+                }
+                return waktu;
+            }
+
             // Auto-submit form search ketika mengetik (dengan debounce)
             let searchTimeout;
             const searchInputs = document.querySelectorAll('.search-bar input[name="search"]');
@@ -1728,7 +1731,6 @@
                 button.addEventListener('click', function() {
                     const peminjam = this.getAttribute('data-peminjam');
                     const nim = this.getAttribute('data-nim');
-                    const prodi = this.getAttribute('data-prodi');
                     const email = this.getAttribute('data-email');
                     const noHp = this.getAttribute('data-no-hp');
                     const tanggal = this.getAttribute('data-tanggal');
@@ -1772,14 +1774,13 @@
                                 <h6><i class="fas fa-user me-2"></i>Informasi Peminjam</h6>
                                 <p><strong>Nama:</strong> ${peminjam}</p>
                                 <p><strong>NIM:</strong> ${nim || '-'}</p>
-                                <p><strong>Program Studi:</strong> ${prodi || '-'}</p>
                                 <p><strong>Email:</strong> ${email || '-'}</p>
                                 <p><strong>No. HP:</strong> ${noHp || '-'}</p>
                             </div>
                             <div class="col-md-6">
                                 <h6><i class="fas fa-calendar me-2"></i>Informasi Peminjaman</h6>
-                                <p><strong>Tanggal:</strong> ${tanggal}</p>
-                                <p><strong>Waktu:</strong> ${waktuMulai} - ${waktuSelesai}</p>
+                                <p><strong>Tanggal:</strong> ${tanggal}</p>                              
+<p><strong>Waktu:</strong> ${formatJamMenit(waktuMulai)} - ${formatJamMenit(waktuSelesai)}</p>
                                 <p><strong>Ruang:</strong> ${ruang}</p>
                                 <p><strong>Proyektor:</strong> ${proyektorLabel}</p>
                                 <p><strong>Dosen Pengampu:</strong> ${dosen || '-'}</p>
@@ -1849,7 +1850,6 @@
                     const id = button.getAttribute('data-id');
                     const peminjam = button.getAttribute('data-peminjam');
                     const nim = button.getAttribute('data-nim');
-                    const prodi = button.getAttribute('data-prodi');
                     const email = button.getAttribute('data-email');
                     const noHp = button.getAttribute('data-no-hp');
                     const tanggal = button.getAttribute('data-tanggal');
@@ -1869,7 +1869,6 @@
                     // Isi form dengan data yang ada (gunakan edit_ prefixed IDs)
                     document.getElementById('edit_peminjam').value = peminjam;
                     document.getElementById('edit_nim').value = nim;
-                    document.getElementById('edit_prodi').value = prodi;
                     document.getElementById('edit_email').value = email;
                     // Normalize date and time for HTML inputs
                     try {
