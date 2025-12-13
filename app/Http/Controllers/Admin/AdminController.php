@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Ruangan;
 use App\Models\Projector;
 use App\Models\Dosen;
+use App\Models\SlotWaktu;
 use Carbon\Carbon;
 use App\Exports\PeminjamanExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -103,6 +104,7 @@ class AdminController extends Controller
         $ruangan = Ruangan::where('status', 'Tersedia')->get();
         $projectors = Projector::where('status', 'tersedia')->get();
         $dosens = Dosen::orderBy('nama_dosen')->get();
+        $slotwaktu = SlotWaktu::orderBy('waktu', 'asc')->get();
 
         return view('admin.peminjaman.index', compact(
             'peminjamans',
@@ -112,7 +114,8 @@ class AdminController extends Controller
             'totalCount',
             'ruangan',
             'projectors',
-            'dosens'
+            'dosens',
+            'slotwaktu'
         ));
     }
 

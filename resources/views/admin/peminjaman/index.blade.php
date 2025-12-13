@@ -1248,10 +1248,6 @@
                                 <td>
                                     @php $pjStatus = optional($peminjaman->pengembalian)->status; @endphp
 
-                                    @if (in_array($pjStatus, ['overdue', 'terlambat']))
-                                        <span class="badge status-badge status-terlambat"><i
-                                                class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
-                                    @else
                                         @if ($peminjaman->status == 'disetujui' && $isOngoing)
                                             <span class="badge status-badge status-berlangsung">
                                                 <i class="fas fa-play-circle me-1"></i> Berlangsung
@@ -1272,7 +1268,6 @@
                                             <span class="badge status-badge status-menunggu">
                                                 <i class="fas fa-clock me-1"></i> Menunggu
                                             </span>
-                                        @endif
                                     @endif
                                 </td>
                                 <td>
@@ -1465,14 +1460,24 @@
                                         required>
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label for="edit_waktu_mulai" class="form-label">Waktu Mulai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_mulai"
-                                        name="waktu_mulai" required>
+                                    <label class="form-label">Waktu Mulai</label>
+                                    <select class="form-select" id="edit_waktu_mulai" name="waktu_mulai" required>
+                                        <option value="">-- Pilih Waktu Mulai --</option>
+                                        @foreach ($slotwaktu as $slot)
+                                            <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+
                                 <div class="col-md-3 mb-3">
-                                    <label for="edit_waktu_selesai" class="form-label">Waktu Selesai</label>
-                                    <input type="time" class="form-control" id="edit_waktu_selesai"
-                                        name="waktu_selesai" required>
+                                    <label class="form-label">Waktu Selesai</label>
+                                    <select class="form-select" id="edit_waktu_selesai" name="waktu_selesai"
+                                        required>
+                                        <option value="">-- Pilih Waktu Selesai --</option>
+                                        @foreach ($slotwaktu as $slot)
+                                            <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="edit_ruangan_id" class="form-label">Ruang</label>
@@ -1568,16 +1573,25 @@
                                     <input type="date" name="tanggal" class="form-control" required>
                                 </div>
 
-                                <!-- WAKTU MULAI -->
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label">Waktu Mulai</label>
-                                    <input type="time" name="waktu_mulai" class="form-control" required>
+                                    <select class="form-select" id="edit_waktu_mulai" name="waktu_mulai" required>
+                                        <option value="">-- Pilih Waktu Mulai --</option>
+                                        @foreach ($slotwaktu as $slot)
+                                            <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
-                                <!-- WAKTU SELESAI -->
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label">Waktu Selesai</label>
-                                    <input type="time" name="waktu_selesai" class="form-control" required>
+                                    <select class="form-select" id="edit_waktu_selesai" name="waktu_selesai"
+                                        required>
+                                        <option value="">-- Pilih Waktu Selesai --</option>
+                                        @foreach ($slotwaktu as $slot)
+                                            <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <!-- RUANG -->
@@ -1624,7 +1638,6 @@
                                     <label for="status" class="form-label">Status</label>
                                     <select name="status" class="form-select" id="status">
                                         <option value="pending" selected>Menunggu</option>
-                                        <option value="berlangsung">Berlangsung</option>
                                         <option value="disetujui">Disetujui</option>
                                         <option value="ditolak">Ditolak</option>
                                         <option value="selesai">Selesai</option>
@@ -1878,8 +1891,8 @@
                     } catch (e) {
                         document.getElementById('edit_tanggal').value = '';
                     }
-                    document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai);
-                    document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai);
+                    document.getElementById('edit_waktu_mulai').value = waktuMulai?.substring(0, 5) || '';
+                    document.getElementById('edit_waktu_selesai').value = waktuSelesai?.substring(0, 5) || '';
 
                     // Set ruangan_id langsung dari data attribute
                     const ruanganSelect = document.getElementById('edit_ruangan_id');
