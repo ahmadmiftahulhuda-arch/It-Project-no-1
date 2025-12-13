@@ -1532,20 +1532,18 @@
                                         <button class="btn btn-info btn-action view-detail" title="Lihat Detail"
                                             data-id="{{ $peminjaman->id }}"
                                             data-tanggal="{{ $tanggal->format('d M Y') }}"
-                                            data-waktu-mulai="{{ $peminjaman->waktu_mulai ?? '08:00' }}"
-                                            data-waktu-selesai="{{ $peminjaman->waktu_selesai ?? '17:00' }}"
+                                            data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? $peminjaman->waktu_mulai }}"
+                                            data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? $peminjaman->waktu_selesai }}"
                                             data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
-                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '' }}"
-                                            data-dosen-nip="{{ $peminjaman->dosen_nip ?? '' }}"
-                                            data-projector-id="{{ $peminjaman->projector->id ?? '' }}"
+                                            data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '-' }}"
                                             data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
                                             data-status="{{ $peminjaman->status }}"
-                                            data-nama-peminjam="{{ $peminjaman->nama_peminjam ?? 'Tidak tersedia' }}"
-                                            data-nim="{{ $peminjaman->nim ?? 'Tidak tersedia' }}"
-                                            data-prodi="{{ $peminjaman->prodi ?? 'Tidak tersedia' }}"
-                                            data-no-hp="{{ $peminjaman->no_hp ?? 'Tidak tersedia' }}"
-                                            data-email="{{ $peminjaman->email ?? 'Tidak tersedia' }}"
+                                             {{-- ambil dari USER --}}
+                                            data-nama-peminjam="{{ $peminjaman->user->name ?? '-' }}"
+                                            data-nim="{{ $peminjaman->user->nim ?? '-' }}"
+                                            data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"
+                                            data-email="{{ $peminjaman->user->email ?? '-' }}"
                                             data-diajukan="{{ $waktuPengajuan->format('d M Y H:i') }}"
                                             data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
                                             <i class="fas fa-eye"></i>
@@ -1646,6 +1644,27 @@
                         <button class="modal-close" id="closeModal">&times;</button>
                     </div>
                     <div class="modal-body-custom">
+
+                        <div class="detail-section">
+                            <h4><i class="fas fa-user"></i> Informasi Peminjam</h4>
+                            <div class="detail-row">
+                                <div class="detail-label">Nama Peminjam</div>
+                                <div class="detail-value" id="detail-nama-peminjam"></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">NIM</div>
+                                <div class="detail-value" id="detail-nim"></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">No. HP</div>
+                                <div class="detail-value" id="detail-no-hp"></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Email</div>
+                                <div class="detail-value" id="detail-email"></div>
+                            </div>
+                        </div>
+
                         <div class="detail-section">
                             <h4><i class="fas fa-calendar-alt"></i> Informasi Peminjaman</h4>
                             <div class="detail-row">
@@ -1673,30 +1692,6 @@
                                 <div class="detail-value">
                                     <span class="status-badge" id="detail-status"></span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="detail-section">
-                            <h4><i class="fas fa-user"></i> Informasi Peminjam</h4>
-                            <div class="detail-row">
-                                <div class="detail-label">Nama Peminjam</div>
-                                <div class="detail-value" id="detail-nama-peminjam"></div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">NIM</div>
-                                <div class="detail-value" id="detail-nim"></div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">Program Studi</div>
-                                <div class="detail-value" id="detail-prodi"></div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">No. HP</div>
-                                <div class="detail-value" id="detail-no-hp"></div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">Email</div>
-                                <div class="detail-value" id="detail-email"></div>
                             </div>
                         </div>
 
@@ -1902,7 +1897,6 @@
                 document.getElementById('detail-keperluan').textContent = keperluan;
                 document.getElementById('detail-nama-peminjam').textContent = namaPeminjam;
                 document.getElementById('detail-nim').textContent = nim;
-                document.getElementById('detail-prodi').textContent = prodi;
                 document.getElementById('detail-no-hp').textContent = noHp;
                 document.getElementById('detail-email').textContent = email;
                 document.getElementById('detail-dosen').textContent = dosen || '-';
