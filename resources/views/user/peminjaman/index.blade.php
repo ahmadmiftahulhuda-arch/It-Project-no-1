@@ -1423,15 +1423,27 @@
                     </thead>
                     <tbody id="tableBody">
                         @forelse($peminjamans as $peminjaman)
-                            @php
-                                $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
-                                $now = \Carbon\Carbon::now();
-                                $isOngoing = $peminjaman->is_ongoing;
+@php
+    $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
 
-                                // Hitung waktu pengajuan relatif
-                                $waktuPengajuan = \Carbon\Carbon::parse($peminjaman->created_at);
-                                $selisih = $waktuPengajuan->diffForHumans($now, true);
-                            @endphp
+    $waktuMulai = \Carbon\Carbon::parse(
+        $peminjaman->tanggal . ' ' . ($peminjaman->display_waktu_mulai ?? $peminjaman->waktu_mulai)
+    );
+
+    $waktuSelesai = \Carbon\Carbon::parse(
+        $peminjaman->tanggal . ' ' . ($peminjaman->display_waktu_selesai ?? $peminjaman->waktu_selesai)
+    );
+
+    $now = \Carbon\Carbon::now();
+
+    // 🔥 INI PENENTU STATUS BERLANGSUNG (FIX UTAMA)
+    $isOngoing =
+        $peminjaman->status === 'disetujui' &&
+        $now->between($waktuMulai, $waktuSelesai);
+
+    $waktuPengajuan = \Carbon\Carbon::parse($peminjaman->created_at);
+@endphp
+
 
                             <tr class="{{ $isOngoing ? 'table-success' : '' }}"
                                 data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
@@ -1488,12 +1500,8 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    @php $pjStatus = optional($peminjaman->pengembalian)->status; @endphp
+                                    @php $pjStatus = optional($peminjaman)->status; @endphp
 
-                                    @if (in_array($pjStatus, ['overdue', 'terlambat']))
-                                        <span class="badge status-badge status-terlambat"><i
-                                                class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
-                                    @else
                                         @switch(true)
                                             @case($peminjaman->status === 'disetujui' && $isOngoing)
                                                 <span class="badge status-badge status-berlangsung">
@@ -1525,7 +1533,6 @@
                                                     <i class="fas fa-clock me-1"></i> Menunggu
                                                 </span>
                                         @endswitch
-                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-1">
