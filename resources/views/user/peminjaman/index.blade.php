@@ -1423,27 +1423,15 @@
                     </thead>
                     <tbody id="tableBody">
                         @forelse($peminjamans as $peminjaman)
-@php
-    $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
+                            @php
+                                $tanggal = \Carbon\Carbon::parse($peminjaman->tanggal);
+                                $now = \Carbon\Carbon::now();
+                                $isOngoing = $peminjaman->is_ongoing;
 
-    $waktuMulai = \Carbon\Carbon::parse(
-        $peminjaman->tanggal . ' ' . ($peminjaman->display_waktu_mulai ?? $peminjaman->waktu_mulai)
-    );
-
-    $waktuSelesai = \Carbon\Carbon::parse(
-        $peminjaman->tanggal . ' ' . ($peminjaman->display_waktu_selesai ?? $peminjaman->waktu_selesai)
-    );
-
-    $now = \Carbon\Carbon::now();
-
-    // 🔥 INI PENENTU STATUS BERLANGSUNG (FIX UTAMA)
-    $isOngoing =
-        $peminjaman->status === 'disetujui' &&
-        $now->between($waktuMulai, $waktuSelesai);
-
-    $waktuPengajuan = \Carbon\Carbon::parse($peminjaman->created_at);
-@endphp
-
+                                // Hitung waktu pengajuan relatif
+                                $waktuPengajuan = \Carbon\Carbon::parse($peminjaman->created_at);
+                                $selisih = $waktuPengajuan->diffForHumans($now, true);
+                            @endphp
 
                             <tr class="{{ $isOngoing ? 'table-success' : '' }}"
                                 data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
