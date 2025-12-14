@@ -29,7 +29,8 @@ class Peminjaman extends Model
         'status_pengembalian', // <-- Ditambahkan
         'tanggal_kembali',      // <-- Ditambahkan
         'kondisi_kembali',      // <-- Ditambahkan
-        'keterangan_kembali'    // <-- Ditambahkan
+        'keterangan_kembali',    // <-- Ditambahkan
+        'nilai_preferensi'
     ];
 
     public function spkPenilaian()

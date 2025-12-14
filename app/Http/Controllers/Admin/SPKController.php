@@ -7,7 +7,6 @@ use App\Models\SpkCriterion;
 use App\Models\SpkPenilaian;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SPKController extends Controller
 {
@@ -16,14 +15,16 @@ class SPKController extends Controller
      */
     public function index()
     {
+        // 1. Ambil kriteria + bobot AHP
         $criteria = SpkCriterion::orderBy('kode')->get();
 
-        $peminjamans = Peminjaman::whereRaw(
-            "LOWER(COALESCE(status,'')) = ?",
-            ['disetujui']
-        )->get();
+        // 2. Ambil peminjaman yang disetujui
+        $peminjamans = Peminjaman::with(['ruangan', 'projector', 'user', 'spkPenilaian'])
+            ->whereRaw("LOWER(COALESCE(status,'')) = ?", ['disetujui'])
+            ->get();
 
-        // Nilai lama
+
+        // 3. Ambil nilai penilaian lama (jika ada)
         $scores = [];
         $penilaian = SpkPenilaian::whereIn(
             'peminjaman_id',
@@ -34,7 +35,7 @@ class SPKController extends Controller
             $scores[$p->peminjaman_id][$p->criterion_id] = $p->nilai;
         }
 
-        // Ranking jika sudah ada
+        // 4. Ambil hasil ranking SAW (INI YANG SEBELUMNYA HILANG)
         $rankings = Peminjaman::whereNotNull('nilai_preferensi')
             ->orderByDesc('nilai_preferensi')
             ->get();
@@ -48,46 +49,53 @@ class SPKController extends Controller
     }
 
     /**
-     * Simpan nilai alternatif & hitung SAW
+     * Simpan penilaian & hitung SAW
      */
     public function storeScores(Request $request)
     {
-        $request->validate([
-            'scores' => 'required|array'
-        ]);
+        $scores = $request->input('scores', []);
 
-        DB::transaction(function () use ($request) {
-            foreach ($request->scores as $peminjaman_id => $criterias) {
-                foreach ($criterias as $criterion_id => $nilai) {
-                    SpkPenilaian::updateOrCreate(
-                        [
-                            'peminjaman_id' => $peminjaman_id,
-                            'criterion_id'  => $criterion_id,
-                        ],
-                        [
-                            'nilai' => (float) $nilai
-                        ]
-                    );
-                }
+        // 1. Simpan nilai penilaian
+        foreach ($scores as $peminjaman_id => $criterias) {
+            foreach ($criterias as $criterion_id => $nilai) {
+                SpkPenilaian::updateOrCreate(
+                    [
+                        'peminjaman_id' => $peminjaman_id,
+                        'criterion_id'  => $criterion_id,
+                    ],
+                    [
+                        'nilai' => (float)$nilai
+                    ]
+                );
             }
+        }
 
-            $this->hitungDanSimpanSAW();
-        });
+        // 2. Hitung SAW
+        $this->hitungSAW();
 
-        return back()->with('success', 'Penilaian tersimpan & SAW berhasil dihitung.');
+        return redirect()
+            ->route('admin.spk.index')
+            ->with('success', 'Penilaian tersimpan & SAW berhasil dihitung.');
     }
 
     /**
-     * PROSES INTI SAW
+     * ==========================
+     * INTI PERHITUNGAN SAW
+     * (SAMA DENGAN PYTHON)
+     * ==========================
      */
-    private function hitungDanSimpanSAW(): void
+    private function hitungSAW(): void
     {
         $criteria = SpkCriterion::orderBy('kode')->get();
+
+        // Ambil peminjaman + penilaian
         $peminjamans = Peminjaman::with('spkPenilaian')->get();
 
-        // ===============================
-        // 1. Pembagi normalisasi
-        // ===============================
+        /**
+         * 1. Hitung pembagi normalisasi
+         * BENEFIT → max
+         * COST    → min
+         */
         $pembagi = [];
 
         foreach ($criteria as $c) {
@@ -95,51 +103,53 @@ class SPKController extends Controller
 
             foreach ($peminjamans as $p) {
                 $nilai = optional(
-                    $p->spkPenilaian
-                        ->where('criterion_id', $c->id)
-                        ->first()
+                    $p->spkPenilaian->where('criterion_id', $c->id)->first()
                 )->nilai;
 
                 if ($nilai !== null) {
-                    $values[] = (float) $nilai;
+                    $values[] = (float)$nilai;
                 }
             }
 
-            if (empty($values)) {
-                $pembagi[$c->id] = 1.0;
+            if (count($values) === 0) {
+                $pembagi[$c->id] = 1;
             } else {
-                $pembagi[$c->id] = $c->tipe === 'benefit'
-                    ? max($values)
-                    : min($values);
+                $pembagi[$c->id] = ($c->tipe === 'cost')
+                    ? min($values)
+                    : max($values);
+            }
 
-                if ($pembagi[$c->id] == 0) {
-                    $pembagi[$c->id] = 1.0;
-                }
+            if ($pembagi[$c->id] == 0) {
+                $pembagi[$c->id] = 1;
             }
         }
 
-        // ===============================
-        // 2. Hitung nilai preferensi
-        // ===============================
+        /**
+         * 2. Hitung nilai preferensi
+         * normalisasi × bobot
+         */
         foreach ($peminjamans as $p) {
-            $preferensi = 0.0;
+            $preferensi = 0;
 
             foreach ($criteria as $c) {
                 $nilai = optional(
-                    $p->spkPenilaian
-                        ->where('criterion_id', $c->id)
-                        ->first()
+                    $p->spkPenilaian->where('criterion_id', $c->id)->first()
                 )->nilai;
 
-                if ($nilai === null) continue;
+                if ($nilai === null) {
+                    continue;
+                }
 
-                $nilai = (float) $nilai;
+                $nilai = (float)$nilai;
 
-                $normalisasi = $c->tipe === 'benefit'
-                    ? $nilai / $pembagi[$c->id]
-                    : ($nilai != 0 ? $pembagi[$c->id] / $nilai : 0);
+                // Normalisasi (SAMA DENGAN PYTHON)
+                if ($c->tipe === 'cost') {
+                    $normalisasi = $pembagi[$c->id] / $nilai;
+                } else {
+                    $normalisasi = $nilai / $pembagi[$c->id];
+                }
 
-                $preferensi += $normalisasi * (float) $c->bobot;
+                $preferensi += $normalisasi * (float)$c->bobot;
             }
 
             $p->nilai_preferensi = round($preferensi, 8);

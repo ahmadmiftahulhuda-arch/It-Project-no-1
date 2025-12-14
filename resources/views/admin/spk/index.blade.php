@@ -1047,17 +1047,20 @@
                                             <strong>Keperluan:</strong> {{ $p->keperluan ?? '-' }}
                                         </td>
                                         <td>
-                                            <strong>Ruang:</strong> {{ $p->ruang ?? ($p->ruangan->nama ?? '-') }}<br>
+                                            <strong>Ruang:</strong>
+                                            {{ $p->ruangan->nama_ruangan ?? '-' }}<br>
+
                                             <strong>Proyektor:</strong>
-                                            {{ $p->projector->kode ?? ($p->kode_proyektor ?? '-') }}
+                                            {{ $p->projector->kode_proyektor ?? '-' }}
                                         </td>
                                         <td>
                                             <strong>Tanggal:</strong>
-                                            {{ $p->tanggal_peminjaman ?? ($p->tanggal ?? '-') }}<br>
+                                            {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}<br>
+
                                             <strong>Jam:</strong>
-                                            {{ $p->jam_mulai ?? ($p->jam_peminjaman ?? '-') }}
-                                            @if (!empty($p->jam_selesai))
-                                                - {{ $p->jam_selesai }}
+                                            {{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}
+                                            @if ($p->waktu_selesai)
+                                                - {{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}
                                             @endif
                                         </td>
 
@@ -1131,17 +1134,20 @@
                                         <td>{{ $p->kode_peminjaman ?? 'PMJ-' . $p->id }}</td>
                                         <td>{{ $p->user->name ?? ($p->nama_peminjam ?? '-') }}</td>
                                         <td>
-                                            <strong>Ruang:</strong> {{ $p->ruang ?? ($p->ruangan->nama ?? '-') }}<br>
+                                            <strong>Ruang:</strong>
+                                            {{ $p->ruangan->nama_ruangan ?? '-' }}<br>
+
                                             <strong>Proyektor:</strong>
-                                            {{ $p->projector->kode ?? ($p->kode_proyektor ?? '-') }}
+                                            {{ $p->projector->kode_proyektor ?? '-' }}
                                         </td>
                                         <td>
                                             <strong>Tanggal:</strong>
-                                            {{ $p->tanggal_peminjaman ?? ($p->tanggal ?? '-') }}<br>
+                                            {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}<br>
+
                                             <strong>Jam:</strong>
-                                            {{ $p->jam_mulai ?? ($p->jam_peminjaman ?? '-') }}
-                                            @if (!empty($p->jam_selesai))
-                                                - {{ $p->jam_selesai }}
+                                            {{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}
+                                            @if ($p->waktu_selesai)
+                                                - {{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}
                                             @endif
                                         </td>
                                         <td class="text-center fw-bold">
