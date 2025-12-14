@@ -1,1253 +1,1252 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPK Peminjaman - AHP & SAW</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #3b5998;
-            --secondary: #6d84b4;
-            --success: #4caf50;
-            --info: #2196f3;
-            --warning: #ff9800;
-            --danger: #f44336;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --gray: #6c757d;
-            --sidebar-width: 250px;
-            --text-light: #6c757d;
-            --text-dark: #495057;
-            --bg-light: #f5f8fa;
-            --bg-card: #ffffff;
-            --border-light: #e9ecef;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--sidebar-width);
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            transition: all 0.3s;
-            z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .dark-mode .sidebar {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-        }
-
-        .sidebar-logo {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .sidebar-menu {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 0;
-        }
-
-        .sidebar-menu::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar-menu::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-        }
-
-        .sidebar-menu::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .sidebar-menu::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .menu-item:hover,
-        .menu-item.active {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-left: 4px solid white;
-        }
-
-        .menu-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-            opacity: 0.8;
-            flex-shrink: 0;
-        }
-
-        .dropdown-custom {
-            margin-bottom: 5px;
-        }
-
-        .dropdown-toggle-custom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 20px;
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
-            cursor: pointer;
-            width: 100%;
-            background: none;
-            border: none;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .dropdown-toggle-custom:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .dropdown-toggle-custom i:last-child {
-            transition: transform 0.3s;
-            margin-left: auto;
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .dropdown-toggle-custom[aria-expanded="true"] {
-            background-color: rgba(255, 255, 255, 0.15);
-            border-left: 4px solid white;
-        }
-
-        .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
-            transform: rotate(180deg);
-        }
-
-        .dropdown-items {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .dropdown-items.show {
-            max-height: 500px;
-        }
-
-        .dropdown-item {
-            padding: 10px 20px 10px 40px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
-            position: relative;
-        }
-
-        .dropdown-item:hover,
-        .dropdown-item.active {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-left: 4px solid white;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 20px;
-            transition: all 0.3s;
-            min-height: 100vh;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-card);
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-            border: 1px solid var(--border-light);
-        }
-
-        .search-bar {
-            position: relative;
-            width: 300px;
-        }
-
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border: 1px solid var(--border-light);
-            border-radius: 30px;
-            outline: none;
-            transition: all 0.3s;
-            background-color: var(--bg-light);
-        }
-
-        .search-bar input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
-        }
-
-        .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .notification-btn,
-        .theme-toggle {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-light);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: var(--text-dark);
-        }
-
-        .notification-btn:hover,
-        .theme-toggle:hover {
-            background: #e4e6eb;
-            color: var(--primary);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .page-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-title h1 {
-            color: var(--dark);
-            margin-bottom: 5px;
-            font-weight: 600;
-            font-size: 1.8rem;
-        }
-
-        .page-title p {
-            color: var(--text-light);
-            margin: 0;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
-        }
-
-        .btn-primary:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
-        }
-
-        .ahp-container,
-        .spk-container,
-        .ranking-container {
-            background: var(--bg-card);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-light);
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            color: var(--dark);
-            font-weight: 600;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title i {
-            color: var(--primary);
-        }
-
-        .matrix-container {
-            overflow-x: auto;
-            margin-bottom: 30px;
-        }
-
-        .matrix-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .matrix-table th {
-            background: var(--primary);
-            color: white;
-            padding: 15px;
-            font-weight: 600;
-            text-align: center;
-            border: none;
-        }
-
-        .matrix-table td {
-            padding: 15px;
-            text-align: center;
-            border: 1px solid var(--border-light);
-            background: white;
-        }
-
-        .matrix-table .criteria-header {
-            background: #f0f4ff;
-            font-weight: 600;
-            color: var(--dark);
-            border: none;
-        }
-
-        .matrix-table input {
-            width: 80px;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-align: center;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .matrix-table input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.1);
-            outline: none;
-        }
-
-        .result-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .result-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-light);
-            text-align: center;
-        }
-
-        .result-card .result-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 10px 0;
-        }
-
-        .result-card .result-label {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        .result-card.success .result-value {
-            color: var(--success);
-        }
-
-        .result-card.warning .result-value {
-            color: var(--warning);
-        }
-
-        .result-card.danger .result-value {
-            color: var(--danger);
-        }
-
-        .eigenvector-container {
-            background: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-light);
-            margin-top: 30px;
-        }
-
-        .eigenvector-title {
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--dark);
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 10px;
-        }
-
-        .eigenvector-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .eigenvector-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            transition: all 0.3s;
-        }
-
-        .eigenvector-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .eigenvector-label {
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .eigenvector-value {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        .table-spk th {
-            background-color: var(--primary);
-            color: #fff;
-            text-align: center;
-        }
-
-        .badge-priority {
-            font-size: 0.8rem;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                overflow: hidden;
+    @php
+        $peminjamans = $peminjamans ?? [];
+        $scores = $scores ?? [];
+        $rankings = $rankings ?? [];
+    @endphp
+    <!DOCTYPE html>
+    <html lang="id">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SPK Peminjaman - AHP & SAW</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            :root {
+                --primary: #3b5998;
+                --secondary: #6d84b4;
+                --success: #4caf50;
+                --info: #2196f3;
+                --warning: #ff9800;
+                --danger: #f44336;
+                --light: #f8f9fa;
+                --dark: #343a40;
+                --gray: #6c757d;
+                --sidebar-width: 250px;
+                --text-light: #6c757d;
+                --text-dark: #495057;
+                --bg-light: #f5f8fa;
+                --bg-card: #ffffff;
+                --border-light: #e9ecef;
             }
 
-            .sidebar-header h2,
-            .dropdown-toggle-custom span {
-                display: none;
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--bg-light);
+                color: var(--text-dark);
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+            }
+
+            /* Sidebar Styles */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: var(--sidebar-width);
+                height: 100%;
+                background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+                color: white;
+                transition: all 0.3s;
+                z-index: 1000;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .dark-mode .sidebar {
+                background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            }
+
+            .sidebar-header {
+                padding: 20px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                flex-shrink: 0;
+            }
+
+            .sidebar-logo {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                opacity: 0.9;
+            }
+
+            .sidebar-menu {
+                flex: 1;
+                overflow-y: auto;
+                padding: 20px 0;
+            }
+
+            .sidebar-menu::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .sidebar-menu::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 3px;
+            }
+
+            .sidebar-menu::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 3px;
+            }
+
+            .sidebar-menu::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.5);
+            }
+
+            .menu-item {
+                display: flex;
+                align-items: center;
+                padding: 12px 20px;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                transition: all 0.3s;
+                border-left: 4px solid transparent;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .menu-item:hover,
+            .menu-item.active {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-left: 4px solid white;
+            }
+
+            .menu-item i {
+                margin-right: 10px;
+                width: 20px;
+                text-align: center;
+                opacity: 0.8;
+                flex-shrink: 0;
+            }
+
+            .dropdown-custom {
+                margin-bottom: 5px;
             }
 
             .dropdown-toggle-custom {
-                justify-content: center;
-                padding: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 20px;
+                color: rgba(255, 255, 255, 0.9);
+                text-decoration: none;
+                transition: all 0.3s;
+                border-left: 4px solid transparent;
+                cursor: pointer;
+                width: 100%;
+                background: none;
+                border: none;
+                text-align: left;
+                font-weight: 600;
             }
 
-            .dropdown-toggle-custom i {
-                margin-right: 0;
+            .dropdown-toggle-custom:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
             }
 
             .dropdown-toggle-custom i:last-child {
-                display: none;
+                transition: transform 0.3s;
+                margin-left: auto;
+                font-size: 0.8rem;
+                opacity: 0.7;
+            }
+
+            .dropdown-toggle-custom[aria-expanded="true"] {
+                background-color: rgba(255, 255, 255, 0.15);
+                border-left: 4px solid white;
+            }
+
+            .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
+                transform: rotate(180deg);
             }
 
             .dropdown-items {
-                display: none;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+                background-color: rgba(0, 0, 0, 0.1);
             }
 
+            .dropdown-items.show {
+                max-height: 500px;
+            }
+
+            .dropdown-item {
+                padding: 10px 20px 10px 40px;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                display: block;
+                transition: all 0.3s;
+                border-left: 4px solid transparent;
+                position: relative;
+            }
+
+            .dropdown-item:hover,
+            .dropdown-item.active {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-left: 4px solid white;
+            }
+
+            /* Main Content */
             .main-content {
-                margin-left: 70px;
+                margin-left: var(--sidebar-width);
+                padding: 20px;
+                transition: all 0.3s;
+                min-height: 100vh;
             }
 
+            /* Header */
             .header {
-                flex-direction: column;
-                gap: 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: var(--bg-card);
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                margin-bottom: 20px;
+                border: 1px solid var(--border-light);
             }
 
             .search-bar {
-                width: 100%;
+                position: relative;
+                width: 300px;
             }
 
-            .result-container {
-                grid-template-columns: 1fr;
+            .search-bar i {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-light);
+            }
+
+            .search-bar input {
+                width: 100%;
+                padding: 10px 15px 10px 40px;
+                border: 1px solid var(--border-light);
+                border-radius: 30px;
+                outline: none;
+                transition: all 0.3s;
+                background-color: var(--bg-light);
+            }
+
+            .search-bar input:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+            }
+
+            .user-actions {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .notification-btn,
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg-light);
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all 0.3s;
+                color: var(--text-dark);
+            }
+
+            .notification-btn:hover,
+            .theme-toggle:hover {
+                background: #e4e6eb;
+                color: var(--primary);
+            }
+
+            .user-profile {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: var(--primary);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .page-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .page-title h1 {
+                color: var(--dark);
+                margin-bottom: 5px;
+                font-weight: 600;
+                font-size: 1.8rem;
+            }
+
+            .page-title p {
+                color: var(--text-light);
+                margin: 0;
+            }
+
+            .btn-primary {
+                background: var(--primary);
+                border: none;
+                padding: 10px 20px;
+                border-radius: 4px;
+                font-weight: 500;
+                transition: all 0.3s;
+                box-shadow: 0 2px 5px rgba(59, 89, 152, 0.2);
+            }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+            }
+
+            .ahp-container,
+            .spk-container,
+            .ranking-container {
+                background: var(--bg-card);
+                border-radius: 8px;
+                padding: 30px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                border: 1px solid var(--border-light);
+                margin-bottom: 30px;
+            }
+
+            .section-title {
+                color: var(--dark);
+                font-weight: 600;
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid var(--primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .section-title i {
+                color: var(--primary);
+            }
+
+            .matrix-container {
+                overflow-x: auto;
+                margin-bottom: 30px;
+            }
+
+            .matrix-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 0 auto;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            }
+
+            .matrix-table th {
+                background: var(--primary);
+                color: white;
+                padding: 15px;
+                font-weight: 600;
+                text-align: center;
+                border: none;
+            }
+
+            .matrix-table td {
+                padding: 15px;
+                text-align: center;
+                border: 1px solid var(--border-light);
+                background: white;
+            }
+
+            .matrix-table .criteria-header {
+                background: #f0f4ff;
+                font-weight: 600;
+                color: var(--dark);
+                border: none;
             }
 
             .matrix-table input {
-                width: 60px;
+                width: 80px;
+                padding: 8px 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                text-align: center;
+                font-weight: 500;
+                transition: all 0.3s;
             }
-        }
 
-        body.dark-mode {
-            --bg-light: #121212;
-            --bg-card: #1e1e1e;
-            --text-dark: #e0e0e0;
-            --text-light: #a0a0a0;
-            --border-light: #333;
-            --dark: #f0f0f0;
-        }
+            .matrix-table input:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.1);
+                outline: none;
+            }
 
-        body.dark-mode .sidebar {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-        }
+            .result-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 30px;
+            }
 
-        body.dark-mode .header,
-        body.dark-mode .ahp-container,
-        body.dark-mode .spk-container,
-        body.dark-mode .ranking-container,
-        body.dark-mode .result-card,
-        body.dark-mode .eigenvector-container {
-            background: var(--bg-card);
-            color: var(--text-dark);
-            border-color: var(--border-light);
-        }
+            .result-card {
+                background: white;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                border: 1px solid var(--border-light);
+                text-align: center;
+            }
 
-        body.dark-mode .matrix-table {
-            background: #2a2a2a;
-        }
+            .result-card .result-value {
+                font-size: 2rem;
+                font-weight: 700;
+                margin: 10px 0;
+            }
 
-        body.dark-mode .matrix-table td {
-            background: #2a2a2a;
-            border-color: var(--border-light);
-            color: var(--text-dark);
-        }
+            .result-card .result-label {
+                color: var(--text-light);
+                font-size: 0.9rem;
+                margin: 0;
+            }
 
-        body.dark-mode .matrix-table th {
-            background: var(--primary);
-            color: white;
-        }
+            .result-card.success .result-value {
+                color: var(--success);
+            }
 
-        body.dark-mode .matrix-table .criteria-header {
-            background: #3a3a3a;
-            color: var(--text-dark);
-        }
+            .result-card.warning .result-value {
+                color: var(--warning);
+            }
 
-        body.dark-mode .matrix-table input {
-            background: #3a3a3a;
-            border-color: #555;
-            color: var(--text-dark);
-        }
+            .result-card.danger .result-value {
+                color: var(--danger);
+            }
 
-        body.dark-mode .eigenvector-item {
-            background: #2a2a2a;
-        }
+            .eigenvector-container {
+                background: white;
+                border-radius: 8px;
+                padding: 25px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                border: 1px solid var(--border-light);
+                margin-top: 30px;
+            }
 
-        body.dark-mode .eigenvector-item:hover {
-            background: #3a3a3a;
-        }
+            .eigenvector-title {
+                font-weight: 600;
+                margin-bottom: 20px;
+                color: var(--dark);
+                border-bottom: 1px solid var(--border-light);
+                padding-bottom: 10px;
+            }
 
-        body.dark-mode .notification-btn,
-        body.dark-mode .theme-toggle {
-            background: #2a2a2a;
-            color: var(--text-dark);
-        }
-    </style>
-</head>
+            .eigenvector-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
 
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class="fas fa-laptop-code"></i>
-            </div>
-            <h2>Admin TI</h2>
-        </div>
+            .eigenvector-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 15px;
+                margin-bottom: 8px;
+                background: #f8f9fa;
+                border-radius: 6px;
+                transition: all 0.3s;
+            }
 
-        <div class="sidebar-menu">
-            <!-- Menu Utama -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
-                    <span>Menu Utama</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="menuUtama">
-                    <a href="/admin/dashboard" class="dropdown-item">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
+            .eigenvector-item:hover {
+                background: #e9ecef;
+                transform: translateX(5px);
+            }
+
+            .eigenvector-label {
+                font-weight: 500;
+                color: var(--dark);
+            }
+
+            .eigenvector-value {
+                font-weight: 600;
+                color: var(--primary);
+                font-size: 1.1rem;
+            }
+
+            .table-spk th {
+                background-color: var(--primary);
+                color: #fff;
+                text-align: center;
+            }
+
+            .badge-priority {
+                font-size: 0.8rem;
+            }
+
+            @media (max-width: 768px) {
+                .sidebar {
+                    width: 70px;
+                    overflow: hidden;
+                }
+
+                .sidebar-header h2,
+                .dropdown-toggle-custom span {
+                    display: none;
+                }
+
+                .dropdown-toggle-custom {
+                    justify-content: center;
+                    padding: 15px;
+                }
+
+                .dropdown-toggle-custom i {
+                    margin-right: 0;
+                }
+
+                .dropdown-toggle-custom i:last-child {
+                    display: none;
+                }
+
+                .dropdown-items {
+                    display: none;
+                }
+
+                .main-content {
+                    margin-left: 70px;
+                }
+
+                .header {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+
+                .search-bar {
+                    width: 100%;
+                }
+
+                .result-container {
+                    grid-template-columns: 1fr;
+                }
+
+                .matrix-table input {
+                    width: 60px;
+                }
+            }
+
+            body.dark-mode {
+                --bg-light: #121212;
+                --bg-card: #1e1e1e;
+                --text-dark: #e0e0e0;
+                --text-light: #a0a0a0;
+                --border-light: #333;
+                --dark: #f0f0f0;
+            }
+
+            body.dark-mode .sidebar {
+                background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            }
+
+            body.dark-mode .header,
+            body.dark-mode .ahp-container,
+            body.dark-mode .spk-container,
+            body.dark-mode .ranking-container,
+            body.dark-mode .result-card,
+            body.dark-mode .eigenvector-container {
+                background: var(--bg-card);
+                color: var(--text-dark);
+                border-color: var(--border-light);
+            }
+
+            body.dark-mode .matrix-table {
+                background: #2a2a2a;
+            }
+
+            body.dark-mode .matrix-table td {
+                background: #2a2a2a;
+                border-color: var(--border-light);
+                color: var(--text-dark);
+            }
+
+            body.dark-mode .matrix-table th {
+                background: var(--primary);
+                color: white;
+            }
+
+            body.dark-mode .matrix-table .criteria-header {
+                background: #3a3a3a;
+                color: var(--text-dark);
+            }
+
+            body.dark-mode .matrix-table input {
+                background: #3a3a3a;
+                border-color: #555;
+                color: var(--text-dark);
+            }
+
+            body.dark-mode .eigenvector-item {
+                background: #2a2a2a;
+            }
+
+            body.dark-mode .eigenvector-item:hover {
+                background: #3a3a3a;
+            }
+
+            body.dark-mode .notification-btn,
+            body.dark-mode .theme-toggle {
+                background: #2a2a2a;
+                color: var(--text-dark);
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-laptop-code"></i>
                 </div>
-            </div>
-
-            <!-- Manajemen Peminjaman -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
-                    <span>Manajemen Peminjaman</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="peminjamanMenu">
-                    <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
-                        <i class="fas fa-hand-holding"></i>
-                        <span>Peminjaman</span>
-                    </a>
-                    <a href="/admin/pengembalian" class="dropdown-item">
-                        <i class="fas fa-undo"></i>
-                        <span>Pengembalian</span>
-                    </a>
-                    <a href="/admin/riwayat" class="dropdown-item">
-                        <i class="fas fa-history"></i>
-                        <span>Riwayat Peminjaman</span>
-                    </a>
-                    <a href="/admin/feedback" class="dropdown-item">
-                        <i class="fas fa-comment"></i>
-                        <span>Feedback</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Manajemen Aset -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
-                    <span>Manajemen Aset</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="asetMenu">
-                    <a href="{{ route('projectors.index') }}" class="dropdown-item">
-                        <i class="fas fa-video"></i>
-                        <span>Proyektor</span>
-                    </a>
-                    <a href="{{ route('barangs.index') }}" class="dropdown-item">
-                        <i class="fas fa-box"></i>
-                        <span>Barang</span>
-                    </a>
-                    <a href="/admin/ruangan" class="dropdown-item">
-                        <i class="fas fa-door-open"></i>
-                        <span>Ruangan</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Manajemen Akademik -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
-                    <span>Manajemen Akademik</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="akademikMenu">
-                    <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Jadwal Perkuliahan</span>
-                    </a>
-                    <a href="/admin/slotwaktu" class="dropdown-item">
-                        <i class="fas fa-clock"></i>
-                        <span>Slot Waktu</span>
-                    </a>
-                    <a href="/admin/mata_kuliah" class="dropdown-item">
-                        <i class="fas fa-book"></i>
-                        <span>Matakuliah</span>
-                    </a>
-                    <a href="/admin/kelas" class="dropdown-item">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <span>Kelas</span>
-                    </a>
-                    <a href="/admin/dosen" class="dropdown-item">
-                        <i class="fas fa-user-tie"></i>
-                        <span>Dosen</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Manajemen Pengguna -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
-                    <span>Manajemen Pengguna</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="penggunaMenu">
-                    <a href="{{ route('admin.users.index') }}" class="dropdown-item">
-                        <i class="fas fa-users"></i>
-                        <span>Pengguna</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Laporan & Pengaturan -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
-                    <span>Laporan & Pengaturan</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="laporanMenu">
-                    <a href="/admin/laporan" class="dropdown-item">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Statistik</span>
-                    </a>
-                    <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
-                        <i class="fas fa-cog"></i>
-                        <span>Pengaturan</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Sistem Pendukung Keputusan -->
-            <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
-                    <span>Sistem TPK</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-items collapse" id="spkMenu">
-                    <a href="{{ route('admin.spk.index') }}" class="dropdown-item active">
-                        <i class="fas fa-sliders-h"></i>
-                        <span>AHP & SAW</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Header -->
-        <div class="header">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari menu...">
+                <h2>Admin TI</h2>
             </div>
 
-            <div class="user-actions">
-                <div class="notification-btn">
-                    <i class="fas fa-bell"></i>
+            <div class="sidebar-menu">
+                <!-- Menu Utama -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
+                        <span>Menu Utama</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="menuUtama">
+                        <a href="/admin/dashboard" class="dropdown-item">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-moon"></i>
+                <!-- Manajemen Peminjaman -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
+                        <span>Manajemen Peminjaman</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="peminjamanMenu">
+                        <a href="{{ route('admin.peminjaman.index') }}" class="dropdown-item">
+                            <i class="fas fa-hand-holding"></i>
+                            <span>Peminjaman</span>
+                        </a>
+                        <a href="/admin/pengembalian" class="dropdown-item">
+                            <i class="fas fa-undo"></i>
+                            <span>Pengembalian</span>
+                        </a>
+                        <a href="/admin/riwayat" class="dropdown-item">
+                            <i class="fas fa-history"></i>
+                            <span>Riwayat Peminjaman</span>
+                        </a>
+                        <a href="/admin/feedback" class="dropdown-item">
+                            <i class="fas fa-comment"></i>
+                            <span>Feedback</span>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="user-profile">
-                    <div class="user-avatar">A</div>
-                    <div>
-                        <div>Admin Lab</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
+                <!-- Manajemen Aset -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
+                        <span>Manajemen Aset</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="asetMenu">
+                        <a href="{{ route('projectors.index') }}" class="dropdown-item">
+                            <i class="fas fa-video"></i>
+                            <span>Proyektor</span>
+                        </a>
+                        <a href="{{ route('barangs.index') }}" class="dropdown-item">
+                            <i class="fas fa-box"></i>
+                            <span>Barang</span>
+                        </a>
+                        <a href="/admin/ruangan" class="dropdown-item">
+                            <i class="fas fa-door-open"></i>
+                            <span>Ruangan</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Manajemen Akademik -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
+                        <span>Manajemen Akademik</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="akademikMenu">
+                        <a href="/admin/jadwal-perkuliahan" class="dropdown-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Jadwal Perkuliahan</span>
+                        </a>
+                        <a href="/admin/slotwaktu" class="dropdown-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Slot Waktu</span>
+                        </a>
+                        <a href="/admin/mata_kuliah" class="dropdown-item">
+                            <i class="fas fa-book"></i>
+                            <span>Matakuliah</span>
+                        </a>
+                        <a href="/admin/kelas" class="dropdown-item">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Kelas</span>
+                        </a>
+                        <a href="/admin/dosen" class="dropdown-item">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Dosen</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Manajemen Pengguna -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
+                        <span>Manajemen Pengguna</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="penggunaMenu">
+                        <a href="{{ route('admin.users.index') }}" class="dropdown-item">
+                            <i class="fas fa-users"></i>
+                            <span>Pengguna</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Laporan & Pengaturan -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                        <span>Laporan & Pengaturan</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="laporanMenu">
+                        <a href="/admin/laporan" class="dropdown-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Statistik</span>
+                        </a>
+                        <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Pengaturan</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Sistem Pendukung Keputusan -->
+                <div class="dropdown-custom">
+                    <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                        <span>Sistem TPK</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-items collapse" id="spkMenu">
+                        <a href="{{ route('admin.spk.index') }}" class="dropdown-item active">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>AHP & SAW</span>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Page Title -->
-        <div class="page-title">
-            <div>
-                <h1>SPK Peminjaman Ruang & Proyektor</h1>
-                <p>Integrasi AHP (Bobot Kriteria) & SAW (Perankingan Peminjaman)</p>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari menu...">
+                </div>
+
+                <div class="user-actions">
+                    <div class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </div>
+
+                    <div class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </div>
+
+                    <div class="user-profile">
+                        <div class="user-avatar">A</div>
+                        <div>
+                            <div>Admin Lab</div>
+                            <div style="font-size: 0.8rem; color: var(--text-light);">Teknologi Informasi</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        {{-- ALERT SUCCESS / ERROR --}}
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- Page Title -->
+            <div class="page-title">
+                <div>
+                    <h1>SPK Peminjaman Ruang & Proyektor</h1>
+                    <p>Integrasi AHP (Bobot Kriteria) & SAW (Perankingan Peminjaman)</p>
+                </div>
             </div>
-        @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show">
-                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+            {{-- ALERT SUCCESS / ERROR --}}
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-        <!-- BAGIAN A: AHP – Bobot Kriteria -->
-        <div class="ahp-container">
-            <h2 class="section-title">
-                <i class="fas fa-sliders-h"></i>
-                A. Pengaturan Bobot Kriteria (AHP)
-            </h2>
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-            <p class="text-muted mb-3">
-                Lengkapi matriks perbandingan berpasangan antar kriteria. Nilai akan digunakan sebagai bobot
-                pada metode SAW untuk menentukan prioritas peminjaman.
-            </p>
+            <!-- BAGIAN A: AHP – Bobot Kriteria -->
+            <div class="ahp-container">
+                <h2 class="section-title">
+                    <i class="fas fa-sliders-h"></i>
+                    A. Pengaturan Bobot Kriteria (AHP)
+                </h2>
 
-            <form method="POST" action="{{ route('admin.ahp.settings.save') }}">
-                @csrf
+                <p class="text-muted mb-3">
+                    Lengkapi matriks perbandingan berpasangan antar kriteria. Nilai akan digunakan sebagai bobot
+                    pada metode SAW untuk menentukan prioritas peminjaman.
+                </p>
 
-                <div class="matrix-container">
-                    <table class="matrix-table">
-                        <thead>
-                            <tr>
-                                <th>Kriteria</th>
-                                @foreach($criteria as $c)
-                                    <th>{{ $c->kode ?? $c->code ?? ('K'.$loop->iteration) }}</th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($criteria as $i => $rowCriteria)
+                <form method="POST" action="{{ route('admin.ahp.settings.save') }}">
+                    @csrf
+
+                    <div class="matrix-container">
+                        <table class="matrix-table">
+                            <thead>
                                 <tr>
-                                    <td class="criteria-header">
-                                        {{ $rowCriteria->kode ?? $rowCriteria->code ?? ('K'.($i+1)) }}
-                                        - {{ $rowCriteria->nama ?? $rowCriteria->name ?? '' }}
-                                    </td>
-                                    @foreach($criteria as $j => $colCriteria)
-                                        <td>
-                                            @if ($i === $j)
-                                                <input
-                                                    type="number"
-                                                    name="matrix[{{ $i }}][{{ $j }}]"
-                                                    value="1.00"
-                                                    step="0.01"
-                                                    readonly
-                                                    style="background-color: #f0f0f0;">
-                                            @else
-                                                <input
-                                                    type="number"
-                                                    name="matrix[{{ $i }}][{{ $j }}]"
-                                                    step="0.01"
-                                                    required
-                                                    placeholder="0.00"
-                                                    value="{{ old("matrix.$i.$j") }}">
-                                            @endif
-                                        </td>
+                                    <th>Kriteria</th>
+                                    @foreach ($criteria as $c)
+                                        <th>{{ $c->kode }}</th>
                                     @endforeach
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-calculator me-2"></i>Hitung AHP & Simpan Bobot
-                    </button>
-                </div>
-            </form>
-
-            <!-- Hasil Perhitungan AHP -->
-            @if (session('matrix'))
-                <div class="mt-5">
-                    <h3 class="section-title">
-                        <i class="fas fa-chart-bar"></i>
-                        Hasil Perhitungan AHP
-                    </h3>
-
-                    <!-- Result Cards -->
-                    <div class="result-container">
-                        <div class="result-card success">
-                            <div class="result-label">Consistency Ratio (CR)</div>
-                            <div class="result-value">{{ number_format(session('CR'), 4) }}</div>
-                            <small class="text-muted">
-                                @if (session('CR') < 0.1)
-                                    <span class="text-success">✓ Konsisten</span>
-                                @else
-                                    <span class="text-danger">✗ Tidak Konsisten</span>
-                                @endif
-                            </small>
-                        </div>
-
-                        <div class="result-card warning">
-                            <div class="result-label">Consistency Index (CI)</div>
-                            <div class="result-value">{{ number_format(session('CI'), 4) }}</div>
-                            <small class="text-muted">Indeks Konsistensi</small>
-                        </div>
-
-                        <div class="result-card">
-                            <div class="result-label">λ Max</div>
-                            <div class="result-value">{{ number_format(session('lambdaMax'), 4) }}</div>
-                            <small class="text-muted">Nilai Eigen Maksimum</small>
-                        </div>
-
-                        <div class="result-card {{ session('status') == 'KONSISTEN' ? 'success' : 'danger' }}">
-                            <div class="result-label">Status</div>
-                            <div class="result-value">
-                                @if (session('status') == 'KONSISTEN')
-                                    <i class="fas fa-check-circle"></i>
-                                @else
-                                    <i class="fas fa-exclamation-circle"></i>
-                                @endif
-                            </div>
-                            <small class="text-muted">{{ session('status') }}</small>
-                        </div>
-                    </div>
-
-                    <!-- Eigenvector -->
-                    @if(session('eigenvector'))
-                        <div class="eigenvector-container">
-                            <h4 class="eigenvector-title">
-                                <i class="fas fa-weight-hanging me-2"></i>
-                                Eigenvector (Bobot Prioritas Kriteria)
-                            </h4>
-                            <ul class="eigenvector-list">
-                                @foreach (session('eigenvector') as $index => $ev)
-                                    <li class="eigenvector-item">
-                                        <span class="eigenvector-label">
-                                            {{ $criteria[$index]->kode ?? $criteria[$index]->code ?? ('K'.($index+1)) }}
-                                            - {{ $criteria[$index]->nama ?? $criteria[$index]->name ?? '' }}
-                                        </span>
-                                        <span class="eigenvector-value">{{ number_format($ev, 4) }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <!-- Matrix yang diinput -->
-                    <div class="mt-4">
-                        <h5 class="mb-3">
-                            <i class="fas fa-table me-2"></i>
-                            Matrix Perbandingan yang Diinput
-                        </h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
+                            </thead>
+                            <tbody>
+                                @foreach ($criteria as $i => $rowCriteria)
                                     <tr>
-                                        <th>Kriteria</th>
-                                        @foreach($criteria as $c)
-                                            <th class="text-center">
-                                                {{ $c->kode ?? $c->code ?? ('K'.$loop->iteration) }}
-                                            </th>
+                                        <td class="criteria-header">
+                                            {{ $rowCriteria->kode }} - {{ $rowCriteria->nama }}
+                                        </td>
+                                        @foreach ($criteria as $j => $colCriteria)
+                                            <td>
+                                                @if ($i === $j)
+                                                    <input type="number"
+                                                        name="matrix[{{ $i }}][{{ $j }}]"
+                                                        value="1.00" step="0.01" readonly
+                                                        style="background-color: #f0f0f0;">
+                                                @else
+                                                    <input type="number"
+                                                        name="matrix[{{ $i }}][{{ $j }}]"
+                                                        step="any" min="0.111"
+                                                        value="{{ old("matrix.$i.$j", $i === $j ? 1 : '') }}"
+                                                        {{ $i === $j ? 'readonly' : 'required' }}>
+                                                @endif
+                                            </td>
                                         @endforeach
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach(session('matrix') as $i => $row)
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calculator me-2"></i>Hitung AHP & Simpan Bobot
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Hasil Perhitungan AHP -->
+                @if (session('matrix'))
+                    <div class="mt-5">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Hasil Perhitungan AHP
+                        </h3>
+
+                        <!-- Result Cards -->
+                        <div class="result-container">
+                            <div class="result-card success">
+                                <div class="result-label">Consistency Ratio (CR)</div>
+                                <div class="result-value">{{ number_format(session('CR'), 4) }}</div>
+                                <small class="text-muted">
+                                    @if (session('CR') < 0.1)
+                                        <span class="text-success">✓ Konsisten</span>
+                                    @else
+                                        <span class="text-danger">✗ Tidak Konsisten</span>
+                                    @endif
+                                </small>
+                            </div>
+
+                            <div class="result-card warning">
+                                <div class="result-label">Consistency Index (CI)</div>
+                                <div class="result-value">{{ number_format(session('CI'), 4) }}</div>
+                                <small class="text-muted">Indeks Konsistensi</small>
+                            </div>
+
+                            <div class="result-card">
+                                <div class="result-label">λ Max</div>
+                                <div class="result-value">{{ number_format(session('lambdaMax'), 4) }}</div>
+                                <small class="text-muted">Nilai Eigen Maksimum</small>
+                            </div>
+
+                            <div class="result-card {{ session('status') == 'KONSISTEN' ? 'success' : 'danger' }}">
+                                <div class="result-label">Status</div>
+                                <div class="result-value">
+                                    @if (session('status') == 'KONSISTEN')
+                                        <i class="fas fa-check-circle"></i>
+                                    @else
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    @endif
+                                </div>
+                                <small class="text-muted">{{ session('status') }}</small>
+                            </div>
+                        </div>
+
+                        <!-- Eigenvector -->
+                        @if (session('eigenvector'))
+                            <div class="eigenvector-container">
+                                <h4 class="eigenvector-title">
+                                    <i class="fas fa-weight-hanging me-2"></i>
+                                    Eigenvector (Bobot Prioritas Kriteria)
+                                </h4>
+                                <ul class="eigenvector-list">
+                                    @foreach (session('eigenvector') as $index => $ev)
+                                        <li class="eigenvector-item">
+                                            <span class="eigenvector-label">
+                                                {{ $criteria->get($index)->kode }} - {{ $criteria[$index]->nama }}
+                                            </span>
+                                            <span class="eigenvector-value">
+                                                {{ round($ev, 8) }}
+                                            </span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <!-- Matrix yang diinput -->
+                        <div class="mt-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-table me-2"></i>
+                                Matrix Perbandingan yang Diinput
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
                                         <tr>
-                                            <th class="text-center">
-                                                {{ $criteria[$i]->kode ?? $criteria[$i]->code ?? ('K'.($i+1)) }}
-                                            </th>
-                                            @foreach($row as $value)
-                                                <td class="text-center">{{ number_format($value, 4) }}</td>
+                                            <th>Kriteria</th>
+                                            @foreach ($criteria as $c)
+                                                <th class="text-center">{{ $c->kode }}</th>
                                             @endforeach
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (session('matrix') as $i => $row)
+                                            <tr>
+                                                <th class="text-center">
+                                                    {{ $criteria[$i]->kode }}
+                                                </th>
+                                                @foreach ($row as $value)
+                                                    <td class="text-center">{{ number_format($value, 4) }}</td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
-            {{-- Tooltip Petunjuk Pengisian --}}
-            <div class="mt-3 p-3 bg-light border rounded">
-                <h6><i class="fas fa-info-circle me-2 text-primary"></i>Petunjuk Pengisian Nilai AHP:</h6>
-                <small class="text-muted d-block mb-1">• Nilai 1: Kedua kriteria sama penting</small>
-                <small class="text-muted d-block mb-1">• Nilai 3: Kriteria baris sedikit lebih penting dari kolom</small>
-                <small class="text-muted d-block mb-1">• Nilai 5: Kriteria baris lebih penting</small>
-                <small class="text-muted d-block mb-1">• Nilai 7: Kriteria baris sangat lebih penting</small>
-                <small class="text-muted d-block mb-1">• Nilai 9: Kriteria baris mutlak lebih penting</small>
-                <small class="text-muted">• Nilai genap (2,4,6,8): nilai kompromi antara skala di atas</small>
+                {{-- Tooltip Petunjuk Pengisian --}}
+                <div class="mt-3 p-3 bg-light border rounded">
+                    <h6><i class="fas fa-info-circle me-2 text-primary"></i>Petunjuk Pengisian Nilai AHP:</h6>
+                    <small class="text-muted d-block mb-1">• Nilai 1: Kedua kriteria sama penting</small>
+                    <small class="text-muted d-block mb-1">• Nilai 3: Kriteria baris sedikit lebih penting dari
+                        kolom</small>
+                    <small class="text-muted d-block mb-1">• Nilai 5: Kriteria baris lebih penting</small>
+                    <small class="text-muted d-block mb-1">• Nilai 7: Kriteria baris sangat lebih penting</small>
+                    <small class="text-muted d-block mb-1">• Nilai 9: Kriteria baris mutlak lebih penting</small>
+                    <small class="text-muted">• Nilai genap (2,4,6,8): nilai kompromi antara skala di atas</small>
+                </div>
+            </div>
+
+            <!-- BAGIAN B: INPUT PENILAIAN PEMINJAMAN (SPK) -->
+            <div class="spk-container">
+                <h2 class="section-title">
+                    <i class="fas fa-list-check"></i>
+                    B. Penilaian Alternatif Peminjaman (SPK)
+                </h2>
+
+                <p class="text-muted mb-3">
+                    Berikan nilai setiap peminjaman berdasarkan kriteria yang ada.
+                    Nilai ini akan dinormalisasi dan dikalikan bobot (hasil AHP) untuk perankingan SAW.
+                </p>
+
+                <form action="{{ route('admin.spk.scores.save') }}" method="POST">
+                    @csrf
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-spk align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Peminjaman</th>
+                                    <th>Ruang / Proyektor</th>
+                                    <th>Tanggal & Jam</th>
+                                    @foreach ($criteria as $c)
+                                        <th class="text-center">
+                                            {{ $c->kode }}<br>
+                                            <small>{{ $c->nama }}</small>
+                                        </th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($peminjamans as $p)
+                                    <tr>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td>
+                                            <strong>Kode:</strong> {{ $p->kode_peminjaman ?? 'PMJ-' . $p->id }}<br>
+                                            <strong>Peminjam:</strong>
+                                            {{ $p->user->name ?? ($p->nama_peminjam ?? '-') }}<br>
+                                            <strong>Keperluan:</strong> {{ $p->keperluan ?? '-' }}
+                                        </td>
+                                        <td>
+                                            <strong>Ruang:</strong> {{ $p->ruang ?? ($p->ruangan->nama ?? '-') }}<br>
+                                            <strong>Proyektor:</strong>
+                                            {{ $p->projector->kode ?? ($p->kode_proyektor ?? '-') }}
+                                        </td>
+                                        <td>
+                                            <strong>Tanggal:</strong>
+                                            {{ $p->tanggal_peminjaman ?? ($p->tanggal ?? '-') }}<br>
+                                            <strong>Jam:</strong>
+                                            {{ $p->jam_mulai ?? ($p->jam_peminjaman ?? '-') }}
+                                            @if (!empty($p->jam_selesai))
+                                                - {{ $p->jam_selesai }}
+                                            @endif
+                                        </td>
+
+                                        @foreach ($criteria as $c)
+                                            @php
+                                                $existing = $scores[$p->id][$c->id] ?? null;
+                                            @endphp
+                                            <td class="text-center">
+                                                <input type="number" step="0.01" min="0"
+                                                    name="scores[{{ $p->id }}][{{ $c->id }}]"
+                                                    class="form-control form-control-sm text-center"
+                                                    value="{{ old('scores.' . $p->id . '.' . $c->id, $existing) }}"
+                                                    required>
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="{{ 4 + count($criteria) }}" class="text-center text-muted">
+                                            Belum ada data peminjaman yang dapat dinilai.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (count($peminjamans))
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Simpan Penilaian & Hitung SAW
+                            </button>
+                        </div>
+                    @endif
+                </form>
+            </div>
+
+            <!-- BAGIAN C: HASIL RANKING SAW -->
+            <div class="ranking-container">
+                <h2 class="section-title">
+                    <i class="fas fa-ranking-star"></i>
+                    C. Hasil Perankingan Peminjaman (SAW)
+                </h2>
+
+                <p class="text-muted mb-3">
+                    Tabel berikut menampilkan nilai preferensi dan urutan prioritas peminjaman
+                    berdasarkan metode SAW dengan bobot dari AHP.
+                </p>
+
+                @if (!empty($rankings) && count($rankings) > 0)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Peringkat</th>
+                                    <th>Kode Peminjaman</th>
+                                    <th>Peminjam</th>
+                                    <th>Ruang / Proyektor</th>
+                                    <th>Tanggal & Jam</th>
+                                    <th class="text-center">Nilai Preferensi</th>
+                                    <th class="text-center">Status Prioritas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($rankings as $idx => $item)
+                                    @php
+                                        $p = $item;
+                                    @endphp
+                                    <tr>
+                                        <td class="text-center fw-bold">{{ $idx + 1 }}</td>
+                                        <td>{{ $p->kode_peminjaman ?? 'PMJ-' . $p->id }}</td>
+                                        <td>{{ $p->user->name ?? ($p->nama_peminjam ?? '-') }}</td>
+                                        <td>
+                                            <strong>Ruang:</strong> {{ $p->ruang ?? ($p->ruangan->nama ?? '-') }}<br>
+                                            <strong>Proyektor:</strong>
+                                            {{ $p->projector->kode ?? ($p->kode_proyektor ?? '-') }}
+                                        </td>
+                                        <td>
+                                            <strong>Tanggal:</strong>
+                                            {{ $p->tanggal_peminjaman ?? ($p->tanggal ?? '-') }}<br>
+                                            <strong>Jam:</strong>
+                                            {{ $p->jam_mulai ?? ($p->jam_peminjaman ?? '-') }}
+                                            @if (!empty($p->jam_selesai))
+                                                - {{ $p->jam_selesai }}
+                                            @endif
+                                        </td>
+                                        <td class="text-center fw-bold">
+                                            {{ number_format($p->nilai_preferensi, 4) }}
+                                        </td>
+                                        <td class="text-center">
+                                            @if ($idx === 0)
+                                                <span class="badge bg-success badge-priority">
+                                                    Prioritas Utama
+                                                </span>
+                                            @elseif($idx < 3)
+                                                <span class="badge bg-info badge-priority">
+                                                    Prioritas Tinggi
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary badge-priority">
+                                                    Prioritas Normal
+                                                </span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Belum ada hasil perankingan. Silakan isi penilaian pada bagian B dan klik
+                        <strong>"Simpan Penilaian & Hitung SAW"</strong>.
+                    </div>
+                @endif
             </div>
         </div>
 
-        <!-- BAGIAN B: INPUT PENILAIAN PEMINJAMAN (SPK) -->
-        <div class="spk-container">
-            <h2 class="section-title">
-                <i class="fas fa-list-check"></i>
-                B. Penilaian Alternatif Peminjaman (SPK)
-            </h2>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Toggle theme
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
 
-            <p class="text-muted mb-3">
-                Berikan nilai setiap peminjaman berdasarkan kriteria yang ada.
-                Nilai ini akan dinormalisasi dan dikalikan bobot (hasil AHP) untuk perankingan SAW.
-            </p>
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
 
-            <form action="{{ route('admin.spk.scores.save') }}" method="POST">
-                @csrf
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-spk align-middle">
-                        <thead>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>Peminjaman</th>
-                                <th>Ruang / Proyektor</th>
-                                <th>Tanggal & Jam</th>
-                                @foreach($criteria as $c)
-                                    <th class="text-center">
-                                        {{ $c->kode ?? $c->code ?? ('K'.$loop->iteration) }}<br>
-                                        <small>{{ $c->nama ?? $c->name ?? '' }}</small>
-                                    </th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($peminjamans as $p)
-                                <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>
-                                        <strong>Kode:</strong> {{ $p->kode_peminjaman ?? ('PMJ-'.$p->id) }}<br>
-                                        <strong>Peminjam:</strong> {{ $p->user->name ?? $p->nama_peminjam ?? '-' }}<br>
-                                        <strong>Keperluan:</strong> {{ $p->keperluan ?? '-' }}
-                                    </td>
-                                    <td>
-                                        <strong>Ruang:</strong> {{ $p->ruang ?? $p->ruangan->nama ?? '-' }}<br>
-                                        <strong>Proyektor:</strong> {{ $p->projector->kode ?? $p->kode_proyektor ?? '-' }}
-                                    </td>
-                                    <td>
-                                        <strong>Tanggal:</strong> {{ $p->tanggal_peminjaman ?? $p->tanggal ?? '-' }}<br>
-                                        <strong>Jam:</strong>
-                                        {{ ($p->jam_mulai ?? $p->jam_peminjaman ?? '-') }}
-                                        @if(!empty($p->jam_selesai))
-                                            - {{ $p->jam_selesai }}
-                                        @endif
-                                    </td>
-
-                                    @foreach($criteria as $c)
-                                        @php
-                                            $existing = $scores[$p->id][$c->id] ?? null;
-                                        @endphp
-                                        <td class="text-center">
-                                            <input
-                                                type="number"
-                                                step="0.01"
-                                                min="0"
-                                                name="scores[{{ $p->id }}][{{ $c->id }}]"
-                                                class="form-control form-control-sm text-center"
-                                                value="{{ old('scores.'.$p->id.'.'.$c->id, $existing) }}"
-                                                required>
-                                        </td>
-                                    @endforeach
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="{{ 4 + count($criteria) }}" class="text-center text-muted">
-                                        Belum ada data peminjaman yang dapat dinilai.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                @if(count($peminjamans))
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Simpan Penilaian & Hitung SAW
-                        </button>
-                    </div>
-                @endif
-            </form>
-        </div>
-
-        <!-- BAGIAN C: HASIL RANKING SAW -->
-        <div class="ranking-container">
-            <h2 class="section-title">
-                <i class="fas fa-ranking-star"></i>
-                C. Hasil Perankingan Peminjaman (SAW)
-            </h2>
-
-            <p class="text-muted mb-3">
-                Tabel berikut menampilkan nilai preferensi dan urutan prioritas peminjaman
-                berdasarkan metode SAW dengan bobot dari AHP.
-            </p>
-
-            @if(isset($rankings) && count($rankings))
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Peringkat</th>
-                                <th>Kode Peminjaman</th>
-                                <th>Peminjam</th>
-                                <th>Ruang / Proyektor</th>
-                                <th>Tanggal & Jam</th>
-                                <th class="text-center">Nilai Preferensi</th>
-                                <th class="text-center">Status Prioritas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($rankings as $idx => $item)
-                                @php
-                                    // $item diasumsikan punya: peminjaman (relasi) dan nilai_preferensi
-                                    $p = $item->peminjaman ?? $item;
-                                    $nilai = $item->nilai_preferensi ?? $item->nilai ?? 0;
-                                @endphp
-                                <tr>
-                                    <td class="text-center fw-bold">{{ $idx + 1 }}</td>
-                                    <td>{{ $p->kode_peminjaman ?? ('PMJ-'.$p->id) }}</td>
-                                    <td>{{ $p->user->name ?? $p->nama_peminjam ?? '-' }}</td>
-                                    <td>
-                                        <strong>Ruang:</strong> {{ $p->ruang ?? $p->ruangan->nama ?? '-' }}<br>
-                                        <strong>Proyektor:</strong> {{ $p->projector->kode ?? $p->kode_proyektor ?? '-' }}
-                                    </td>
-                                    <td>
-                                        <strong>Tanggal:</strong> {{ $p->tanggal_peminjaman ?? $p->tanggal ?? '-' }}<br>
-                                        <strong>Jam:</strong>
-                                        {{ ($p->jam_mulai ?? $p->jam_peminjaman ?? '-') }}
-                                        @if(!empty($p->jam_selesai))
-                                            - {{ $p->jam_selesai }}
-                                        @endif
-                                    </td>
-                                    <td class="text-center fw-bold">
-                                        {{ number_format($nilai, 4) }}
-                                    </td>
-                                    <td class="text-center">
-                                        @if($idx === 0)
-                                            <span class="badge bg-success badge-priority">
-                                                Prioritas Utama
-                                            </span>
-                                        @elseif($idx < 3)
-                                            <span class="badge bg-info badge-priority">
-                                                Prioritas Tinggi
-                                            </span>
-                                        @else
-                                            <span class="badge bg-secondary badge-priority">
-                                                Prioritas Normal
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Belum ada hasil perankingan. Silakan isi penilaian pada bagian B dan klik
-                    <strong>"Simpan Penilaian & Hitung SAW"</strong>.
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Toggle theme
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-
-            if (document.body.classList.contains('dark-mode')) {
+            // Terapkan dark mode jika sebelumnya diaktifkan
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('darkMode', 'disabled');
             }
-        });
 
-        // Terapkan dark mode jika sebelumnya diaktifkan
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
+            // Auto-fill reciprocal values untuk matrix AHP
+            const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
 
-        // Auto-fill reciprocal values untuk matrix AHP
-        const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
+            matrixInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const name = this.name;
+                    const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
 
-        matrixInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                const name = this.name;
-                const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
+                    if (matches) {
+                        const row = parseInt(matches[1]);
+                        const col = parseInt(matches[2]);
 
-                if (matches) {
-                    const row = parseInt(matches[1]);
-                    const col = parseInt(matches[2]);
-
-                    if (row !== col) {
-                        const reciprocalInput = document.querySelector(
-                            `input[name="matrix[${col}][${row}]"]`
-                        );
-                        if (reciprocalInput && this.value !== '') {
-                            const value = parseFloat(this.value);
-                            if (value > 0) {
-                                reciprocalInput.value = (1 / value).toFixed(2);
+                        if (row !== col) {
+                            const reciprocalInput = document.querySelector(
+                                `input[name="matrix[${col}][${row}]"]`
+                            );
+                            if (reciprocalInput && this.value !== '') {
+                                const value = parseFloat(this.value);
+                                if (value > 0) {
+                                    reciprocalInput.value = (1 / value).toFixed(8);
+                                }
                             }
                         }
                     }
-                }
-            });
-        });
-
-        // Validasi AHP matrix
-        const ahpForm = document.querySelector('.ahp-container form');
-        ahpForm.addEventListener('submit', function(e) {
-            let isValid = true;
-            const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
-
-            inputs.forEach(input => {
-                if (input.value === '' || isNaN(parseFloat(input.value))) {
-                    isValid = false;
-                    input.style.borderColor = 'var(--danger)';
-                } else {
-                    input.style.borderColor = '';
-                }
+                });
             });
 
-            if (!isValid) {
-                e.preventDefault();
-                alert('Harap isi semua nilai perbandingan matriks AHP!');
-            }
-        });
-    </script>
-</body>
+            // Validasi AHP matrix
+            const ahpForm = document.querySelector('.ahp-container form');
+            ahpForm.addEventListener('submit', function(e) {
+                let isValid = true;
+                const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
 
-</html>
+                inputs.forEach(input => {
+                    if (input.value === '' || isNaN(parseFloat(input.value))) {
+                        isValid = false;
+                        input.style.borderColor = 'var(--danger)';
+                    } else {
+                        input.style.borderColor = '';
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Harap isi semua nilai perbandingan matriks AHP!');
+                }
+            });
+        </script>
+    </body>
+
+    </html>

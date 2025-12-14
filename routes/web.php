@@ -293,30 +293,26 @@ Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function() {
 });
 
 
-// PENGATURAN TPK ADMIN
 Route::prefix('admin')->group(function () {
 
+    // ===== AHP (BOBOT KRITERIA) =====
     Route::get('/ahp-settings', [AHPController::class, 'index'])
         ->name('admin.ahp.settings');
 
     Route::post('/ahp-settings', [AHPController::class, 'store'])
         ->name('admin.ahp.settings.save');
+
+    // ===== SPK / SAW =====
+    Route::get('/spk', [SPKController::class, 'index'])
+        ->name('admin.spk.index');
+
+    Route::post('/spk/scores', [SPKController::class, 'storeScores'])
+        ->name('admin.spk.scores.save');
+
+    Route::get('/spk/hasil', [SPKController::class, 'hasil'])
+        ->name('admin.spk.hasil');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
-
-    // INDEX SPK (AHP + SAW)
-    Route::get('/spk', [SpkController::class, 'index'])->name('spk.index');
-
-    // SIMPAN MATRIX AHP
-    Route::post('/spk/ahp', [SpkController::class, 'saveAhpMatrix'])->name('spk.ahp.save');
-
-    // SIMPAN NILAI PENILAIAN
-    Route::post('/spk/scores', [SpkController::class, 'storeScores'])->name('spk.scores.save');
-
-    // HALAMAN SAW
-    Route::get('/spk/saw', [SpkController::class, 'saw'])->name('spk.saw');
-});
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('ruangan', RuanganController::class);

@@ -7,11 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class SpkPenilaian extends Model
 {
     protected $table = 'spk_penilaian';
-    protected $fillable = [
-        'peminjaman_id',
-        'criterion_id',
-        'nilai'
-    ];
+
+    protected $fillable = ['peminjaman_id', 'criterion_id', 'nilai'];
 
     public function peminjaman()
     {

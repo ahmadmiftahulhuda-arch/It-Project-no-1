@@ -7,105 +7,143 @@ use App\Models\SpkCriterion;
 use App\Models\SpkPenilaian;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SPKController extends Controller
 {
+    /**
+     * Halaman SPK (AHP + SAW)
+     */
     public function index()
     {
-        $criteria = SpkCriterion::ordered()->get();
-        // Use approved bookings as alternatives for ranking (adjust as needed)
-        $peminjamans = Peminjaman::whereRaw("LOWER(COALESCE(status,'')) = ?", ['disetujui'])->get();
+        $criteria = SpkCriterion::orderBy('kode')->get();
 
-        return view('admin.spk.index', compact('criteria','peminjamans'));
-    }
+        $peminjamans = Peminjaman::whereRaw(
+            "LOWER(COALESCE(status,'')) = ?",
+            ['disetujui']
+        )->get();
 
-    public function storePenilaian(Request $request)
-    {
-        foreach ($request->nilai as $peminjaman_id => $criterias) {
-            foreach ($criterias as $criterion_id => $nilai) {
-                SpkPenilaian::updateOrCreate(
-                    [
-                        'peminjaman_id' => $peminjaman_id,
-                        'criterion_id' => $criterion_id
-                    ],
-                    ['nilai' => $nilai]
-                );
-            }
+        // Nilai lama
+        $scores = [];
+        $penilaian = SpkPenilaian::whereIn(
+            'peminjaman_id',
+            $peminjamans->pluck('id')
+        )->get();
+
+        foreach ($penilaian as $p) {
+            $scores[$p->peminjaman_id][$p->criterion_id] = $p->nilai;
         }
 
-        return back()->with('success','Penilaian tersimpan!');
+        // Ranking jika sudah ada
+        $rankings = Peminjaman::whereNotNull('nilai_preferensi')
+            ->orderByDesc('nilai_preferensi')
+            ->get();
+
+        return view('admin.spk.index', compact(
+            'criteria',
+            'peminjamans',
+            'scores',
+            'rankings'
+        ));
     }
 
-    // New method to match route name `storeScores`
+    /**
+     * Simpan nilai alternatif & hitung SAW
+     */
     public function storeScores(Request $request)
     {
-        // Expecting input structure: scores[peminjaman_id][criterion_id] = value
-        $scores = $request->input('scores', []);
-        foreach ($scores as $peminjaman_id => $criterias) {
-            foreach ($criterias as $criterion_id => $nilai) {
-                SpkPenilaian::updateOrCreate(
-                    [
-                        'peminjaman_id' => $peminjaman_id,
-                        'criterion_id' => $criterion_id
-                    ],
-                    ['nilai' => $nilai]
-                );
-            }
-        }
+        $request->validate([
+            'scores' => 'required|array'
+        ]);
 
-        return back()->with('success', 'Penilaian tersimpan!');
+        DB::transaction(function () use ($request) {
+            foreach ($request->scores as $peminjaman_id => $criterias) {
+                foreach ($criterias as $criterion_id => $nilai) {
+                    SpkPenilaian::updateOrCreate(
+                        [
+                            'peminjaman_id' => $peminjaman_id,
+                            'criterion_id'  => $criterion_id,
+                        ],
+                        [
+                            'nilai' => (float) $nilai
+                        ]
+                    );
+                }
+            }
+
+            $this->hitungDanSimpanSAW();
+        });
+
+        return back()->with('success', 'Penilaian tersimpan & SAW berhasil dihitung.');
     }
 
-    public function saw()
+    /**
+     * PROSES INTI SAW
+     */
+    private function hitungDanSimpanSAW(): void
     {
-        $criteria = SpkCriterion::all();
+        $criteria = SpkCriterion::orderBy('kode')->get();
         $peminjamans = Peminjaman::with('spkPenilaian')->get();
-        // --- AMBIL BOBOT AHP (jika ada) ---
-        $ahpSettings = \App\Models\AHPSetting::all()->pluck('weight','criteria')->toArray();
 
-        // --- NORMALISASI SAW (kunci by peminjaman id) ---
-        $normal = [];
-        foreach ($criteria as $k) {
-            // build associative array peminjaman_id => nilai
-            $col = [];
+        // ===============================
+        // 1. Pembagi normalisasi
+        // ===============================
+        $pembagi = [];
+
+        foreach ($criteria as $c) {
+            $values = [];
+
             foreach ($peminjamans as $p) {
-                $val = optional($p->spkPenilaian->where('criterion_id', $k->id)->first())->nilai;
-                $col[$p->id] = $val !== null ? (float)$val : 0.0;
+                $nilai = optional(
+                    $p->spkPenilaian
+                        ->where('criterion_id', $c->id)
+                        ->first()
+                )->nilai;
+
+                if ($nilai !== null) {
+                    $values[] = (float) $nilai;
+                }
             }
 
-            if ($k->jenis == 'benefit') {
-                $max = max($col) ?: 1;
-                foreach ($col as $pid => $v) {
-                    $normal[$k->id][$pid] = $max > 0 ? ($v / $max) : 0;
-                }
+            if (empty($values)) {
+                $pembagi[$c->id] = 1.0;
             } else {
-                // cost-type
-                $min = min(array_filter($col, fn($x) => $x > 0)) ?: 1;
-                foreach ($col as $pid => $v) {
-                    $normal[$k->id][$pid] = ($v > 0) ? ($min / $v) : 0;
+                $pembagi[$c->id] = $c->tipe === 'benefit'
+                    ? max($values)
+                    : min($values);
+
+                if ($pembagi[$c->id] == 0) {
+                    $pembagi[$c->id] = 1.0;
                 }
             }
         }
 
-        // --- HITUNG RANKING DENGAN BOBOT AHP ---
-        $hasil = [];
-        $totalCriteria = max(1, count($criteria));
+        // ===============================
+        // 2. Hitung nilai preferensi
+        // ===============================
         foreach ($peminjamans as $p) {
-            $total = 0;
-            foreach ($criteria as $k) {
-                $n = $normal[$k->id][$p->id] ?? 0;
-                // try to find weight by kode or nama in ahp settings
-                $weight = null;
-                if (isset($ahpSettings[$k->kode ?? ''])) $weight = (float)$ahpSettings[$k->kode];
-                if ($weight === null && isset($ahpSettings[$k->nama ?? ''])) $weight = (float)$ahpSettings[$k->nama];
-                if ($weight === null) $weight = 1 / $totalCriteria;
-                $total += $n * $weight;
+            $preferensi = 0.0;
+
+            foreach ($criteria as $c) {
+                $nilai = optional(
+                    $p->spkPenilaian
+                        ->where('criterion_id', $c->id)
+                        ->first()
+                )->nilai;
+
+                if ($nilai === null) continue;
+
+                $nilai = (float) $nilai;
+
+                $normalisasi = $c->tipe === 'benefit'
+                    ? $nilai / $pembagi[$c->id]
+                    : ($nilai != 0 ? $pembagi[$c->id] / $nilai : 0);
+
+                $preferensi += $normalisasi * (float) $c->bobot;
             }
-            $hasil[$p->id] = $total;
+
+            $p->nilai_preferensi = round($preferensi, 8);
+            $p->save();
         }
-
-        arsort($hasil);
-
-        return view('admin.spk.hasil', compact('hasil','criteria','peminjamans'));
     }
 }

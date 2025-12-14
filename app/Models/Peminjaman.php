@@ -34,7 +34,7 @@ class Peminjaman extends Model
 
     public function spkPenilaian()
     {
-        return $this->hasMany(SpkPenilaian::class, 'peminjaman_id');
+        return $this->hasMany(\App\Models\SpkPenilaian::class, 'peminjaman_id');
     }
 
     /**

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class SpkCriterion extends Model
 {
     protected $table = 'spk_criteria';
-    protected $fillable = ['kode', 'nama', 'jenis'];
+
+    protected $fillable = ['kode', 'nama', 'tipe', 'bobot'];
 
     public function penilaian()
     {
