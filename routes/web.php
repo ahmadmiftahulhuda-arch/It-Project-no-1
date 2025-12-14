@@ -28,6 +28,7 @@ use App\Models\SlotWaktu;
 use App\Models\Projector;
 use App\Http\Controllers\Admin\AHPController;
 use App\Http\Controllers\Admin\SPKController;
+use App\Http\Controllers\Admin\SPKDummyController;
 use App\Http\Controllers\Admin\DosenController;
 
 // ================================
@@ -47,13 +48,18 @@ Route::get('/', function () {
     // Statistik
     $totalRuangan = Ruangan::count();
     $availableRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->count();
-    $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance','perbaikan'])->count();
+    $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance', 'perbaikan'])->count();
     $occupiedRuangan = max(0, $totalRuangan - $availableRuangan - $maintenanceRuangan);
     $totalProjectors = Projector::count();
 
     return view('home', compact(
-        'ruangan', 'slotwaktu', 'projectors',
-        'totalRuangan', 'availableRuangan', 'occupiedRuangan', 'totalProjectors'
+        'ruangan',
+        'slotwaktu',
+        'projectors',
+        'totalRuangan',
+        'availableRuangan',
+        'occupiedRuangan',
+        'totalProjectors'
     ));
 })->name('home');
 Route::view('/about', 'about')->name('about');
@@ -75,13 +81,18 @@ Route::get('/home', function () {
     $totalRuangan = Ruangan::count();
     $availableRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) = ?", ['tersedia'])->count();
     // hitung maintenance / perbaikan
-    $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance','perbaikan'])->count();
+    $maintenanceRuangan = Ruangan::whereRaw("LOWER(COALESCE(status, '')) IN (?, ?)", ['maintenance', 'perbaikan'])->count();
     $occupiedRuangan = max(0, $totalRuangan - $availableRuangan - $maintenanceRuangan);
     $totalProjectors = Projector::count();
 
     return view('home', compact(
-        'ruangan', 'slotwaktu', 'projectors',
-        'totalRuangan', 'availableRuangan', 'occupiedRuangan', 'totalProjectors'
+        'ruangan',
+        'slotwaktu',
+        'projectors',
+        'totalRuangan',
+        'availableRuangan',
+        'occupiedRuangan',
+        'totalProjectors'
     ));
 });
 
@@ -244,7 +255,7 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
 
     // Laporan
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
-Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->name('admin.laporan.data');
+    Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->name('admin.laporan.data');
 
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');
@@ -265,7 +276,7 @@ Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->na
 // ROUTES UNTUK USER
 // ================================
 
-Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function() {
+Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/profile', [App\Http\Controllers\User\UserProfileController::class, 'index'])->name('user.profile.index');
         Route::put('/profile', [App\Http\Controllers\User\UserProfileController::class, 'update'])->name('user.profile.update');
@@ -293,25 +304,37 @@ Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function() {
 });
 
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:Administrator', '2fa.verified'])
+    ->prefix('admin')
+    ->group(function () {
 
-    // ===== AHP (BOBOT KRITERIA) =====
+    /* =========================
+       AHP (BOBOT KRITERIA)
+    ========================= */
     Route::get('/ahp-settings', [AHPController::class, 'index'])
         ->name('admin.ahp.settings');
 
     Route::post('/ahp-settings', [AHPController::class, 'store'])
         ->name('admin.ahp.settings.save');
 
-    // ===== SPK / SAW =====
+    /* =========================
+       SPK UTAMA (PEMINJAMAN ASLI)
+    ========================= */
     Route::get('/spk', [SPKController::class, 'index'])
         ->name('admin.spk.index');
 
     Route::post('/spk/scores', [SPKController::class, 'storeScores'])
         ->name('admin.spk.scores.save');
 
-    Route::get('/spk/hasil', [SPKController::class, 'hasil'])
-        ->name('admin.spk.hasil');
-});
+    /* =========================
+       SPK DUMMY (EXCEL)
+    ========================= */
+    Route::get('/spk/dummy', [SPKDummyController::class, 'index'])
+        ->name('admin.spk.dummy');
+
+    Route::post('/spk/dummy/import', [SPKDummyController::class, 'import'])
+        ->name('admin.spk.import');
+});;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
