@@ -1024,66 +1024,114 @@
                         <table class="table table-bordered table-spk align-middle">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
-                                    <th>Peminjaman</th>
-                                    <th>Ruang / Proyektor</th>
-                                    <th>Tanggal & Jam</th>
-                                    @foreach ($criteria as $c)
-                                        <th class="text-center">
-                                            {{ $c->kode }}<br>
-                                            <small>{{ $c->nama }}</small>
-                                        </th>
-                                    @endforeach
+                                    <th>#</th>
+                                    <th>Nama</th>
+                                    <th>Keperluan (K1)</th>
+                                    <th>Tanggal Pinjam (K2)</th>
+                                    <th>Jam (K3)</th>
+                                    <th>Catatan Riwayat (K4)</th>
+                                    <th>Sarana Prasarana (K5)</th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                                @forelse($peminjamans as $p)
+                                @foreach ($peminjamans as $p)
+                                    @php
+                                        // ======================
+                                        // K1 KEPERLUAN (DARI TEKS USER)
+                                        // ======================
+                                        $mapKeperluan = [
+                                            'perkuliahan' => 5,
+                                            'kelas pengganti' => 4,
+                                            'seminar' => 3,
+                                            'pkl' => 3,
+                                            'proposal' => 3,
+                                            'mentoring' => 2,
+                                            'belajar' => 2,
+                                            'konsultasi' => 1,
+                                            'uas' => 1,
+                                        ];
+
+                                        $k1 = 1;
+                                        foreach ($mapKeperluan as $key => $val) {
+                                            if (str_contains(strtolower($p->keperluan), $key)) {
+                                                $k1 = $val;
+                                                break;
+                                            }
+                                        }
+
+                                        // ======================
+                                        // K2 TANGGAL (SESUAI EXCEL)
+                                        // ======================
+                                        $k2 = 1;
+
+                                        // ======================
+                                        // K3 JAM → menit dari jam input
+                                        // ======================
+                                        $jamInput = \Carbon\Carbon::parse($p->created_at);
+                                        $k3 = $jamInput->hour * 60 + $jamInput->minute;
+
+                                        // ======================
+                                        // K4 CATATAN RIWAYAT (DARI FEEDBACK)
+                                        // ======================
+                                        $k4 = 1; // default
+                                        if ($p->feedback) {
+                                            if ($p->feedback->rating === 'cukup') {
+                                                $k4 = 0.5;
+                                            }
+                                            if ($p->feedback->rating === 'buruk') {
+                                                $k4 = 0;
+                                            }
+                                        }
+
+                                        // ======================
+                                        // K5 SARANA PRASARANA
+                                        // ======================
+                                        $k5 = $p->ruangan && $p->projector ? 2 : 1;
+                                    @endphp
+
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <strong>Kode:</strong> {{ $p->kode_peminjaman ?? 'PMJ-' . $p->id }}<br>
-                                            <strong>Peminjam:</strong>
-                                            {{ $p->user->name ?? ($p->nama_peminjam ?? '-') }}<br>
-                                            <strong>Keperluan:</strong> {{ $p->keperluan ?? '-' }}
-                                        </td>
-                                        <td>
-                                            <strong>Ruang:</strong>
-                                            {{ $p->ruangan->nama_ruangan ?? '-' }}<br>
+                                        <td>{{ $loop->iteration }}</td>
 
-                                            <strong>Proyektor:</strong>
-                                            {{ $p->projector->kode_proyektor ?? '-' }}
-                                        </td>
-                                        <td>
-                                            <strong>Tanggal:</strong>
-                                            {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}<br>
+                                        {{-- Nama --}}
+                                        <td>{{ $p->user->name }}</td>
 
-                                            <strong>Jam:</strong>
-                                            {{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}
-                                            @if ($p->waktu_selesai)
-                                                - {{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}
-                                            @endif
+                                        {{-- K1 Keperluan --}}
+                                        <td class="text-center">
+                                            {{ $k1 }}
+                                            <input type="hidden" name="scores[{{ $p->id }}][K1]"
+                                                value="{{ $k1 }}">
                                         </td>
 
-                                        @foreach ($criteria as $c)
-                                            @php
-                                                $existing = $scores[$p->id][$c->id] ?? null;
-                                            @endphp
-                                            <td class="text-center">
-                                                <input type="number" step="0.01" min="0"
-                                                    name="scores[{{ $p->id }}][{{ $c->id }}]"
-                                                    class="form-control form-control-sm text-center"
-                                                    value="{{ old('scores.' . $p->id . '.' . $c->id, $existing) }}"
-                                                    required>
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="{{ 4 + count($criteria) }}" class="text-center text-muted">
-                                            Belum ada data peminjaman yang dapat dinilai.
+                                        {{-- K2 Tanggal --}}
+                                        <td class="text-center">
+                                            {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}
+                                            <input type="hidden" name="scores[{{ $p->id }}][K2]"
+                                                value="{{ $k2 }}">
+                                        </td>
+
+                                        {{-- K3 Jam (dalam menit) --}}
+                                        <td class="text-center">
+                                            {{ $k3 }} menit
+                                            <input type="hidden" name="scores[{{ $p->id }}][K3]"
+                                                value="{{ $k3 }}">
+                                        </td>
+
+                                        {{-- K4 Catatan Riwayat --}}
+                                        <td class="text-center">
+                                            {{ $k4 }}
+                                            <input type="hidden" name="scores[{{ $p->id }}][K4]"
+                                                value="{{ $k4 }}">
+                                        </td>
+
+                                        {{-- K5 Sarana Prasarana --}}
+                                        <td class="text-center">
+                                            {{ $k5 }}
+                                            <input type="hidden" name="scores[{{ $p->id }}][K5]"
+                                                value="{{ $k5 }}">
                                         </td>
                                     </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -1096,6 +1144,55 @@
                         </div>
                     @endif
                 </form>
+                {{-- PETUNJUK KONVERSI NILAI SPK --}}
+                <div class="mt-4 p-3 bg-light border rounded">
+                    <h6 class="fw-bold mb-2">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        Petunjuk Konversi Nilai SPK
+                    </h6>
+
+                    <ul class="mb-0 small text-muted">
+                        <li>
+                            <strong>K3 – Jam (Cost):</strong>
+                            Jam dikonversi ke menit dengan rumus
+                            <code>HH:MM → (HH × 60) + MM</code>.
+                            Semakin kecil nilai, semakin diprioritaskan.
+                        </li>
+
+                        <li>
+                            <strong>K1 – Keperluan:</strong>
+                            <ul>
+                                <li>Perkuliahan = 5</li>
+                                <li>Kelas Pengganti = 4</li>
+                                <li>Seminar / TA / PKL / Proposal / Ujikom = 3</li>
+                                <li>Mentoring / Belajar Bersama = 2</li>
+                                <li>Konsultasi KRS / UAS / UTS = 1</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <strong>K5 – Sarana Prasarana:</strong>
+                            <ul>
+                                <li>Ruangan + Proyektor = 2</li>
+                                <li>Ruangan saja = 1</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <strong>K4 – Catatan Riwayat:</strong>
+                            <ul>
+                                <li>Baik = 1</li>
+                                <li>Kurang Baik = 0.5</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <strong>K2 – Tanggal Pinjam:</strong>
+                            Semua peminjaman diberi nilai <strong>1</strong>.
+                        </li>
+                    </ul>
+                </div>
+
             </div>
 
             <!-- BAGIAN C: HASIL RANKING SAW -->
@@ -1145,10 +1242,7 @@
                                             {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}<br>
 
                                             <strong>Jam:</strong>
-                                            {{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}
-                                            @if ($p->waktu_selesai)
-                                                - {{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}
-                                            @endif
+                                            {{ \Carbon\Carbon::parse($p->created_at)->format('H:i') }}
                                         </td>
                                         <td class="text-center fw-bold">
                                             {{ number_format($p->nilai_preferensi, 4) }}

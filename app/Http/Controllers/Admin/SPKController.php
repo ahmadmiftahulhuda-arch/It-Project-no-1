@@ -3,39 +3,38 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Peminjaman;
 use App\Models\SpkCriterion;
 use App\Models\SpkPenilaian;
-use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class SPKController extends Controller
 {
     /**
-     * Halaman SPK (AHP + SAW)
+     * ===============================
+     * HALAMAN SPK (AHP + SAW)
+     * ===============================
      */
     public function index()
     {
-        // 1. Ambil kriteria + bobot AHP
+        // Semua kriteria (sudah punya bobot dari AHP)
         $criteria = SpkCriterion::orderBy('kode')->get();
 
-        // 2. Ambil peminjaman yang disetujui
-        $peminjamans = Peminjaman::with(['ruangan', 'projector', 'user', 'spkPenilaian'])
-            ->whereRaw("LOWER(COALESCE(status,'')) = ?", ['disetujui'])
+        // Peminjaman yang sudah disetujui
+        $peminjamans = Peminjaman::with(['user', 'ruangan', 'projector', 'spkPenilaian'])
+            ->where('status', 'disetujui')
             ->get();
 
-
-        // 3. Ambil nilai penilaian lama (jika ada)
+        // Nilai penilaian sebelumnya
         $scores = [];
-        $penilaian = SpkPenilaian::whereIn(
-            'peminjaman_id',
-            $peminjamans->pluck('id')
-        )->get();
-
-        foreach ($penilaian as $p) {
-            $scores[$p->peminjaman_id][$p->criterion_id] = $p->nilai;
+        foreach ($peminjamans as $p) {
+            foreach ($p->spkPenilaian as $sp) {
+                $scores[$p->id][$sp->criterion_id] = $sp->nilai;
+            }
         }
 
-        // 4. Ambil hasil ranking SAW (INI YANG SEBELUMNYA HILANG)
+        // Ranking SAW
         $rankings = Peminjaman::whereNotNull('nilai_preferensi')
             ->orderByDesc('nilai_preferensi')
             ->get();
@@ -49,111 +48,124 @@ class SPKController extends Controller
     }
 
     /**
-     * Simpan penilaian & hitung SAW
+     * ===============================
+     * SIMPAN NILAI SPK
+     * ===============================
      */
     public function storeScores(Request $request)
     {
-        $scores = $request->input('scores', []);
+        $criteria = SpkCriterion::all();
 
-        // 1. Simpan nilai penilaian
-        foreach ($scores as $peminjaman_id => $criterias) {
-            foreach ($criterias as $criterion_id => $nilai) {
-                SpkPenilaian::updateOrCreate(
-                    [
-                        'peminjaman_id' => $peminjaman_id,
-                        'criterion_id'  => $criterion_id,
-                    ],
-                    [
-                        'nilai' => (float)$nilai
-                    ]
-                );
+        foreach ($request->scores as $peminjaman_id => $inputScores) {
+
+            $peminjaman = Peminjaman::findOrFail($peminjaman_id);
+
+            foreach ($criteria as $c) {
+
+                /**
+                 * ===============================
+                 * K3 (JAM) → OTOMATIS
+                 * ===============================
+                 * Rumus Excel / Python:
+                 * menit = jam * 60 + menit
+                 */
+                if ($c->kode === 'K3') {
+                    $jamInput = Carbon::parse($peminjaman->created_at);
+                    $nilai = ($jamInput->hour * 60) + $jamInput->minute;
+                } else {
+                    $nilai = $inputScores[$c->id] ?? null;
+                }
+
+                if ($nilai !== null) {
+                    SpkPenilaian::updateOrCreate(
+                        [
+                            'peminjaman_id' => $peminjaman_id,
+                            'criterion_id'  => $c->id,
+                        ],
+                        [
+                            'nilai' => (float) $nilai
+                        ]
+                    );
+                }
             }
         }
 
-        // 2. Hitung SAW
+        // Hitung SAW
         $this->hitungSAW();
 
         return redirect()
             ->route('admin.spk.index')
-            ->with('success', 'Penilaian tersimpan & SAW berhasil dihitung.');
+            ->with('success', 'Penilaian SPK & SAW berhasil dihitung.');
     }
 
     /**
-     * ==========================
-     * INTI PERHITUNGAN SAW
-     * (SAMA DENGAN PYTHON)
-     * ==========================
+     * ===============================
+     * PROSES SAW (SESUAI EXCEL)
+     * ===============================
      */
-    private function hitungSAW(): void
+    private function hitungSAW()
     {
-        $criteria = SpkCriterion::orderBy('kode')->get();
-
-        // Ambil peminjaman + penilaian
+        $criteria = SpkCriterion::all();
         $peminjamans = Peminjaman::with('spkPenilaian')->get();
 
         /**
-         * 1. Hitung pembagi normalisasi
-         * BENEFIT → max
-         * COST    → min
+         * ===============================
+         * LANGKAH 1: PEMBAGI NORMALISASI
+         * ===============================
          */
         $pembagi = [];
 
         foreach ($criteria as $c) {
-            $values = [];
+            $nilai = $peminjamans
+                ->pluck('spkPenilaian')
+                ->flatten()
+                ->where('criterion_id', $c->id)
+                ->pluck('nilai')
+                ->toArray();
 
-            foreach ($peminjamans as $p) {
-                $nilai = optional(
-                    $p->spkPenilaian->where('criterion_id', $c->id)->first()
-                )->nilai;
-
-                if ($nilai !== null) {
-                    $values[] = (float)$nilai;
-                }
-            }
-
-            if (count($values) === 0) {
+            if (empty($nilai)) {
                 $pembagi[$c->id] = 1;
             } else {
                 $pembagi[$c->id] = ($c->tipe === 'cost')
-                    ? min($values)
-                    : max($values);
-            }
-
-            if ($pembagi[$c->id] == 0) {
-                $pembagi[$c->id] = 1;
+                    ? min($nilai)
+                    : max($nilai);
             }
         }
 
         /**
-         * 2. Hitung nilai preferensi
-         * normalisasi × bobot
+         * ===============================
+         * LANGKAH 2: NORMALISASI + BOBOT
+         * ===============================
          */
         foreach ($peminjamans as $p) {
             $preferensi = 0;
 
             foreach ($criteria as $c) {
-                $nilai = optional(
-                    $p->spkPenilaian->where('criterion_id', $c->id)->first()
-                )->nilai;
+                $penilaian = $p->spkPenilaian
+                    ->where('criterion_id', $c->id)
+                    ->first();
 
-                if ($nilai === null) {
-                    continue;
-                }
+                if (!$penilaian) continue;
 
-                $nilai = (float)$nilai;
+                $nilai = $penilaian->nilai;
 
-                // Normalisasi (SAMA DENGAN PYTHON)
-                if ($c->tipe === 'cost') {
-                    $normalisasi = $pembagi[$c->id] / $nilai;
-                } else {
-                    $normalisasi = $nilai / $pembagi[$c->id];
-                }
+                // Normalisasi SAW
+                $normalisasi = ($c->tipe === 'cost')
+                    ? $pembagi[$c->id] / $nilai
+                    : $nilai / $pembagi[$c->id];
 
-                $preferensi += $normalisasi * (float)$c->bobot;
+                // Bobot dari AHP
+                $preferensi += $normalisasi * $c->bobot;
             }
 
-            $p->nilai_preferensi = round($preferensi, 8);
-            $p->save();
+            /**
+             * ===============================
+             * LANGKAH 3: SIMPAN HASIL
+             * ===============================
+             */
+            $p->update([
+                'nilai_preferensi' => round($preferensi, 4)
+            ]);
         }
     }
 }
