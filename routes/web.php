@@ -332,6 +332,9 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])
     Route::get('/spk/dummy', [SPKDummyController::class, 'index'])
         ->name('admin.spk.dummy');
 
+            Route::post('/spk/dummy/hitung', [SPKDummyController::class, 'hitungSAW'])
+        ->name('admin.spk.dummy.hitung');
+
     Route::post('/spk/dummy/import', [SPKDummyController::class, 'import'])
         ->name('admin.spk.import');
 });;

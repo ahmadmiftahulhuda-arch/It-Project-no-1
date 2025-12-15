@@ -1,5 +1,10 @@
 @php
-    $dummyRankings = $dummyRankings ?? collect();
+    $criteria = $criteria ?? [];
+    $alternatifList = $alternatifList ?? [];
+    $matrixX = $matrixX ?? null;
+    $matrixR = $matrixR ?? null;
+    $hasil = $hasil ?? null;
+    $ranking = $ranking ?? null;
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -7,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPK Dummy - AHP & SAW</title>
+    <title>SPK Dummy - SAW</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -352,6 +357,15 @@
             text-align: center;
         }
 
+        .table-bordered {
+            border: 1px solid var(--border-light);
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid var(--border-light);
+        }
+
         .badge-priority {
             font-size: 0.8rem;
         }
@@ -443,6 +457,22 @@
             color: var(--text-dark);
         }
 
+        body.dark-mode .table-bordered {
+            border-color: var(--border-light);
+        }
+
+        body.dark-mode .table-bordered th,
+        body.dark-mode .table-bordered td {
+            border-color: var(--border-light);
+            color: var(--text-dark);
+        }
+
+        .alert-custom {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
         .info-box {
             background: #f8f9fa;
             border-left: 4px solid var(--info);
@@ -451,15 +481,22 @@
             border-radius: 4px;
         }
 
-        .info-box.dark-mode {
+        body.dark-mode .info-box {
             background: #2a2a2a;
             border-left: 4px solid var(--info);
         }
 
-        .alert-custom {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -657,8 +694,8 @@
         <!-- Page Title -->
         <div class="page-title">
             <div>
-                <h1>SPK Dummy (Simulasi Excel & SAW)</h1>
-                <p>Import data dummy dan simulasi perhitungan SAW untuk pengujian sistem</p>
+                <h1>SPK Dummy - Metode SAW</h1>
+                <p>Simulasi perhitungan SAW dengan data dummy untuk pengujian sistem</p>
             </div>
         </div>
 
@@ -680,263 +717,266 @@
         <!-- Info Box -->
         <div class="info-box">
             <h6 class="mb-2"><i class="fas fa-info-circle me-2 text-info"></i>Fitur SPK Dummy</h6>
-            <p class="mb-0 small">Gunakan fitur ini untuk menguji sistem dengan data dummy dari Excel sebelum menerapkan pada data peminjaman sebenarnya.</p>
+            <p class="mb-0 small">Gunakan fitur ini untuk menguji sistem dengan data dummy sebelum menerapkan pada data
+                peminjaman sebenarnya. Input 13 baris data sesuai format dan hitung perankingan SAW.</p>
         </div>
 
-        <!-- BAGIAN A: IMPORT DATA DUMMY -->
+        <!-- BAGIAN A: BOBOT AHP -->
         <div class="card-custom">
             <h2 class="section-title">
-                <i class="fas fa-upload"></i>
-                A. Import Data Dummy dari Excel
+                <i class="fas fa-weight-hanging"></i>
+                A. Bobot Kriteria (Hasil AHP)
             </h2>
-
-            <p class="text-muted mb-3">
-                Upload file Excel dengan data dummy untuk simulasi perhitungan SAW.
-            </p>
-
-            <form action="{{ route('admin.spk.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-8">
-                        <label for="fileInput" class="form-label">File Excel (.xlsx, .xls)</label>
-                        <input type="file" name="file" id="fileInput" class="form-control" accept=".xlsx,.xls" required>
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-file-import me-2"></i>Import Data
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mt-3">
-                    <h6 class="fw-bold mb-2">
-                        <i class="fas fa-file-excel me-2 text-success"></i>
-                        Format Excel yang Diperlukan:
-                    </h6>
-                    <div class="table-responsive">
-                        <table class="table table-bordered small">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Kolom A</th>
-                                    <th>Kolom B</th>
-                                    <th>Kolom C</th>
-                                    <th>Kolom D</th>
-                                    <th>Kolom E</th>
-                                    <th>Kolom F</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>nama</strong></td>
-                                    <td><strong>keperluan</strong></td>
-                                    <td><strong>tanggal_pinjam</strong></td>
-                                    <td><strong>jam</strong></td>
-                                    <td><strong>catatan_riwayat</strong></td>
-                                    <td><strong>sarana_prasarana</strong></td>
-                                </tr>
-                                <tr class="text-muted">
-                                    <td>John Doe</td>
-                                    <td>perkuliahan</td>
-                                    <td>2024-01-15</td>
-                                    <td>08:00</td>
-                                    <td>baik</td>
-                                    <td>ruangan+proyektor</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- BAGIAN B: DATA DUMMY -->
-        @if ($dummyRankings->count())
-        <div class="card-custom">
-            <h2 class="section-title">
-                <i class="fas fa-database"></i>
-                B. Data Dummy yang Diimport
-            </h2>
-
-            <p class="text-muted mb-3">
-                Data berikut telah dikonversi ke nilai kriteria sesuai aturan sistem.
-            </p>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-spk align-middle">
                     <thead>
                         <tr>
-                            <th class="text-center">#</th>
-                            <th>Nama</th>
-                            <th class="text-center">K1<br><small>Keperluan</small></th>
-                            <th class="text-center">K2<br><small>Tanggal Pinjam</small></th>
-                            <th class="text-center">K3<br><small>Jam (menit)</small></th>
-                            <th class="text-center">K4<br><small>Catatan Riwayat</small></th>
-                            <th class="text-center">K5<br><small>Sarana Prasarana</small></th>
+                            <th class="text-center">Kode</th>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">Tipe</th>
+                            <th class="text-center">Bobot</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($dummyRankings as $i => $d)
-                            <tr>
-                                <td class="text-center">{{ $i + 1 }}</td>
-                                <td>
-                                    <strong>{{ $d->nama }}</strong>
-                                    @if($d->keperluan)
-                                        <br><small class="text-muted">{{ $d->keperluan }}</small>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary">{{ $d->k1 }}</span>
-                                </td>
-                                <td class="text-center">
-                                    {{ $d->k2 }}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-info">{{ $d->k3 }}</span>
-                                </td>
-                                <td class="text-center">
-                                    @if($d->k4 == 1)
-                                        <span class="badge bg-success">Baik</span>
-                                    @elseif($d->k4 == 0.5)
-                                        <span class="badge bg-warning">Cukup</span>
-                                    @else
-                                        <span class="badge bg-danger">Buruk</span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    @if($d->k5 == 2)
-                                        <span class="badge bg-success">Ruang + Proyektor</span>
-                                    @else
-                                        <span class="badge bg-secondary">Ruang Saja</span>
-                                    @endif
-                                </td>
-                            </tr>
+                        @foreach ($criteria as $c)
+                            @if (in_array($c->kode, ['K1', 'K2', 'K3', 'K4', 'K5']))
+                                <tr>
+                                    <td class="text-center fw-bold">{{ $c->kode }}</td>
+                                    <td>{{ $c->nama }}</td>
+                                    <td class="text-center">
+                                        @if (strtolower($c->tipe) === 'benefit')
+                                            <span class="badge bg-success">Benefit</span>
+                                        @else
+                                            <span class="badge bg-warning">Cost</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center fw-bold">{{ number_format((float) $c->bobot, 6) }}</td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
+            <div class="mt-2 text-muted small">
+                <i class="fas fa-info-circle me-1"></i>
+                Normalisasi: Benefit = x/max, Cost = min/x
+            </div>
         </div>
 
-        <!-- BAGIAN C: HASIL RANKING SAW -->
+        <!-- BAGIAN B: STEP 0 - INPUT ALTERNATIF -->
         <div class="card-custom">
             <h2 class="section-title">
-                <i class="fas fa-ranking-star"></i>
-                C. Hasil Perankingan SAW (Dummy Data)
+                <i class="fas fa-edit"></i>
+                B. STEP 0 — Input Alternatif (13 baris sesuai Excel)
             </h2>
 
-            <p class="text-muted mb-3">
-                Urutan prioritas berdasarkan nilai preferensi tertinggi dari perhitungan SAW.
-            </p>
-
-            @php
-                $rankingSAW = $dummyRankings->sortByDesc('nilai_preferensi')->values();
-                $maxPreferensi = $rankingSAW->first() ? $rankingSAW->first()->nilai_preferensi : 1;
-                // Jika nilai preferensi maksimum adalah 0, set ke 1 untuk menghindari division by zero
-                if ($maxPreferensi == 0) {
-                    $maxPreferensi = 1;
-                }
-            @endphp
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Peringkat</th>
-                            <th>Nama</th>
-                            <th class="text-center">Nilai Preferensi</th>
-                            <th class="text-center">Status Prioritas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($rankingSAW as $i => $d)
+            <form method="GET" action="{{ route('admin.spk.dummy') }}">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle bg-white">
+                        <thead class="table-light">
                             <tr>
-                                <td class="text-center fw-bold" style="width: 80px;">
-                                    <div class="rank-circle @if($i < 3) top-rank @endif">
-                                        {{ $i + 1 }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <strong>{{ $d->nama }}</strong>
-                                    @if($d->keperluan)
-                                        <br><small class="text-muted">{{ $d->keperluan }}</small>
-                                    @endif
-                                </td>
-                                <td class="text-center fw-bold" style="width: 150px;">
-                                    <div class="score-display">
-                                        {{ number_format($d->nilai_preferensi, 4) }}
-                                    </div>
-                                </td>
-                                <td class="text-center" style="width: 150px;">
-                                    @if ($i === 0)
-                                        <span class="badge bg-success badge-priority py-2 px-3">
-                                            <i class="fas fa-trophy me-1"></i> Prioritas Utama
-                                        </span>
-                                    @elseif($i < 3)
-                                        <span class="badge bg-info badge-priority py-2 px-3">
-                                            <i class="fas fa-star me-1"></i> Prioritas Tinggi
-                                        </span>
-                                    @else
-                                        <span class="badge bg-secondary badge-priority py-2 px-3">
-                                            Prioritas Normal
-                                        </span>
-                                    @endif
-                                </td>
+                                <th style="min-width:280px">Nama</th>
+                                <th style="min-width:140px">Keperluan (K1)</th>
+                                <th style="min-width:160px">Tanggal Pinjam (K2)</th>
+                                <th style="min-width:140px">Jam (K3)</th>
+                                <th style="min-width:180px">Catatan Riwayat (K4)</th>
+                                <th style="min-width:180px">Sarana Prasarana (K5)</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0; $i < 13; $i++)
+                                <tr>
+                                    <td class="text-start">
+                                        <input type="text" name="nilai[{{ $i }}][nama]"
+                                            class="form-control" placeholder="Contoh: Dosen 1 / Mahasiswa 8"
+                                            value="{{ request("nilai.$i.nama") }}" required>
+                                    </td>
+
+                                    <td>
+                                        <input type="number" step="0.01" min="0"
+                                            name="nilai[{{ $i }}][K1]" class="form-control text-center"
+                                            value="{{ request("nilai.$i.K1") }}" placeholder="ex: 1-5">
+                                    </td>
+                                    <td>
+                                        <input type="number" step="0.01" min="0"
+                                            name="nilai[{{ $i }}][K2]" class="form-control text-center"
+                                            value="{{ request("nilai.$i.K2") }}" placeholder="ex: 1">
+                                    </td>
+                                    <td>
+                                        <input type="number" step="0.01" min="0"
+                                            name="nilai[{{ $i }}][K3]" class="form-control text-center"
+                                            value="{{ request("nilai.$i.K3") }}" placeholder="ex: 480">
+                                    </td>
+                                    <td>
+                                        <input type="number" step="0.01" min="0"
+                                            name="nilai[{{ $i }}][K4]" class="form-control text-center"
+                                            value="{{ request("nilai.$i.K4") }}" placeholder="ex: 1 / 0.5">
+                                    </td>
+                                    <td>
+                                        <input type="number" step="0.01" min="0"
+                                            name="nilai[{{ $i }}][K5]" class="form-control text-center"
+                                            value="{{ request("nilai.$i.K5") }}" placeholder="ex: 1 / 2">
+                                    </td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary btn-lg">
+                        <i class="fas fa-calculator me-2"></i>Hitung SAW (STEP 1–5)
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- HASIL SAW -->
+        @if (isset($matrixX))
+            <!-- STEP 1 - MATRIX KEPUTUSAN -->
+            <div class="card-custom">
+                <h2 class="section-title">
+                    <i class="fas fa-table"></i>
+                    STEP 1 — Matriks Keputusan (X)
+                </h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-spk align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">K1</th>
+                                <th class="text-center">K2</th>
+                                <th class="text-center">K3</th>
+                                <th class="text-center">K4</th>
+                                <th class="text-center">K5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($matrixX as $row)
+                                <tr>
+                                    <td class="text-start">{{ $row['nama'] }}</td>
+                                    <td class="text-center">{{ $row['K1'] }}</td>
+                                    <td class="text-center">{{ $row['K2'] }}</td>
+                                    <td class="text-center">{{ $row['K3'] }}</td>
+                                    <td class="text-center">{{ $row['K4'] }}</td>
+                                    <td class="text-center">{{ $row['K5'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            @if ($rankingSAW->count() > 0)
-            <div class="mt-4 p-3 bg-light border rounded">
-                <h6 class="fw-bold mb-3">
-                    <i class="fas fa-chart-line me-2 text-primary"></i>
-                    Visualisasi Ranking
-                </h6>
-                <div class="ranking-visualization">
-                    @foreach ($rankingSAW->take(5) as $i => $d)
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="rank-number me-3" style="width: 30px;">#{{ $i+1 }}</div>
-                            <div class="flex-grow-1">
-                                <div class="progress" style="height: 25px;">
-                                    @php
-                                        // PERBAIKAN: Hindari division by zero
-                                        $percentage = $maxPreferensi > 0 ? ($d->nilai_preferensi / $maxPreferensi) * 100 : 0;
-                                    @endphp
-                                    <div class="progress-bar 
-                                        @if($i==0) bg-success
-                                        @elseif($i<3) bg-info
-                                        @else bg-secondary @endif" 
-                                        role="progressbar" 
-                                        style="width: {{ $percentage }}%"
-                                        aria-valuenow="{{ $d->nilai_preferensi }}" 
-                                        aria-valuemin="0" 
-                                        aria-valuemax="{{ $maxPreferensi }}">
-                                        <span class="ms-2">{{ number_format($d->nilai_preferensi, 3) }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ms-3" style="width: 120px;">
-                                <small class="text-muted">{{ $d->nama }}</small>
-                            </div>
-                        </div>
-                    @endforeach
+            <!-- STEP 2 - MATRIX NORMALISASI -->
+            <div class="card-custom">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    STEP 2 — Matriks Normalisasi (R)
+                </h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-spk align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">K1</th>
+                                <th class="text-center">K2</th>
+                                <th class="text-center">K3</th>
+                                <th class="text-center">K4</th>
+                                <th class="text-center">K5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($matrixR as $row)
+                                <tr>
+                                    <td class="text-start">{{ $row['nama'] }}</td>
+                                    <td class="text-center">{{ number_format((float) $row['K1'], 6) }}</td>
+                                    <td class="text-center">{{ number_format((float) $row['K2'], 6) }}</td>
+                                    <td class="text-center">{{ number_format((float) $row['K3'], 6) }}</td>
+                                    <td class="text-center">{{ number_format((float) $row['K4'], 6) }}</td>
+                                    <td class="text-center">{{ number_format((float) $row['K5'], 6) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            @endif
-        </div>
-        @else
-        <div class="card-custom">
-            <div class="text-center py-5">
-                <div class="mb-4">
-                    <i class="fas fa-file-excel fa-4x text-muted"></i>
+
+            <!-- STEP 3 - NILAI PREFERENSI -->
+            <div class="card-custom">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    STEP 3 — Nilai Preferensi (V)
+                </h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-spk align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Nilai Preferensi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($hasil as $h)
+                                <tr>
+                                    <td class="text-start">{{ $h['nama'] }}</td>
+                                    <td class="text-center fw-bold">{{ number_format((float) $h['preferensi'], 6) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <h4 class="mb-3">Belum ada data dummy</h4>
-                <p class="text-muted mb-4">Import file Excel untuk mulai simulasi perhitungan SAW dengan data dummy.</p>
-                <a href="#import-section" class="btn btn-primary">
-                    <i class="fas fa-upload me-2"></i>Import Data Dummy
-                </a>
             </div>
-        </div>
+
+            <!-- STEP 4 - RANKING PRIORITAS -->
+            <div class="card-custom">
+                <h2 class="section-title">
+                    <i class="fas fa-trophy"></i>
+                    STEP 4 — Ranking Prioritas
+                </h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-spk align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Rank</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Nilai Preferensi</th>
+                                <th class="text-center">Status Prioritas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($ranking as $i => $r)
+                                <tr>
+                                    <td class="text-center fw-bold">
+                                        <div class="rank-circle @if ($i < 3) top-rank @endif">
+                                            {{ $i + 1 }}
+                                        </div>
+                                    </td>
+                                    <td class="text-start">{{ $r['nama'] }}</td>
+                                    <td class="text-center fw-bold">{{ number_format((float) $r['preferensi'], 6) }}
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($i === 0)
+                                            <span class="badge bg-success badge-priority py-2 px-3">
+                                                <i class="fas fa-trophy me-1"></i> Prioritas Utama
+                                            </span>
+                                        @elseif($i < 3)
+                                            <span class="badge bg-info badge-priority py-2 px-3">
+                                                <i class="fas fa-star me-1"></i> Prioritas Tinggi
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary badge-priority py-2 px-3">
+                                                Prioritas Normal
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         @endif
     </div>
 
@@ -950,7 +990,7 @@
             if (document.body.classList.contains('dark-mode')) {
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('darkMode', 'enabled');
-                
+
                 // Update info box for dark mode
                 document.querySelectorAll('.info-box').forEach(box => {
                     box.classList.add('dark-mode');
@@ -958,7 +998,7 @@
             } else {
                 themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                 localStorage.setItem('darkMode', 'disabled');
-                
+
                 // Remove dark mode from info box
                 document.querySelectorAll('.info-box').forEach(box => {
                     box.classList.remove('dark-mode');
@@ -974,31 +1014,6 @@
                 box.classList.add('dark-mode');
             });
         }
-
-        // File input preview
-        const fileInput = document.getElementById('fileInput');
-        if (fileInput) {
-            fileInput.addEventListener('change', function(e) {
-                const fileName = e.target.files[0]?.name;
-                if (fileName) {
-                    const nextSibling = e.target.nextElementSibling;
-                    if (nextSibling && nextSibling.classList.contains('form-label')) {
-                        nextSibling.textContent = `File dipilih: ${fileName}`;
-                        nextSibling.classList.add('text-success');
-                    }
-                }
-            });
-        }
-
-        // Smooth scroll to import section
-        document.querySelectorAll('a[href="#import-section"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('.card-custom:first-of-type').scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
 
         // Add rank circle styling
         const style = document.createElement('style');
@@ -1019,24 +1034,12 @@
                 color: white;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             }
-            .score-display {
-                font-size: 1.2rem;
-                color: var(--primary);
-            }
-            .ranking-visualization .progress {
-                border-radius: 12px;
-                overflow: hidden;
-            }
-            .ranking-visualization .progress-bar {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                padding-left: 10px;
-                font-weight: 600;
-                border-radius: 12px;
+            .badge-priority {
+                font-size: 0.8rem;
             }
         `;
         document.head.appendChild(style);
     </script>
 </body>
+
 </html>
