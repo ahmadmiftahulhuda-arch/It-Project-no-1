@@ -1440,13 +1440,11 @@
                         <tr>
                             <th width="50" class="text-center">No</th>
                             <th>Tanggal & Waktu</th>
-                            <th>Ruang</th>
-                            <th>Dosen Pengampu</th>
+                            <th>Ruangan</th>
                             <th>Proyektor</th>
-                            <th class="col-status text-center">Status Peminjaman</th>
-                            <th class="col-status text-center">Status Pengembalian</th>
-                            <th class="col-aksi text-center">Aksi</th>
-
+                            <th class="text-center">Status Peminjaman</th>
+                            <th class="text-center">Status Pengembalian</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -1464,14 +1462,14 @@
                             <tr class="{{ $isOngoing ? 'table-success' : '' }}"
                                 data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
                                 data-tanggal="{{ $peminjaman->tanggal }}"
-                                data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '') }}"
-                                data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '') }}"
-                                data-waktu-pengajuan="{{ $peminjaman->created_at }}"
-                                data-waktu-pengembalian="{{ optional($peminjaman->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($peminjaman->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}">
+                                data-waktu-pengajuan="{{ $peminjaman->created_at }}">
+
+                                <!-- NO -->
                                 <td class="fw-bold text-center">
                                     {{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                 </td>
 
+                                <!-- TANGGAL & WAKTU (DISAMAKAN DENGAN PEMINJAMAN) -->
                                 <td>
                                     <div>
                                         <i class="fas fa-calendar-day text-primary me-1"></i>
@@ -1486,31 +1484,36 @@
                                         </span>
                                     </div>
 
-                                    <div class="text-muted small mt-1">
-                                        <i class="fas fa-paper-plane me-1"></i>
-                                        {{ $waktuPengajuan->diffForHumans() }}
+                                    <div class="mt-1">
+                                        <span class="badge bg-light text-secondary">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ $waktuPengajuan->diffForHumans() }}
+                                        </span>
                                     </div>
                                 </td>
 
+                                <!-- RUANGAN -->
                                 <td>
                                     <i class="fas fa-door-open text-info me-1"></i>
                                     {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
                                 </td>
 
-                                <td>
-                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
-                                </td>
-
-                                <td>
-                                    <strong>{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor ?? '-' : 'Tidak' }}</strong>
-                                    <div class="text-muted small mt-1">{{ $peminjaman->projector->merk ?? '' }}</div>
-                                </td>
-
+                                <!-- PROYEKTOR -->
                                 <td class="text-center">
-                                    @php
-                                        $pjStatus = optional($peminjaman->pengembalian)->status;
-                                    @endphp
+                                    @if ($peminjaman->projector)
+                                        <strong>{{ $peminjaman->projector->kode_proyektor }}</strong>
+                                        <div class="text-muted small">
+                                            {{ $peminjaman->projector->merk ?? '' }}
+                                        </div>
+                                    @else
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-times me-1"></i> Tidak
+                                        </span>
+                                    @endif
+                                </td>
 
+                                <!-- STATUS PEMINJAMAN -->
+                                <td class="text-center">
                                     @if ($isOngoing && $peminjaman->status === 'disetujui')
                                         <span class="badge status-badge status-berlangsung">
                                             <span class="pulse-dot"></span>
@@ -1519,46 +1522,51 @@
                                     @else
                                         @switch($peminjaman->status)
                                             @case('disetujui')
-                                                <span class="badge status-badge status-disetujui"><i
-                                                        class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                                <span class="badge status-badge status-disetujui">
+                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
+                                                </span>
                                             @break
 
                                             @case('selesai')
-                                                <span class="badge status-badge status-selesai"><i
-                                                        class="fas fa-check-double me-1"></i> Selesai</span>
+                                                <span class="badge status-badge status-selesai">
+                                                    <i class="fas fa-check-double me-1"></i> Selesai
+                                                </span>
                                             @break
 
                                             @case('ditolak')
-                                                <span class="badge status-badge status-ditolak"><i
-                                                        class="fas fa-times-circle me-1"></i> Ditolak</span>
+                                                <span class="badge status-badge status-ditolak">
+                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
+                                                </span>
                                             @break
 
                                             @default
-                                                <span class="badge status-badge status-menunggu"><i
-                                                        class="fas fa-clock me-1"></i> Menunggu</span>
+                                                <span class="badge status-badge status-menunggu">
+                                                    <i class="fas fa-clock me-1"></i> Menunggu
+                                                </span>
                                         @endswitch
                                     @endif
                                 </td>
 
+                                <!-- STATUS PENGEMBALIAN -->
                                 <td class="text-center">
-                                    @php
-                                        $pj = strtolower($pjStatus ?? '');
-                                    @endphp
+                                    @php $pj = strtolower(optional($peminjaman->pengembalian)->status ?? '') @endphp
+
                                     @if (in_array($pj, ['overdue', 'terlambat']))
-                                        <span class="badge status-badge status-terlambat"><i
-                                                class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
+                                        <span class="badge status-badge status-terlambat">
+                                            <i class="fas fa-exclamation-circle me-1"></i> Terlambat
+                                        </span>
                                     @elseif(in_array($pj, ['verified', 'disetujui']))
-                                        <span class="badge status-badge status-disetujui"><i
-                                                class="fas fa-check-circle me-1"></i> Disetujui</span>
+                                        <span class="badge status-badge status-disetujui">
+                                            <i class="fas fa-check-circle me-1"></i> Disetujui
+                                        </span>
                                     @elseif(in_array($pj, ['rejected', 'ditolak']))
-                                        <span class="badge status-badge status-ditolak"><i
-                                                class="fas fa-times-circle me-1"></i> Ditolak</span>
-                                    @elseif(in_array($pj, ['pending', 'menunggu', '']))
-                                        <span class="badge status-badge status-menunggu"><i
-                                                class="fas fa-clock me-1"></i> Menunggu Verifikasi</span>
+                                        <span class="badge status-badge status-ditolak">
+                                            <i class="fas fa-times-circle me-1"></i> Ditolak
+                                        </span>
                                     @else
-                                        <span class="badge status-badge status-belum-dikembalikan"><i
-                                                class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>
+                                        <span class="badge status-badge status-menunggu">
+                                            <i class="fas fa-clock me-1"></i> Menunggu Verifikasi
+                                        </span>
                                     @endif
                                 </td>
 

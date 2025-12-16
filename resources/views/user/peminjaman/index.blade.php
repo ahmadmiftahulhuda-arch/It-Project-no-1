@@ -1414,7 +1414,6 @@
                             <th width="50" class="text-center">No</th>
                             <th>Tanggal & Waktu</th>
                             <th>Ruang</th>
-                            <th>Dosen Pengampu</th>
                             <th width="100" class="text-center">Proyektor</th>
                             <th>Keperluan</th>
                             <th width="130" class="text-center">Status</th>
@@ -1441,9 +1440,13 @@
                                 data-waktu-selesai="{{ $peminjaman->display_waktu_selesai ?? ($peminjaman->waktu_selesai ?? '') }}"
                                 data-waktu-pengajuan="{{ $peminjaman->created_at }}"
                                 data-id="{{ $peminjaman->id }}">
+
+                                <!-- 1. NO -->
                                 <td class="fw-bold text-center">
                                     {{ ($peminjamans->currentPage() - 1) * $peminjamans->perPage() + $loop->iteration }}
                                 </td>
+
+                                <!-- 2. TANGGAL & WAKTU -->
                                 <td>
                                     <div>
                                         <i class="fas fa-calendar-day text-primary me-1"></i>
@@ -1456,27 +1459,37 @@
                                             {{ $peminjaman->display_waktu_selesai ?? '17:00' }}
                                         </span>
                                     </div>
-                                    <div class="text-muted small mt-1">
-                                        <i class="fas fa-paper-plane me-1"></i> Diajukan {{ $selisih }} yang lalu
+                                    <div class="mt-1">
+                                        <span class="badge bg-light text-secondary">
+                                            <i class="fas fa-clock me-1"></i>{{ $selisih }} yang lalu
+                                        </span>
                                     </div>
                                 </td>
-                                <td><i class="fas fa-door-open text-info me-1"></i>
-                                    {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}</td>
+
+                                <!-- 3. RUANG -->
                                 <td>
-                                    {{ $peminjaman->dosen->nama_dosen ?? '-' }}
+                                    <i class="fas fa-door-open text-info me-1"></i>
+                                    {{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}
                                 </td>
+
+                                <!-- 4. PROYEKTOR -->
                                 <td class="text-center">
                                     @if ($peminjaman->projector)
                                         <div>
                                             <strong>{{ $peminjaman->projector->kode_proyektor ?? 'ID:' . $peminjaman->projector->id }}</strong>
-                                            <div class="text-muted small">{{ $peminjaman->projector->merk ?? '' }}
-                                                {{ $peminjaman->projector->model ?? '' }}</div>
+                                            <div class="text-muted small">
+                                                {{ $peminjaman->projector->merk ?? '' }}
+                                                {{ $peminjaman->projector->model ?? '' }}
+                                            </div>
                                         </div>
                                     @else
-                                        <span class="badge bg-secondary status-badge"><i
-                                                class="fas fa-times me-1"></i> Tidak</span>
+                                        <span class="badge bg-secondary status-badge">
+                                            <i class="fas fa-times me-1"></i> Tidak
+                                        </span>
                                     @endif
                                 </td>
+
+                                <!-- 5. KEPERLUAN -->
                                 <td>
                                     <div class="info-tooltip">
                                         <span class="text-truncate-custom">
@@ -1487,40 +1500,40 @@
                                         @endif
                                     </div>
                                 </td>
+
+                                <!-- 6. STATUS -->
                                 <td class="text-center">
-                                    @php $pjStatus = optional($peminjaman)->status; @endphp
+                                    @switch(true)
+                                        @case($peminjaman->status === 'disetujui' && $isOngoing)
+                                            <span class="badge status-badge status-berlangsung">
+                                                <span class="pulse-dot"></span>
+                                                <i class="fas fa-play-circle me-1"></i> Berlangsung
+                                            </span>
+                                        @break
 
-                                        @switch(true)
-                                            @case($peminjaman->status === 'disetujui' && $isOngoing)
-                                                <span class="badge status-badge status-berlangsung">
-                                                    <span class="pulse-dot"></span>
-                                                    <i class="fas fa-play-circle me-1"></i> Berlangsung
-                                                </span>
-                                            @break
+                                        @case($peminjaman->status === 'disetujui')
+                                            <span class="badge status-badge status-disetujui">
+                                                <i class="fas fa-check-circle me-1"></i> Disetujui
+                                            </span>
+                                        @break
 
-                                            @case($peminjaman->status === 'disetujui')
-                                                <span class="badge status-badge status-disetujui">
-                                                    <i class="fas fa-check-circle me-1"></i> Disetujui
-                                                </span>
-                                            @break
+                                        @case($peminjaman->status === 'selesai')
+                                            <span class="badge status-badge status-selesai">
+                                                <i class="fas fa-check-double me-1"></i> Selesai
+                                            </span>
+                                        @break
 
-                                            @case($peminjaman->status === 'selesai')
-                                                <span class="badge status-badge status-selesai">
-                                                    <i class="fas fa-check-double me-1"></i> Selesai
-                                                </span>
-                                            @break
+                                        @case($peminjaman->status === 'ditolak')
+                                            <span class="badge status-badge status-ditolak">
+                                                <i class="fas fa-times-circle me-1"></i> Ditolak
+                                            </span>
+                                        @break
 
-                                            @case($peminjaman->status === 'ditolak')
-                                                <span class="badge status-badge status-ditolak">
-                                                    <i class="fas fa-times-circle me-1"></i> Ditolak
-                                                </span>
-                                            @break
-
-                                            @default
-                                                <span class="badge status-badge status-menunggu">
-                                                    <i class="fas fa-clock me-1"></i> Menunggu
-                                                </span>
-                                        @endswitch
+                                        @default
+                                            <span class="badge status-badge status-menunggu">
+                                                <i class="fas fa-clock me-1"></i> Menunggu
+                                            </span>
+                                    @endswitch
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-1">
@@ -1533,8 +1546,7 @@
                                             data-dosen="{{ $peminjaman->dosen->nama_dosen ?? '-' }}"
                                             data-projector-label="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                             data-keperluan="{{ $peminjaman->keperluan }}"
-                                            data-status="{{ $peminjaman->status }}"
-                                             {{-- ambil dari USER --}}
+                                            data-status="{{ $peminjaman->status }}" {{-- ambil dari USER --}}
                                             data-nama-peminjam="{{ $peminjaman->user->name ?? '-' }}"
                                             data-nim="{{ $peminjaman->user->nim ?? '-' }}"
                                             data-no-hp="{{ $peminjaman->user->no_hp ?? '-' }}"

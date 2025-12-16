@@ -1111,12 +1111,10 @@
                             </option>
                             <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>
                                 Disetujui</option>
-                            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak
-                            </option>
                             <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>
                                 Terlambat</option>
                         </select>
-                    </div>
+                    </div>                      
 
                     <div class="filter-group">
                         <label for="ruang_filter">Ruang</label>
@@ -1201,15 +1199,15 @@
                                     data-waktu-pengembalian="{{ $pengembalian->tanggal_pengembalian ? \Carbon\Carbon::parse($pengembalian->tanggal_pengembalian)->format('H:i') : '' }}">
                                     <td>{{ ($pengembalians->currentPage() - 1) * $pengembalians->perPage() + $loop->iteration }}
                                     </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar me-2"
-                                                style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                                {{ substr($pengembalian->user->name ?? 'G', 0, 1) }}
-                                            </div>
-                                            {{ $pengembalian->user->name ?? 'Guest' }}
-                                        </div>
-                                    </td>
+    <!-- PEMINJAM -->
+    <td>
+        <div class="fw-bold">
+            {{ $pengembalian->user->name ?? 'Guest' }}
+        </div>
+        <small class="text-muted">
+            {{ $pengembalian->user->nim ?? '-' }}
+        </small>
+    </td>
                                     <td>
                                         <strong>{{ $pengembalian->peminjaman->ruangan->nama_ruangan ?? ($pengembalian->peminjaman->ruang ?? 'N/A') }}</strong><br>
                                         @if ($pengembalian->peminjaman->projector)

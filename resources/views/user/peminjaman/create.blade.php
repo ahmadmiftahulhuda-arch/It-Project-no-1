@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -137,6 +138,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -192,17 +194,17 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
         }
 
-         /* ===== TOMBOL LOGIN ===== */
+        /* ===== TOMBOL LOGIN ===== */
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -348,7 +350,8 @@
             gap: 0.5rem;
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border-radius: 10px;
             border: 1px solid #e2e8f0;
             padding: 12px 15px;
@@ -357,7 +360,8 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.15);
             outline: none;
@@ -377,7 +381,8 @@
             font-size: 1rem;
         }
 
-        .input-icon .form-control, .input-icon .form-select {
+        .input-icon .form-control,
+        .input-icon .form-select {
             padding-left: 45px;
         }
 
@@ -640,7 +645,9 @@
         }
 
         @media (max-width: 576px) {
-            .btn-primary-custom, .btn-secondary-custom {
+
+            .btn-primary-custom,
+            .btn-secondary-custom {
                 width: 100%;
                 padding: 12px;
             }
@@ -733,7 +740,7 @@
                                     <i class="fas fa-clock me-2"></i> Jadwal Kuliah
                                 </a>
                             </li>
-                           
+
                             <li>
                                 <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
@@ -813,7 +820,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}"
+                                        href="{{ route('user.settings.index') }}">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -883,7 +891,7 @@
                     <div class="card-body">
                         <form action="{{ route('user.peminjaman.store') }}" method="POST" id="peminjamanForm">
                             @csrf
-                            
+
                             <div class="mb-4 form-group">
                                 <label class="form-label">
                                     <i class="fas fa-calendar-day text-primary"></i>
@@ -891,8 +899,9 @@
                                 </label>
                                 <div class="input-icon">
                                     <i class="fas fa-calendar-day"></i>
-                                    <input type="date" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror" 
-                                           value="{{ old('tanggal') }}" required id="tanggalInput">
+                                    <input type="date" name="tanggal"
+                                        class="form-control @error('tanggal') is-invalid @enderror"
+                                        value="{{ old('tanggal') }}" required id="tanggalInput">
                                 </div>
                                 @error('tanggal')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -907,10 +916,13 @@
                                     </label>
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
-                                        <select name="waktu_mulai" class="form-select @error('waktu_mulai') is-invalid @enderror" required>
+                                        <select name="waktu_mulai"
+                                            class="form-select @error('waktu_mulai') is-invalid @enderror" required>
                                             <option value="">Pilih Waktu Mulai</option>
-                                            @foreach($slotwaktu as $slot)
-                                                <option value="{{ $slot->waktu }}" {{ old('waktu_mulai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @foreach ($slotwaktu as $slot)
+                                                <option value="{{ $slot->waktu }}"
+                                                    {{ old('waktu_mulai') == $slot->waktu ? 'selected' : '' }}>
+                                                    {{ $slot->waktu }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -926,10 +938,13 @@
                                     </label>
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
-                                        <select name="waktu_selesai" class="form-select @error('waktu_selesai') is-invalid @enderror" required>
+                                        <select name="waktu_selesai"
+                                            class="form-select @error('waktu_selesai') is-invalid @enderror" required>
                                             <option value="">Pilih Waktu Selesai</option>
-                                            @foreach($slotwaktu as $slot)
-                                                <option value="{{ $slot->waktu }}" {{ old('waktu_selesai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @foreach ($slotwaktu as $slot)
+                                                <option value="{{ $slot->waktu }}"
+                                                    {{ old('waktu_selesai') == $slot->waktu ? 'selected' : '' }}>
+                                                    {{ $slot->waktu }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -946,11 +961,14 @@
                                 </label>
                                 <div class="input-icon">
                                     <i class="fas fa-door-open"></i>
-                                    <select name="ruangan_id" class="form-select @error('ruangan_id') is-invalid @enderror" required>
+                                    <select name="ruangan_id"
+                                        class="form-select @error('ruangan_id') is-invalid @enderror">
                                         <option value="">Pilih Ruang</option>
                                         @foreach ($ruangan as $ruang)
-                                            <option value="{{ $ruang->id }}" {{ old('ruangan_id') == $ruang->id ? 'selected' : '' }}>
-                                                {{ $ruang->nama_ruangan ?? $ruang->name }}  {{ $ruang->lokasi ?? $ruang->building ?? '' }}
+                                            <option value="{{ $ruang->id }}"
+                                                {{ old('ruangan_id') == $ruang->id ? 'selected' : '' }}>
+                                                {{ $ruang->nama_ruangan ?? $ruang->name }}
+                                                {{ $ruang->lokasi ?? ($ruang->building ?? '') }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -967,11 +985,14 @@
                                 </label>
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
-                                    <select name="projector_id" class="form-select @error('projector_id') is-invalid @enderror">
+                                    <select name="projector_id"
+                                        class="form-select @error('projector_id') is-invalid @enderror">
                                         <option value="">Pilih Proyektor </option>
-                                        @foreach($projectors as $projector)
-                                            <option value="{{ $projector->id }}" {{ old('projector_id') == $projector->id ? 'selected' : '' }}>
-                                                {{ $projector->kode_proyektor ?? ('' . $projector->id) }} - {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}
+                                        @foreach ($projectors as $projector)
+                                            <option value="{{ $projector->id }}"
+                                                {{ old('projector_id') == $projector->id ? 'selected' : '' }}>
+                                                {{ $projector->kode_proyektor ?? '' . $projector->id }} -
+                                                {{ $projector->merk ?? '' }} {{ $projector->model ?? '' }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -982,44 +1003,62 @@
                             </div>
 
                             <div class="col-md-12 mb-4 form-group">
-                                        <label class="form-label">
-                                            <i class="fas fa-user text-primary"></i>
-                                            Dosen Pengampu Mata Kuliah (Opsional)
-                                        </label>
-                                        <div class="input-icon">
-                                            <i class="fas fa-chalkboard-teacher"></i>
-                                            <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror">
-                                                <option value="">Pilih Dosen Pengampu Mata Kuliah</option>
-                                                @if(!empty($dosens) && $dosens->count())
-                                                    @foreach($dosens as $dosen)
-                                                        <option value="{{ $dosen->nip }}" {{ old('dosen_nip') == $dosen->nip ? 'selected' : '' }}>
-                                                            {{ $dosen->nama_dosen }} - {{ $dosen->nip }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                        @error('dosen_nip')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <label class="form-label">
+                                    <i class="fas fa-user text-primary"></i>
+                                    Dosen Pengampu Mata Kuliah (Opsional)
+                                </label>
+                                <div class="input-icon">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <select name="dosen_nip"
+                                        class="form-select @error('dosen_nip') is-invalid @enderror">
+                                        <option value="">Pilih Dosen Pengampu Mata Kuliah</option>
+                                        @if (!empty($dosens) && $dosens->count())
+                                            @foreach ($dosens as $dosen)
+                                                <option value="{{ $dosen->nip }}"
+                                                    {{ old('dosen_nip') == $dosen->nip ? 'selected' : '' }}>
+                                                    {{ $dosen->nama_dosen }} - {{ $dosen->nip }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                @error('dosen_nip')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
                             <div class="mb-4 form-group">
                                 <label class="form-label">
                                     <i class="fas fa-clipboard-list text-primary"></i>
                                     Keperluan
                                 </label>
+
                                 <div class="input-icon">
-                                    <textarea name="keperluan" class="form-control @error('keperluan') is-invalid @enderror" 
-                                              rows="4" placeholder="Jelaskan keperluan peminjaman anda secara mendetail..." required>{{ old('keperluan') }}</textarea>
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <select name="keperluan" id="keperluanSelect"
+                                        class="form-select @error('keperluan') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Keperluan --</option>
+                                        <option value="Perkuliahan">Perkuliahan</option>
+                                        <option value="Kelas Pengganti">Kelas Pengganti</option>
+                                        <option value="Seminar TA/PKL/Proposal">Seminar TA/PKL/Proposal</option>
+                                        <option value="Ujikom">Ujikom</option>
+                                        <option value="Mentoring">Mentoring</option>
+                                        <option value="Belajar Bersama">Belajar Bersama</option>
+                                        <option value="Konsultasi KRS">Konsultasi KRS, UTS, UAS</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
                                 </div>
-                                @error('keperluan')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            </div>
+
+                            <!-- INPUT LAINNYA -->
+                            <div class="mt-3 d-none" id="keperluanLainnyaWrapper">
+                                <input type="text" name="keperluan_lainnya" id="keperluanLainnya"
+                                    class="form-control" placeholder="Tuliskan keperluan lainnya" disabled>
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary-custom me-md-2">
+                                <a href="{{ route('user.peminjaman.index') }}"
+                                    class="btn btn-secondary-custom me-md-2">
                                     <i class="fas fa-times me-2"></i>Batal
                                 </a>
                                 <button type="submit" class="btn btn-primary-custom" id="submitBtn">
@@ -1029,7 +1068,7 @@
                         </form>
                     </div>
                 </div>
-                
+
                 <!-- Info Box yang Diperbaiki -->
                 <div class="info-box mt-4">
                     <h5><i class="fas fa-info-circle"></i> Informasi Penting</h5>
@@ -1055,15 +1094,18 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -1074,7 +1116,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -1090,7 +1132,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -1109,9 +1151,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -1119,7 +1162,7 @@
     <script>
         // ===== NAVBAR SCROLL EFFECT =====
         const navbar = document.getElementById('navbar');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 50) {
                 navbar.classList.add('scrolled');
@@ -1132,12 +1175,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Handle dropdown toggle animation
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
+
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     // Close other open dropdowns
                     dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                        if (otherToggle !== toggle && otherToggle.classList.contains(
+                                'show')) {
                             otherToggle.classList.remove('show');
                             const otherMenu = otherToggle.nextElementSibling;
                             if (otherMenu && otherMenu.classList.contains('show')) {
@@ -1147,11 +1191,38 @@
                     });
                 });
             });
-            
+
+            (function() {
+                const keperluanSelect = document.getElementById('keperluanSelect');
+                const wrapper = document.getElementById('keperluanLainnyaWrapper');
+                const inputLainnya = document.getElementById('keperluanLainnya');
+
+                if (!keperluanSelect || !wrapper || !inputLainnya) return;
+
+                keperluanSelect.addEventListener('change', function() {
+                    if (this.value === 'Lainnya') {
+                        wrapper.classList.remove('d-none');
+                        inputLainnya.removeAttribute('disabled');
+                        inputLainnya.focus();
+                    } else {
+                        wrapper.classList.add('d-none');
+                        inputLainnya.value = '';
+                        inputLainnya.setAttribute('disabled', 'disabled');
+                    }
+                });
+
+                // Handle reload / old value
+                if (keperluanSelect.value === 'Lainnya') {
+                    wrapper.classList.remove('d-none');
+                    inputLainnya.removeAttribute('disabled');
+                }
+            })();
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {
                 if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    const openDropdowns = document.querySelectorAll(
+                        '.dropdown-toggle.show, .dropdown-menu.show');
                     openDropdowns.forEach(element => {
                         element.classList.remove('show');
                     });
@@ -1161,7 +1232,7 @@
 
         // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
         const backToTopButton = document.getElementById('backToTop');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopButton.classList.add('visible');
@@ -1169,10 +1240,13 @@
                 backToTopButton.classList.remove('visible');
             }
         });
-        
+
         backToTopButton.addEventListener('click', (e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
 
         // ===== SET TANGGAL MINIMUM DAN VALIDASI FORM =====
@@ -1180,51 +1254,56 @@
             // Set tanggal minimum ke hari ini
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('tanggalInput');
-            
+
             if (dateInput) {
                 dateInput.setAttribute('min', today);
-                
+
                 // Jika tidak ada nilai sebelumnya, set ke hari ini
                 if (!dateInput.value) {
                     dateInput.value = today;
                 }
             }
-            
+
             // Validasi form yang lebih baik
             const form = document.getElementById('peminjamanForm');
             const submitBtn = document.getElementById('submitBtn');
-            
+
             if (form) {
                 form.addEventListener('submit', function(e) {
                     const ruangEl = document.querySelector('select[name="ruangan_id"]');
                     const ruang = ruangEl ? ruangEl.value : '';
-                    const keperluanEl = document.querySelector('textarea[name="keperluan"]');
-                    const keperluan = keperluanEl ? keperluanEl.value : '';
+                    const keperluanSelect = document.querySelector('select[name="keperluan"]');
+                    const keperluan = keperluanSelect ? keperluanSelect.value : '';
+
+                    const keperluanLainnyaInput = document.querySelector('input[name="keperluan_lainnya"]');
+                    const keperluanLainnya = keperluanLainnyaInput ? keperluanLainnyaInput.value : '';
+
                     const projEl = document.querySelector('select[name="projector_id"]');
                     const proyektor = projEl ? projEl.value : '';
-                    
+
                     let isValid = true;
-                    
-                    if (ruang === '') {
+
+                    // WAJIB: minimal salah satu (ruang ATAU proyektor)
+                    if (ruang === '' && proyektor === '') {
                         isValid = false;
-                        showToast('Pilih ruang terlebih dahulu', 'error');
+                        showToast('Minimal pilih Ruangan atau Proyektor', 'error');
                     }
-                    
-                    if (keperluan.trim() === '') {
+
+                    if (keperluan === '') {
                         isValid = false;
                         showToast('Keperluan tidak boleh kosong', 'error');
                     }
-                    
-                    if (proyektor === '') {
+
+                    if (keperluan === 'Lainnya' && keperluanLainnya.trim() === '') {
                         isValid = false;
-                        showToast('Pilih ketersediaan proyektor', 'error');
+                        showToast('Silakan isi keperluan lainnya', 'error');
                     }
-                    
+
                     if (!isValid) {
                         e.preventDefault();
                         return false;
                     }
-                    
+
                     // Tampilkan loading state
                     if (submitBtn) {
                         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
@@ -1232,12 +1311,13 @@
                     }
                 });
             }
-            
+
             // Fungsi untuk menampilkan toast notification
             function showToast(message, type = 'info') {
                 // Buat elemen toast
                 const toast = document.createElement('div');
-                toast.className = `alert alert-${type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
+                toast.className =
+                    `alert alert-${type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
                 toast.style.top = '20px';
                 toast.style.right = '20px';
                 toast.style.zIndex = '1060';
@@ -1247,9 +1327,9 @@
                     ${message}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 `;
-                
+
                 document.body.appendChild(toast);
-                
+
                 // Hapus toast setelah 5 detik
                 setTimeout(() => {
                     if (toast.parentNode) {
@@ -1257,7 +1337,7 @@
                     }
                 }, 5000);
             }
-            
+
             // Animasi untuk form groups
             const formGroups = document.querySelectorAll('.form-group');
             formGroups.forEach(group => {
@@ -1266,7 +1346,7 @@
                     input.addEventListener('focus', function() {
                         group.style.transform = 'translateX(5px)';
                     });
-                    
+
                     input.addEventListener('blur', function() {
                         group.style.transform = 'translateX(0)';
                     });
@@ -1275,4 +1355,5 @@
         });
     </script>
 </body>
+
 </html>

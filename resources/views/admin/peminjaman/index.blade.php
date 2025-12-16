@@ -1226,10 +1226,6 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="user-avatar me-2"
-                                            style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                            {{ substr($peminjaman->user->name ?? 'G', 0, 1) }}
-                                        </div>
                                         <div>
                                             <div class="fw-bold">{{ $peminjaman->user->name ?? 'Guest' }}</div>
                                             <small class="text-muted">{{ $peminjaman->user->nim ?? '-' }}</small>

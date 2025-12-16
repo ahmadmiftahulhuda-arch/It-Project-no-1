@@ -470,7 +470,7 @@
         .alert-custom {
             border-radius: 8px;
             border: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .info-box {
@@ -717,8 +717,7 @@
         <!-- Info Box -->
         <div class="info-box">
             <h6 class="mb-2"><i class="fas fa-info-circle me-2 text-info"></i>Fitur SPK Dummy</h6>
-            <p class="mb-0 small">Gunakan fitur ini untuk menguji sistem dengan data dummy sebelum menerapkan pada data
-                peminjaman sebenarnya. Input 13 baris data sesuai format dan hitung perankingan SAW.</p>
+            <p class="mb-0 small">Gunakan fitur ini untuk menguji sistem dengan data dummy sebelum menerapkan pada data peminjaman sebenarnya. Input 13 baris data sesuai format dan hitung perankingan SAW.</p>
         </div>
 
         <!-- BAGIAN A: BOBOT AHP -->
@@ -739,20 +738,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($criteria as $c)
-                            @if (in_array($c->kode, ['K1', 'K2', 'K3', 'K4', 'K5']))
-                                <tr>
-                                    <td class="text-center fw-bold">{{ $c->kode }}</td>
-                                    <td>{{ $c->nama }}</td>
-                                    <td class="text-center">
-                                        @if (strtolower($c->tipe) === 'benefit')
-                                            <span class="badge bg-success">Benefit</span>
-                                        @else
-                                            <span class="badge bg-warning">Cost</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center fw-bold">{{ number_format((float) $c->bobot, 6) }}</td>
-                                </tr>
+                        @foreach($criteria as $c)
+                            @if(in_array($c->kode, ['K1','K2','K3','K4','K5']))
+                            <tr>
+                                <td class="text-center fw-bold">{{ $c->kode }}</td>
+                                <td>{{ $c->nama }}</td>
+                                <td class="text-center">
+                                    @if(strtolower($c->tipe) === 'benefit')
+                                        <span class="badge bg-success">Benefit</span>
+                                    @else
+                                        <span class="badge bg-warning">Cost</span>
+                                    @endif
+                                </td>
+                                <td class="text-center fw-bold">{{ number_format((float)$c->bobot, 6) }}</td>
+                            </tr>
                             @endif
                         @endforeach
                     </tbody>
@@ -785,41 +784,41 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < 13; $i++)
-                                <tr>
-                                    <td class="text-start">
-                                        <input type="text" name="nilai[{{ $i }}][nama]"
-                                            class="form-control" placeholder="Contoh: Dosen 1 / Mahasiswa 8"
-                                            value="{{ request("nilai.$i.nama") }}" required>
-                                    </td>
-
-                                    <td>
-                                        <input type="number" step="0.01" min="0"
-                                            name="nilai[{{ $i }}][K1]" class="form-control text-center"
-                                            value="{{ request("nilai.$i.K1") }}" placeholder="ex: 1-5">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" min="0"
-                                            name="nilai[{{ $i }}][K2]" class="form-control text-center"
-                                            value="{{ request("nilai.$i.K2") }}" placeholder="ex: 1">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" min="0"
-                                            name="nilai[{{ $i }}][K3]" class="form-control text-center"
-                                            value="{{ request("nilai.$i.K3") }}" placeholder="ex: 480">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" min="0"
-                                            name="nilai[{{ $i }}][K4]" class="form-control text-center"
-                                            value="{{ request("nilai.$i.K4") }}" placeholder="ex: 1 / 0.5">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" min="0"
-                                            name="nilai[{{ $i }}][K5]" class="form-control text-center"
-                                            value="{{ request("nilai.$i.K5") }}" placeholder="ex: 1 / 2">
-                                    </td>
-                                </tr>
-                            @endfor
+                        @for($i=0; $i<13; $i++)
+                            <tr>
+                                <td class="text-start">
+                                    <select name="nilai[{{$i}}][nama]" class="form-select">
+                                        <option value="">-- Pilih (Dosen/Mahasiswa) --</option>
+                                        @foreach($alternatifList as $nama)
+                                            <option value="{{ $nama }}"
+                                                @if(request("nilai.$i.nama")==$nama) selected @endif>
+                                                {{ $nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" min="0" name="nilai[{{$i}}][K1]" class="form-control text-center"
+                                        value="{{ request("nilai.$i.K1") }}" placeholder="ex: 1-5">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" min="0" name="nilai[{{$i}}][K2]" class="form-control text-center"
+                                        value="{{ request("nilai.$i.K2") }}" placeholder="ex: 1">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" min="0" name="nilai[{{$i}}][K3]" class="form-control text-center"
+                                        value="{{ request("nilai.$i.K3") }}" placeholder="ex: 480">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" min="0" name="nilai[{{$i}}][K4]" class="form-control text-center"
+                                        value="{{ request("nilai.$i.K4") }}" placeholder="ex: 1 / 0.5">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" min="0" name="nilai[{{$i}}][K5]" class="form-control text-center"
+                                        value="{{ request("nilai.$i.K5") }}" placeholder="ex: 1 / 2">
+                                </td>
+                            </tr>
+                        @endfor
                         </tbody>
                     </table>
                 </div>
@@ -833,150 +832,148 @@
         </div>
 
         <!-- HASIL SAW -->
-        @if (isset($matrixX))
-            <!-- STEP 1 - MATRIX KEPUTUSAN -->
-            <div class="card-custom">
-                <h2 class="section-title">
-                    <i class="fas fa-table"></i>
-                    STEP 1 — Matriks Keputusan (X)
-                </h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-spk align-middle">
-                        <thead>
+        @if(isset($matrixX))
+        <!-- STEP 1 - MATRIX KEPUTUSAN -->
+        <div class="card-custom">
+            <h2 class="section-title">
+                <i class="fas fa-table"></i>
+                STEP 1 — Matriks Keputusan (X)
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-spk align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">K1</th>
+                            <th class="text-center">K2</th>
+                            <th class="text-center">K3</th>
+                            <th class="text-center">K4</th>
+                            <th class="text-center">K5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($matrixX as $row)
                             <tr>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">K1</th>
-                                <th class="text-center">K2</th>
-                                <th class="text-center">K3</th>
-                                <th class="text-center">K4</th>
-                                <th class="text-center">K5</th>
+                                <td class="text-start">{{ $row['nama'] }}</td>
+                                <td class="text-center">{{ $row['K1'] }}</td>
+                                <td class="text-center">{{ $row['K2'] }}</td>
+                                <td class="text-center">{{ $row['K3'] }}</td>
+                                <td class="text-center">{{ $row['K4'] }}</td>
+                                <td class="text-center">{{ $row['K5'] }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($matrixX as $row)
-                                <tr>
-                                    <td class="text-start">{{ $row['nama'] }}</td>
-                                    <td class="text-center">{{ $row['K1'] }}</td>
-                                    <td class="text-center">{{ $row['K2'] }}</td>
-                                    <td class="text-center">{{ $row['K3'] }}</td>
-                                    <td class="text-center">{{ $row['K4'] }}</td>
-                                    <td class="text-center">{{ $row['K5'] }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- STEP 2 - MATRIX NORMALISASI -->
-            <div class="card-custom">
-                <h2 class="section-title">
-                    <i class="fas fa-chart-bar"></i>
-                    STEP 2 — Matriks Normalisasi (R)
-                </h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-spk align-middle">
-                        <thead>
+        <!-- STEP 2 - MATRIX NORMALISASI -->
+        <div class="card-custom">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i>
+                STEP 2 — Matriks Normalisasi (R)
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-spk align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">K1</th>
+                            <th class="text-center">K2</th>
+                            <th class="text-center">K3</th>
+                            <th class="text-center">K4</th>
+                            <th class="text-center">K5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($matrixR as $row)
                             <tr>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">K1</th>
-                                <th class="text-center">K2</th>
-                                <th class="text-center">K3</th>
-                                <th class="text-center">K4</th>
-                                <th class="text-center">K5</th>
+                                <td class="text-start">{{ $row['nama'] }}</td>
+                                <td class="text-center">{{ number_format((float)$row['K1'], 6) }}</td>
+                                <td class="text-center">{{ number_format((float)$row['K2'], 6) }}</td>
+                                <td class="text-center">{{ number_format((float)$row['K3'], 6) }}</td>
+                                <td class="text-center">{{ number_format((float)$row['K4'], 6) }}</td>
+                                <td class="text-center">{{ number_format((float)$row['K5'], 6) }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($matrixR as $row)
-                                <tr>
-                                    <td class="text-start">{{ $row['nama'] }}</td>
-                                    <td class="text-center">{{ number_format((float) $row['K1'], 6) }}</td>
-                                    <td class="text-center">{{ number_format((float) $row['K2'], 6) }}</td>
-                                    <td class="text-center">{{ number_format((float) $row['K3'], 6) }}</td>
-                                    <td class="text-center">{{ number_format((float) $row['K4'], 6) }}</td>
-                                    <td class="text-center">{{ number_format((float) $row['K5'], 6) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- STEP 3 - NILAI PREFERENSI -->
-            <div class="card-custom">
-                <h2 class="section-title">
-                    <i class="fas fa-star"></i>
-                    STEP 3 — Nilai Preferensi (V)
-                </h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-spk align-middle">
-                        <thead>
+        <!-- STEP 3 - NILAI PREFERENSI -->
+        <div class="card-custom">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i>
+                STEP 3 — Nilai Preferensi (V)
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-spk align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">Nilai Preferensi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($hasil as $h)
                             <tr>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">Nilai Preferensi</th>
+                                <td class="text-start">{{ $h['nama'] }}</td>
+                                <td class="text-center fw-bold">{{ number_format((float)$h['preferensi'], 6) }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($hasil as $h)
-                                <tr>
-                                    <td class="text-start">{{ $h['nama'] }}</td>
-                                    <td class="text-center fw-bold">{{ number_format((float) $h['preferensi'], 6) }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- STEP 4 - RANKING PRIORITAS -->
-            <div class="card-custom">
-                <h2 class="section-title">
-                    <i class="fas fa-trophy"></i>
-                    STEP 4 — Ranking Prioritas
-                </h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-spk align-middle">
-                        <thead>
+        <!-- STEP 4 - RANKING PRIORITAS -->
+        <div class="card-custom">
+            <h2 class="section-title">
+                <i class="fas fa-trophy"></i>
+                STEP 4 — Ranking Prioritas
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-spk align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Rank</th>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">Nilai Preferensi</th>
+                            <th class="text-center">Status Prioritas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($ranking as $i => $r)
                             <tr>
-                                <th class="text-center">Rank</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">Nilai Preferensi</th>
-                                <th class="text-center">Status Prioritas</th>
+                                <td class="text-center fw-bold">
+                                    <div class="rank-circle @if($i < 3) top-rank @endif">
+                                        {{ $i+1 }}
+                                    </div>
+                                </td>
+                                <td class="text-start">{{ $r['nama'] }}</td>
+                                <td class="text-center fw-bold">{{ number_format((float)$r['preferensi'], 6) }}</td>
+                                <td class="text-center">
+                                    @if ($i === 0)
+                                        <span class="badge bg-success badge-priority py-2 px-3">
+                                            <i class="fas fa-trophy me-1"></i> Prioritas Utama
+                                        </span>
+                                    @elseif($i < 3)
+                                        <span class="badge bg-info badge-priority py-2 px-3">
+                                            <i class="fas fa-star me-1"></i> Prioritas Tinggi
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary badge-priority py-2 px-3">
+                                            Prioritas Normal
+                                        </span>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($ranking as $i => $r)
-                                <tr>
-                                    <td class="text-center fw-bold">
-                                        <div class="rank-circle @if ($i < 3) top-rank @endif">
-                                            {{ $i + 1 }}
-                                        </div>
-                                    </td>
-                                    <td class="text-start">{{ $r['nama'] }}</td>
-                                    <td class="text-center fw-bold">{{ number_format((float) $r['preferensi'], 6) }}
-                                    </td>
-                                    <td class="text-center">
-                                        @if ($i === 0)
-                                            <span class="badge bg-success badge-priority py-2 px-3">
-                                                <i class="fas fa-trophy me-1"></i> Prioritas Utama
-                                            </span>
-                                        @elseif($i < 3)
-                                            <span class="badge bg-info badge-priority py-2 px-3">
-                                                <i class="fas fa-star me-1"></i> Prioritas Tinggi
-                                            </span>
-                                        @else
-                                            <span class="badge bg-secondary badge-priority py-2 px-3">
-                                                Prioritas Normal
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+        </div>
         @endif
     </div>
 
@@ -990,7 +987,7 @@
             if (document.body.classList.contains('dark-mode')) {
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('darkMode', 'enabled');
-
+                
                 // Update info box for dark mode
                 document.querySelectorAll('.info-box').forEach(box => {
                     box.classList.add('dark-mode');
@@ -998,7 +995,7 @@
             } else {
                 themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                 localStorage.setItem('darkMode', 'disabled');
-
+                
                 // Remove dark mode from info box
                 document.querySelectorAll('.info-box').forEach(box => {
                     box.classList.remove('dark-mode');
@@ -1041,5 +1038,4 @@
         document.head.appendChild(style);
     </script>
 </body>
-
 </html>
