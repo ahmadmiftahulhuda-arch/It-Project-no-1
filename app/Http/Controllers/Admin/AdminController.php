@@ -75,7 +75,9 @@ class AdminController extends Controller
             // Accept either the display value 'terlambat' or the DB-safe 'overdue'
             if ($request->status === 'terlambat' || $request->status === 'overdue') {
                 // pengembalians where tanggal_pengembalian > peminjaman.tanggal
-                $query->whereRaw("DATE(tanggal_pengembalian) > (select DATE(tanggal) from peminjamans where peminjamans.id = pengembalians.peminjaman_id)");
+                $query->whereHas('pengembalian', function ($q) {
+                    $q->where('status', 'overdue');
+                });
             } else {
                 $query->where('status', $request->status);
             }
@@ -268,6 +270,7 @@ class AdminController extends Controller
         $completedCount = Peminjaman::where('status', 'disetujui')->count();
         $cancelledCount = Peminjaman::where('status', 'ditolak')->count();
         $ongoingCount = Peminjaman::where('status', 'pending')->count();
+        $completedCount = Peminjaman::where('status', 'selesai')->count();
         $totalCount = Peminjaman::count();
 
         $riwayat = $query->orderBy('created_at', 'desc')->paginate(15);
@@ -548,41 +551,43 @@ class AdminController extends Controller
     public function approvePengembalian($id)
     {
         $pengembalian = \App\Models\Pengembalian::with('peminjaman')->findOrFail($id);
-
-        // Determine whether pengembalian was submitted after the peminjaman end time
         $peminjaman = $pengembalian->peminjaman;
-        $statusToSave = 'verified';
+
+        // Default status
+        $statusFinal = 'verified';
 
         try {
-            // prefer stored waktu_selesai, fallback to end of day
             $waktuSelesai = $peminjaman->waktu_selesai ?? '23:59';
-            $end = Carbon::parse($peminjaman->tanggal . ' ' . $waktuSelesai);
+            $deadline = Carbon::parse($peminjaman->tanggal . ' ' . $waktuSelesai);
 
-            // pengembalian->tanggal_pengembalian is cast to datetime; ensure we have a datetime
-            $tglPeng = $pengembalian->tanggal_pengembalian ? Carbon::parse($pengembalian->tanggal_pengembalian) : Carbon::now();
+            $waktuPengembalian = Carbon::parse($pengembalian->tanggal_pengembalian);
 
-            if ($tglPeng->greaterThan($end)) {
-                $statusToSave = 'overdue'; // DB canonical
+            if ($waktuPengembalian->gt($deadline)) {
+                $statusFinal = 'overdue';
             }
         } catch (\Exception $e) {
-            // If any parsing error, default to verified
-            $statusToSave = 'verified';
+            $statusFinal = 'verified';
         }
 
-        // Update status pengembalian
+        // 1️⃣ UPDATE PENGEMBALIAN
         $pengembalian->update([
-            'status' => $statusToSave
+            'status' => $statusFinal
         ]);
 
-        // Update status in peminjaman table: always mark selesai and set tanggal_kembali to pengembalian time
+        // 2️⃣ 🔥 WAJIB: TUTUP PEMINJAMAN (APAPUN verified / overdue)
         $peminjaman->update([
             'status' => 'selesai',
-            'status_pengembalian' => 'sudah dikembalikan',
-            'tanggal_kembali' => $pengembalian->tanggal_pengembalian ?? now()
+            'tanggal_kembali' => $pengembalian->tanggal_pengembalian ?? now(),
+            'status_pengembalian' => 'sudah dikembalikan'
         ]);
 
         return redirect()->route('admin.pengembalian')
-            ->with('success', 'Pengembalian berhasil disetujui.');
+            ->with(
+                'success',
+                $statusFinal === 'overdue'
+                    ? 'Pengembalian disetujui (TERLAMBAT). Peminjaman diselesaikan.'
+                    : 'Pengembalian disetujui. Peminjaman diselesaikan.'
+            );
     }
 
     public function rejectPengembalian($id)
@@ -655,8 +660,8 @@ class AdminController extends Controller
             ->with(
                 'success',
                 $statusFinal === 'overdue'
-                ? 'Pengembalian disimpan (TERLAMBAT).'
-                : 'Pengembalian berhasil diperbarui.'
+                    ? 'Pengembalian disimpan (TERLAMBAT).'
+                    : 'Pengembalian berhasil diperbarui.'
             );
     }
 
