@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,13 +16,13 @@
             --light-color: #f8f9fa;
             --dark-color: #343a40;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f8fa;
@@ -29,7 +30,7 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
-        
+
         /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -147,6 +148,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -165,6 +167,14 @@
             width: 100%;
             text-align: left;
             font-weight: 500;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
         }
 
         .dropdown-item-custom:hover {
@@ -202,11 +212,11 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
@@ -262,7 +272,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -274,27 +284,27 @@
             background-size: cover;
             background-position: center;
         }
-        
+
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-content h1 {
             animation: fadeInDown 1s ease;
         }
-        
+
         .hero-content p {
             animation: fadeInUp 1s ease;
         }
-        
+
         /* ===== MAIN CONTENT ===== */
         .main-content {
             padding: 0 1rem;
         }
-        
+
         .section-title {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
@@ -304,7 +314,7 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         /* ===== ABOUT STYLES ===== */
         .about-card {
             background-color: white;
@@ -314,19 +324,20 @@
             margin-bottom: 2.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .about-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
-        
+
         .mission-vision {
             display: flex;
             gap: 2rem;
             margin: 2rem 0;
         }
-        
-        .mission, .vision {
+
+        .mission,
+        .vision {
             flex: 1;
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 10px;
@@ -334,22 +345,23 @@
             border-left: 4px solid var(--primary-color);
             transition: transform 0.3s ease;
         }
-        
-        .mission:hover, .vision:hover {
+
+        .mission:hover,
+        .vision:hover {
             transform: translateY(-3px);
         }
-        
+
         .team-section {
             margin: 3rem 0;
         }
-        
+
         .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
-        
+
         .team-member {
             background-color: white;
             border-radius: 10px;
@@ -358,11 +370,11 @@
             transition: transform 0.3s;
             position: relative;
         }
-        
+
         .team-member:hover {
             transform: translateY(-5px);
         }
-        
+
         .team-img {
             height: 200px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -374,7 +386,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .team-img::after {
             content: '';
             position: absolute;
@@ -384,28 +396,28 @@
             transform: rotate(45deg) translateY(-50px);
             animation: shine 3s infinite linear;
         }
-        
+
         .team-info {
             padding: 1.5rem;
             text-align: center;
         }
-        
+
         .team-info h4 {
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .team-info p {
             color: #6c757d;
             margin-bottom: 1rem;
         }
-        
+
         .social-links {
             display: flex;
             gap: 0.8rem;
             justify-content: center;
         }
-        
+
         .social-links a {
             color: var(--primary-color);
             font-size: 1.2rem;
@@ -418,20 +430,20 @@
             border-radius: 50%;
             background-color: #f8f9fa;
         }
-        
+
         .social-links a:hover {
             color: white;
             background-color: var(--primary-color);
             transform: translateY(-3px);
         }
-        
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
-        
+
         .feature-card {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 10px;
@@ -442,12 +454,12 @@
             border-left: 4px solid var(--primary-color);
             transition: all 0.3s ease;
         }
-        
+
         .feature-card:hover {
             background: linear-gradient(135deg, #e9ecef, #dee2e6);
             transform: translateX(5px);
         }
-        
+
         .feature-icon {
             background-color: var(--primary-color);
             color: white;
@@ -461,16 +473,16 @@
             flex-shrink: 0;
             transition: all 0.3s ease;
         }
-        
+
         .feature-card:hover .feature-icon {
             transform: rotate(15deg) scale(1.1);
         }
-        
+
         .feature-content h4 {
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         /* Back to top button */
         .back-to-top {
             position: fixed;
@@ -491,49 +503,52 @@
             transition: all 0.3s ease;
             z-index: 999;
         }
-        
+
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .back-to-top:hover {
             background-color: var(--secondary-color);
             transform: translateY(-5px);
         }
-        
+
         /* ===== ANIMATIONS ===== */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes shine {
             from {
                 left: -100%;
             }
+
             to {
                 left: 100%;
             }
         }
-        
+
         /* ===== FOOTER STYLES ===== */
         .footer {
             background-color: #2d3748;
@@ -541,7 +556,7 @@
             padding: 40px 0 20px;
             margin-top: 2rem;
         }
-        
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -550,14 +565,14 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
         }
-        
+
         .footer-section h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .footer-section h3::after {
             content: '';
             position: absolute;
@@ -567,45 +582,45 @@
             height: 2px;
             background-color: #1a56db;
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 12px;
         }
-        
+
         .footer-links a {
             color: #e5e7eb;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
         }
-        
+
         .footer-links a:hover {
             color: #1a56db;
             padding-left: 5px;
         }
-        
+
         .contact-info {
             margin-bottom: 15px;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .contact-info i {
             margin-right: 10px;
             color: #1a56db;
             min-width: 20px;
         }
-        
+
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         .social-icons a {
             display: inline-flex;
             align-items: center;
@@ -617,22 +632,22 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .social-icons a:hover {
             background-color: #1a56db;
             transform: translateY(-3px);
         }
-        
+
         .opening-hours {
             margin-bottom: 15px;
         }
-        
+
         .opening-hours div {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
         }
-        
+
         .footer-bottom {
             max-width: 1200px;
             margin: 30px auto 0;
@@ -640,49 +655,49 @@
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         /* ===== RESPONSIVE ADJUSTMENTS ===== */
         @media (max-width: 992px) {
             .navbar ul {
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            
+
             .navbar ul li {
                 margin: 0.3rem;
             }
-            
+
             .mission-vision {
                 flex-direction: column;
             }
         }
-        
+
         @media (max-width: 768px) {
             .hero-section {
                 padding: 2.5rem 0;
             }
-            
+
             .about-card {
                 padding: 1.5rem;
             }
-            
+
             .team-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .footer-section h3 {
                 font-size: 1.3rem;
             }
-            
+
             .back-to-top {
                 bottom: 20px;
                 right: 20px;
@@ -690,6 +705,7 @@
                 height: 40px;
             }
         }
+
         /* ===== ENHANCED ERROR POPUP STYLES ===== */
         .error-modal .modal-content {
             border-radius: 16px;
@@ -704,6 +720,7 @@
                 opacity: 0;
                 transform: scale(0.8) translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -742,9 +759,17 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .error-modal .modal-body {
@@ -768,9 +793,26 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-5px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(5px);
+            }
         }
 
         .error-modal .error-message {
@@ -901,6 +943,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -942,6 +985,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
@@ -1050,7 +1094,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}"
+                                        href="{{ route('user.settings.index') }}">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -1095,34 +1140,43 @@
             <h3 class="section-title">
                 <i class="fa-solid fa-circle-info"></i> Tentang Sistem
             </h3>
-            <p>Sistem Peminjaman Sarana Prasarana merupakan platform digital yang dikembangkan khusus untuk Program Studi Teknologi Informasi. Sistem ini memungkinkan pengelolaan dan pemantauan ketersediaan ruangan serta proyektor secara real-time, sehingga proses peminjaman dapat dilakukan dengan lebih efisien dan terorganisir.</p>
-            
-            <p>Dikembangkan dengan teknologi terkini, sistem ini memberikan kemudahan bagi seluruh civitas akademika Program Studi Teknologi Informasi untuk mengakses informasi ketersediaan sarana prasarana kapan saja dan di mana saja.</p>
+            <p>Sistem Peminjaman Sarana Prasarana merupakan platform digital yang dikembangkan khusus untuk Program
+                Studi Teknologi Informasi. Sistem ini memungkinkan pengelolaan dan pemantauan ketersediaan ruangan serta
+                proyektor secara real-time, sehingga proses peminjaman dapat dilakukan dengan lebih efisien dan
+                terorganisir.</p>
+
+            <p>Dikembangkan dengan teknologi terkini, sistem ini memberikan kemudahan bagi seluruh civitas akademika
+                Program Studi Teknologi Informasi untuk mengakses informasi ketersediaan sarana prasarana kapan saja dan
+                di mana saja.</p>
         </div>
-        
+
         <div class="about-card">
             <h3 class="section-title">
                 <i class="fa-solid fa-bullseye"></i> Misi & Visi
             </h3>
-            
+
             <div class="mission-vision">
                 <div class="mission">
                     <h4><i class="fa-solid fa-flag"></i> Misi</h4>
-                    <p>Menyediakan platform digital yang efisien untuk pengelolaan sarana prasarana, meningkatkan transparansi ketersediaan fasilitas, dan mendukung proses belajar mengajar yang lebih efektif di lingkungan Program Studi Teknologi Informasi.</p>
+                    <p>Menyediakan platform digital yang efisien untuk pengelolaan sarana prasarana, meningkatkan
+                        transparansi ketersediaan fasilitas, dan mendukung proses belajar mengajar yang lebih efektif di
+                        lingkungan Program Studi Teknologi Informasi.</p>
                 </div>
-                
+
                 <div class="vision">
                     <h4><i class="fa-solid fa-eye"></i> Visi</h4>
-                    <p>Menjadi sistem pengelolaan sarana prasarana terdepan yang mendukung transformasi digital di lingkungan pendidikan tinggi, khususnya dalam pengoptimalan penggunaan resources yang tersedia.</p>
+                    <p>Menjadi sistem pengelolaan sarana prasarana terdepan yang mendukung transformasi digital di
+                        lingkungan pendidikan tinggi, khususnya dalam pengoptimalan penggunaan resources yang tersedia.
+                    </p>
                 </div>
             </div>
         </div>
-        
+
         <div class="about-card">
             <h3 class="section-title">
                 <i class="fa-solid fa-star"></i> Keunggulan Sistem
             </h3>
-            
+
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -1130,40 +1184,44 @@
                     </div>
                     <div class="feature-content">
                         <h4>Real-time Tracking</h4>
-                        <p>Memantau ketersediaan ruangan dan proyektor secara real-time dengan update informasi setiap menit.</p>
+                        <p>Memantau ketersediaan ruangan dan proyektor secara real-time dengan update informasi setiap
+                            menit.</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
                     <div class="feature-content">
                         <h4>Kalender Interaktif</h4>
-                        <p>Fitur kalender yang memudahkan pengguna melihat jadwal penggunaan fasilitas dalam periode waktu tertentu.</p>
+                        <p>Fitur kalender yang memudahkan pengguna melihat jadwal penggunaan fasilitas dalam periode
+                            waktu tertentu.</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fa-solid fa-bell"></i>
                     </div>
                     <div class="feature-content">
                         <h4>Notifikasi Otomatis</h4>
-                        <p>Sistem notifikasi yang mengingatkan pengguna tentang jadwal peminjaman dan pengembalian fasilitas.</p>
+                        <p>Sistem notifikasi yang mengingatkan pengguna tentang jadwal peminjaman dan pengembalian
+                            fasilitas.</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fa-solid fa-mobile-screen"></i>
                     </div>
                     <div class="feature-content">
                         <h4>Responsive Design</h4>
-                        <p>Antarmuka yang responsif dan dapat diakses dengan optimal melalui berbagai perangkat dan ukuran layar.</p>
+                        <p>Antarmuka yang responsif dan dapat diakses dengan optimal melalui berbagai perangkat dan
+                            ukuran layar.</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fa-solid fa-chart-line"></i>
@@ -1173,7 +1231,7 @@
                         <p>Fitur pelaporan yang membantu pengelola dalam menganalisis penggunaan sarana prasarana.</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fa-solid fa-lock"></i>
@@ -1185,14 +1243,14 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="about-card">
             <div class="team-section">
                 <h3 class="section-title">
                     <i class="fa-solid fa-people-group"></i> Tim Pengembang
                 </h3>
                 <p>Tim dedikasi yang berada di balik pengembangan dan pemeliharaan sistem ini.</p>
-                
+
                 <div class="team-grid">
                     <div class="team-member">
                         <div class="team-img">
@@ -1207,7 +1265,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="team-member">
                         <div class="team-img">
                             <i class="fa-solid fa-user"></i>
@@ -1221,7 +1279,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="team-member">
                         <div class="team-img">
                             <i class="fa-solid fa-user"></i>
@@ -1240,7 +1298,7 @@
                         <div class="team-img">
                             <i class="fa-solid fa-user"></i>
                         </div>
-                     <div class="team-info">
+                        <div class="team-info">
                             <h4>M.Riki Aditya</h4>
                             <p>UI/UX Designer</p>
                             <div class="social-links">
@@ -1249,7 +1307,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="team-member">
                         <div class="team-img">
                             <i class="fa-solid fa-user"></i>
@@ -1266,16 +1324,22 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="about-card">
             <h3 class="section-title">
                 <i class="fa-solid fa-history"></i> Sejarah Pengembangan
             </h3>
-            <p>Sistem Peminjaman Sarana Prasarana pertama kali dikembangkan pada tahun 2023 sebagai respons terhadap kebutuhan akan pengelolaan fasilitas yang lebih efisien di Program Studi Teknologi Informasi. Versi awal sistem ini diluncurkan pada Januari 2024 setelah melalui proses pengembangan selama enam bulan.</p>
-            
-            <p>Sejak peluncuran pertamanya, sistem terus mengalami penyempurnaan dan penambahan fitur berdasarkan masukan dari pengguna. Hingga saat ini, sistem telah digunakan oleh lebih dari 500 pengguna aktif yang terdiri dari dosen, staff, dan mahasiswa Program Studi Teknologi Informasi.</p>
-            
-            <p>Pengembangan sistem akan terus dilakukan untuk menyesuaikan dengan kebutuhan yang berkembang dan kemajuan teknologi terbaru, dengan komitmen untuk selalu memberikan layanan terbaik bagi civitas akademika Program Studi Teknologi Informasi.</p>
+            <p>Sistem Peminjaman Sarana Prasarana pertama kali dikembangkan pada tahun 2023 sebagai respons terhadap
+                kebutuhan akan pengelolaan fasilitas yang lebih efisien di Program Studi Teknologi Informasi. Versi awal
+                sistem ini diluncurkan pada Januari 2024 setelah melalui proses pengembangan selama enam bulan.</p>
+
+            <p>Sejak peluncuran pertamanya, sistem terus mengalami penyempurnaan dan penambahan fitur berdasarkan
+                masukan dari pengguna. Hingga saat ini, sistem telah digunakan oleh lebih dari 500 pengguna aktif yang
+                terdiri dari dosen, staff, dan mahasiswa Program Studi Teknologi Informasi.</p>
+
+            <p>Pengembangan sistem akan terus dilakukan untuk menyesuaikan dengan kebutuhan yang berkembang dan kemajuan
+                teknologi terbaru, dengan komitmen untuk selalu memberikan layanan terbaik bagi civitas akademika
+                Program Studi Teknologi Informasi.</p>
         </div>
     </div>
 
@@ -1284,19 +1348,22 @@
         <i class="fas fa-arrow-up"></i>
     </a>
 
-   <footer class="footer">
+    <footer class="footer">
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -1307,7 +1374,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -1323,7 +1390,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -1342,74 +1409,80 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
     <!-- Session Error Modal - Enhanced Version -->
     @if (session('error'))
-    <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1" aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sessionErrorModalLabel">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Akses Ditolak
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="error-icon-container">
-                        <i class="fas fa-ban error-icon"></i>
+        <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1"
+            aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static"
+            data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sessionErrorModalLabel">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Akses Ditolak
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    
-                    <div class="error-message">
-                        <p class="mb-0">{{ session('error') }}</p>
+                    <div class="modal-body">
+                        <div class="error-icon-container">
+                            <i class="fas fa-ban error-icon"></i>
+                        </div>
+
+                        <div class="error-message">
+                            <p class="mb-0">{{ session('error') }}</p>
+                        </div>
+
+                        @if (strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+                            </div>
+                        @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki
+                                akses.
+                            </div>
+                        @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
+                            </div>
+                        @else
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
+                            </div>
+                        @endif
                     </div>
-                    
-                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+                    <div class="modal-footer">
+                        @if (strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                            <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
+                                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                            </a>
+                        @endif
+
+                        <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal"
+                            id="closeErrorBtn">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+
+                        @if (strpos(session('error'), 'login') === false)
+                            <a href="/home" class="btn btn-error btn-error-outline">
+                                <i class="fas fa-home"></i> Kembali ke Beranda
+                            </a>
+                        @endif
                     </div>
-                    @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki akses.
-                    </div>
-                    @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
-                    </div>
-                    @else
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
-                    </div>
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
-                    <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
-                        <i class="fas fa-sign-in-alt"></i> Login Sekarang
-                    </a>
-                    @endif
-                    
-                    <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal" id="closeErrorBtn">
-                        <i class="fas fa-times"></i> Tutup
-                    </button>
-                    
-                    @if(strpos(session('error'), 'login') === false)
-                    <a href="/home" class="btn btn-error btn-error-outline">
-                        <i class="fas fa-home"></i> Kembali ke Beranda
-                    </a>
-                    @endif
                 </div>
             </div>
         </div>
-    </div>
     @endif
 
     <!-- Success Modal Template -->
@@ -1421,14 +1494,16 @@
                         <i class="fas fa-check-circle"></i>
                         Berhasil!
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="error-icon-container">
                         <i class="fas fa-check-circle error-icon" style="color: #28a745;"></i>
                     </div>
-                    
-                    <div class="error-message" style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
+
+                    <div class="error-message"
+                        style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
                         <p class="mb-0" id="successMessage">Operasi berhasil diselesaikan.</p>
                     </div>
                 </div>
@@ -1445,7 +1520,7 @@
     <script>
         // Back to top button functionality
         const backToTopButton = document.getElementById('backToTop');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopButton.classList.add('visible');
@@ -1453,15 +1528,18 @@
                 backToTopButton.classList.remove('visible');
             }
         });
-        
+
         backToTopButton.addEventListener('click', (e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
-        
+
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 50) {
                 navbar.classList.add('scrolled');
@@ -1474,12 +1552,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Handle dropdown toggle animation
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
+
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     // Close other open dropdowns
                     dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                        if (otherToggle !== toggle && otherToggle.classList.contains(
+                            'show')) {
                             otherToggle.classList.remove('show');
                             const otherMenu = otherToggle.nextElementSibling;
                             if (otherMenu && otherMenu.classList.contains('show')) {
@@ -1489,11 +1568,12 @@
                     });
                 });
             });
-            
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {
                 if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    const openDropdowns = document.querySelectorAll(
+                        '.dropdown-toggle.show, .dropdown-menu.show');
                     openDropdowns.forEach(element => {
                         element.classList.remove('show');
                     });
@@ -1504,89 +1584,91 @@
             @if (session('error'))
                 var errorModal = new bootstrap.Modal(document.getElementById('sessionErrorModal'));
                 errorModal.show();
-                
+
                 // Add auto-focus to the most appropriate button
                 setTimeout(() => {
                     const primaryBtn = document.querySelector('.error-modal .btn-error-primary');
                     const closeBtn = document.getElementById('closeErrorBtn');
-                    
+
                     if (primaryBtn) {
                         primaryBtn.focus();
                     } else if (closeBtn) {
                         closeBtn.focus();
                     }
                 }, 300);
-                
+
                 // Auto-hide modal after 10 seconds if user doesn't interact
                 let modalTimeout = setTimeout(() => {
                     if (document.querySelector('#sessionErrorModal.show')) {
                         errorModal.hide();
                     }
                 }, 10000);
-                
+
                 // Clear timeout on user interaction
                 document.getElementById('sessionErrorModal').addEventListener('click', () => {
                     clearTimeout(modalTimeout);
                 });
-                
+
                 // Add keyboard shortcuts
                 document.addEventListener('keydown', function(e) {
                     if (e.key === 'Escape') {
                         clearTimeout(modalTimeout);
                     }
-                    
+
                     if (e.key === 'Enter' && document.querySelector('#sessionErrorModal.show')) {
-                        const activeButton = document.querySelector('#sessionErrorModal .modal-footer .btn-error-primary');
+                        const activeButton = document.querySelector(
+                            '#sessionErrorModal .modal-footer .btn-error-primary');
                         if (activeButton) {
                             activeButton.click();
                         }
                     }
                 });
             @endif
-            
+
             // Success Modal function for future use
             window.showSuccessModal = function(message) {
                 const successModalEl = document.getElementById('successModal');
                 const successMessageEl = document.getElementById('successMessage');
-                
+
                 if (successMessageEl && message) {
                     successMessageEl.textContent = message;
                 }
-                
+
                 const successModal = new bootstrap.Modal(successModalEl);
                 successModal.show();
-                
+
                 // Auto-hide after 3 seconds
                 setTimeout(() => {
                     successModal.hide();
                 }, 3000);
             };
         });
-        
+
         // Animation on scroll
         const animateOnScroll = () => {
             const elements = document.querySelectorAll('.about-card, .feature-card, .team-member');
-            
+
             elements.forEach(element => {
                 const elementPosition = element.getBoundingClientRect().top;
                 const screenPosition = window.innerHeight / 1.3;
-                
+
                 if (elementPosition < screenPosition) {
                     element.style.opacity = 1;
                     element.style.transform = 'translateY(0)';
                 }
             });
         };
-        
+
         // Initialize elements for animation
         document.querySelectorAll('.about-card, .feature-card, .team-member').forEach(element => {
             element.style.opacity = 0;
             element.style.transform = 'translateY(20px)';
             element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         });
-        
+
         window.addEventListener('scroll', animateOnScroll);
         window.addEventListener('load', animateOnScroll);
     </script>
 </body>
+
 </html>

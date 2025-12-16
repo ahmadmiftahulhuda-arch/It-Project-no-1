@@ -161,6 +161,14 @@
             font-weight: 500;
         }
 
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
+        }
+
         .dropdown-item-custom:hover {
             background-color: rgba(59, 89, 152, 0.1);
             color: var(--primary-color);

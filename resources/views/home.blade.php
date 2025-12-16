@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,13 +20,13 @@
             --danger-color: #dc3545;
             --info-color: #17a2b8;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f8fa;
@@ -33,7 +34,7 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
-        
+
         /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -151,6 +152,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -169,6 +171,14 @@
             width: 100%;
             text-align: left;
             font-weight: 500;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
         }
 
         .dropdown-item-custom:hover {
@@ -246,11 +256,11 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
@@ -266,7 +276,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -278,19 +288,19 @@
             background-size: cover;
             background-position: center;
         }
-        
+
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-content h1 {
             animation: fadeInDown 1s ease;
             margin-bottom: 1rem;
         }
-        
+
         .hero-content p {
             animation: fadeInUp 1s ease;
             margin-bottom: 2rem;
@@ -343,7 +353,7 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         /* ===== NAVIGASI BAWAH BANNER ===== */
         .sub-navigation {
             background-color: white;
@@ -353,14 +363,14 @@
             top: 76px;
             z-index: 999;
         }
-        
+
         .sub-nav-container {
             display: flex;
             justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
         }
-        
+
         .sub-nav-item {
             padding: 0.7rem 1.5rem;
             border-radius: 30px;
@@ -374,7 +384,7 @@
             gap: 0.5rem;
             border: 1px solid transparent;
         }
-        
+
         .sub-nav-item:hover,
         .sub-nav-item.active {
             background-color: var(--primary-color);
@@ -382,12 +392,12 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* ===== MAIN CONTENT ===== */
         .main-content {
             padding: 2rem 1rem;
         }
-        
+
         .section-title {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
@@ -397,7 +407,7 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         /* ===== CARD STYLES ===== */
         .card-custom {
             background-color: white;
@@ -408,12 +418,12 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
         }
-        
+
         .card-custom:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
-        
+
         /* ===== STATISTICS SECTION ===== */
         .stats-grid {
             display: grid;
@@ -421,7 +431,7 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .stat-card {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 12px;
@@ -430,30 +440,30 @@
             border-left: 4px solid var(--primary-color);
             transition: all 0.3s ease;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .stat-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
             color: var(--primary-color);
         }
-        
+
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-label {
             color: #6c757d;
             font-weight: 500;
         }
-        
+
         /* ===== ROOM STATUS SECTION ===== */
         .room-status-grid {
             display: grid;
@@ -461,7 +471,7 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .room-card {
             background-color: white;
             border-radius: 12px;
@@ -469,12 +479,12 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .room-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
-        
+
         .room-header {
             padding: 1rem 1.5rem;
             background-color: var(--primary-color);
@@ -483,65 +493,65 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .room-name {
             font-weight: 600;
             font-size: 1.2rem;
         }
-        
+
         .room-status {
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
+
         .status-available {
             background-color: var(--success-color);
             color: white;
         }
-        
+
         .status-occupied {
             background-color: var(--danger-color);
             color: white;
         }
-        
+
         .status-maintenance {
             background-color: var(--warning-color);
             color: #212529;
         }
-        
+
         .room-body {
             padding: 1.5rem;
         }
-        
+
         .room-details {
             display: flex;
             justify-content: space-between;
             margin-bottom: 1rem;
         }
-        
+
         .room-detail {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .room-schedule {
             margin-top: 1rem;
         }
-        
+
         .schedule-item {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
             border-bottom: 1px solid #e9ecef;
         }
-        
+
         .schedule-item:last-child {
             border-bottom: none;
         }
-        
+
         /* ===== PROJECTOR STATUS SECTION ===== */
         .projector-grid {
             display: grid;
@@ -549,7 +559,7 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .projector-card {
             background-color: white;
             border-radius: 12px;
@@ -558,40 +568,40 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .projector-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
-        
+
         .projector-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
         }
-        
+
         .projector-available {
             color: var(--success-color);
         }
-        
+
         .projector-in-use {
             color: var(--danger-color);
         }
-        
+
         .projector-maintenance {
             color: var(--warning-color);
         }
-        
+
         .projector-name {
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--primary-color);
         }
-        
+
         .projector-location {
             color: #6c757d;
             margin-bottom: 1rem;
         }
-        
+
         /* ===== QUICK ACTIONS ===== */
         .quick-actions {
             display: flex;
@@ -599,7 +609,7 @@
             flex-wrap: wrap;
             margin-bottom: 2rem;
         }
-        
+
         .action-card {
             flex: 1;
             min-width: 200px;
@@ -611,23 +621,23 @@
             text-decoration: none;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .action-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             color: white;
         }
-        
+
         .action-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .action-title {
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
-        
+
         /* ===== USAGE STATISTICS ===== */
         .usage-stats {
             display: grid;
@@ -635,32 +645,32 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .usage-card {
             background-color: white;
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
-        
+
         .usage-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .usage-title {
             font-weight: 600;
             color: var(--primary-color);
         }
-        
+
         .usage-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
         }
-        
+
         .usage-bar {
             height: 10px;
             background-color: #e9ecef;
@@ -668,35 +678,35 @@
             overflow: hidden;
             margin-bottom: 0.5rem;
         }
-        
+
         .usage-fill {
             height: 100%;
             border-radius: 5px;
         }
-        
+
         .fill-primary {
             background-color: var(--primary-color);
         }
-        
+
         .fill-success {
             background-color: var(--success-color);
         }
-        
+
         .fill-warning {
             background-color: var(--warning-color);
         }
-        
+
         .fill-danger {
             background-color: var(--danger-color);
         }
-        
+
         .usage-label {
             display: flex;
             justify-content: space-between;
             font-size: 0.9rem;
             color: #6c757d;
         }
-        
+
         /* ===== RECENT ACTIVITY ===== */
         .activity-list {
             background-color: white;
@@ -705,17 +715,17 @@
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
-        
+
         .activity-item {
             display: flex;
             padding: 1rem 0;
             border-bottom: 1px solid #e9ecef;
         }
-        
+
         .activity-item:last-child {
             border-bottom: none;
         }
-        
+
         .activity-icon {
             width: 40px;
             height: 40px;
@@ -726,42 +736,42 @@
             margin-right: 1rem;
             flex-shrink: 0;
         }
-        
+
         .activity-icon.booking {
             background-color: rgba(59, 89, 152, 0.1);
             color: var(--primary-color);
         }
-        
+
         .activity-icon.return {
             background-color: rgba(40, 167, 69, 0.1);
             color: var(--success-color);
         }
-        
+
         .activity-icon.maintenance {
             background-color: rgba(255, 193, 7, 0.1);
             color: var(--warning-color);
         }
-        
+
         .activity-content {
             flex: 1;
         }
-        
+
         .activity-title {
             font-weight: 600;
             margin-bottom: 0.3rem;
         }
-        
+
         .activity-desc {
             color: #6c757d;
             font-size: 0.9rem;
             margin-bottom: 0.3rem;
         }
-        
+
         .activity-time {
             color: #9ca3af;
             font-size: 0.8rem;
         }
-        
+
         /* Back to top button */
         .back-to-top {
             position: fixed;
@@ -782,40 +792,42 @@
             transition: all 0.3s ease;
             z-index: 999;
         }
-        
+
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .back-to-top:hover {
             background-color: var(--secondary-color);
             transform: translateY(-5px);
         }
-        
+
         /* ===== ANIMATIONS ===== */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         /* ===== FOOTER STYLES ===== */
         .footer {
             background-color: #2d3748;
@@ -823,7 +835,7 @@
             padding: 40px 0 20px;
             margin-top: 2rem;
         }
-        
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -832,14 +844,14 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
         }
-        
+
         .footer-section h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .footer-section h3::after {
             content: '';
             position: absolute;
@@ -849,45 +861,45 @@
             height: 2px;
             background-color: var(--primary-color);
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 12px;
         }
-        
+
         .footer-links a {
             color: #e5e7eb;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
         }
-        
+
         .footer-links a:hover {
             color: var(--primary-color);
             padding-left: 5px;
         }
-        
+
         .contact-info {
             margin-bottom: 15px;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .contact-info i {
             margin-right: 10px;
             color: var(--primary-color);
             min-width: 20px;
         }
-        
+
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         .social-icons a {
             display: inline-flex;
             align-items: center;
@@ -899,22 +911,22 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .social-icons a:hover {
             background-color: var(--primary-color);
             transform: translateY(-3px);
         }
-        
+
         .opening-hours {
             margin-bottom: 15px;
         }
-        
+
         .opening-hours div {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
         }
-        
+
         .footer-bottom {
             max-width: 1200px;
             margin: 30px auto 0;
@@ -922,81 +934,81 @@
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         /* ===== RESPONSIVE ADJUSTMENTS ===== */
         @media (max-width: 992px) {
             .navbar ul {
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            
+
             .navbar ul li {
                 margin: 0.3rem;
             }
-            
+
             .sub-nav-container {
                 justify-content: flex-start;
                 overflow-x: auto;
                 padding-bottom: 10px;
             }
-            
+
             .sub-nav-item {
                 white-space: nowrap;
             }
         }
-        
+
         @media (max-width: 768px) {
             .hero-section {
                 padding: 3rem 0 2rem;
             }
-            
+
             .hero-content h1 {
                 font-size: 2rem;
             }
-            
+
             .hero-content p {
                 font-size: 1.1rem;
             }
-            
+
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn-hero {
                 width: 100%;
                 max-width: 250px;
                 justify-content: center;
             }
-            
+
             .sub-navigation {
                 top: 70px;
             }
-            
+
             .stats-grid,
             .room-status-grid,
             .projector-grid,
             .usage-stats {
                 grid-template-columns: 1fr;
             }
-            
+
             .quick-actions {
                 flex-direction: column;
             }
-            
+
             .action-card {
                 min-width: 100%;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .footer-section h3 {
                 font-size: 1.3rem;
             }
-            
+
             .back-to-top {
                 bottom: 20px;
                 right: 20px;
@@ -1004,22 +1016,22 @@
                 height: 40px;
             }
         }
-        
+
         @media (max-width: 576px) {
             .hero-content h1 {
                 font-size: 1.8rem;
             }
-            
+
             .sub-nav-item {
                 padding: 0.5rem 1rem;
                 font-size: 0.9rem;
             }
-            
+
             .card-custom {
                 padding: 1rem;
             }
         }
-        
+
         /* ===== ENHANCED ERROR POPUP STYLES ===== */
         .error-modal .modal-content {
             border-radius: 16px;
@@ -1034,6 +1046,7 @@
                 opacity: 0;
                 transform: scale(0.8) translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -1072,9 +1085,17 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .error-modal .modal-body {
@@ -1098,9 +1119,26 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-5px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(5px);
+            }
         }
 
         .error-modal .error-message {
@@ -1231,6 +1269,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -1272,6 +1311,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
@@ -1380,7 +1420,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}"
+                                        href="{{ route('user.settings.index') }}">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -1415,7 +1456,7 @@
             <div class="hero-content">
                 <h1 class="display-4 fw-bold">Sistem Peminjaman Sarana Prasarana</h1>
                 <p class="lead">Kelola peminjaman ruangan dan proyektor dengan mudah dan efisien</p>
-                
+
                 <!-- Tombol Hero -->
                 <div class="hero-buttons">
                     <a href="{{ route('user.peminjaman.create') }}" class="btn-hero btn-hero-primary">
@@ -1493,7 +1534,7 @@
         <section id="rooms" class="mb-5">
             <h2 class="section-title"><i class="fas fa-door-open"></i> Info Ruangan</h2>
             <div class="room-status-grid">
-                @foreach($ruangan as $room)
+                @foreach ($ruangan as $room)
                     <div class="room-card">
                         <div class="room-header">
                             <div class="room-name">{{ $room->nama_ruangan }}</div>
@@ -1520,8 +1561,8 @@
                                 </div>
                             </div>
                             <div class="room-schedule">
-                                @if(isset($room->jadwals) && $room->jadwals->count() > 0)
-                                    @foreach($room->jadwals as $j)
+                                @if (isset($room->jadwals) && $room->jadwals->count() > 0)
+                                    @foreach ($room->jadwals as $j)
                                         <div class="schedule-item">
                                             <span>{{ $j->jam_mulai ?? '-' }} - {{ $j->jam_selesai ?? '-' }}</span>
                                             <span class="text-danger">Terpakai</span>
@@ -1553,7 +1594,7 @@
         <section id="projectors" class="mb-5">
             <h2 class="section-title"><i class="fas fa-video"></i> Status Proyektor</h2>
             <div class="projector-grid">
-                @foreach($projectors as $projector)
+                @foreach ($projectors as $projector)
                     @php
                         $status = strtolower($projector->status ?? '');
                         $statusClass = 'projector-available';
@@ -1571,7 +1612,8 @@
                         <div class="projector-icon {{ $statusClass }}">
                             <i class="fas fa-video"></i>
                         </div>
-                        <div class="projector-name">{{ $projector->kode_proyektor }} - {{ $projector->merk }} {{ $projector->model }}</div>
+                        <div class="projector-name">{{ $projector->kode_proyektor }} - {{ $projector->merk }}
+                            {{ $projector->model }}</div>
                         <div class="projector-status {{ $statusClass }}">{{ $statusLabel }}</div>
                     </div>
                 @endforeach
@@ -1601,7 +1643,7 @@
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <div class="action-title">Kalender</div>
-                    <p>Lihat  peminjaman</p>
+                    <p>Lihat peminjaman</p>
                 </a>
                 <a href="{{ route('user.feedback.create') }}" class="action-card">
                     <div class="action-icon">
@@ -1711,7 +1753,8 @@
                     </div>
                     <div class="activity-content">
                         <div class="activity-title">Peminjaman Disetujui</div>
-                        <div class="activity-desc">Peminjaman Ruang Meeting oleh M. Ferdiy Ariyanto telah disetujui</div>
+                        <div class="activity-desc">Peminjaman Ruang Meeting oleh M. Ferdiy Ariyanto telah disetujui
+                        </div>
                         <div class="activity-time">3 jam yang lalu</div>
                     </div>
                 </div>
@@ -1729,15 +1772,18 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -1748,7 +1794,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -1764,7 +1810,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -1783,9 +1829,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -1793,67 +1840,72 @@
 
     <!-- Session Error Modal - Enhanced Version -->
     @if (session('error'))
-    <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1" aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sessionErrorModalLabel">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Akses Ditolak
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="error-icon-container">
-                        <i class="fas fa-ban error-icon"></i>
+        <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1"
+            aria-labelledby="sessionErrorModalLabel" aria-hidden="true" data-bs-backdrop="static"
+            data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sessionErrorModalLabel">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Akses Ditolak
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    
-                    <div class="error-message">
-                        <p class="mb-0">{{ session('error') }}</p>
+                    <div class="modal-body">
+                        <div class="error-icon-container">
+                            <i class="fas fa-ban error-icon"></i>
+                        </div>
+
+                        <div class="error-message">
+                            <p class="mb-0">{{ session('error') }}</p>
+                        </div>
+
+                        @if (strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+                            </div>
+                        @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki
+                                akses.
+                            </div>
+                        @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
+                            </div>
+                        @else
+                            <div class="error-suggestion">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
+                            </div>
+                        @endif
                     </div>
-                    
-                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Solusi:</strong> Silakan login terlebih dahulu untuk mengakses halaman ini.
+                    <div class="modal-footer">
+                        @if (strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
+                            <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
+                                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                            </a>
+                        @endif
+
+                        <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal"
+                            id="closeErrorBtn">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+
+                        @if (strpos(session('error'), 'login') === false)
+                            <a href="/home" class="btn btn-error btn-error-outline">
+                                <i class="fas fa-home"></i> Kembali ke Beranda
+                            </a>
+                        @endif
                     </div>
-                    @elseif(strpos(session('error'), 'izin') !== false || strpos(session('error'), 'akses') !== false)
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Solusi:</strong> Hubungi administrator jika Anda merasa seharusnya memiliki akses.
-                    </div>
-                    @elseif(strpos(session('error'), 'valid') !== false || strpos(session('error'), 'Valid') !== false)
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Solusi:</strong> Periksa kembali data yang Anda masukkan atau hubungi support.
-                    </div>
-                    @else
-                    <div class="error-suggestion">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Tips:</strong> Refresh halaman atau coba lagi dalam beberapa saat.
-                    </div>
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    @if(strpos(session('error'), 'login') !== false || strpos(session('error'), 'Login') !== false)
-                    <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
-                        <i class="fas fa-sign-in-alt"></i> Login Sekarang
-                    </a>
-                    @endif
-                    
-                    <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal" id="closeErrorBtn">
-                        <i class="fas fa-times"></i> Tutup
-                    </button>
-                    
-                    @if(strpos(session('error'), 'login') === false)
-                    <a href="/home" class="btn btn-error btn-error-outline">
-                        <i class="fas fa-home"></i> Kembali ke Beranda
-                    </a>
-                    @endif
                 </div>
             </div>
         </div>
-    </div>
     @endif
 
     <!-- Success Modal Template -->
@@ -1865,14 +1917,16 @@
                         <i class="fas fa-check-circle"></i>
                         Berhasil!
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="error-icon-container">
                         <i class="fas fa-check-circle error-icon" style="color: #28a745;"></i>
                     </div>
-                    
-                    <div class="error-message" style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
+
+                    <div class="error-message"
+                        style="background: linear-gradient(135deg, #f0fff4, #e6ffe6); border-left-color: #28a745;">
                         <p class="mb-0" id="successMessage">Operasi berhasil diselesaikan.</p>
                     </div>
                 </div>
@@ -1901,12 +1955,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Handle dropdown toggle animation
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
+
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     // Close other open dropdowns
                     dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                        if (otherToggle !== toggle && otherToggle.classList.contains(
+                            'show')) {
                             otherToggle.classList.remove('show');
                             const otherMenu = otherToggle.nextElementSibling;
                             if (otherMenu && otherMenu.classList.contains('show')) {
@@ -1916,11 +1971,12 @@
                     });
                 });
             });
-            
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {
                 if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    const openDropdowns = document.querySelectorAll(
+                        '.dropdown-toggle.show, .dropdown-menu.show');
                     openDropdowns.forEach(element => {
                         element.classList.remove('show');
                     });
@@ -1931,64 +1987,65 @@
             @if (session('error'))
                 var errorModal = new bootstrap.Modal(document.getElementById('sessionErrorModal'));
                 errorModal.show();
-                
+
                 // Add auto-focus to the most appropriate button
                 setTimeout(() => {
                     const primaryBtn = document.querySelector('.error-modal .btn-error-primary');
                     const closeBtn = document.getElementById('closeErrorBtn');
-                    
+
                     if (primaryBtn) {
                         primaryBtn.focus();
                     } else if (closeBtn) {
                         closeBtn.focus();
                     }
                 }, 300);
-                
+
                 // Auto-hide modal after 10 seconds if user doesn't interact
                 let modalTimeout = setTimeout(() => {
                     if (document.querySelector('#sessionErrorModal.show')) {
                         errorModal.hide();
                     }
                 }, 10000);
-                
+
                 // Clear timeout on user interaction
                 document.getElementById('sessionErrorModal').addEventListener('click', () => {
                     clearTimeout(modalTimeout);
                 });
-                
+
                 // Add keyboard shortcuts
                 document.addEventListener('keydown', function(e) {
                     if (e.key === 'Escape') {
                         clearTimeout(modalTimeout);
                     }
-                    
+
                     if (e.key === 'Enter' && document.querySelector('#sessionErrorModal.show')) {
-                        const activeButton = document.querySelector('#sessionErrorModal .modal-footer .btn-error-primary');
+                        const activeButton = document.querySelector(
+                            '#sessionErrorModal .modal-footer .btn-error-primary');
                         if (activeButton) {
                             activeButton.click();
                         }
                     }
                 });
             @endif
-            
+
             // Success Modal function for future use
             window.showSuccessModal = function(message) {
                 const successModalEl = document.getElementById('successModal');
                 const successMessageEl = document.getElementById('successMessage');
-                
+
                 if (successMessageEl && message) {
                     successMessageEl.textContent = message;
                 }
-                
+
                 const successModal = new bootstrap.Modal(successModalEl);
                 successModal.show();
-                
+
                 // Auto-hide after 3 seconds
                 setTimeout(() => {
                     successModal.hide();
                 }, 3000);
             };
-            
+
             // Error Toast function for non-critical errors
             window.showErrorToast = function(message, type = 'error') {
                 const toastId = 'toast-' + Date.now();
@@ -2004,9 +2061,9 @@
                         </div>
                     </div>
                 `;
-                
+
                 document.body.insertAdjacentHTML('beforeend', toastHtml);
-                
+
                 // Auto remove after animation
                 setTimeout(() => {
                     const toast = document.getElementById(toastId);
@@ -2015,34 +2072,35 @@
                     }
                 }, 5000);
             };
-            
+
             // Example of using the toast (for demonstration)
             // You can call this from anywhere: showErrorToast('Pesan error disini');
-            
+
             // Also handle any console errors and show user-friendly messages
             window.addEventListener('error', function(e) {
                 console.error('Error occurred:', e);
-                
+
                 // Only show toast for certain errors
                 if (e.message && e.message.includes('Network') || e.message.includes('fetch')) {
                     showErrorToast('Koneksi jaringan bermasalah. Silakan coba lagi.', 'error');
                 }
             });
-            
+
             // Initialize elements for animation
-            document.querySelectorAll('.stat-card, .room-card, .projector-card, .usage-card, .activity-item').forEach(element => {
-                element.style.opacity = 0;
-                element.style.transform = 'translateY(20px)';
-                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            });
-            
+            document.querySelectorAll('.stat-card, .room-card, .projector-card, .usage-card, .activity-item')
+                .forEach(element => {
+                    element.style.opacity = 0;
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                });
+
             // Trigger initial animation
             animateOnScroll();
         });
 
         // Back to top button functionality
         const backToTopButton = document.getElementById('backToTop');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopButton.classList.add('visible');
@@ -2050,29 +2108,32 @@
                 backToTopButton.classList.remove('visible');
             }
         });
-        
+
         backToTopButton.addEventListener('click', (e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
-        
+
         // Sub navigation functionality
         const subNavItems = document.querySelectorAll('.sub-nav-item');
-        
+
         subNavItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 // Remove active class from all items
                 subNavItems.forEach(i => i.classList.remove('active'));
-                
+
                 // Add active class to clicked item
                 this.classList.add('active');
-                
+
                 // Scroll to target section
                 const targetId = this.getAttribute('href');
                 const targetSection = document.querySelector(targetId);
-                
+
                 if (targetSection) {
                     const offsetTop = targetSection.offsetTop - 100;
                     window.scrollTo({
@@ -2082,41 +2143,42 @@
                 }
             });
         });
-        
+
         // Update active sub nav item on scroll
         const sections = document.querySelectorAll('section[id]');
-        
+
         window.addEventListener('scroll', () => {
             let current = '';
-            
+
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
-                
+
                 if (scrollY >= (sectionTop - 150)) {
                     current = section.getAttribute('id');
                 }
             });
-            
+
             subNavItems.forEach(item => {
                 item.classList.remove('active');
                 if (item.getAttribute('href') === `#${current}`) {
                     item.classList.add('active');
                 }
             });
-            
+
             // Trigger animation on scroll
             animateOnScroll();
         });
-        
+
         // Animation on scroll
         function animateOnScroll() {
-            const elements = document.querySelectorAll('.stat-card, .room-card, .projector-card, .usage-card, .activity-item');
-            
+            const elements = document.querySelectorAll(
+                '.stat-card, .room-card, .projector-card, .usage-card, .activity-item');
+
             elements.forEach(element => {
                 const elementPosition = element.getBoundingClientRect().top;
                 const screenPosition = window.innerHeight / 1.3;
-                
+
                 if (elementPosition < screenPosition) {
                     element.style.opacity = 1;
                     element.style.transform = 'translateY(0)';
@@ -2125,4 +2187,5 @@
         }
     </script>
 </body>
+
 </html>
