@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,13 +23,13 @@
             --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f8fa;
@@ -36,7 +37,7 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
-        
+
         /* ===== NAVBAR STYLES ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -148,6 +149,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -166,6 +168,14 @@
             width: 100%;
             text-align: left;
             font-weight: 500;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
         }
 
         .dropdown-item-custom:hover {
@@ -568,7 +578,7 @@
             padding: 50px 0 25px;
             margin-top: 3rem;
         }
-        
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -577,14 +587,14 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
         }
-        
+
         .footer-section h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .footer-section h3::after {
             content: '';
             position: absolute;
@@ -594,45 +604,45 @@
             height: 2px;
             background-color: var(--primary-color);
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 12px;
         }
-        
+
         .footer-links a {
             color: #e5e7eb;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
         }
-        
+
         .footer-links a:hover {
             color: var(--primary-color);
             padding-left: 5px;
         }
-        
+
         .contact-info {
             margin-bottom: 15px;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .contact-info i {
             margin-right: 10px;
             color: var(--primary-color);
             min-width: 20px;
         }
-        
+
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         .social-icons a {
             display: inline-flex;
             align-items: center;
@@ -644,22 +654,22 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .social-icons a:hover {
             background-color: var(--primary-color);
             transform: translateY(-3px);
         }
-        
+
         .opening-hours {
             margin-bottom: 15px;
         }
-        
+
         .opening-hours div {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
         }
-        
+
         .footer-bottom {
             max-width: 1200px;
             margin: 40px auto 0;
@@ -695,7 +705,7 @@
                 padding: 1rem 1.2rem;
                 font-size: 0.95rem;
             }
-            
+
             .tab-content-custom {
                 padding: 2rem;
             }
@@ -705,38 +715,38 @@
             .main-content {
                 padding: 1.5rem 0;
             }
-            
+
             .card-header-settings {
                 padding: 1.5rem;
             }
-            
+
             .card-header-settings h4 {
                 font-size: 1.5rem;
             }
-            
+
             .settings-tabs {
                 padding: 0 1rem;
             }
-            
+
             .nav-tabs-custom {
                 flex-direction: column;
             }
-            
+
             .nav-tabs-custom .nav-link {
                 justify-content: flex-start;
                 border-bottom: 2px solid transparent;
                 border-left: 3px solid transparent;
             }
-            
+
             .nav-tabs-custom .nav-link.active {
                 border-bottom: 2px solid transparent;
                 border-left: 3px solid var(--primary-color);
             }
-            
+
             .tab-content-custom {
                 padding: 1.5rem;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 30px;
@@ -747,23 +757,24 @@
             .tab-content-custom {
                 padding: 1.2rem;
             }
-            
+
             .settings-group-card {
                 padding: 1.2rem;
             }
-            
+
             .form-check-switch {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.5rem;
             }
-            
+
             .form-check-input {
                 margin-right: 0;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
@@ -866,7 +877,8 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
                                 <li class="dropdown-header-custom">Masuk sebagai</li>
-                                <li class="dropdown-header-custom fw-bold">{{ Auth::user()->display_name ?? Auth::user()->name }}</li>
+                                <li class="dropdown-header-custom fw-bold">
+                                    {{ Auth::user()->display_name ?? Auth::user()->name }}</li>
                                 <li>
                                     <hr class="dropdown-divider-custom">
                                 </li>
@@ -938,7 +950,8 @@
                         <i class="fas fa-check-circle"></i>
                         <div>
                             {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
                         </div>
                     </div>
                 @endif
@@ -962,22 +975,28 @@
                     <div class="card-header-settings">
                         <h4><i class="fas fa-cog"></i> Pengaturan Pengguna</h4>
                     </div>
-                    
+
                     <!-- Settings Tabs -->
                     <div class="settings-tabs">
                         <ul class="nav nav-tabs nav-tabs-custom" id="settingsTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" type="button" role="tab" aria-controls="account" aria-selected="true">
+                                <button class="nav-link active" id="account-tab" data-bs-toggle="tab"
+                                    data-bs-target="#account" type="button" role="tab" aria-controls="account"
+                                    aria-selected="true">
                                     <i class="fas fa-user-cog"></i> Akun
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab" aria-controls="notifications" aria-selected="false">
+                                <button class="nav-link" id="notifications-tab" data-bs-toggle="tab"
+                                    data-bs-target="#notifications" type="button" role="tab"
+                                    aria-controls="notifications" aria-selected="false">
                                     <i class="fas fa-bell"></i> Notifikasi
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">
+                                <button class="nav-link" id="security-tab" data-bs-toggle="tab"
+                                    data-bs-target="#security" type="button" role="tab"
+                                    aria-controls="security" aria-selected="false">
                                     <i class="fas fa-shield-alt"></i> Keamanan
                                 </button>
                             </li>
@@ -989,34 +1008,41 @@
                         @csrf
                         @method('PUT')
                         <div class="tab-content tab-content-custom" id="settingsTabContent">
-                            
+
                             <!-- Account Tab -->
-                            <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                            <div class="tab-pane fade show active" id="account" role="tabpanel"
+                                aria-labelledby="account-tab">
                                 <h5 class="section-title"><i class="fas fa-user-circle"></i> Informasi Akun</h5>
-                                <p class="text-muted-light mb-4">Untuk mengubah informasi profil Anda (nama, email, nomor telepon) atau kata sandi, silakan kunjungi halaman <a href="{{ route('user.profile.index') }}" class="text-primary">Pengaturan Profil</a>.</p>
-                                
+                                <p class="text-muted-light mb-4">Untuk mengubah informasi profil Anda (nama, email,
+                                    nomor telepon) atau kata sandi, silakan kunjungi halaman <a
+                                        href="{{ route('user.profile.index') }}" class="text-primary">Pengaturan
+                                        Profil</a>.</p>
+
                                 <div class="row mb-4">
                                     <div class="col-md-6 mb-3">
                                         <label for="name" class="form-label-settings">
                                             <i class="fas fa-user"></i> Nama Lengkap
                                         </label>
-                                        <input type="text" class="form-control form-control-settings" id="name" value="{{ $user->name }}" disabled>
+                                        <input type="text" class="form-control form-control-settings"
+                                            id="name" value="{{ $user->name }}" disabled>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="email" class="form-label-settings">
                                             <i class="fas fa-envelope"></i> Alamat Email
                                         </label>
-                                        <input type="email" class="form-control form-control-settings" id="email" value="{{ $user->email }}" disabled>
+                                        <input type="email" class="form-control form-control-settings"
+                                            id="email" value="{{ $user->email }}" disabled>
                                     </div>
                                 </div>
-                                
+
                                 <div class="d-flex justify-content-center mt-4">
                                     <!-- Button moved to footer -->
                                 </div>
                             </div>
-                            
+
                             <!-- Notifications Tab -->
-                            <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                            <div class="tab-pane fade" id="notifications" role="tabpanel"
+                                aria-labelledby="notifications-tab">
                                 <h5 class="section-title"><i class="fas fa-bell"></i> Preferensi Notifikasi</h5>
                                 <p class="text-muted-light mb-4">Pilih jenis notifikasi yang ingin Anda terima.</p>
 
@@ -1024,27 +1050,33 @@
                                 <div class="settings-group-card">
                                     <h6><i class="fas fa-envelope"></i> Notifikasi Email</h6>
                                     <div class="form-check-switch">
-                                        <input class="form-check-input" type="checkbox" id="emailStatusUpdates" name="email_status_updates" 
-                                               {{ ($user->notification_preferences['email']['status_updates'] ?? true) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="emailStatusUpdates"
+                                            name="email_status_updates"
+                                            {{ $user->notification_preferences['email']['status_updates'] ?? true ? 'checked' : '' }}>
                                         <label class="form-check-label" for="emailStatusUpdates">
                                             <strong>Pembaruan Status Peminjaman</strong>
-                                            <small class="text-muted-light d-block">Notifikasi saat peminjaman disetujui, ditolak, atau dibatalkan</small>
+                                            <small class="text-muted-light d-block">Notifikasi saat peminjaman
+                                                disetujui, ditolak, atau dibatalkan</small>
                                         </label>
                                     </div>
                                     <div class="form-check-switch">
-                                        <input class="form-check-input" type="checkbox" id="emailReminders" name="email_reminders"
-                                               {{ ($user->notification_preferences['email']['reminders'] ?? true) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="emailReminders"
+                                            name="email_reminders"
+                                            {{ $user->notification_preferences['email']['reminders'] ?? true ? 'checked' : '' }}>
                                         <label class="form-check-label" for="emailReminders">
                                             <strong>Pengingat Peminjaman</strong>
-                                            <small class="text-muted-light d-block">Notifikasi sebelum jadwal peminjaman dimulai</small>
+                                            <small class="text-muted-light d-block">Notifikasi sebelum jadwal
+                                                peminjaman dimulai</small>
                                         </label>
                                     </div>
                                     <div class="form-check-switch">
-                                        <input class="form-check-input" type="checkbox" id="emailPromotions" name="email_promotions"
-                                               {{ ($user->notification_preferences['email']['promotions'] ?? true) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="emailPromotions"
+                                            name="email_promotions"
+                                            {{ $user->notification_preferences['email']['promotions'] ?? true ? 'checked' : '' }}>
                                         <label class="form-check-label" for="emailPromotions">
                                             <strong>Promo & Update Sistem</strong>
-                                            <small class="text-muted-light d-block">Informasi tentang fitur baru dan promosi</small>
+                                            <small class="text-muted-light d-block">Informasi tentang fitur baru dan
+                                                promosi</small>
                                         </label>
                                     </div>
                                 </div>
@@ -1052,23 +1084,28 @@
                                 <!-- WhatsApp Notifications -->
                                 <div class="settings-group-card">
                                     <h6><i class="fab fa-whatsapp"></i> Notifikasi WhatsApp</h6>
-                                    
-                                    @if($user->no_hp)
+
+                                    @if ($user->no_hp)
                                         <div class="alert alert-settings-info mb-3">
                                             <i class="fas fa-info-circle"></i>
                                             <div>
                                                 Notifikasi akan dikirim ke nomor: <strong>{{ $user->no_hp }}</strong>
                                                 <br>
-                                                <small>Ubah nomor telepon di <a href="{{ route('user.profile.index') }}" class="alert-link">Pengaturan Profil</a></small>
+                                                <small>Ubah nomor telepon di <a
+                                                        href="{{ route('user.profile.index') }}"
+                                                        class="alert-link">Pengaturan Profil</a></small>
                                             </div>
                                         </div>
                                     @else
                                         <div class="alert alert-settings-warning">
                                             <i class="fas fa-exclamation-triangle"></i>
                                             <div>
-                                                Anda belum menambahkan nomor telepon. 
+                                                Anda belum menambahkan nomor telepon.
                                                 <br>
-                                                <small>Tambahkan nomor telepon di <a href="{{ route('user.profile.index') }}" class="alert-link">Pengaturan Profil</a> untuk mengaktifkan notifikasi WhatsApp.</small>
+                                                <small>Tambahkan nomor telepon di <a
+                                                        href="{{ route('user.profile.index') }}"
+                                                        class="alert-link">Pengaturan Profil</a> untuk mengaktifkan
+                                                    notifikasi WhatsApp.</small>
                                             </div>
                                         </div>
                                     @endif
@@ -1078,35 +1115,41 @@
                                 <div class="settings-group-card">
                                     <h6><i class="fas fa-desktop"></i> Notifikasi Sistem</h6>
                                     <div class="form-check-switch">
-                                        <input class="form-check-input" type="checkbox" id="systemBrowser" name="system_browser"
-                                               {{ ($user->notification_preferences['system']['browser'] ?? true) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="systemBrowser"
+                                            name="system_browser"
+                                            {{ $user->notification_preferences['system']['browser'] ?? true ? 'checked' : '' }}>
                                         <label class="form-check-label" for="systemBrowser">
                                             <strong>Browser Notifications</strong>
-                                            <small class="text-muted-light d-block">Notifikasi pop-up di browser</small>
+                                            <small class="text-muted-light d-block">Notifikasi pop-up di
+                                                browser</small>
                                         </label>
                                     </div>
                                     <div class="form-check-switch">
-                                        <input class="form-check-input" type="checkbox" id="systemSound" name="system_sound"
-                                               {{ ($user->notification_preferences['system']['sound'] ?? false) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="systemSound"
+                                            name="system_sound"
+                                            {{ $user->notification_preferences['system']['sound'] ?? false ? 'checked' : '' }}>
                                         <label class="form-check-label" for="systemSound">
                                             <strong>Suara Notifikasi</strong>
-                                            <small class="text-muted-light d-block">Efek suara saat notifikasi masuk</small>
+                                            <small class="text-muted-light d-block">Efek suara saat notifikasi
+                                                masuk</small>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Security Tab -->
-                            <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+                            <div class="tab-pane fade" id="security" role="tabpanel"
+                                aria-labelledby="security-tab">
                                 <h5 class="section-title"><i class="fas fa-shield-alt"></i> Pengaturan Keamanan</h5>
                                 <p class="text-muted-light mb-4">Kelola pengaturan keamanan akun Anda.</p>
 
                                 <!-- Two-Factor Authentication -->
                                 <div class="settings-group-card">
                                     <h6><i class="fas fa-lock"></i> Autentikasi Dua Faktor (2FA)</h6>
-                                    <p class="text-muted-light mb-3">Tambahkan lapisan keamanan ekstra ke akun Anda dengan 2FA.</p>
-                                    
-                                    @if($user->two_factor_enabled ?? false)
+                                    <p class="text-muted-light mb-3">Tambahkan lapisan keamanan ekstra ke akun Anda
+                                        dengan 2FA.</p>
+
+                                    @if ($user->two_factor_enabled ?? false)
                                         <div class="alert alert-settings-success mb-3">
                                             <i class="fas fa-check-circle"></i>
                                             <div>
@@ -1116,10 +1159,12 @@
                                             </div>
                                         </div>
                                         <div class="form-check-switch">
-                                            <input class="form-check-input" type="checkbox" id="twoFactorEnabled" name="two_factor_enabled" checked>
+                                            <input class="form-check-input" type="checkbox" id="twoFactorEnabled"
+                                                name="two_factor_enabled" checked>
                                             <label class="form-check-label" for="twoFactorEnabled">
                                                 <strong>Nonaktifkan 2FA</strong>
-                                                <small class="text-muted-light d-block">Matikan autentikasi dua faktor</small>
+                                                <small class="text-muted-light d-block">Matikan autentikasi dua
+                                                    faktor</small>
                                             </label>
                                         </div>
                                     @else
@@ -1132,25 +1177,28 @@
                                             </div>
                                         </div>
                                         <div class="form-check-switch">
-                                            <input class="form-check-input" type="checkbox" id="twoFactorEnabled" name="two_factor_enabled">
+                                            <input class="form-check-input" type="checkbox" id="twoFactorEnabled"
+                                                name="two_factor_enabled">
                                             <label class="form-check-label" for="twoFactorEnabled">
                                                 <strong>Aktifkan 2FA</strong>
-                                                <small class="text-muted-light d-block">Aktifkan autentikasi dua faktor</small>
+                                                <small class="text-muted-light d-block">Aktifkan autentikasi dua
+                                                    faktor</small>
                                             </label>
                                         </div>
                                     @endif
-                                    
+
                                     <div class="mt-3">
                                         <button type="button" class="btn btn-settings-secondary btn-sm" disabled>
                                             <i class="fas fa-qrcode me-1"></i> Kelola 2FA (Segera Hadir)
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Active Sessions -->
                                 <div class="settings-group-card">
                                     <h6><i class="fas fa-desktop"></i> Sesi Aktif</h6>
-                                    <p class="text-muted-light mb-3">Kelola perangkat yang sedang login ke akun Anda.</p>
+                                    <p class="text-muted-light mb-3">Kelola perangkat yang sedang login ke akun Anda.
+                                    </p>
                                     <div class="alert alert-settings-info mb-3">
                                         <i class="fas fa-info-circle"></i>
                                         <div>
@@ -1163,7 +1211,7 @@
                                         <i class="fas fa-sign-out-alt me-1"></i> Lihat Semua Sesi (Segera Hadir)
                                     </button>
                                 </div>
-                                
+
                                 <!-- Security History -->
                                 <div class="settings-group-card">
                                     <h6><i class="fas fa-history"></i> Riwayat Keamanan</h6>
@@ -1174,7 +1222,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Buttons Footer -->
                         <div class="card-footer bg-light p-3 border-top">
                             <div class="d-flex justify-content-between align-items-center">
@@ -1197,15 +1245,18 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -1216,7 +1267,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -1232,7 +1283,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -1251,9 +1302,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -1273,11 +1325,12 @@
         // ===== DROPDOWN ANIMATION =====
         document.addEventListener('DOMContentLoaded', function() {
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
+
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                        if (otherToggle !== toggle && otherToggle.classList.contains(
+                            'show')) {
                             otherToggle.classList.remove('show');
                             const otherMenu = otherToggle.nextElementSibling;
                             if (otherMenu && otherMenu.classList.contains('show')) {
@@ -1287,10 +1340,11 @@
                     });
                 });
             });
-            
+
             document.addEventListener('click', function(e) {
                 if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    const openDropdowns = document.querySelectorAll(
+                        '.dropdown-toggle.show, .dropdown-menu.show');
                     openDropdowns.forEach(element => {
                         element.classList.remove('show');
                     });
@@ -1334,23 +1388,24 @@
         document.querySelector('form').addEventListener('submit', function(e) {
             const whatsappStatus = document.getElementById('whatsappStatusUpdates');
             const whatsappReminders = document.getElementById('whatsappReminders');
-            
+
             if ((whatsappStatus && whatsappStatus.checked) || (whatsappReminders && whatsappReminders.checked)) {
                 const phoneNumber = "{{ $user->no_hp }}";
                 if (!phoneNumber) {
                     e.preventDefault();
-                    alert('Anda perlu menambahkan nomor telepon di Pengaturan Profil untuk mengaktifkan notifikasi WhatsApp.');
+                    alert(
+                        'Anda perlu menambahkan nomor telepon di Pengaturan Profil untuk mengaktifkan notifikasi WhatsApp.');
                     document.getElementById('notifications-tab').click();
                     return false;
                 }
             }
-            
+
             // Show saving message
             const saveButton = this.querySelector('button[type="submit"]');
             const originalText = saveButton.innerHTML;
             saveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Menyimpan...';
             saveButton.disabled = true;
-            
+
             setTimeout(() => {
                 saveButton.innerHTML = originalText;
                 saveButton.disabled = false;
@@ -1359,8 +1414,12 @@
 
         // Smooth scroll to alerts
         document.querySelectorAll('.alert').forEach(alert => {
-            alert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            alert.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest'
+            });
         });
     </script>
 </body>
+
 </html>

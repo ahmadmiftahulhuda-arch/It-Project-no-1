@@ -1722,7 +1722,8 @@
                     </a>
 
                     <!-- Tombol kanan (Ekspor) -->
-                    <a href="" class="btn btn-primary btn-sm">
+                    <a href="{{ route('jadwal-perkuliahan.export', request()->query()) }}"
+                        class="btn btn-primary btn-sm">
                         <i class="fas fa-file-export me-1"></i> Ekspor
                     </a>
                 </div>
@@ -2422,6 +2423,22 @@
                             if (jamSelesai) {
                                 jamSelesai.setCustomValidity('');
                             }
+                        }
+                    });
+                });
+                document.addEventListener('DOMContentLoaded', function() {
+                    const filterForm = document.getElementById('filterForm');
+
+                    const hari = document.getElementById('hari');
+                    const ruangan = document.getElementById('ruangan');
+                    const sistemKuliah = document.getElementById('sistem_kuliah');
+
+                    // Auto submit ketika filter berubah
+                    [hari, ruangan, sistemKuliah].forEach(el => {
+                        if (el) {
+                            el.addEventListener('change', () => {
+                                filterForm.submit();
+                            });
                         }
                     });
                 });

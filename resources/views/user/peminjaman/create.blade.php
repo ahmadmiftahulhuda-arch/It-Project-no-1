@@ -159,6 +159,14 @@
             font-weight: 500;
         }
 
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
+        }
+
         .dropdown-item-custom:hover {
             background-color: rgba(59, 89, 152, 0.1);
             color: var(--primary-color);
@@ -733,17 +741,6 @@
                             <li>
                                 <a class="dropdown-item-custom" href="/kalender">
                                     <i class="fas fa-calendar me-2"></i> Kalender Akademik
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
-                                </a>
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-download me-2"></i> Download Kalender
                                 </a>
                             </li>
                         </ul>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,13 +20,13 @@
             --info-color: #17a2b8;
             --verification-color: #ff6b35;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f8fa;
@@ -33,7 +34,7 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
-        
+
         /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -145,6 +146,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -163,6 +165,14 @@
             width: 100%;
             text-align: left;
             font-weight: 500;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
         }
 
         .dropdown-item-custom:hover {
@@ -237,11 +247,11 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
@@ -512,7 +522,7 @@
             padding: 40px 0 20px;
             margin-top: 2rem;
         }
-        
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -521,14 +531,14 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
         }
-        
+
         .footer-section h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .footer-section h3::after {
             content: '';
             position: absolute;
@@ -538,45 +548,45 @@
             height: 2px;
             background-color: var(--primary-color);
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 12px;
         }
-        
+
         .footer-links a {
             color: #e5e7eb;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
         }
-        
+
         .footer-links a:hover {
             color: var(--primary-color);
             padding-left: 5px;
         }
-        
+
         .contact-info {
             margin-bottom: 15px;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .contact-info i {
             margin-right: 10px;
             color: var(--primary-color);
             min-width: 20px;
         }
-        
+
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         .social-icons a {
             display: inline-flex;
             align-items: center;
@@ -588,22 +598,22 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .social-icons a:hover {
             background-color: var(--primary-color);
             transform: translateY(-3px);
         }
-        
+
         .opening-hours {
             margin-bottom: 15px;
         }
-        
+
         .opening-hours div {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
         }
-        
+
         .footer-bottom {
             max-width: 1200px;
             margin: 30px auto 0;
@@ -617,43 +627,43 @@
             .card-body-profile {
                 padding: 1.5rem;
             }
-            
+
             .card-header-profile {
                 padding: 1.25rem;
             }
-            
+
             .btn-profile-primary,
             .btn-profile-secondary {
                 padding: 0.7rem 1.5rem;
                 font-size: 0.9rem;
             }
-            
+
             .breadcrumb-custom {
                 padding: 0.75rem 0;
                 margin-bottom: 1.5rem;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
         }
-        
+
         @media (max-width: 576px) {
             .card-body-profile {
                 padding: 1rem;
             }
-            
+
             .form-control-profile {
                 padding: 0.7rem 0.9rem;
                 font-size: 0.9rem;
             }
-            
+
             .section-title {
                 font-size: 1.2rem;
             }
         }
-        
+
         /* ===== VERIFICATION MODAL STYLES YANG DIKEMBANGKAN ===== */
         .verification-modal .modal-content {
             border-radius: 12px;
@@ -668,6 +678,7 @@
                 opacity: 0;
                 transform: translateY(-20px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -719,8 +730,15 @@
         }
 
         @keyframes gentlePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
         }
 
         .verification-modal .verification-message {
@@ -996,6 +1014,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
@@ -1106,7 +1125,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}"
+                                        href="{{ route('user.settings.index') }}">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -1163,18 +1183,18 @@
                         {{ strtoupper(substr($user->display_name, 0, 1)) }}
                     </div>
                     <div class="user-details">
-                        @if(!$user->verified)
-                        <div class="verification-status unverified">
-                            <i class="fas fa-exclamation-circle"></i>
-                            Akun Belum Diverifikasi
-                        </div>
+                        @if (!$user->verified)
+                            <div class="verification-status unverified">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Akun Belum Diverifikasi
+                            </div>
                         @else
-                        <div class="verification-status verified">
-                            <i class="fas fa-check-circle"></i>
-                            Akun Telah Diverifikasi
-                        </div>
+                            <div class="verification-status verified">
+                                <i class="fas fa-check-circle"></i>
+                                Akun Telah Diverifikasi
+                            </div>
                         @endif
-                        
+
                         <div class="user-detail">
                             <i class="fas fa-user"></i>
                             <span><strong>Nama:</strong> {{ $user->display_name }}</span>
@@ -1183,11 +1203,11 @@
                             <i class="fas fa-envelope"></i>
                             <span><strong>Email:</strong> {{ $user->email }}</span>
                         </div>
-                        @if($user->no_hp)
-                        <div class="user-detail">
-                            <i class="fas fa-phone"></i>
-                            <span><strong>No. Telepon:</strong> {{ $user->no_hp }}</span>
-                        </div>
+                        @if ($user->no_hp)
+                            <div class="user-detail">
+                                <i class="fas fa-phone"></i>
+                                <span><strong>No. Telepon:</strong> {{ $user->no_hp }}</span>
+                            </div>
                         @endif
                         <div class="user-detail">
                             <i class="fas fa-calendar-alt"></i>
@@ -1206,7 +1226,8 @@
                             <div class="alert alert-profile-success alert-dismissible fade show" role="alert">
                                 <i class="fas fa-check-circle me-2"></i>
                                 {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         @endif
 
@@ -1222,21 +1243,24 @@
                             </div>
                         @endif
 
-                        @if(!$user->verified)
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="border-left: 3px solid #ff6b35; background-color: rgba(255, 107, 53, 0.05);">
-                            <div class="d-flex align-items-start">
-                                <i class="fas fa-user-clock me-2 mt-1" style="color: #ff6b35;"></i>
-                                <div>
-                                    <strong class="d-block mb-1" style="color: #ff6b35;">Akun Belum Diverifikasi</strong>
-                                    <p class="mb-0">
-                                        Untuk menggunakan semua fitur sistem, silakan lengkapi verifikasi akun Anda.
-                                        <a href="#" class="alert-link" data-bs-toggle="modal" data-bs-target="#verificationModal">
-                                            Klik di sini untuk petunjuk verifikasi
-                                        </a>
-                                    </p>
+                        @if (!$user->verified)
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                                style="border-left: 3px solid #ff6b35; background-color: rgba(255, 107, 53, 0.05);">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-user-clock me-2 mt-1" style="color: #ff6b35;"></i>
+                                    <div>
+                                        <strong class="d-block mb-1" style="color: #ff6b35;">Akun Belum
+                                            Diverifikasi</strong>
+                                        <p class="mb-0">
+                                            Untuk menggunakan semua fitur sistem, silakan lengkapi verifikasi akun Anda.
+                                            <a href="#" class="alert-link" data-bs-toggle="modal"
+                                                data-bs-target="#verificationModal">
+                                                Klik di sini untuk petunjuk verifikasi
+                                            </a>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
 
                         <form action="{{ route('user.profile.update') }}" method="POST">
@@ -1244,14 +1268,16 @@
                             @method('PUT')
 
                             <h5 class="section-title"><i class="fas fa-user"></i> Informasi Pribadi</h5>
-                            
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="name" class="form-label-profile">
                                         <i class="fas fa-user"></i> Nama Lengkap
                                     </label>
-                                    <input type="text" class="form-control form-control-profile @error('name') is-invalid @enderror" 
-                                           id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                                    <input type="text"
+                                        class="form-control form-control-profile @error('name') is-invalid @enderror"
+                                        id="name" name="name" value="{{ old('name', $user->name) }}"
+                                        required>
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1264,8 +1290,9 @@
                                     <label for="nim" class="form-label-profile">
                                         <i class="fas fa-id-card"></i> NIM
                                     </label>
-                                    <input type="text" class="form-control form-control-profile @error('nim') is-invalid @enderror"
-                                           id="nim" name="nim" value="{{ old('nim', $user->nim) }}">
+                                    <input type="text"
+                                        class="form-control form-control-profile @error('nim') is-invalid @enderror"
+                                        id="nim" name="nim" value="{{ old('nim', $user->nim) }}">
                                     @error('nim')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1280,8 +1307,10 @@
                                     <label for="email" class="form-label-profile">
                                         <i class="fas fa-envelope"></i> Alamat Email
                                     </label>
-                                    <input type="email" class="form-control form-control-profile @error('email') is-invalid @enderror" 
-                                           id="email" name="email" value="{{ old('email', $user->email) }}" required readonly>
+                                    <input type="email"
+                                        class="form-control form-control-profile @error('email') is-invalid @enderror"
+                                        id="email" name="email" value="{{ old('email', $user->email) }}"
+                                        required readonly>
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1293,9 +1322,10 @@
                                     <label for="no_hp" class="form-label-profile">
                                         <i class="fas fa-phone"></i> Nomor Telepon
                                     </label>
-                                    <input type="text" class="form-control form-control-profile @error('no_hp') is-invalid @enderror" 
-                                           id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}" 
-                                           placeholder="Contoh: 081234567890">
+                                    <input type="text"
+                                        class="form-control form-control-profile @error('no_hp') is-invalid @enderror"
+                                        id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}"
+                                        placeholder="Contoh: 081234567890">
                                     @error('no_hp')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1309,7 +1339,8 @@
 
                             <h5 class="section-title"><i class="fas fa-lock"></i> Keamanan Akun</h5>
                             <p class="text-muted mb-4">
-                                <i class="fas fa-shield-alt me-2"></i>Kosongkan kolom password jika tidak ingin mengubah kata sandi.
+                                <i class="fas fa-shield-alt me-2"></i>Kosongkan kolom password jika tidak ingin
+                                mengubah kata sandi.
                             </p>
 
                             <div class="row">
@@ -1317,8 +1348,9 @@
                                     <label for="password" class="form-label-profile">
                                         <i class="fas fa-key"></i> Kata Sandi Baru
                                     </label>
-                                    <input type="password" class="form-control form-control-profile @error('password') is-invalid @enderror" 
-                                           id="password" name="password">
+                                    <input type="password"
+                                        class="form-control form-control-profile @error('password') is-invalid @enderror"
+                                        id="password" name="password">
                                     @error('password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1331,8 +1363,8 @@
                                     <label for="password_confirmation" class="form-label-profile">
                                         <i class="fas fa-key"></i> Konfirmasi Kata Sandi
                                     </label>
-                                    <input type="password" class="form-control form-control-profile" 
-                                           id="password_confirmation" name="password_confirmation">
+                                    <input type="password" class="form-control form-control-profile"
+                                        id="password_confirmation" name="password_confirmation">
                                     <small class="form-text-profile">
                                         <i class="fas fa-info-circle"></i> Ulangi kata sandi baru Anda
                                     </small>
@@ -1363,15 +1395,18 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -1382,7 +1417,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -1398,7 +1433,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -1417,112 +1452,120 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
     <!-- ===== VERIFICATION MODAL YANG DIKEMBANGKAN ===== -->
-    @if(!$user->verified)
-    <div class="modal fade verification-modal" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="verificationModalLabel">
-                        <i class="fas fa-user-check"></i>
-                        Verifikasi Akun
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <i class="fas fa-user-clock verification-icon"></i>
-                    
-                    <div class="verification-message">
-                        <p class="mb-2"><strong>Halo, {{ $user->display_name }}!</strong></p>
-                        <p class="mb-0">Akun Anda belum diverifikasi. Selesaikan proses verifikasi untuk mengakses semua fitur sistem:</p>
+    @if (!$user->verified)
+        <div class="modal fade verification-modal" id="verificationModal" tabindex="-1"
+            aria-labelledby="verificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="verificationModalLabel">
+                            <i class="fas fa-user-check"></i>
+                            Verifikasi Akun
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    
-                    <div class="mt-4">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <div class="step-title">Lengkapi Profil</div>
-                                <div class="step-desc">Pastikan data profil (NIM, nomor telepon) sudah lengkap</div>
-                            </div>
-                        </div>
-                        
-                        <div class="step-item">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <div class="step-title">Hubungi Admin</div>
-                                <div class="step-desc">Kunjungi kantor Prodi TI dengan membawa KTM</div>
-                            </div>
-                        </div>
-                        
-                        <div class="step-item">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <div class="step-title">Tunggu Aktivasi</div>
-                                <div class="step-desc">Admin akan mengaktifkan akun dalam 1-2 hari kerja</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="verification-reminder mt-4">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <small>Anda tidak dapat melakukan peminjaman sampai akun diverifikasi.</small>
-                        <i class="fas fa-info-circle me-2"></i>
-                        <small>Hanya korti disetiap matakuliah yang bisa mendaftar, S&K berlaku.</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                <a href="https://wa.me/6281528438544?text=Assalamu'alaikum%20pak/bu.%0ASelamat%20siang%20pak/bu%20Mohon%20maaf%20mengganggu%20waktunya.%20Perkenalkan,%20saya%20{{ urlencode($user->display_name) }}%20dari%20Prodi%20Teknologi%20Informasi,%20dengan%20NIM%20{{ urlencode($user->nim) }}.%20Saat%20ini%20saya%20juga%20bertugas%20sebagai%20koordinator%20tingkat%20(korti)%20pada%20mata%20kuliah%20(isi%20disini).%0A%0AIzin%20menghubungi%20Bapak/Ibu%20untuk%20keperluan%20verifikasi%20akun%20PINTER.%20Verifikasi%20ini%20diperlukan%20agar%20saya%20dapat%20melanjutkan%20akses%20dan%20menjalankan%20tugas%20saya,%20termasuk%20mengoordinasikan%20kebutuhan%20perkuliahan%20teman-teman.%0A%0AMohon%20bantuannya%20untuk%20melakukan%20proses%20verifikasi%20akun%20tersebut.%0A%0ASekali%20lagi%20mohon%20maaf%20apabila%20mengganggu%20waktunya,%20dan%20terima%20kasih%20atas%20perhatian%20Bapak/Ibu.%0AWassalamu'alaikum." 
-                    class="btn btn-verification btn-verification-primary"target="_blank">
-                    <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp</a>
+                    <div class="modal-body">
+                        <i class="fas fa-user-clock verification-icon"></i>
 
-                    <button type="button" class="btn btn-verification btn-verification-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Tutup
-                    </button>
+                        <div class="verification-message">
+                            <p class="mb-2"><strong>Halo, {{ $user->display_name }}!</strong></p>
+                            <p class="mb-0">Akun Anda belum diverifikasi. Selesaikan proses verifikasi untuk
+                                mengakses semua fitur sistem:</p>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <div class="step-title">Lengkapi Profil</div>
+                                    <div class="step-desc">Pastikan data profil (NIM, nomor telepon) sudah lengkap
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <div class="step-title">Hubungi Admin</div>
+                                    <div class="step-desc">Kunjungi kantor Prodi TI dengan membawa KTM</div>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <div class="step-title">Tunggu Aktivasi</div>
+                                    <div class="step-desc">Admin akan mengaktifkan akun dalam 1-2 hari kerja</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="verification-reminder mt-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>Anda tidak dapat melakukan peminjaman sampai akun diverifikasi.</small>
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>Hanya korti disetiap matakuliah yang bisa mendaftar, S&K berlaku.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="https://wa.me/6281528438544?text=Assalamu'alaikum%20pak/bu.%0ASelamat%20siang%20pak/bu%20Mohon%20maaf%20mengganggu%20waktunya.%20Perkenalkan,%20saya%20{{ urlencode($user->display_name) }}%20dari%20Prodi%20Teknologi%20Informasi,%20dengan%20NIM%20{{ urlencode($user->nim) }}.%20Saat%20ini%20saya%20juga%20bertugas%20sebagai%20koordinator%20tingkat%20(korti)%20pada%20mata%20kuliah%20(isi%20disini).%0A%0AIzin%20menghubungi%20Bapak/Ibu%20untuk%20keperluan%20verifikasi%20akun%20PINTER.%20Verifikasi%20ini%20diperlukan%20agar%20saya%20dapat%20melanjutkan%20akses%20dan%20menjalankan%20tugas%20saya,%20termasuk%20mengoordinasikan%20kebutuhan%20perkuliahan%20teman-teman.%0A%0AMohon%20bantuannya%20untuk%20melakukan%20proses%20verifikasi%20akun%20tersebut.%0A%0ASekali%20lagi%20mohon%20maaf%20apabila%20mengganggu%20waktunya,%20dan%20terima%20kasih%20atas%20perhatian%20Bapak/Ibu.%0AWassalamu'alaikum."
+                            class="btn btn-verification btn-verification-primary"target="_blank">
+                            <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp</a>
+
+                        <button type="button" class="btn btn-verification btn-verification-secondary"
+                            data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     @endif
 
     <!-- ===== SESSION ERROR MODAL ===== -->
     @if (session('error') && strpos(session('error'), 'verifikasi') === false)
-    <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1" aria-labelledby="sessionErrorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sessionErrorModalLabel">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Akses Ditolak
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <i class="fas fa-ban error-icon"></i>
-                    
-                    <div class="error-message">
-                        <p class="mb-0">{{ session('error') }}</p>
+        <div class="modal fade error-modal" id="sessionErrorModal" tabindex="-1"
+            aria-labelledby="sessionErrorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sessionErrorModalLabel">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Akses Ditolak
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    @if(strpos(session('error'), 'login') !== false)
-                    <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
-                        <i class="fas fa-sign-in-alt"></i> Login Sekarang
-                    </a>
-                    @endif
-                    
-                    <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Tutup
-                    </button>
+                    <div class="modal-body">
+                        <i class="fas fa-ban error-icon"></i>
+
+                        <div class="error-message">
+                            <p class="mb-0">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @if (strpos(session('error'), 'login') !== false)
+                            <a href="{{ route('login') }}" class="btn btn-error btn-error-primary">
+                                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                            </a>
+                        @endif
+
+                        <button type="button" class="btn btn-error btn-error-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     @endif
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1540,10 +1583,11 @@
 
         // ===== MODAL FUNCTIONALITY =====
         document.addEventListener('DOMContentLoaded', function() {
-            @if(!$user->verified)
+            @if (!$user->verified)
                 // Show verification modal after 1.5 seconds
                 setTimeout(() => {
-                    const verificationModal = new bootstrap.Modal(document.getElementById('verificationModal'));
+                    const verificationModal = new bootstrap.Modal(document.getElementById(
+                        'verificationModal'));
                     verificationModal.show();
                 }, 1500);
             @endif
@@ -1556,24 +1600,24 @@
 
             // Password visibility toggle
             const passwordInputs = document.querySelectorAll('input[type="password"]');
-            
+
             passwordInputs.forEach(input => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'position-relative';
-                
+
                 const eyeIcon = document.createElement('span');
                 eyeIcon.className = 'position-absolute end-0 top-50 translate-middle-y me-3';
                 eyeIcon.style.cursor = 'pointer';
                 eyeIcon.innerHTML = '<i class="fas fa-eye" style="color: #6c757d;"></i>';
-                
+
                 input.parentNode.insertBefore(wrapper, input);
                 wrapper.appendChild(input);
                 wrapper.appendChild(eyeIcon);
-                
+
                 eyeIcon.addEventListener('click', function() {
                     const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
                     input.setAttribute('type', type);
-                    
+
                     const icon = this.querySelector('i');
                     if (type === 'text') {
                         icon.classList.remove('fa-eye');
@@ -1584,13 +1628,13 @@
                     }
                 });
             });
-            
+
             // Form validation
             const form = document.querySelector('form');
             form.addEventListener('submit', function(e) {
                 const password = document.getElementById('password');
                 const confirmPassword = document.getElementById('password_confirmation');
-                
+
                 if (password.value || confirmPassword.value) {
                     if (password.value !== confirmPassword.value) {
                         e.preventDefault();
@@ -1617,19 +1661,20 @@
                     </div>
                 </div>
             `;
-            
+
             document.body.insertAdjacentHTML('beforeend', toastHtml);
-            
+
             const toast = new bootstrap.Toast(document.getElementById(toastId), {
                 autohide: true,
                 delay: 3000
             });
             toast.show();
-            
+
             document.getElementById(toastId).addEventListener('hidden.bs.toast', function() {
                 this.remove();
             });
         }
     </script>
 </body>
+
 </html>

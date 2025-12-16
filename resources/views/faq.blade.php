@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,13 +15,13 @@
             --light-color: #f8f9fa;
             --dark-color: #343a40;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f8fa;
@@ -28,7 +29,7 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
-        
+
         /* ===== NAVBAR STYLES YANG DIPERBAIKI ===== */
         .navbar-custom {
             background-color: var(--primary-color);
@@ -146,6 +147,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -164,6 +166,14 @@
             width: 100%;
             text-align: left;
             font-weight: 500;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus,
+        .dropdown-menu a:active,
+        .dropdown-menu a:visited {
+            text-decoration: none !important;
         }
 
         .dropdown-item-custom:hover {
@@ -201,11 +211,11 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
@@ -261,7 +271,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -273,22 +283,22 @@
             background-size: cover;
             background-position: center;
         }
-        
+
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-content h1 {
             animation: fadeInDown 1s ease;
         }
-        
+
         .hero-content p {
             animation: fadeInUp 1s ease;
         }
-        
+
         /* ===== FAQ STYLES ===== */
         .faq-container {
             max-width: 900px;
@@ -369,14 +379,21 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .faq-item.active + .faq-answer {
+        .faq-item.active+.faq-answer {
             display: block;
             animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ===== ANIMATIONS ===== */
@@ -385,17 +402,19 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -422,12 +441,12 @@
             transition: all 0.3s ease;
             z-index: 999;
         }
-        
+
         .back-to-top.visible {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .back-to-top:hover {
             background-color: var(--secondary-color);
             transform: translateY(-5px);
@@ -440,7 +459,7 @@
             padding: 40px 0 20px;
             margin-top: 2rem;
         }
-        
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -449,14 +468,14 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
         }
-        
+
         .footer-section h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .footer-section h3::after {
             content: '';
             position: absolute;
@@ -466,45 +485,45 @@
             height: 2px;
             background-color: #1a56db;
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 12px;
         }
-        
+
         .footer-links a {
             color: #e5e7eb;
             text-decoration: none;
             transition: all 0.3s ease;
             display: block;
         }
-        
+
         .footer-links a:hover {
             color: #1a56db;
             padding-left: 5px;
         }
-        
+
         .contact-info {
             margin-bottom: 15px;
             display: flex;
             align-items: flex-start;
         }
-        
+
         .contact-info i {
             margin-right: 10px;
             color: #1a56db;
             min-width: 20px;
         }
-        
+
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         .social-icons a {
             display: inline-flex;
             align-items: center;
@@ -516,22 +535,22 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .social-icons a:hover {
             background-color: #1a56db;
             transform: translateY(-3px);
         }
-        
+
         .opening-hours {
             margin-bottom: 15px;
         }
-        
+
         .opening-hours div {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
         }
-        
+
         .footer-bottom {
             max-width: 1200px;
             margin: 30px auto 0;
@@ -545,27 +564,28 @@
             .faq-container {
                 padding: 0 15px;
             }
-            
+
             .faq-section {
                 padding: 14px 20px;
                 font-size: 16px;
             }
-            
+
             .faq-item {
                 padding: 16px 20px;
                 font-size: 15px;
             }
-            
+
             .faq-answer {
                 padding: 16px 20px;
             }
-            
+
             .search-box {
                 padding: 12px 16px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- ===== NAVBAR YANG DIPERBAIKI ===== -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" id="navbar">
@@ -730,40 +750,51 @@
         <!-- Umum -->
         <div class="faq-section">❓ Umum</div>
         <div class="faq-item">Apa itu sistem peminjaman sarana dan prasarana Prodi TI?</div>
-        <div class="faq-answer">Sistem ini adalah layanan online untuk mempermudah mahasiswa dan dosen dalam mengajukan peminjaman fasilitas sarana dan prasarana di Prodi Teknologi Informasi.</div>
+        <div class="faq-answer">Sistem ini adalah layanan online untuk mempermudah mahasiswa dan dosen dalam mengajukan
+            peminjaman fasilitas sarana dan prasarana di Prodi Teknologi Informasi.</div>
         <div class="faq-item">Siapa saja yang dapat menggunakan layanan ini?</div>
-        <div class="faq-answer">Layanan ini dapat digunakan oleh seluruh civitas akademika Prodi Teknologi Informasi, termasuk mahasiswa, dosen, dan staf.</div>
+        <div class="faq-answer">Layanan ini dapat digunakan oleh seluruh civitas akademika Prodi Teknologi Informasi,
+            termasuk mahasiswa, dosen, dan staf.</div>
         <div class="faq-item">Apa saja fasilitas/sarana yang bisa dipinjam melalui sistem ini?</div>
-        <div class="faq-answer">Fasilitas yang dapat dipinjam antara lain: ruang kelas, laboratorium, proyektor, laptop, dan perangkat pendukung lainnya.</div>
+        <div class="faq-answer">Fasilitas yang dapat dipinjam antara lain: ruang kelas, laboratorium, proyektor,
+            laptop, dan perangkat pendukung lainnya.</div>
 
         <!-- Akun & Akses -->
         <div class="faq-section">🔑 Akun & Akses</div>
         <div class="faq-item">Bagaimana cara mendaftar/mengakses sistem peminjaman?</div>
-        <div class="faq-answer">Pengguna dapat mengakses sistem dengan login menggunakan akun yang telah terdaftar atau mendaftar melalui halaman registrasi.</div>
+        <div class="faq-answer">Pengguna dapat mengakses sistem dengan login menggunakan akun yang telah terdaftar atau
+            mendaftar melalui halaman registrasi.</div>
         <div class="faq-item">Apa yang harus dilakukan jika lupa password akun?</div>
-        <div class="faq-answer">Jika lupa password, pengguna dapat menggunakan fitur "Lupa Password" untuk mengatur ulang kata sandi.</div>
+        <div class="faq-answer">Jika lupa password, pengguna dapat menggunakan fitur "Lupa Password" untuk mengatur
+            ulang kata sandi.</div>
         <div class="faq-item">Apakah bisa login menggunakan akun kampus (SSO)?</div>
         <div class="faq-answer">Ya, sistem ini mendukung login menggunakan akun Single Sign-On (SSO) kampus.</div>
 
         <!-- Proses Peminjaman -->
         <div class="faq-section">📋 Proses Peminjaman</div>
         <div class="faq-item">Bagaimana cara melakukan peminjaman sarana/prasarana?</div>
-        <div class="faq-answer">Pengguna memilih fasilitas yang tersedia, mengisi formulir peminjaman, lalu mengajukan permohonan melalui sistem.</div>
+        <div class="faq-answer">Pengguna memilih fasilitas yang tersedia, mengisi formulir peminjaman, lalu mengajukan
+            permohonan melalui sistem.</div>
         <div class="faq-item">Apakah ada batasan jumlah barang yang bisa dipinjam?</div>
-        <div class="faq-answer">Ya, terdapat batasan jumlah barang sesuai dengan kebijakan prodi dan ketersediaan fasilitas.</div>
+        <div class="faq-answer">Ya, terdapat batasan jumlah barang sesuai dengan kebijakan prodi dan ketersediaan
+            fasilitas.</div>
         <div class="faq-item">Apakah saya bisa melakukan peminjaman untuk orang lain?</div>
         <div class="faq-answer">Tidak, peminjaman hanya berlaku untuk pemilik akun yang mengajukan.</div>
         <div class="faq-item">Bagaimana cara membatalkan peminjaman yang sudah diajukan?</div>
-        <div class="faq-answer">Pengguna dapat membatalkan permohonan melalui menu "Riwayat Peminjaman" selama permohonan belum disetujui.</div>
+        <div class="faq-answer">Pengguna dapat membatalkan permohonan melalui menu "Riwayat Peminjaman" selama
+            permohonan belum disetujui.</div>
 
         <!-- Jadwal & Durasi -->
         <div class="faq-section">⏰ Jadwal & Durasi</div>
         <div class="faq-item">Berapa lama maksimal durasi peminjaman?</div>
-        <div class="faq-answer">Maksimal durasi peminjaman adalah 1 minggu, kecuali ada izin khusus dari pengelola.</div>
+        <div class="faq-answer">Maksimal durasi peminjaman adalah 1 minggu, kecuali ada izin khusus dari pengelola.
+        </div>
         <div class="faq-item">Bagaimana jika saya ingin memperpanjang waktu peminjaman?</div>
-        <div class="faq-answer">Pengguna harus mengajukan perpanjangan melalui sistem sebelum masa peminjaman berakhir.</div>
+        <div class="faq-answer">Pengguna harus mengajukan perpanjangan melalui sistem sebelum masa peminjaman berakhir.
+        </div>
         <div class="faq-item">Apa yang terjadi jika saya telat mengembalikan fasilitas?</div>
-        <div class="faq-answer">Keterlambatan pengembalian dapat dikenakan sanksi sesuai aturan prodi, termasuk pembatasan peminjaman berikutnya.</div>
+        <div class="faq-answer">Keterlambatan pengembalian dapat dikenakan sanksi sesuai aturan prodi, termasuk
+            pembatasan peminjaman berikutnya.</div>
 
         <!-- Persetujuan & Aturan -->
         <div class="faq-section">📌 Persetujuan & Aturan</div>
@@ -772,25 +803,31 @@
         <div class="faq-item">Berapa lama proses persetujuan biasanya berlangsung?</div>
         <div class="faq-answer">Proses persetujuan biasanya memerlukan waktu 1–2 hari kerja.</div>
         <div class="faq-item">Apa saja aturan penggunaan sarana dan prasarana?</div>
-        <div class="faq-answer">Aturan meliputi penggunaan secara bijak, menjaga kebersihan, serta mengembalikan fasilitas dalam kondisi baik.</div>
+        <div class="faq-answer">Aturan meliputi penggunaan secara bijak, menjaga kebersihan, serta mengembalikan
+            fasilitas dalam kondisi baik.</div>
         <div class="faq-item">Apakah ada sanksi jika sarana rusak/hilang saat digunakan?</div>
-        <div class="faq-answer">Ya, pengguna wajib mengganti atau memperbaiki fasilitas yang rusak/hilang sesuai kebijakan prodi.</div>
+        <div class="faq-answer">Ya, pengguna wajib mengganti atau memperbaiki fasilitas yang rusak/hilang sesuai
+            kebijakan prodi.</div>
 
         <!-- Teknis & Kendala -->
         <div class="faq-section">⚙️ Teknis & Kendala</div>
         <div class="faq-item">Bagaimana jika terjadi error pada sistem saat melakukan peminjaman?</div>
         <div class="faq-answer">Pengguna dapat mencoba refresh halaman, atau melaporkan kendala ke admin sistem.</div>
         <div class="faq-item">Siapa yang bisa dihubungi jika ada masalah dengan fasilitas yang dipinjam?</div>
-        <div class="faq-answer">Hubungi admin atau petugas laboratorium yang bertanggung jawab terhadap fasilitas tersebut.</div>
+        <div class="faq-answer">Hubungi admin atau petugas laboratorium yang bertanggung jawab terhadap fasilitas
+            tersebut.</div>
         <div class="faq-item">Bagaimana cara melaporkan kerusakan pada fasilitas?</div>
-        <div class="faq-answer">Laporan kerusakan dapat disampaikan melalui menu "Laporan" di sistem atau langsung kepada pengelola.</div>
+        <div class="faq-answer">Laporan kerusakan dapat disampaikan melalui menu "Laporan" di sistem atau langsung
+            kepada pengelola.</div>
 
         <!-- Kontak & Bantuan -->
         <div class="faq-section">☎️ Kontak & Bantuan</div>
         <div class="faq-item">Dimana saya bisa mendapatkan informasi lebih lanjut?</div>
-        <div class="faq-answer">Informasi lebih lanjut dapat diperoleh melalui website resmi Prodi Teknologi Informasi atau admin pengelola.</div>
+        <div class="faq-answer">Informasi lebih lanjut dapat diperoleh melalui website resmi Prodi Teknologi Informasi
+            atau admin pengelola.</div>
         <div class="faq-item">Apakah ada kontak admin/pengelola yang bisa dihubungi langsung?</div>
-        <div class="faq-answer">Ya, admin dapat dihubungi melalui email: peminjaman@example.ac.id atau nomor telepon resmi prodi.</div>
+        <div class="faq-answer">Ya, admin dapat dihubungi melalui email: peminjaman@example.ac.id atau nomor telepon
+            resmi prodi.</div>
     </div>
 
     <!-- Back to top button -->
@@ -803,15 +840,18 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-time
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -822,7 +862,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -838,7 +878,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -857,9 +897,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -874,7 +915,7 @@
         });
 
         // Search FAQ
-        document.getElementById('search').addEventListener('keyup', function () {
+        document.getElementById('search').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             document.querySelectorAll('.faq-item, .faq-answer').forEach(el => {
                 if (el.textContent.toLowerCase().includes(filter)) {
@@ -887,7 +928,7 @@
 
         // Back to top button functionality
         const backToTopButton = document.getElementById('backToTop');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopButton.classList.add('visible');
@@ -895,15 +936,18 @@
                 backToTopButton.classList.remove('visible');
             }
         });
-        
+
         backToTopButton.addEventListener('click', (e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
-        
+
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 50) {
                 navbar.classList.add('scrolled');
@@ -916,12 +960,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Handle dropdown toggle animation
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
+
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     // Close other open dropdowns
                     dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                        if (otherToggle !== toggle && otherToggle.classList.contains(
+                            'show')) {
                             otherToggle.classList.remove('show');
                             const otherMenu = otherToggle.nextElementSibling;
                             if (otherMenu && otherMenu.classList.contains('show')) {
@@ -931,11 +976,12 @@
                     });
                 });
             });
-            
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {
                 if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    const openDropdowns = document.querySelectorAll(
+                        '.dropdown-toggle.show, .dropdown-menu.show');
                     openDropdowns.forEach(element => {
                         element.classList.remove('show');
                     });
@@ -944,4 +990,5 @@
         });
     </script>
 </body>
+
 </html>

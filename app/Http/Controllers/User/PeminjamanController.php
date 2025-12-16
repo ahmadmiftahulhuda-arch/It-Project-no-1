@@ -12,9 +12,6 @@ use App\Models\Dosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Notifications\PeminjamanBaruNotification;
-use App\Notifications\PengembalianBaruNotification;
-use App\Models\User;
 
 class PeminjamanController extends Controller
 {
@@ -95,7 +92,7 @@ class PeminjamanController extends Controller
             ? $request->keperluan_lainnya
             : $request->keperluan;
 
-        $peminjaman = Peminjaman::create([
+        Peminjaman::create([
             'user_id'       => Auth::id(),
             'tanggal'       => $request->tanggal,
             'ruangan_id'    => $request->ruangan_id,
@@ -107,11 +104,6 @@ class PeminjamanController extends Controller
             'status'        => 'pending',
         ]);
 
-        // Notify admins about the new pending peminjaman
-        $admins = User::where('peran', 'Administrator')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new PeminjamanBaruNotification($peminjaman));
-        }
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil disimpan');
     }
@@ -307,9 +299,8 @@ class PeminjamanController extends Controller
                     'catatan' => $request->catatan,
                     'status' => $statusToSave,
                 ]);
-                $pengembalian = $existing;
             } else {
-                $pengembalian = Pengembalian::create([
+                Pengembalian::create([
                     'peminjaman_id' => $peminjaman->id,
                     'user_id' => $userId,
                     'tanggal_pengembalian' => $tanggalPengembalian,
@@ -318,12 +309,6 @@ class PeminjamanController extends Controller
                     'catatan' => $request->catatan,
                     'status' => $statusToSave,
                 ]);
-            }
-
-            // Notify admins about the new pending pengembalian
-            $admins = User::where('peran', 'Administrator')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new PengembalianBaruNotification($pengembalian));
             }
 
             return response()->json([

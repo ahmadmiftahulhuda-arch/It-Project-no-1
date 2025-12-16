@@ -12,7 +12,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'timezone' => 'Asia/Jakarta',
+    'timezone' => 'Asia/Makassar',
 
     'locale' => env('APP_LOCALE', 'id'),
 
