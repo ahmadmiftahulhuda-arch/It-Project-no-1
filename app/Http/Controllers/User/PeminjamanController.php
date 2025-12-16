@@ -9,9 +9,13 @@ use App\Models\Ruangan;
 use App\Models\Projector;
 use App\Models\SlotWaktu;
 use App\Models\Dosen;
+use App\Models\User; // Tambahan untuk mencari Admin
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+// Tambahan Import Notifikasi
+use App\Notifications\PeminjamanBaruNotification;
+use App\Notifications\PengembalianBaruNotification;
 
 class PeminjamanController extends Controller
 {
@@ -92,18 +96,23 @@ class PeminjamanController extends Controller
             ? $request->keperluan_lainnya
             : $request->keperluan;
 
-        Peminjaman::create([
+        $peminjaman = Peminjaman::create([
             'user_id'       => Auth::id(),
             'tanggal'       => $request->tanggal,
             'ruangan_id'    => $request->ruangan_id,
             'projector_id'  => $request->projector_id,
             'waktu_mulai'   => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
-            'keperluan'     => $keperluanFinal, // ✅ INI KUNCI
+            'keperluan'     => $keperluanFinal, 
             'dosen_nip'     => $request->dosen_nip,
             'status'        => 'pending',
         ]);
 
+        // ✅ TAMBAHAN: NOTIFIKASI PEMINJAMAN BARU KE ADMIN
+        $admins = User::where('peran', 'Administrator')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new PeminjamanBaruNotification($peminjaman));
+        }
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil disimpan');
     }
@@ -158,7 +167,7 @@ class PeminjamanController extends Controller
             'projector_id'  => $request->projector_id,
             'waktu_mulai'   => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
-            'keperluan'     => $keperluanFinal, // ✅ WAJIB
+            'keperluan'     => $keperluanFinal, 
             'dosen_nip'     => $request->dosen_nip,
         ]);
 
@@ -299,8 +308,10 @@ class PeminjamanController extends Controller
                     'catatan' => $request->catatan,
                     'status' => $statusToSave,
                 ]);
+                // ✅ UPDATE VARIABEL AGAR BISA DIPAKAI NOTIFIKASI
+                $pengembalian = $existing;
             } else {
-                Pengembalian::create([
+                $pengembalian = Pengembalian::create([
                     'peminjaman_id' => $peminjaman->id,
                     'user_id' => $userId,
                     'tanggal_pengembalian' => $tanggalPengembalian,
@@ -311,9 +322,27 @@ class PeminjamanController extends Controller
                 ]);
             }
 
+            // 🔥 LOGIKA KODE 1: JIKA TERLAMBAT → TUTUP PEMINJAMAN OTOMATIS
+            if ($statusToSave === 'overdue') {
+                $peminjaman->update([
+                    'status' => 'selesai',
+                    'tanggal_kembali' => $tanggalPengembalian,
+                    'status_pengembalian' => 'sudah dikembalikan',
+                ]);
+            }
+
+            // ✅ TAMBAHAN: NOTIFIKASI PENGEMBALIAN KE ADMIN
+            $admins = User::where('peran', 'Administrator')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new PengembalianBaruNotification($pengembalian));
+            }
+
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan pengembalian berhasil diajukan.',
+                'status' => $statusToSave,
+                'message' => $statusToSave === 'overdue'
+                    ? 'Pengembalian diajukan (TERLAMBAT). Peminjaman otomatis diselesaikan.'
+                    : 'Pengajuan pengembalian berhasil diajukan dan menunggu verifikasi admin.',
             ]);
         } catch (\Exception $e) {
             return response()->json([

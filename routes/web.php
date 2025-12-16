@@ -226,6 +226,13 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::post('/dosen/import', [\App\Http\Controllers\Admin\DosenController::class, 'import'])->name('dosen.import');
     Route::get('/dosen', [\App\Http\Controllers\Admin\DosenController::class, 'index'])->name('dosen.index');
 
+    // Notification Routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notifications/all', [NotificationController::class, 'all'])->name('admin.notifications.all');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllAsRead');
+    Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->name('admin.notifications.clearAll');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+
     // Admin Peminjaman, Pengembalian, Riwayat
     Route::prefix('peminjaman')->group(function () {
         Route::get('/', [AdminController::class, 'peminjaman'])->name('admin.peminjaman.index');
