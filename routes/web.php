@@ -181,6 +181,8 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::post('/jadwal-perkuliahan/import', [JadwalPerkuliahanController::class, 'import'])->name('jadwal-perkuliahan.import');
     Route::get('/template', [JadwalPerkuliahanController::class, 'downloadTemplate'])->name('template');
     Route::post('/jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])->name('jadwal-perkuliahan.delete-all');
+    Route::get('/admin/jadwal-perkuliahan/export',[JadwalPerkuliahanController::class, 'export'])->name('jadwal-perkuliahan.export');
+
 
     // Ruangan, Mata Kuliah, Slot Waktu
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -264,8 +266,6 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::get('/riwayat/export', function (Request $request) {
         return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
     })->name('admin.riwayat.export');
-
-
 });
 
 // ================================
@@ -304,36 +304,36 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])
     ->prefix('admin')
     ->group(function () {
 
-    /* =========================
+        /* =========================
        AHP (BOBOT KRITERIA)
     ========================= */
-    Route::get('/ahp-settings', [AHPController::class, 'index'])
-        ->name('admin.ahp.settings');
+        Route::get('/ahp-settings', [AHPController::class, 'index'])
+            ->name('admin.ahp.settings');
 
-    Route::post('/ahp-settings', [AHPController::class, 'store'])
-        ->name('admin.ahp.settings.save');
+        Route::post('/ahp-settings', [AHPController::class, 'store'])
+            ->name('admin.ahp.settings.save');
 
-    /* =========================
+        /* =========================
        SPK UTAMA (PEMINJAMAN ASLI)
     ========================= */
-    Route::get('/spk', [SPKController::class, 'index'])
-        ->name('admin.spk.index');
+        Route::get('/spk', [SPKController::class, 'index'])
+            ->name('admin.spk.index');
 
-    Route::post('/spk/scores', [SPKController::class, 'storeScores'])
-        ->name('admin.spk.scores.save');
+        Route::post('/spk/scores', [SPKController::class, 'storeScores'])
+            ->name('admin.spk.scores.save');
 
-    /* =========================
+        /* =========================
        SPK DUMMY (EXCEL)
     ========================= */
-    Route::get('/spk/dummy', [SPKDummyController::class, 'index'])
-        ->name('admin.spk.dummy');
+        Route::get('/spk/dummy', [SPKDummyController::class, 'index'])
+            ->name('admin.spk.dummy');
 
-            Route::post('/spk/dummy/hitung', [SPKDummyController::class, 'hitungSAW'])
-        ->name('admin.spk.dummy.hitung');
+        Route::post('/spk/dummy/hitung', [SPKDummyController::class, 'hitungSAW'])
+            ->name('admin.spk.dummy.hitung');
 
-    Route::post('/spk/dummy/import', [SPKDummyController::class, 'import'])
-        ->name('admin.spk.import');
-});;
+        Route::post('/spk/dummy/import', [SPKDummyController::class, 'import'])
+            ->name('admin.spk.import');
+    });;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {

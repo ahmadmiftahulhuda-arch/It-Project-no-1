@@ -7,6 +7,7 @@ use App\Models\JadwalPerkuliahan;
 use App\Imports\JadwalPerkuliahanImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use App\Exports\JadwalPerkuliahanExport;
 
 class JadwalPerkuliahanController extends Controller
 {
@@ -214,5 +215,19 @@ class JadwalPerkuliahanController extends Controller
             return redirect()->route('jadwal-perkuliahan.index')
                 ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
+    }
+    public function export(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'hari' => $request->hari,
+            'ruangan' => $request->ruangan,
+            'sistem_kuliah' => $request->sistem_kuliah,
+        ];
+
+        return Excel::download(
+            new JadwalPerkuliahanExport($filters),
+            'jadwal_perkuliahan.xlsx'
+        );
     }
 }

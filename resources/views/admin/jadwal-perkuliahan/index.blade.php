@@ -1722,7 +1722,8 @@
                     </a>
 
                     <!-- Tombol kanan (Ekspor) -->
-                    <a href="" class="btn btn-primary btn-sm">
+                    <a href="{{ route('jadwal-perkuliahan.export', request()->query()) }}"
+                        class="btn btn-primary btn-sm">
                         <i class="fas fa-file-export me-1"></i> Ekspor
                     </a>
                 </div>
