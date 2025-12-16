@@ -465,7 +465,7 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
         }
-       
+
         /* Table */
         .table-container {
             background: var(--bg-card);
@@ -1345,10 +1345,10 @@
                                         data-waktu-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($item->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}">
                                         <td>{{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                         </td>
-    <td>
-        <div class="fw-bold">{{ $item->user->name ?? 'Guest' }}</div>
-        <small class="text-muted">{{ $item->user->nim ?? '-' }}</small>
-    </td>
+                                        <td>
+                                            <div class="fw-bold">{{ $item->user->name ?? 'Guest' }}</div>
+                                            <small class="text-muted">{{ $item->user->nim ?? '-' }}</small>
+                                        </td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                                             <br>

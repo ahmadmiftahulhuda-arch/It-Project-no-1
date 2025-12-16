@@ -181,7 +181,7 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::post('/jadwal-perkuliahan/import', [JadwalPerkuliahanController::class, 'import'])->name('jadwal-perkuliahan.import');
     Route::get('/template', [JadwalPerkuliahanController::class, 'downloadTemplate'])->name('template');
     Route::post('/jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])->name('jadwal-perkuliahan.delete-all');
-    Route::get('/admin/jadwal-perkuliahan/export',[JadwalPerkuliahanController::class, 'export'])->name('jadwal-perkuliahan.export');
+    Route::get('/admin/jadwal-perkuliahan/export', [JadwalPerkuliahanController::class, 'export'])->name('jadwal-perkuliahan.export');
 
 
     // Ruangan, Mata Kuliah, Slot Waktu
@@ -261,8 +261,9 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');
         Route::put('/{id}', [AdminController::class, 'updateRiwayat'])->name('admin.riwayat.update');
-        Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.riwayat.destroy');
+        Route::delete('/{id}', [AdminController::class, 'destroyRiwayat'])->name('admin.riwayat.destroy');
     });
+
     Route::get('/riwayat/export', function (Request $request) {
         return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
     })->name('admin.riwayat.export');

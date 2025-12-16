@@ -664,6 +664,19 @@ class AdminController extends Controller
                     : 'Pengembalian berhasil diperbarui.'
             );
     }
+    
+    /**
+     * Hapus RIWAYAT peminjaman
+     */
+    public function destroyRiwayat($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->delete();
+
+        return redirect()
+            ->route('admin.riwayat')
+            ->with('success', 'Riwayat peminjaman berhasil dihapus.');
+    }
 
     /**
      * Update riwayat peminjaman
