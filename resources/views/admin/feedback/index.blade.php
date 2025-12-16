@@ -1299,11 +1299,6 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="d-flex gap-2">
-                    <button type="button" id="resetFilter" class="btn btn-outline">
-                        <i class="fas fa-refresh me-1"></i> Reset
-                    </button>
-                </div>
                 <a href="{{ route('admin.feedback.export', request()->query()) }}" class="btn btn-outline">
                     <i class="fas fa-file-export"></i> Ekspor
                 </a>
