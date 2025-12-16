@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Peminjaman;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Http\Request;
 
 class RiwayatExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -19,47 +19,70 @@ class RiwayatExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = Peminjaman::with(['user','ruangan','projector']);
+        $query = Peminjaman::with([
+            'user',
+            'ruangan',
+            'projector',
+            'pengembalian'
+        ]);
 
-        // Filter search
-        if ($this->request->search) {
+        // 🔍 Filter pencarian
+        if ($this->request->filled('search')) {
             $search = $this->request->search;
-            $query->where(function($q) use ($search) {
+
+            $query->where(function ($q) use ($search) {
                 $q->where('keperluan', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($u) use ($search) {
-                      $u->where('name', 'like', "%{$search}%");
+                  ->orWhereHas('user', function ($u) use ($search) {
+                      $u->where('name', 'like', "%{$search}%")
+                        ->orWhere('nim', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('ruangan', function ($r) use ($search) {
+                      $r->where('nama_ruangan', 'like', "%{$search}%");
                   });
             });
         }
 
-        // Filter status
-        if ($this->request->status) {
+        // 🔘 Filter status peminjaman
+        if ($this->request->filled('status')) {
             $query->where('status', $this->request->status);
         }
 
-        // Filter tanggal
-        if ($this->request->date_from) {
+        // 📅 Filter tanggal
+        if ($this->request->filled('date_from')) {
             $query->whereDate('tanggal', '>=', $this->request->date_from);
         }
 
-        if ($this->request->date_to) {
+        if ($this->request->filled('date_to')) {
             $query->whereDate('tanggal', '<=', $this->request->date_to);
         }
 
-        return $query->latest()->get();
+        return $query->orderBy('tanggal', 'desc')->get();
     }
 
     public function map($item): array
     {
+        $pengembalian = $item->pengembalian;
+
         return [
             $item->id,
             $item->user->name ?? '-',
             $item->tanggal,
             $item->ruangan->nama_ruangan ?? '-',
-            $item->projector->kode_proyektor ?? 'Tidak',
+            $item->projector
+                ? $item->projector->kode_proyektor
+                : 'Tanpa Proyektor',
             $item->keperluan,
             ucfirst($item->status),
-            $item->status_pengembalian ?? 'Belum dikembalikan',
+
+            // Status pengembalian
+            $pengembalian
+                ? strtoupper($pengembalian->status)
+                : 'BELUM DIKEMBALIKAN',
+
+            // Tanggal pengembalian
+            $pengembalian && $pengembalian->tanggal_pengembalian
+                ? $pengembalian->tanggal_pengembalian
+                : '-',
         ];
     }
 
@@ -68,12 +91,13 @@ class RiwayatExport implements FromCollection, WithHeadings, WithMapping
         return [
             'ID',
             'Peminjam',
-            'Tanggal',
+            'Tanggal Peminjaman',
             'Ruangan',
             'Proyektor',
             'Keperluan',
             'Status Peminjaman',
             'Status Pengembalian',
+            'Tanggal Pengembalian',
         ];
     }
 }
