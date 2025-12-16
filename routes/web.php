@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\AHPController;
 use App\Http\Controllers\Admin\SPKController;
 use App\Http\Controllers\Admin\SPKDummyController;
 use App\Http\Controllers\Admin\DosenController;
+use App\Http\Controllers\Admin\NotificationController;
 
 // ================================
 // HALAMAN UMUM (PUBLIC ROUTES)
@@ -265,6 +266,12 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
         return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
     })->name('admin.riwayat.export');
 
+    // Notification Routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notifications/all', [NotificationController::class, 'all'])->name('admin.notifications.all');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllAsRead');
+    Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->name('admin.notifications.clearAll');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 
 });
 

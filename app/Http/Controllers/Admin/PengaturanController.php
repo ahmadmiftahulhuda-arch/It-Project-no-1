@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Peminjaman;
+use App\Models\Pengembalian;
 use App\Mail\Security\PasswordChanged;
 
 class PengaturanController extends Controller
@@ -17,7 +19,18 @@ class PengaturanController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('admin.settings.index', compact('user'));
+        // Ambil data untuk notifikasi
+        $peminjamanNotifications = Peminjaman::with('user')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+            
+        $pengembalianNotifications = Pengembalian::with('user', 'peminjaman')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        return view('admin.settings.index', compact('user', 'peminjamanNotifications', 'pengembalianNotifications'));
     }
 
     public function updateProfile(Request $request)

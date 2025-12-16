@@ -105,6 +105,16 @@ class AdminController extends Controller
         $projectors = Projector::where('status', 'tersedia')->get();
         $dosens = Dosen::orderBy('nama_dosen')->get();
         $slotwaktu = SlotWaktu::orderBy('waktu', 'asc')->get();
+        
+        $peminjamanNotifications = Peminjaman::with('user', 'ruangan')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+            
+        $pengembalianNotifications = Pengembalian::with('user', 'peminjaman')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
 
         return view('admin.peminjaman.index', compact(
             'peminjamans',
@@ -115,7 +125,9 @@ class AdminController extends Controller
             'ruangan',
             'projectors',
             'dosens',
-            'slotwaktu'
+            'slotwaktu',
+            'peminjamanNotifications',
+            'pengembalianNotifications'
         ));
     }
 
@@ -215,6 +227,16 @@ class AdminController extends Controller
         $totalReturns = Pengembalian::count();
 
         $totalReturns = \App\Models\Pengembalian::count();
+        
+        $peminjamanNotifications = Peminjaman::with('user', 'ruangan')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+            
+        $pengembalianNotifications = Pengembalian::with('user', 'peminjaman')
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
 
         return view('admin.pengembalian.index', compact(
             'peminjamans',
@@ -225,6 +247,8 @@ class AdminController extends Controller
             'totalReturns',
             'ruangans',
             'projectors',
+            'peminjamanNotifications',
+            'pengembalianNotifications'
         ));
     }
 

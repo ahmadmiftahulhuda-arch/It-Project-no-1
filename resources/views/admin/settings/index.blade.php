@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin TI - Pengaturan Sistem</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -328,20 +329,27 @@
             box-shadow: 0 4px 12px rgba(59, 89, 152, 0.2);
         }
 
-        .notification-btn .notification-badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            font-size: 0.65rem;
-            padding: 3px 6px;
-            min-width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #ff4757, #ff3838);
-            border: 2px solid var(--bg-card);
-        }
+.notification-btn .notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+
+    font-size: 0.65rem;
+    padding: 3px 6px;
+
+    min-width: 18px;
+    height: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(135deg, #FF5B5B, #D92525);
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 2px 4px rgba(217, 37, 37, 0.4); /* Softer, color-matched shadow */
+
+    border-radius: 999px; /* 🔥 KUNCI AGAR TIDAK KOTAK */
+}
 
         .dark-mode .notification-btn {
             background: #2a2a2a;
@@ -1557,7 +1565,7 @@
                             <!-- Notifications will be dynamically added here -->
                         </div>
                         <div class="notification-footer">
-                            <a href="#" id="viewAllNotifications">Lihat semua notifikasi</a>
+                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua notifikasi</a>
                         </div>
                     </div>
                 </div>
@@ -1901,685 +1909,239 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle
-            const themeToggle = document.getElementById('theme-toggle');
-            const darkModeTogglePref = document.getElementById('dark-mode-toggle-pref');
-
-            const applyTheme = (theme) => {
-                if (theme === 'enabled') {
-                    document.body.classList.add('dark-mode');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                    if(darkModeTogglePref) darkModeTogglePref.checked = true;
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                    if(darkModeTogglePref) darkModeTogglePref.checked = false;
-                }
-            };
-
-            const toggleTheme = () => {
-                const currentTheme = localStorage.getItem('darkMode') === 'enabled' ? 'disabled' : 'enabled';
-                localStorage.setItem('darkMode', currentTheme);
-                applyTheme(currentTheme);
-            };
-
-            themeToggle.addEventListener('click', toggleTheme);
-            if(darkModeTogglePref) {
-                darkModeTogglePref.addEventListener('change', function() {
-                    const isDarkMode = this.checked;
-                    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-                    applyTheme(isDarkMode ? 'enabled' : 'disabled');
-                });
-            }
-            
-            // Load saved theme preference
-            applyTheme(localStorage.getItem('darkMode') || 'disabled');
-
-            // Show/hide password functionality
-            document.querySelectorAll('.password-toggle-icon').forEach(icon => {
-                icon.addEventListener('click', function () {
-                    const passwordInput = this.previousElementSibling;
-                    
-                    // Toggle the type
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-
-                    // Toggle the icon class
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
-                });
-            });
-
-            // ========== Settings Navigation ==========
-            const navItems = document.querySelectorAll('.settings-nav-item');
-            const panels = document.querySelectorAll('.settings-panel');
-            
-            function switchSettingsPanel(targetId) {
-                // Hide all panels
-                panels.forEach(panel => {
-                    panel.classList.remove('active');
-                });
-                
-                // Show target panel
-                const targetPanel = document.getElementById(targetId);
-                if (targetPanel) {
-                    targetPanel.classList.add('active');
-                }
-            }
-            
-            // Add click event to navigation items
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    
-                    // Update active nav item
-                    navItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Switch to target panel
-                    switchSettingsPanel(`${target}-settings`);
-                });
-            });
-            
-            // Check URL hash on load
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                const targetNavItem = document.querySelector(`.settings-nav-item[data-target="${hash}"]`);
-                if (targetNavItem) {
-                    targetNavItem.click();
-                }
-            } else {
-                // Re-open security tab on password validation error, only if no hash is present
-                @if ($errors->has('current_password') || $errors->has('password') || session('success_password'))
-                    document.querySelector('.settings-nav-item[data-target="security"]').click();
-                @endif
-            }
-
-            // 2FA Setup
-            const enable2faBtn = document.getElementById('enable-2fa-btn');
-            const twoFactorAuthModal = new bootstrap.Modal(document.getElementById('twoFactorAuthModal'));
-            const qrCodeContainer = document.getElementById('qr-code-container');
-            const recoveryCodesList = document.getElementById('recovery-codes-list');
-            const activate2faForm = document.getElementById('activate-2fa-form');
-            const otpInput = document.getElementById('otp');
-            const otpError = document.getElementById('otp-error');
-
-            if (enable2faBtn) {
-                enable2faBtn.addEventListener('click', function () {
-                    // Show spinner while fetching QR code
-                    qrCodeContainer.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
-                    recoveryCodesList.innerHTML = '';
-                    
-                    twoFactorAuthModal.show();
-
-                    // Fetch QR code and recovery codes
-                    fetch('{{ route("admin.2fa.setup") }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                        },
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            // If response is not ok, get the JSON error message and throw it
-                            return response.json().then(err => { throw new Error(err.message || 'Failed to setup 2FA.') });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        qrCodeContainer.innerHTML = `<img src="${data.qr_code_url}" alt="QR Code">`;
-                        
-                        let recoveryHtml = '';
-                        data.recovery_codes.forEach(code => {
-                            recoveryHtml += `<li class="col-md-6 col-sm-12"><code>${code}</code></li>`;
-                        });
-                        recoveryCodesList.innerHTML = recoveryHtml;
-                    })
-                    .catch(error => {
-                        console.error('Error during 2FA setup:', error);
-                        // Display the specific error message from the server
-                        qrCodeContainer.innerHTML = `<p class="text-danger">Gagal memuat QR code. Error: ${error.message}</p>`;
-                    });
-                });
-            }
-
-            if(activate2faForm) {
-                activate2faForm.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    
-                    otpError.textContent = '';
-                    otpInput.classList.remove('is-invalid');
-
-                    fetch('{{ route("admin.2fa.activate") }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ otp: otpInput.value })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        return response.json().then(err => { throw new Error(err.message) });
-                    })
-                    .then(data => {
-                        twoFactorAuthModal.hide();
-                        showToastNotification(data.message, 'success');
-                        setTimeout(() => window.location.reload(), 1500);
-                    })
-                    .catch(error => {
-                        otpInput.classList.add('is-invalid');
-                        otpError.textContent = error.message || 'Terjadi kesalahan.';
-                    });
-                });
-            }
-
-            const copyRecoveryCodesBtn = document.getElementById('copy-recovery-codes');
-            if (copyRecoveryCodesBtn) {
-                copyRecoveryCodesBtn.addEventListener('click', function() {
-                    const codes = Array.from(recoveryCodesList.querySelectorAll('code')).map(el => el.textContent);
-                    const codesText = codes.join('\n');
-                    navigator.clipboard.writeText(codesText).then(() => {
-                        showToastNotification('Kode pemulihan disalin ke clipboard!', 'success');
-                    });
-                });
-            }
-
-            // Disable 2FA
-            const disable2faForm = document.getElementById('disable-2fa-form');
-            if (disable2faForm) {
-                disable2faForm.addEventListener('submit', function (e) {
-                    e.preventDefault();
-
-                    fetch('{{ route("admin.2fa.disable") }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({}) // Empty body for disable
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        return response.json().then(err => { throw new Error(err.message || 'Failed to disable 2FA.') });
-                    })
-                    .then(data => {
-                        showToastNotification(data.message, 'success');
-                        setTimeout(() => window.location.reload(), 1500);
-                    })
-                    .catch(error => {
-                        console.error('Error during 2FA disable:', error);
-                        showToastNotification(`Gagal menonaktifkan 2FA. Error: ${error.message}`, 'danger');
-                    });
-                });
-            }
-
-            // Search settings
-            const searchInput = document.getElementById('searchSettings');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                
-                if (searchTerm) {
-                    // Search mode: show all panels and highlight matches
-                    panels.forEach(panel => {
-                        panel.classList.add('active');
-                        
-                        // Highlight search terms in panel content
-                        const textElements = panel.querySelectorAll('h3, p, label, span:not(.toggle-slider)');
-                        textElements.forEach(el => {
-                            const originalText = el.getAttribute('data-original') || el.textContent;
-                            el.setAttribute('data-original', originalText);
-                            
-                            if (searchTerm && originalText.toLowerCase().includes(searchTerm)) {
-                                const regex = new RegExp(`(${searchTerm})`, 'gi');
-                                el.innerHTML = originalText.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
-                            } else if (!searchTerm) {
-                                el.innerHTML = originalText;
-                            }
-                        });
-                    });
-                    
-                    // Filter navigation items
-                    navItems.forEach(item => {
-                        const text = item.textContent.toLowerCase();
-                        if (text.includes(searchTerm)) {
-                            item.style.display = 'flex';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                } else {
-                    // Exit search mode: restore normal view
-                    const activeNavItem = document.querySelector('.settings-nav-item.active');
-                    if (activeNavItem) {
-                        const target = activeNavItem.getAttribute('data-target');
-                        switchSettingsPanel(`${target}-settings`);
-                    }
-                    
-                    // Show all nav items
-                    navItems.forEach(item => {
-                        item.style.display = 'flex';
-                    });
-                    
-                    // Remove highlighting
-                    panels.forEach(panel => {
-                        const textElements = panel.querySelectorAll('[data-original]');
-                        textElements.forEach(el => {
-                            const originalText = el.getAttribute('data-original');
-                            el.innerHTML = originalText;
-                        });
-                    });
-                }
-            });
-
-            // =================================================================
-            // IMPROVED NOTIFICATION SYSTEM
-            // =================================================================
-
-            const notificationDropdown = document.getElementById('notificationDropdown');
+            // ========== DYNAMIC NOTIFICATION SYSTEM ==========
+            let notifications = [];
             const notificationList = document.getElementById('notificationList');
             const notificationBadge = document.getElementById('notificationBadge');
             const markAllReadBtn = document.getElementById('markAllRead');
             const clearNotificationsBtn = document.getElementById('clearNotifications');
-            const viewAllNotificationsBtn = document.getElementById('viewAllNotifications');
-            const toastContainer = document.querySelector('.notification-toast-container');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            // Sample notifications data
-            let notifications = [
-                {
-                    id: 1,
-                    title: 'Peminjaman Baru',
-                    message: 'John Doe mengajukan peminjaman proyektor untuk mata kuliah Basis Data',
-                    type: 'info',
-                    icon: 'fa-hand-holding-usd',
-                    time: '5 menit yang lalu',
-                    read: false,
-                    actions: ['Terima', 'Tolak']
-                },
-                {
-                    id: 2,
-                    title: 'Pengembalian Berhasil',
-                    message: 'Proyektor A telah dikembalikan oleh Jane Smith dalam kondisi baik',
-                    type: 'success',
-                    icon: 'fa-check-circle',
-                    time: '1 jam yang lalu',
-                    read: false,
-                    actions: ['Tandai']
-                },
-                {
-                    id: 3,
-                    title: 'Peringatan Jadwal',
-                    message: 'Jadwal perkuliahan Algoritma akan dimulai dalam 30 menit',
-                    type: 'warning',
-                    icon: 'fa-clock',
-                    time: '3 jam yang lalu',
-                    read: true,
-                    actions: []
-                },
-                {
-                    id: 4,
-                    title: 'Perawatan Rutin',
-                    message: 'Proyektor B memerlukan perawatan rutin bulan ini',
-                    type: 'danger',
-                    icon: 'fa-tools',
-                    time: '1 hari yang lalu',
-                    read: true,
-                    actions: ['Jadwalkan']
+            async function fetchNotifications() {
+                try {
+                    const response = await fetch('{{ route('admin.notifications.index') }}');
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    const data = await response.json();
+                    notifications = data.notifications || [];
+                    renderNotifications();
+                } catch (error) {
+                    console.error('Failed to fetch notifications:', error);
+                    if (notificationList) {
+                        notificationList.innerHTML = `
+                            <div class="notification-empty">
+                                <i class="fas fa-exclamation-triangle text-danger"></i>
+                                <p>Gagal memuat notifikasi</p>
+                            </div>
+                        `;
+                    }
                 }
-            ];
-
-            // Initialize notification system
-            function initNotificationSystem() {
-                renderNotificationList();
-                updateNotificationBadge();
             }
 
-            // Render notification list
-            function renderNotificationList() {
+            function renderNotifications() {
+                if (!notificationList) return;
+                notificationList.innerHTML = '';
                 if (notifications.length === 0) {
                     notificationList.innerHTML = `
                         <div class="notification-empty">
-                            <i class="fas fa-bell-slash"></i>
-                            <p>Tidak ada notifikasi</p>
+                            <i class="fas fa-check-circle"></i>
+                            <p>Tidak ada notifikasi baru</p>
                         </div>
                     `;
-                    return;
-                }
-
-                notificationList.innerHTML = '';
-                notifications.forEach(notif => {
-                    const notificationItem = createNotificationItem(notif);
-                    notificationList.appendChild(notificationItem);
-                });
-            }
-
-            // Create notification item element
-            function createNotificationItem(notif) {
-                const div = document.createElement('div');
-                div.className = `notification-item ${!notif.read ? 'unread' : ''}`;
-                div.dataset.id = notif.id;
-                
-                const iconClass = getIconClass(notif.type);
-                const timeAgo = formatTimeAgo(notif.time);
-                
-                div.innerHTML = `
-                    <div class="notification-icon ${notif.type}">
-                        <i class="fas ${notif.icon}"></i>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-title">${notif.title}</div>
-                        <div class="notification-message">${notif.message}</div>
-                        <div class="notification-time">
-                            <i class="far fa-clock"></i>
-                            ${timeAgo}
-                        </div>
-                        ${notif.actions.length > 0 ? `
-                            <div class="notification-actions-item">
-                                ${notif.actions.map(action => 
-                                    `<button class="btn btn-outline btn-sm" onclick="handleNotificationAction(${notif.id}, '${action.toLowerCase()}')">${action}</button>`
-                                ).join('')}
+                } else {
+                    notifications.forEach(notif => {
+                        const item = document.createElement('a');
+                        item.href = notif.url;
+                        item.className = 'notification-item unread'; 
+                        item.dataset.id = notif.id;
+                        item.innerHTML = `
+                            <div class="notification-icon ${notif.type}">
+                                <i class="fas ${notif.icon}"></i>
                             </div>
-                        ` : ''}
-                    </div>
-                `;
-                
-                // Add click event to mark as read
-                div.addEventListener('click', function(e) {
-                    if (!e.target.closest('.btn')) {
-                        markAsRead(notif.id);
-                    }
-                });
-                
-                return div;
+                            <div class="notification-content">
+                                <div class="notification-title">${notif.title}</div>
+                                <div class="notification-message">${notif.message}</div>
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${notif.time}</span>
+                                </div>
+                            </div>
+                        `;
+                        item.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            window.location.href = notif.url;
+                        });
+                        notificationList.appendChild(item);
+                    });
+                }
+                updateBadge();
             }
 
-            // Get icon class based on notification type
-            function getIconClass(type) {
-                const iconMap = {
-                    'info': 'info',
-                    'success': 'success',
-                    'warning': 'warning',
-                    'danger': 'danger'
-                };
-                return iconMap[type] || 'info';
-            }
-
-            // Format time ago
-            function formatTimeAgo(timeStr) {
-                // This is a simple implementation
-                // In real app, you would parse the actual time string
-                return timeStr;
-            }
-
-            // Update notification badge
-            function updateNotificationBadge() {
-                const unreadCount = notifications.filter(n => !n.read).length;
+            function updateBadge() {
+                if (!notificationBadge) return;
+                const unreadCount = notifications.length;
+                notificationBadge.textContent = unreadCount;
                 if (unreadCount > 0) {
-                    notificationBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
                     notificationBadge.style.display = 'flex';
                 } else {
                     notificationBadge.style.display = 'none';
                 }
             }
 
-            // Mark notification as read
-            function markAsRead(id) {
-                const notification = notifications.find(n => n.id === id);
-                if (notification && !notification.read) {
-                    notification.read = true;
-                    updateNotificationBadge();
-                    
-                    // Update the specific notification item
-                    const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
-                    if (notificationItem) {
-                        notificationItem.classList.remove('unread');
-                    }
-                }
-            }
-
-            // Mark all notifications as read
-            function markAllAsRead() {
-                notifications.forEach(notif => notif.read = true);
-                updateNotificationBadge();
-                renderNotificationList();
-                showToastNotification('Semua notifikasi ditandai sebagai sudah dibaca', 'success');
-            }
-
-            // Clear all notifications
-            function clearAllNotifications() {
-                if (confirm('Apakah Anda yakin ingin menghapus semua notifikasi?')) {
-                    notifications = [];
-                    updateNotificationBadge();
-                    renderNotificationList();
-                    showToastNotification('Semua notifikasi telah dihapus', 'info');
-                }
-            }
-
-            // Handle notification action
-            function handleNotificationAction(id, action) {
-                const notification = notifications.find(n => n.id === id);
-                if (notification) {
-                    switch(action) {
-                        case 'terima':
-                            showToastNotification(`Peminjaman dari ${notification.message.split(' ')[0]} telah diterima`, 'success');
-                            break;
-                        case 'tolak':
-                            showToastNotification(`Peminjaman dari ${notification.message.split(' ')[0]} telah ditolak`, 'danger');
-                            break;
-                        case 'tandai':
-                            showToastNotification('Notifikasi telah ditandai', 'info');
-                            break;
-                        case 'jadwalkan':
-                            showToastNotification('Perawatan telah dijadwalkan', 'success');
-                            break;
-                    }
-                    
-                    // Remove the notification after action
-                    notifications = notifications.filter(n => n.id !== id);
-                    updateNotificationBadge();
-                    renderNotificationList();
-                }
-            }
-
-            // Show toast notification
-            function showToastNotification(message, type = 'info') {
-                const toastId = Date.now();
-                const toast = document.createElement('div');
-                toast.className = `notification-toast ${type}`;
-                toast.dataset.id = toastId;
-                
-                const icon = getToastIcon(type);
-                const title = getToastTitle(type);
-                
-                toast.innerHTML = `
-                    <div class="toast-header">
-                        <div class="toast-icon ${type}">
-                            <i class="fas ${icon}"></i>
-                        </div>
-                        <div class="toast-title">${title}</div>
-                        <button class="toast-close" onclick="removeToast(${toastId})">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="toast-body">${message}</div>
-                    <div class="toast-time">
-                        <i class="far fa-clock"></i>
-                        Baru saja
-                    </div>
-                    <div class="toast-progress">
-                        <div class="toast-progress-bar"></div>
-                    </div>
-                `;
-                
-                toastContainer.appendChild(toast);
-                
-                // Auto remove after 5 seconds
-                setTimeout(() => {
-                    removeToast(toastId);
-                }, 5000);
-            }
-
-            // Remove toast by ID
-            window.removeToast = function(toastId) {
-                const toast = document.querySelector(`.notification-toast[data-id="${toastId}"]`);
-                if (toast) {
-                    toast.style.animation = 'toastSlideOut 0.3s ease forwards';
-                    setTimeout(() => {
-                        toast.remove();
-                    }, 300);
-                }
-            };
-
-            // Get toast icon based on type
-            function getToastIcon(type) {
-                const iconMap = {
-                    'info': 'fa-info-circle',
-                    'success': 'fa-check-circle',
-                    'warning': 'fa-exclamation-triangle',
-                    'danger': 'fa-exclamation-circle'
-                };
-                return iconMap[type] || 'fa-info-circle';
-            }
-
-            // Get toast title based on type
-            function getToastTitle(type) {
-                const titleMap = {
-                    'info': 'Informasi',
-                    'success': 'Berhasil',
-                    'warning': 'Peringatan',
-                    'danger': 'Error'
-                };
-                return titleMap[type] || 'Notifikasi';
-            }
-
-            // Simulate receiving new notifications
-            function simulateNewNotification() {
-                const notificationTypes = ['info', 'success', 'warning'];
-                const notificationTitles = [
-                    'Peminjaman Baru',
-                    'Pengembalian',
-                    'Jadwal Perkuliahan',
-                    'Maintenance'
-                ];
-                const notificationMessages = [
-                    'Ada peminjaman baru yang menunggu persetujuan',
-                    'Item telah berhasil dikembalikan',
-                    'Jadwal perkuliahan akan segera dimulai',
-                    'Perangkat memerlukan pemeriksaan rutin'
-                ];
-                
-                const randomType = notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
-                const randomTitle = notificationTitles[Math.floor(Math.random() * notificationTitles.length)];
-                const randomMessage = notificationMessages[Math.floor(Math.random() * notificationMessages.length)];
-                
-                const newNotification = {
-                    id: Date.now(),
-                    title: randomTitle,
-                    message: randomMessage,
-                    type: randomType,
-                    icon: randomType === 'success' ? 'fa-check-circle' : 'fa-bell',
-                    time: 'Baru saja',
-                    read: false,
-                    actions: []
-                };
-                
-                notifications.unshift(newNotification);
-                updateNotificationBadge();
-                renderNotificationList();
-                
-                // Show toast notification
-                showToastNotification(randomMessage, randomType);
-            }
-
-            // Event listeners
             if (markAllReadBtn) {
-                markAllReadBtn.addEventListener('click', markAllAsRead);
-            }
-            
-            if (clearNotificationsBtn) {
-                clearNotificationsBtn.addEventListener('click', clearAllNotifications);
-            }
-            
-            if (viewAllNotificationsBtn) {
-                viewAllNotificationsBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showToastNotification('Membuka semua notifikasi...', 'info');
+                markAllReadBtn.addEventListener('click', async () => {
+                    notifications = []; 
+                    renderNotifications();
+                    try {
+                        await fetch('{{ route('admin.notifications.markAllAsRead') }}', { 
+                            method: 'POST', 
+                            headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' } 
+                        });
+                    } catch (error) {
+                        console.error('Failed to mark all as read:', error);
+                    }
                 });
             }
 
-            // Initialize notification system
-            initNotificationSystem();
-
-            // Simulate receiving notifications every 30 seconds (for demo)
-            setInterval(() => {
-                if (Math.random() > 0.7) { // 30% chance
-                    simulateNewNotification();
-                }
-            }, 30000);
-
-            // Initial toast notification
-            setTimeout(() => {
-                showToastNotification('Sistem notifikasi telah aktif', 'success');
-            }, 1000);
-        });
-
-        // Save all settings
-        function saveAllSettings() {
-            const settings = {
-                twoFactorAuth: document.getElementById('two-factor-auth')?.checked || false,
-                themeColor: document.getElementById('theme-color').value,
-                fontSize: document.getElementById('font-size').value,
-                pageAnimations: document.getElementById('page-animations')?.checked || false
-            };
-
-            console.log('Saving settings:', settings);
-            
-            showToastNotification('Pengaturan berhasil disimpan!', 'success');
-        }
-
-        // Show notification (legacy function)
-        function showNotification(message, type = 'success') {
-            // Remove existing notifications
-            const existingNotifications = document.querySelectorAll('.fixed-notification');
-            existingNotifications.forEach(notification => notification.remove());
-            
-            const notification = document.createElement('div');
-            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} fixed-notification`;
-            notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${message}
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOutRight 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // Confirm reset settings
-        function confirmResetSettings() {
-            if (confirm('Apakah Anda yakin ingin mereset semua pengaturan ke default? Tindakan ini tidak dapat dibatalkan.')) {
-                // Reset all form elements to default
-                document.getElementById('email-notifications').checked = true;
-                document.getElementById('new-loan-notifications').checked = true;
-                document.getElementById('return-notifications').checked = true;
-                if (document.getElementById('schedule-notifications')) {
-                    document.getElementById('schedule-notifications').checked = true;
-                }
-                document.getElementById('notification-frequency').value = 'realtime';
-                
-                showToastNotification('Semua pengaturan telah direset ke nilai default.', 'success');
+            if (clearNotificationsBtn) {
+                clearNotificationsBtn.addEventListener('click', async () => {
+                    notifications = [];
+                    renderNotifications();
+                    try {
+                        await fetch('{{ route('admin.notifications.clearAll') }}', { 
+                            method: 'POST', 
+                            headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                        });
+                    } catch (error) {
+                        console.error('Failed to clear notifications:', error);
+                    }
+                });
             }
-        }
+            
+            fetchNotifications();
+            // ========== END DYNAMIC NOTIFICATION SYSTEM ==========
+
+            // Sidebar and other existing scripts...
+            const dropdownToggle = document.querySelectorAll('.dropdown-toggle-custom');
+            dropdownToggle.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const target = document.querySelector(this.dataset.bsTarget);
+                    if (target) {
+                        const isShown = target.classList.contains('show');
+                        this.setAttribute('aria-expanded', !isShown);
+                        if (isShown) {
+                            target.classList.remove('show');
+                        } else {
+                            target.classList.add('show');
+                        }
+                    }
+                });
+            });
+
+            // Theme Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-mode');
+                    const icon = themeToggle.querySelector('i');
+                    if (document.body.classList.contains('dark-mode')) {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
+            }
+
+            // Apply saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                if (themeToggle) {
+                    const icon = themeToggle.querySelector('i');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            }
+            // Settings navigation
+            const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+            const settingsPanels = document.querySelectorAll('.settings-panel');
+            const searchSettings = document.getElementById('searchSettings');
+
+            function filterSettings(query) {
+                const lowerQuery = query.toLowerCase();
+                settingsNavItems.forEach(item => {
+                    const targetId = item.dataset.target;
+                    const panel = document.getElementById(`${targetId}-settings`);
+                    const textContent = (item.textContent + (panel ? panel.textContent : '')).toLowerCase();
+                    
+                    if (textContent.includes(lowerQuery)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            if (searchSettings) {
+                searchSettings.addEventListener('input', (e) => {
+                    filterSettings(e.target.value);
+                });
+            }
+
+            settingsNavItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetId = item.dataset.target;
+                    
+                    settingsNavItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    settingsPanels.forEach(panel => panel.classList.remove('active'));
+                    const targetPanel = document.getElementById(`${targetId}-settings`);
+                    if(targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                    
+                    // Update URL hash without jumping
+                    if(history.pushState) {
+                        history.pushState(null, null, `#${targetId}`);
+                    } else {
+                        location.hash = `#${targetId}`;
+                    }
+                });
+            });
+
+            // Check for hash on page load
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const targetNavItem = document.querySelector(`.settings-nav-item[data-target="${hash}"]`);
+                if (targetNavItem) {
+                    targetNavItem.click();
+                }
+            }
+
+            // Password toggle
+            const passwordToggles = document.querySelectorAll('.password-toggle-icon');
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const input = toggle.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        toggle.classList.remove('fa-eye');
+                        toggle.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        toggle.classList.remove('fa-eye-slash');
+                        toggle.classList.add('fa-eye');
+                    }
+                });
+            });
+
+        });
     </script>
 </body>
+
 </html>
