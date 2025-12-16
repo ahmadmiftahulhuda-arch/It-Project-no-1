@@ -22,9 +22,9 @@ class PeminjamanController extends Controller
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('keperluan', 'like', "%{$search}%")
-                  ->orWhere('ruang', 'like', "%{$search}%");
+                    ->orWhere('ruang', 'like', "%{$search}%");
             });
         }
 
@@ -71,13 +71,26 @@ class PeminjamanController extends Controller
 
         $request->validate([
             'tanggal'       => 'required|date',
-            'ruangan_id'    => 'required|exists:ruangan,id',
+            'ruangan_id'    => 'nullable|exists:ruangan,id',
             'projector_id'  => 'nullable|exists:projectors,id',
             'waktu_mulai'   => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i',
             'keperluan'     => 'required|string|max:255',
+            'keperluan_lainnya' => 'nullable|string|max:255',
             'dosen_nip'     => 'nullable|exists:dosens,nip'
         ]);
+
+        // 🔒 VALIDASI LOGIKA
+        if (!$request->ruangan_id && !$request->projector_id) {
+            return back()
+                ->withInput()
+                ->with('error', 'Minimal pilih Ruangan atau Proyektor.');
+        }
+
+        // 🔑 GABUNGKAN KEPERLUAN
+        $keperluanFinal = $request->keperluan === 'Lainnya'
+            ? $request->keperluan_lainnya
+            : $request->keperluan;
 
         Peminjaman::create([
             'user_id'       => Auth::id(),
@@ -86,10 +99,11 @@ class PeminjamanController extends Controller
             'projector_id'  => $request->projector_id,
             'waktu_mulai'   => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
-            'keperluan'     => $request->keperluan,
-            'dosen_nip'     => $request->dosen_nip ?? null,
+            'keperluan'     => $keperluanFinal, // ✅ INI KUNCI
+            'dosen_nip'     => $request->dosen_nip,
             'status'        => 'pending',
         ]);
+
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil disimpan');
     }
@@ -115,13 +129,26 @@ class PeminjamanController extends Controller
     {
         $request->validate([
             'tanggal'       => 'required|date',
-            'ruangan_id'    => 'required|exists:ruangan,id',
+            'ruangan_id'    => 'nullable|exists:ruangan,id',
             'projector_id'  => 'nullable|exists:projectors,id',
             'waktu_mulai'   => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i',
             'keperluan'     => 'required|string|max:255',
+            'keperluan_lainnya' => 'nullable|string|max:255',
             'dosen_nip'     => 'nullable|exists:dosens,nip'
         ]);
+
+        // 🔒 VALIDASI LOGIKA
+        if (!$request->ruangan_id && !$request->projector_id) {
+            return back()
+                ->withInput()
+                ->with('error', 'Minimal pilih Ruangan atau Proyektor.');
+        }
+
+        // 🔑 GABUNGKAN KEPERLUAN
+        $keperluanFinal = $request->keperluan === 'Lainnya'
+            ? $request->keperluan_lainnya
+            : $request->keperluan;
 
         $peminjaman = Peminjaman::where('user_id', Auth::id())->findOrFail($id);
 
@@ -131,11 +158,12 @@ class PeminjamanController extends Controller
             'projector_id'  => $request->projector_id,
             'waktu_mulai'   => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
-            'keperluan'     => $request->keperluan,
-            'dosen_nip'     => $request->dosen_nip ?? null,
+            'keperluan'     => $keperluanFinal, // ✅ WAJIB
+            'dosen_nip'     => $request->dosen_nip,
         ]);
 
-        return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('user.peminjaman.index')
+            ->with('success', 'Data berhasil diupdate');
     }
 
     public function destroy($id)
@@ -154,9 +182,9 @@ class PeminjamanController extends Controller
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('keperluan', 'like', "%{$search}%")
-                  ->orWhere('ruang', 'like', "%{$search}%");
+                    ->orWhere('ruang', 'like', "%{$search}%");
             });
         }
 
@@ -177,11 +205,11 @@ class PeminjamanController extends Controller
         $activeQuery = Peminjaman::where('user_id', $userId)
             ->where('status', 'disetujui')
             ->whereDate('tanggal', '<=', Carbon::now())
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereDoesntHave('pengembalian')
-                  ->orWhereHas('pengembalian', function($q2) {
-                      $q2->whereIn('status', ['pending', 'rejected']);
-                  });
+                    ->orWhereHas('pengembalian', function ($q2) {
+                        $q2->whereIn('status', ['pending', 'rejected']);
+                    });
             })
             ->with(['ruangan', 'projector', 'user', 'dosen']);
 
@@ -189,35 +217,35 @@ class PeminjamanController extends Controller
             $search = $request->search;
             $activeQuery->where(function ($q) use ($search) {
                 $q->where('keperluan', 'like', "%{$search}%")
-                  ->orWhereHas('ruangan', function($r) use ($search) {
-                    $r->where('nama_ruangan', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('ruangan', function ($r) use ($search) {
+                        $r->where('nama_ruangan', 'like', "%{$search}%");
+                    });
             });
         }
 
         $peminjamans = $activeQuery->orderBy('tanggal', 'desc')->get();
 
-        $pengembalians = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+        $pengembalians = Pengembalian::whereHas('peminjaman', function ($q) use ($userId) {
             $q->where('user_id', $userId);
         })
-        ->with(['peminjaman.ruangan', 'peminjaman.projector', 'peminjaman.dosen', 'user'])
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->with(['peminjaman.ruangan', 'peminjaman.projector', 'peminjaman.dosen', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         // Hitung statistik untuk user
-        $totalReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+        $totalReturns = Pengembalian::whereHas('peminjaman', function ($q) use ($userId) {
             $q->where('user_id', $userId);
         })->count();
 
-        $approvedReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+        $approvedReturns = Pengembalian::whereHas('peminjaman', function ($q) use ($userId) {
             $q->where('user_id', $userId);
         })->where('status', 'verified')->count();
 
-        $pendingReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+        $pendingReturns = Pengembalian::whereHas('peminjaman', function ($q) use ($userId) {
             $q->where('user_id', $userId);
         })->where('status', 'pending')->count();
 
-        $rejectedReturns = Pengembalian::whereHas('peminjaman', function($q) use ($userId) {
+        $rejectedReturns = Pengembalian::whereHas('peminjaman', function ($q) use ($userId) {
             $q->where('user_id', $userId);
         })->where('status', 'rejected')->count();
 
@@ -287,7 +315,6 @@ class PeminjamanController extends Controller
                 'success' => true,
                 'message' => 'Pengajuan pengembalian berhasil diajukan.',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -298,11 +325,11 @@ class PeminjamanController extends Controller
 
     public function showPengembalian($id)
     {
-        $pengembalian = Pengembalian::whereHas('peminjaman', function($q) {
+        $pengembalian = Pengembalian::whereHas('peminjaman', function ($q) {
             $q->where('user_id', Auth::id());
         })
-        ->with('peminjaman')
-        ->findOrFail($id);
+            ->with('peminjaman')
+            ->findOrFail($id);
 
         return view('user.pengembalian.show', compact('pengembalian'));
     }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,6 +140,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -194,11 +196,11 @@
                 border-radius: 0 0 8px 8px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle {
                 justify-content: flex-start;
             }
-            
+
             .navbar-nav .nav-link.dropdown-toggle .custom-arrow {
                 margin-left: auto;
             }
@@ -332,14 +334,16 @@
             margin-bottom: 0.5rem;
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border-radius: 8px;
             border: 1px solid #e2e8f0;
             padding: 10px 15px;
             transition: all 0.3s ease;
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(59, 89, 152, 0.15);
         }
@@ -357,7 +361,8 @@
             z-index: 10;
         }
 
-        .input-icon .form-control, .input-icon .form-select {
+        .input-icon .form-control,
+        .input-icon .form-select {
             padding-left: 45px;
         }
 
@@ -599,7 +604,9 @@
         }
 
         @media (max-width: 576px) {
-            .btn-warning-custom, .btn-secondary-custom {
+
+            .btn-warning-custom,
+            .btn-secondary-custom {
                 width: 100%;
                 padding: 12px;
             }
@@ -646,7 +653,7 @@
                                     <i class="fas fa-clock me-2"></i> Jadwal Kuliah
                                 </a>
                             </li>
-                           
+
                             <li>
                                 <a class="dropdown-item-custom" href="#">
                                     <i class="fas fa-download me-2"></i> Download Kalender
@@ -726,7 +733,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}" href="{{ route('user.settings.index') }}">
+                                    <a class="dropdown-item-custom {{ Request::routeIs('user.settings.index') ? 'active' : '' }}"
+                                        href="{{ route('user.settings.index') }}">
                                         <i class="fas fa-cog fa-fw me-2"></i> Pengaturan
                                     </a>
                                 </li>
@@ -797,13 +805,13 @@
                         <form action="{{ route('user.peminjaman.update', $peminjaman->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            
+
                             <!-- Info Status -->
                             <div class="alert alert-info d-flex align-items-center">
                                 <i class="fas fa-info-circle fa-lg me-3"></i>
                                 <div>
-                                    <h6 class="mb-1">Status Peminjaman: 
-                                        @if($peminjaman->status == 'pending')
+                                    <h6 class="mb-1">Status Peminjaman:
+                                        @if ($peminjaman->status == 'pending')
                                             <span class="badge status-badge status-menunggu">
                                                 <i class="fas fa-clock me-1"></i> Menunggu Persetujuan
                                             </span>
@@ -817,23 +825,26 @@
                                             </span>
                                         @endif
                                     </h6>
-                                    <p class="mb-0">Terakhir diubah: {{ \Carbon\Carbon::parse($peminjaman->updated_at)->format('d M Y H:i') }}</p>
+                                    <p class="mb-0">Terakhir diubah:
+                                        {{ \Carbon\Carbon::parse($peminjaman->updated_at)->format('d M Y H:i') }}</p>
                                 </div>
                             </div>
 
-                            @if($peminjaman->status != 'pending')
+                            @if ($peminjaman->status != 'pending')
                                 <div class="alert alert-warning">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
-                                    <strong>Perhatian:</strong> Hanya peminjaman dengan status "Menunggu" yang dapat diedit.
+                                    <strong>Perhatian:</strong> Hanya peminjaman dengan status "Menunggu" yang dapat
+                                    diedit.
                                 </div>
                             @endif
-                            
+
                             <div class="mb-4">
                                 <label class="form-label">Tanggal Peminjaman</label>
                                 <div class="input-icon">
                                     <i class="fas fa-calendar-day"></i>
-                                    <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal', $peminjaman->tanggal) }}" 
-                                           {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                    <input type="date" name="tanggal" class="form-control"
+                                        value="{{ old('tanggal', $peminjaman->tanggal) }}"
+                                        {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
                                 </div>
                                 @error('tanggal')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -843,17 +854,21 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label">Waktu Mulai</label>
-                                        <div class="input-icon">
-                                            <i class="fas fa-clock"></i>
-                                            <select name="waktu_mulai" class="form-select @error('waktu_mulai') is-invalid @enderror" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
-                                                <option value="">Pilih Waktu Mulai</option>
-                                                @if(!empty($slotwaktu))
-                                                    @foreach($slotwaktu as $slot)
-                                                        <option value="{{ $slot->waktu }}" {{ old('waktu_mulai', $peminjaman->waktu_mulai) == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
+                                    <div class="input-icon">
+                                        <i class="fas fa-clock"></i>
+                                        <select name="waktu_mulai"
+                                            class="form-select @error('waktu_mulai') is-invalid @enderror"
+                                            {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                            <option value="">Pilih Waktu Mulai</option>
+                                            @if (!empty($slotwaktu))
+                                                @foreach ($slotwaktu as $slot)
+                                                    <option value="{{ $slot->waktu }}"
+                                                        {{ old('waktu_mulai', $peminjaman->waktu_mulai) == $slot->waktu ? 'selected' : '' }}>
+                                                        {{ $slot->waktu }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                     @error('waktu_mulai')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -863,11 +878,15 @@
                                     <label class="form-label">Waktu Selesai</label>
                                     <div class="input-icon">
                                         <i class="fas fa-clock"></i>
-                                        <select name="waktu_selesai" class="form-select @error('waktu_selesai') is-invalid @enderror" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                        <select name="waktu_selesai"
+                                            class="form-select @error('waktu_selesai') is-invalid @enderror"
+                                            {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
                                             <option value="">Pilih Waktu Selesai</option>
-                                            @if(!empty($slotwaktu))
-                                                @foreach($slotwaktu as $slot)
-                                                    <option value="{{ $slot->waktu }}" {{ old('waktu_selesai', $peminjaman->waktu_selesai) == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @if (!empty($slotwaktu))
+                                                @foreach ($slotwaktu as $slot)
+                                                    <option value="{{ $slot->waktu }}"
+                                                        {{ old('waktu_selesai', $peminjaman->waktu_selesai) == $slot->waktu ? 'selected' : '' }}>
+                                                        {{ $slot->waktu }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -882,10 +901,11 @@
                                 <label class="form-label">Ruang</label>
                                 <div class="input-icon">
                                     <i class="fas fa-door-open"></i>
-                                    <select name="ruangan_id" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                    <select name="ruangan_id" class="form-select">
                                         <option value="">-- Pilih Ruang --</option>
-                                        @foreach($ruangan as $r)
-                                            <option value="{{ $r->id }}" {{ old('ruangan_id', $peminjaman->ruangan_id) == $r->id ? 'selected' : '' }}>
+                                        @foreach ($ruangan as $r)
+                                            <option value="{{ $r->id }}"
+                                                {{ old('ruangan_id', $peminjaman->ruangan_id) == $r->id ? 'selected' : '' }}>
                                                 {{ $r->nama_ruangan }}
                                             </option>
                                         @endforeach
@@ -900,10 +920,12 @@
                                 <label class="form-label">Proyektor (Opsional)</label>
                                 <div class="input-icon">
                                     <i class="fas fa-video"></i>
-                                    <select name="projector_id" class="form-select" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
+                                    <select name="projector_id" class="form-select"
+                                        {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
                                         <option value="">-- Tidak Ada Proyektor --</option>
-                                        @foreach($projectors as $p)
-                                            <option value="{{ $p->id }}" {{ old('projector_id', $peminjaman->projector_id) == $p->id ? 'selected' : '' }}>
+                                        @foreach ($projectors as $p)
+                                            <option value="{{ $p->id }}"
+                                                {{ old('projector_id', $peminjaman->projector_id) == $p->id ? 'selected' : '' }}>
                                                 {{ $p->kode_proyektor }} - {{ $p->merk ?? '' }} {{ $p->model ?? '' }}
                                             </option>
                                         @endforeach
@@ -915,34 +937,72 @@
                             </div>
 
                             <div class="col-md-6 mb-4 form-group">
-                                        <label class="form-label">
-                                            <i class="fas fa-user text-primary"></i>
-                                            Dosen Pengampu Mata Kuliah
-                                        </label>
-                                        <div class="input-icon">
-                                            <i class="fas fa-chalkboard-teacher"></i>
-                                            <select name="dosen_nip" class="form-select @error('dosen_nip') is-invalid @enderror" {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
-                                                <option value="">-- Pilih Dosen Pengampu --</option>
-                                                @if(!empty($dosens) && $dosens->count())
-                                                    @foreach($dosens as $dosen)
-                                                        <option value="{{ $dosen->nip }}" {{ old('dosen_nip', $peminjaman->dosen_nip) == $dosen->nip ? 'selected' : '' }}>
-                                                            {{ $dosen->nama_dosen }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                        @error('dosen_nip')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                <label class="form-label">
+                                    <i class="fas fa-user text-primary"></i>
+                                    Dosen Pengampu Mata Kuliah
+                                </label>
+                                <div class="input-icon">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <select name="dosen_nip"
+                                        class="form-select @error('dosen_nip') is-invalid @enderror"
+                                        {{ $peminjaman->status != 'pending' ? 'disabled' : '' }}>
+                                        <option value="">-- Pilih Dosen Pengampu --</option>
+                                        @if (!empty($dosens) && $dosens->count())
+                                            @foreach ($dosens as $dosen)
+                                                <option value="{{ $dosen->nip }}"
+                                                    {{ old('dosen_nip', $peminjaman->dosen_nip) == $dosen->nip ? 'selected' : '' }}>
+                                                    {{ $dosen->nama_dosen }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                @error('dosen_nip')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label">Keperluan</label>
                                 <div class="input-icon">
                                     <i class="fas fa-clipboard-list"></i>
-                                    <textarea name="keperluan" class="form-control" rows="4" 
-                                              {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>{{ old('keperluan', $peminjaman->keperluan) }}</textarea>
+                                    <select name="keperluan" id="keperluanSelect" class="form-select"
+                                        {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
+                                        <option value="">-- Pilih Keperluan --</option>
+                                        @php
+                                            $opsi = [
+                                                'Perkuliahan',
+                                                'Kelas Pengganti',
+                                                'Seminar TA/PKL/Proposal',
+                                                'Ujikom',
+                                                'Mentoring',
+                                                'Belajar Bersama',
+                                                'Konsultasi KRS',
+                                                'UTS',
+                                                'UAS',
+                                            ];
+                                        @endphp
+
+                                        @foreach ($opsi as $item)
+                                            <option value="{{ $item }}"
+                                                {{ $peminjaman->keperluan == $item ? 'selected' : '' }}>
+                                                {{ $item }}
+                                            </option>
+                                        @endforeach
+
+                                        <option value="Lainnya"
+                                            {{ !in_array($peminjaman->keperluan, $opsi) ? 'selected' : '' }}>
+                                            Lainnya
+                                        </option>
+                                    </select>
+
+                                    <div class="mt-3 {{ in_array($peminjaman->keperluan, $opsi) ? 'd-none' : '' }}"
+                                        id="keperluanLainnyaWrapper">
+                                        <input type="text" name="keperluan_lainnya" class="form-control"
+                                            value="{{ !in_array($peminjaman->keperluan, $opsi) ? $peminjaman->keperluan : '' }}"
+                                            placeholder="Tuliskan keperluan lainnya">
+                                    </div>
+
                                 </div>
                                 @error('keperluan')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -950,10 +1010,11 @@
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('user.peminjaman.index') }}" class="btn btn-secondary-custom me-md-2">
+                                <a href="{{ route('user.peminjaman.index') }}"
+                                    class="btn btn-secondary-custom me-md-2">
                                     <i class="fas fa-times me-2"></i>Batal
                                 </a>
-                                @if($peminjaman->status == 'pending')
+                                @if ($peminjaman->status == 'pending')
                                     <button type="submit" class="btn btn-warning-custom">
                                         <i class="fas fa-save me-2"></i>Perbarui Data
                                     </button>
@@ -966,7 +1027,7 @@
                         </form>
                     </div>
                 </div>
-                
+
                 <!-- Info Box -->
                 <div class="card card-custom mt-4">
                     <div class="card-body">
@@ -977,7 +1038,8 @@
                             </div>
                             <div>
                                 <h6 class="mb-0">Data dibuat</h6>
-                                <p class="text-muted mb-0">{{ \Carbon\Carbon::parse($peminjaman->created_at)->format('d M Y H:i') }}</p>
+                                <p class="text-muted mb-0">
+                                    {{ \Carbon\Carbon::parse($peminjaman->created_at)->format('d M Y H:i') }}</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
@@ -986,7 +1048,8 @@
                             </div>
                             <div>
                                 <h6 class="mb-0">Terakhir diubah</h6>
-                                <p class="text-muted mb-0">{{ \Carbon\Carbon::parse($peminjaman->updated_at)->format('d M Y H:i') }}</p>
+                                <p class="text-muted mb-0">
+                                    {{ \Carbon\Carbon::parse($peminjaman->updated_at)->format('d M Y H:i') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1005,15 +1068,18 @@
         <div class="footer-container">
             <div class="footer-section">
                 <h3>Tentang Kami</h3>
-                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine di Program Studi Teknologi Informasi.</p>
+                <p>Platform digital untuk mengelola dan memantau ketersediaan ruangan serta proyektor secara real-tine
+                    di Program Studi Teknologi Informasi.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/ti.politala?igsh=MXY4MTc3NGZjeHR2MQ=="><i
+                            class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.youtube.com/@teknikinformatikapolitala8620"><i
+                            class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Link Cepat</h3>
                 <ul class="footer-links">
@@ -1024,7 +1090,7 @@
                     <li><a href="/faq">FAQ</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Kontak Kami</h3>
                 <div class="contact-info">
@@ -1040,7 +1106,7 @@
                     <span>peminjaman@example.ac.id</span>
                 </div>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Jam Operasional</h3>
                 <div class="opening-hours">
@@ -1059,16 +1125,17 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
-            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri Tanah Laut. All Rights Reserved.</p>
+            <p>&copy; 2025 Sistem Peminjaman Sarana Prasarana - Program Studi Teknologi Informasi Politeknik Negeri
+                Tanah Laut. All Rights Reserved.</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ===== NAVBAR SCROLL EFFECT =====
         const navbar = document.getElementById('navbar');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 50) {
                 navbar.classList.add('scrolled');
@@ -1081,12 +1148,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Handle dropdown toggle animation
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            
+
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     // Close other open dropdowns
                     dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== toggle && otherToggle.classList.contains('show')) {
+                        if (otherToggle !== toggle && otherToggle.classList.contains(
+                                'show')) {
                             otherToggle.classList.remove('show');
                             const otherMenu = otherToggle.nextElementSibling;
                             if (otherMenu && otherMenu.classList.contains('show')) {
@@ -1096,11 +1164,12 @@
                     });
                 });
             });
-            
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {
                 if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    const openDropdowns = document.querySelectorAll('.dropdown-toggle.show, .dropdown-menu.show');
+                    const openDropdowns = document.querySelectorAll(
+                        '.dropdown-toggle.show, .dropdown-menu.show');
                     openDropdowns.forEach(element => {
                         element.classList.remove('show');
                     });
@@ -1110,7 +1179,7 @@
 
         // ===== BACK TO TOP BUTTON FUNCTIONALITY =====
         const backToTopButton = document.getElementById('backToTop');
-        
+
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTopButton.classList.add('visible');
@@ -1118,10 +1187,13 @@
                 backToTopButton.classList.remove('visible');
             }
         });
-        
+
         backToTopButton.addEventListener('click', (e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
 
         // ===== SET TANGGAL MINIMUM DAN VALIDASI FORM =====
@@ -1129,29 +1201,38 @@
             // Set tanggal minimum ke hari ini
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.querySelector('input[type="date"]');
-            
+
             if (dateInput) {
                 dateInput.setAttribute('min', today);
             }
-            
+
             // Validasi form
             const form = document.querySelector('form');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    const ruang = document.querySelector('select[name="ruangan_id"]') ? document.querySelector('select[name="ruangan_id"]').value : '';
-                    const keperluan = document.querySelector('textarea[name="keperluan"]') ? document.querySelector('textarea[name="keperluan"]').value : '';
-                    const proyektor = document.querySelector('select[name="projector_id"]') ? document.querySelector('select[name="projector_id"]').value : '';
+                    const ruang = document.querySelector('select[name="ruangan_id"]') ? document
+                        .querySelector('select[name="ruangan_id"]').value : '';
+                    const keperluan = document.querySelector('select[name="keperluan"]').value;
+                    const keperluanLainnya = document.querySelector('input[name="keperluan_lainnya"]')
+                        ?.value || '';
+                    const proyektor = document.querySelector('select[name="projector_id"]') ? document
+                        .querySelector('select[name="projector_id"]').value : '';
 
-                    if (ruang === '') {
+                    if (ruang === '' && proyektor === '') {
                         e.preventDefault();
-                        alert('Pilih ruang terlebih dahulu');
+                        alert('Minimal pilih Ruangan atau Proyektor');
                         return false;
                     }
 
-                    if (keperluan.trim() === '') {
-                        e.preventDefault();
-                        alert('Keperluan tidak boleh kosong');
-                        return false;
+                    if (keperluan === '') {
+                        isValid = false;
+                        showToast('Keperluan tidak boleh kosong', 'error');
+                    }
+
+                    // jika pilih lainnya, wajib isi teks
+                    if (keperluan === 'Lainnya' && keperluanLainnya.trim() === '') {
+                        isValid = false;
+                        showToast('Silakan isi keperluan lainnya', 'error');
                     }
 
                     // Proyektor optional: no need to force selection
@@ -1168,4 +1249,5 @@
         });
     </script>
 </body>
+
 </html>
