@@ -916,9 +916,6 @@
             border-color: var(--border-light);
         }
 
-        body.dark-mode .table tbody tr {
-            border-color: var(--border-light);
-        }
 
         body.dark-mode .table tbody tr:hover {
             background: #2a2a2a;
@@ -930,6 +927,29 @@
             background: #2a2a2a;
             border-color: var(--border-light);
             color: var(--text-dark);
+        }
+
+        /* Make table elements dark in dark mode */
+        body.dark-mode .table,
+        body.dark-mode .table thead,
+        body.dark-mode .table tbody,
+        body.dark-mode .table th,
+        body.dark-mode .table td,
+        body.dark-mode .table tr {
+            background-color: transparent;
+            color: var(--text-dark);
+        }
+
+        /* Ensure table header is darker (override Bootstrap) */
+        body.dark-mode .table thead th {
+            background: #252525;
+            color: var(--text-dark);
+            border-color: var(--border-light);
+        }
+
+        /* Row hover and cells */
+        body.dark-mode .table tbody tr:hover {
+            background: #2a2a2a;
         }
 
         body.dark-mode .notification-btn,
@@ -1257,7 +1277,7 @@
                     <i class="fas fa-file-alt"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="draft-count">{{ $draft ?? 0 }}</h3>
+                    <h3 id="draft-count">{{ $draft ??  0 }}</h3>
                     <p>Draft</p>
                 </div>
             </div>
@@ -1266,11 +1286,6 @@
         <!-- Filter Section -->
         <form id="filterForm" method="GET" action="{{ route('admin.feedback.index') }}" class="filter-section">
             <div class="filter-grid">
-                <div class="filter-group">
-                    <label for="search">Cari Feedback</label>
-                    <input type="text" id="search" name="search" placeholder="Cari..."
-                        value="{{ request('search') }}">
-                </div>
                 <div class="filter-group">
                     <label for="status_filter">Status</label>
                     <select id="status_filter" name="status">
@@ -1292,16 +1307,21 @@
                     </select>
                 </div>
                 <div class="filter-group">
+                    <label for="kategori_filter">Kategori</label>
+                    <select id="kategori_filter" name="kategori">
+                        <option value="">Semua Kategori</option>
+                        <option value="Fasilitas Ruangan" {{ request('kategori') == 'Fasilitas Ruangan' ? 'selected' : '' }}>Fasilitas Ruangan</option>
+                        <option value="Kebersihan" {{ request('kategori') == 'Kebersihan' ? 'selected' : '' }}>Kebersihan</option>
+                        <option value="Layanan Staff" {{ request('kategori') == 'Layanan Staff' ? 'selected' : '' }}>Layanan Staff</option>
+                        <option value="Lainnya" {{ request('kategori') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    </select>
+                </div>
+                <div class="filter-group">
                     <label for="date_filter">Tanggal Feedback</label>
                     <input type="date" id="date_filter" name="date" value="{{ request('date') }}">
                 </div>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="d-flex gap-2">
-                    <button type="button" id="resetFilter" class="btn btn-outline">
-                        <i class="fas fa-refresh me-1"></i> Reset
-                    </button>
-                </div>
                 <a href="{{ route('admin.feedback.export', request()->query()) }}" class="btn btn-outline">
                     <i class="fas fa-file-export"></i> Ekspor
                 </a>
@@ -1314,7 +1334,7 @@
                 <table class="table table-hover mb-0" id="feedbackTable">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Peminjam</th>
                             <th>Kategori</th>
                             <th>Detail Feedback</th>
@@ -1327,7 +1347,7 @@
                     <tbody id="feedbackTableBody">
                         @foreach ($feedback as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td>{{ ($feedback->currentPage() - 1) * $feedback->perPage() + $loop->iteration }}</td>
                                 <td>{{ $item->peminjaman->user->name ?? '-' }}</td>
                                 <td>{{ $item->kategori }}</td>
                                 <td>
@@ -1453,6 +1473,9 @@
                             
                             <!-- Hidden input untuk ID -->
                             <input type="hidden" name="id" id="editId" value="${id}">
+                            <input type="hidden" name="rating" value="${rating}">
+                            <input type="hidden" name="detail_feedback" value="${escapeHtml(detailFeedback)}">
+                            <input type="hidden" name="kategori" value="${escapeHtml(kategori)}">
 
                             <div class="form-group">
                                 <label>Peminjam</label>
@@ -1461,40 +1484,19 @@
 
                             <div class="form-group">
                                 <label>Kategori</label>
-                                <select name="kategori" id="editKategori" class="form-control" required>
-                                    <option value="Fasilitas Ruangan" ${kategori === 'Fasilitas Ruangan' ? 'selected' : ''}>Fasilitas Ruangan</option>
-                                    <option value="Kebersihan" ${kategori === 'Kebersihan' ? 'selected' : ''}>Kebersihan</option>
-                                    <option value="Layanan Staff" ${kategori === 'Layanan Staff' ? 'selected' : ''}>Layanan Staff</option>
-                                    <option value="Lainnya" ${kategori === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
-                                </select>
+                                <input type="text" class="form-control" value="${escapeHtml(kategori)}" readonly>
                             </div>
 
                             <div class="form-group">
                                 <label>Detail Feedback</label>
-                                <textarea name="detail_feedback" id="editDetailFeedback" class="form-control" maxlength="1000" rows="4" required>${escapeHtml(detailFeedback)}</textarea>
-                                <div class="char-count">
-                                    <span id="charCountModal">${detailFeedback.length}</span>/1000 karakter
-                                </div>
+                                <textarea id="editDetailFeedback" class="form-control" rows="4" readonly>${escapeHtml(detailFeedback)}</textarea>
                             </div>
 
                             <div class="form-group">
                                 <label>Rating</label>
-                                <div class="rating-stars">
-                                    <div class="star-rating" id="starRating">
-                                        <span class="star" data-value="1">★</span>
-                                        <span class="star" data-value="2">★</span>
-                                        <span class="star" data-value="3">★</span>
-                                        <span class="star" data-value="4">★</span>
-                                        <span class="star" data-value="5">★</span>
-                                    </div>
+                                <div class="rating-stars" style="font-size: 24px;">
+                                    ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}
                                 </div>
-                                <select name="rating" id="editRating" class="form-control" required style="display: none;">
-                                    <option value="1" ${rating == 1 ? 'selected' : ''}>1 ★</option>
-                                    <option value="2" ${rating == 2 ? 'selected' : ''}>2 ★★</option>
-                                    <option value="3" ${rating == 3 ? 'selected' : ''}>3 ★★★</option>
-                                    <option value="4" ${rating == 4 ? 'selected' : ''}>4 ★★★★</option>
-                                    <option value="5" ${rating == 5 ? 'selected' : ''}>5 ★★★★★</option>
-                                </select>
                             </div>
 
                             <div class="form-group">
@@ -1506,7 +1508,7 @@
                                         Dipublikasikan
                                     </label>
                                     <label class="radio-label">
-                                        <input type="radio" name="status" value="Draft" id="statusDraft" ${status === "Draft" ? 'checked' : ''}>
+                                        <input type="radio" name="status" value="Draft" id="statusDraft" ${status !== "Dipublikasikan" ? 'checked' : ''}>
                                         <span class="radio-custom"></span>
                                         Draft
                                     </label>
@@ -1527,63 +1529,16 @@
                 modal.style.display = "flex";
 
                 // Setup event listeners
-                setupModalListeners(rating);
+                setupModalListeners();
             }
 
             // Setup event listeners untuk modal
-            function setupModalListeners(initialRating) {
-                // Character count
-                const detailTextarea = document.getElementById('editDetailFeedback');
-                if (detailTextarea) {
-                    detailTextarea.addEventListener('input', function() {
-                        const charCount = document.getElementById('charCountModal');
-                        if (charCount) {
-                            charCount.textContent = this.value.length;
-                        }
-                    });
-                }
-
-                // Star rating
-                const stars = document.querySelectorAll('.star-rating .star');
-                const ratingInput = document.getElementById('editRating');
-
-                if (stars.length && ratingInput) {
-                    // Set initial rating
-                    updateStarRating(initialRating);
-
-                    stars.forEach(star => {
-                        star.addEventListener('click', function() {
-                            const value = this.getAttribute('data-value');
-                            ratingInput.value = value;
-                            updateStarRating(value);
-                        });
-
-                        star.addEventListener('mouseover', function() {
-                            const value = this.getAttribute('data-value');
-                            updateStarRating(value);
-                        });
-                    });
-
-                    // Reset rating saat mouse leave
-                    const starRatingDiv = document.querySelector('.star-rating');
-                    if (starRatingDiv) {
-                        starRatingDiv.addEventListener('mouseleave', function() {
-                            const currentRating = parseInt(ratingInput.value);
-                            updateStarRating(currentRating);
-                        });
-                    }
-                }
-
+            function setupModalListeners() {
                 // Form submission
                 const editForm = document.getElementById('editForm');
                 if (editForm) {
                     editForm.addEventListener('submit', async function(e) {
                         e.preventDefault();
-
-                        // Validasi form
-                        if (!validateForm()) {
-                            return;
-                        }
 
                         const formData = new FormData(this);
 
@@ -1632,39 +1587,6 @@
                 }
             }
 
-            // Validasi form
-            function validateForm() {
-                const detailFeedback = document.getElementById('editDetailFeedback').value.trim();
-                if (detailFeedback.length === 0) {
-                    alert('Detail feedback harus diisi');
-                    return false;
-                }
-
-                if (detailFeedback.length > 1000) {
-                    alert('Detail feedback maksimal 1000 karakter');
-                    return false;
-                }
-
-                return true;
-            }
-
-            // Fungsi untuk update star rating visual
-            function updateStarRating(rating) {
-                const stars = document.querySelectorAll('.star-rating .star');
-                if (stars.length) {
-                    stars.forEach(star => {
-                        const starValue = parseInt(star.getAttribute('data-value'));
-                        if (starValue <= rating) {
-                            star.classList.add('active');
-                            star.style.color = '#ffc107';
-                        } else {
-                            star.classList.remove('active');
-                            star.style.color = '#ddd';
-                        }
-                    });
-                }
-            }
-
             // Fungsi untuk menutup modal
             function closeEditModal() {
                 document.getElementById('editModal').style.display = "none";
@@ -1680,6 +1602,7 @@
             const statusFilter = document.getElementById('status_filter');
             const ratingFilter = document.getElementById('rating_filter');
             const dateFilter = document.getElementById('date_filter');
+            const kategoriFilter = document.getElementById('kategori_filter');
             const resetFilterButton = document.getElementById('resetFilter');
 
             // Function to submit the form
@@ -1691,6 +1614,7 @@
             statusFilter.addEventListener('change', submitFilterForm);
             ratingFilter.addEventListener('change', submitFilterForm);
             dateFilter.addEventListener('change', submitFilterForm);
+            kategoriFilter.addEventListener('change', submitFilterForm);
 
             // Auto-submit on input for text search (with a small delay)
             let searchTimeout;
@@ -1713,6 +1637,7 @@
                 statusFilter.value = '';
                 ratingFilter.value = '';
                 dateFilter.value = '';
+                kategoriFilter.value = '';
                 submitFilterForm();
             });
 

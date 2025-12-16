@@ -797,6 +797,64 @@
             color: #a0a0a0;
         }
 
+        /* Make inputs, selects and form controls dark in dark mode (higher specificity) */
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
+        body.dark-mode .filter-group select,
+        body.dark-mode .search-bar input,
+        body.dark-mode input[type="text"],
+        body.dark-mode select {
+            background: #2a2a2a !important;
+            border-color: var(--border-light) !important;
+            color: var(--text-dark) !important;
+        }
+
+        /* Make table elements dark in dark mode (force override) */
+        body.dark-mode .table,
+        body.dark-mode .table thead,
+        body.dark-mode .table tbody,
+        body.dark-mode .table th,
+        body.dark-mode .table td,
+        body.dark-mode .table tr {
+            background-color: transparent !important;
+            color: var(--text-dark) !important;
+        }
+
+        /* Ensure table header is darker */
+        body.dark-mode .table thead th {
+            background: #252525 !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border-light) !important;
+        }
+
+        /* Ensure table body cells inherit dark background */
+        body.dark-mode .table tbody td {
+            background: transparent !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border-light) !important;
+        }
+
+        /* Row hover and cells */
+        body.dark-mode .table tbody tr:hover {
+            background: #2a2a2a !important;
+        }
+
+        /* Make badges readable in dark mode */
+        body.dark-mode .status-tersedia {
+            background: #234a2a;
+            color: #b9f6ca;
+        }
+
+        body.dark-mode .status-digunakan {
+            background: #3e2b1f;
+            color: #ffd8a8;
+        }
+
+        body.dark-mode .status-maintenance {
+            background: #3a2121;
+            color: #ffb3b3;
+        }
+
         body.dark-mode .notification-btn,
         body.dark-mode .theme-toggle {
             background: #2a2a2a;
@@ -1061,9 +1119,6 @@
         <!-- Header -->
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.ruangan.index') }}" class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" name="cari" placeholder="Cari ruang..." value="{{ request('cari') }}">
-                <button type="submit" style="display: none;"></button>
             </form>
 
             <div class="user-actions">
@@ -1242,14 +1297,6 @@
                         <label for="kapasitas_filter">Kapasitas Minimal</label>
                         <input type="number" id="kapasitas_filter" name="kapasitas" value="{{ request('kapasitas') }}" min="1" placeholder="Jumlah orang">
                     </div>
-                </div>
-                <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Terapkan Filter
-                    </button>
-                    <a href="{{ route('admin.ruangan.index') }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-refresh me-1"></i> Reset
-                    </a>
                 </div>
             </form>
         </div>

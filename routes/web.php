@@ -163,11 +163,9 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     });
 
     // Redundant dashboard and auth routes can be cleaned up, but per instructions, I will leave them
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
     // --- EKSPORT EXCEL FEEDBACK ---
-    Route::get('/feedback/export', function () {
-        return Excel::download(new FeedbackExport(), 'feedback.xlsx');
+    Route::get('/feedback/export', function (Request $request) {
+        return Excel::download(new FeedbackExport($request), 'feedback.xlsx');
     })->name('admin.feedback.export');
 
     // Feedback
@@ -266,10 +264,7 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
         return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
     })->name('admin.riwayat.export');
 
-    // --- EKSPORT EXCEL FEEDBACK ---
-    Route::get('/feedback/export', function () {
-        return Excel::download(new FeedbackExport(), 'feedback.xlsx');
-    })->name('admin.feedback.export');
+
 });
 
 // ================================
