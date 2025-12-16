@@ -830,6 +830,29 @@
             color: var(--text-dark);
         }
 
+        /* Make table elements dark in dark mode */
+        body.dark-mode .table,
+        body.dark-mode .table thead,
+        body.dark-mode .table tbody,
+        body.dark-mode .table th,
+        body.dark-mode .table td,
+        body.dark-mode .table tr {
+            background-color: transparent;
+            color: var(--text-dark);
+        }
+
+        /* Ensure table header is darker */
+        body.dark-mode .table thead th {
+            background: #252525;
+            color: var(--text-dark);
+            border-color: var(--border-light);
+        }
+
+        /* Row hover and cells */
+        body.dark-mode .table tbody tr:hover {
+            background: #2a2a2a;
+        }
+
         body.dark-mode .notification-btn,
         body.dark-mode .theme-toggle {
             background: #2a2a2a;

@@ -667,12 +667,22 @@
             border-color: var(--border-light);
         }
 
+        /* Force table cells to dark in dark mode and make form controls dark */
         .table tbody td {
             padding: 15px;
             vertical-align: middle;
             border-bottom: 1px solid var(--border-light);
             color: var(--text-dark);
             background: var(--bg-card);
+        }
+
+        .dark-mode .form-control,
+        .dark-mode .form-select,
+        .dark-mode .filter-group select,
+        .dark-mode .search-bar input {
+            background: #2a2a2a !important;
+            border-color: var(--border-light) !important;
+            color: var(--text-dark) !important;
         }
 
         .table tbody tr {
@@ -687,6 +697,20 @@
             background: var(--bg-light);
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .table,
+        .dark-mode .table td,
+        .dark-mode .table tbody,
+        .dark-mode .table tr {
+            background: transparent !important;
+            color: var(--text-dark) !important;
+        }
+
+        .dark-mode .table tbody td {
+            background: transparent !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border-light) !important;
         }
 
         .dark-mode .table tbody tr:hover {
@@ -1635,8 +1659,6 @@
         <!-- Header -->
         <div class="header">
             <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari kode/merk/model..." id="globalSearch">
             </div>
 
             <div class="user-actions">
@@ -1784,14 +1806,6 @@
                             <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
                             <option value="kode" {{ request('sort') == 'kode' ? 'selected' : '' }}>Kode A-Z</option>
                         </select>
-                    </div>
-                    <div class="filter-buttons">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <a href="{{ route('projectors.index') }}" class="btn btn-outline">
-                            <i class="fas fa-refresh"></i> Reset
-                        </a>
                     </div>
                 </form>
             </div>

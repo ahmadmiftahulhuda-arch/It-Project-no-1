@@ -755,12 +755,33 @@
             background: #2a2a2a;
         }
 
+        /* Make inputs, selects and form controls dark in dark mode (stronger) */
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
+        body.dark-mode .filter-group select,
         body.dark-mode .search-bar input,
-        body.dark-mode .filter-group input,
-        body.dark-mode .filter-group select {
-            background: #2a2a2a;
-            border-color: var(--border-light);
-            color: var(--text-dark);
+        body.dark-mode input[type="text"],
+        body.dark-mode select {
+            background: #2a2a2a !important;
+            border-color: var(--border-light) !important;
+            color: var(--text-dark) !important;
+        }
+
+        /* Force table elements dark */
+        body.dark-mode .table,
+        body.dark-mode .table thead,
+        body.dark-mode .table tbody,
+        body.dark-mode .table th,
+        body.dark-mode .table td,
+        body.dark-mode .table tr {
+            background-color: transparent !important;
+            color: var(--text-dark) !important;
+        }
+
+        body.dark-mode .table tbody td {
+            background: transparent !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border-light) !important;
         }
 
         body.dark-mode .notification-btn,

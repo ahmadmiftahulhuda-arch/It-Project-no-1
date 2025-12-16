@@ -1664,8 +1664,6 @@
         <!-- Header -->
         <div class="header">
             <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari kode/nama/merk..." id="globalSearch">
             </div>
 
             <div class="user-actions">

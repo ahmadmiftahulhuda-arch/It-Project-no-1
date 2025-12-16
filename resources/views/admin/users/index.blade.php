@@ -742,13 +742,45 @@
             background: #2a2a2a;
         }
 
-        body.dark-mode .search-bar input,
-        body.dark-mode .filter-group input,
+        /* Make inputs, selects and form controls dark in dark mode (stronger) */
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
         body.dark-mode .filter-group select,
-        body.dark-mode .form-control {
-            background: #2a2a2a;
-            border-color: var(--border-light);
-            color: var(--text-dark);
+        body.dark-mode .search-bar input,
+        body.dark-mode input[type="text"],
+        body.dark-mode select {
+            background: #2a2a2a !important;
+            border-color: var(--border-light) !important;
+            color: var(--text-dark) !important;
+        }
+
+        /* Ensure table elements use dark backgrounds and readable text */
+        body.dark-mode .table,
+        body.dark-mode .table thead,
+        body.dark-mode .table tbody,
+        body.dark-mode .table th,
+        body.dark-mode .table td,
+        body.dark-mode .table tr {
+            background-color: transparent !important;
+            color: var(--text-dark) !important;
+        }
+
+        /* Ensure table header is darker */
+        body.dark-mode .table thead th {
+            background: #252525 !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border-light) !important;
+        }
+
+        /* Table body cells */
+        body.dark-mode .table tbody td {
+            background: transparent !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border-light) !important;
+        }
+
+        body.dark-mode .table tbody tr:hover {
+            background: #2a2a2a !important;
         }
 
         body.dark-mode .form-group input:read-only {
@@ -969,11 +1001,6 @@
         <!-- Header -->
         <div class="header">
             <form id="searchForm" method="GET" action="{{ route('admin.users.index') }}" class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" name="cari"
-                    placeholder="Cari pengguna berdasarkan nama atau email..." value="{{ request('cari') }}"
-                    autocomplete="off">
-                <button type="submit" style="display: none;"></button>
             </form>
 
             <div class="user-actions">
@@ -1104,12 +1131,6 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Terapkan Filter
-                    </button>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-refresh me-1"></i> Reset
-                    </a>
                 </div>
             </form>
         </div>
