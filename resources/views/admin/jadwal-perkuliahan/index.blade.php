@@ -2426,6 +2426,22 @@
                         }
                     });
                 });
+                document.addEventListener('DOMContentLoaded', function() {
+                    const filterForm = document.getElementById('filterForm');
+
+                    const hari = document.getElementById('hari');
+                    const ruangan = document.getElementById('ruangan');
+                    const sistemKuliah = document.getElementById('sistem_kuliah');
+
+                    // Auto submit ketika filter berubah
+                    [hari, ruangan, sistemKuliah].forEach(el => {
+                        if (el) {
+                            el.addEventListener('change', () => {
+                                filterForm.submit();
+                            });
+                        }
+                    });
+                });
             </script>
 </body>
 
