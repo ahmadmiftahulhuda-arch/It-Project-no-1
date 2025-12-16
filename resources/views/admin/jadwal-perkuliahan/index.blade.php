@@ -1966,8 +1966,14 @@
                                     <div class="col-md-6">
                                         <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="kode_matkul"
-                                            name="kode_matkul" value="{{ old('kode_matkul') }}" required>
+                                        <select class="form-select" id="kode_matkul" name="kode_matkul" required>
+                                            <option value="">Pilih Kode Mata Kuliah</option>
+                                            @foreach ($mataKuliahs as $matakuliah)
+                                                <option value="{{ $matakuliah->kode }}"
+                                                    {{ old('kode_matkul') == $matakuliah->kode ? 'selected' : '' }}>
+                                                    {{ $matakuliah->kode }} - {{ $matakuliah->nama }}</option>
+                                            @endforeach
+                                        </select>
                                         @error('kode_matkul')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -2148,13 +2154,19 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
+<div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label for="edit_kode_matkul{{ $item->id }}" class="form-label">Kode
-                                                Mata Kuliah <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control"
-                                                id="edit_kode_matkul{{ $item->id }}" name="kode_matkul"
-                                                value="{{ old('kode_matkul', $item->kode_matkul) }}" required>
+                                            <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select" id="kode_matkul" name="kode_matkul" required>
+                                                <option value="">Pilih Kode Mata Kuliah</option>
+                                                @foreach ($mataKuliahs as $matakuliah)
+                                                    <option value="{{ $matakuliah->kode }}"
+                                                        {{ old('kode_matkul', $item->kode_matkul) == $matakuliah->kode ? 'selected' : '' }}>
+                                                        {{ $matakuliah->kode }} - {{ $matakuliah->nama }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                             @error('kode_matkul')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror

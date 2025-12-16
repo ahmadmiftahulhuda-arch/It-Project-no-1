@@ -15,7 +15,7 @@
                     <i class="fas fa-users-class fa-2x text-primary me-3"></i>
                     <div>
                         {{-- Nama Kelas --}}
-                        <h1 class="h3 fw-bold mb-1 text-dark-mode-aware">Kelas {{ $kela->nama_kelas }}</h1>
+                        <h1 class="h3 fw-bold mb-1 text-dark-mode-aware">{{ $kela->nama_kelas }}</h1>
                         {{-- Jumlah Mahasiswa --}}
                         <span class="badge bg-success-soft text-success p-2 px-3 fw-bold fs-6" style="border-radius: 50px;">
                             <i class="fas fa-graduation-cap me-1"></i> {{ $mahasiswa->count() }} Mahasiswa

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JadwalPerkuliahan;
+use App\Models\MataKuliah;
 use App\Imports\JadwalPerkuliahanImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +73,7 @@ class JadwalPerkuliahanController extends Controller
         $hariList = JadwalPerkuliahan::distinct()->pluck('hari');
         $ruanganList = JadwalPerkuliahan::distinct()->pluck('ruangan');
         $sistemKuliahList = JadwalPerkuliahan::distinct()->pluck('sistem_kuliah');
+        $mataKuliahs = MataKuliah::all();
 
         // ==========================
         // STATISTIK JADWAL
@@ -104,7 +106,8 @@ class JadwalPerkuliahanController extends Controller
             'rabuCount',
             'kamisCount',
             'jumatCount',
-            'filters'
+            'filters',
+            'mataKuliahs'
         ));
     }
 
@@ -113,7 +116,8 @@ class JadwalPerkuliahanController extends Controller
      */
     public function create()
     {
-        return view('admin.jadwal-perkuliahan.create');
+        $mataKuliahs = MataKuliah::all();
+        return view('admin.jadwal-perkuliahan.create', compact('mataKuliahs'));
     }
 
     /**
