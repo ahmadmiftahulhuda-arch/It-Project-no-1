@@ -39,6 +39,10 @@ class FeedbackController extends Controller
             $query->whereDate('created_at', $request->input('date'));
         }
 
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->input('kategori'));
+        }
+
         // Use withQueryString() to append filter parameters to pagination links
         $feedback = $query->latest()->paginate(10)->withQueryString();
 
@@ -46,7 +50,7 @@ class FeedbackController extends Controller
         $totalFeedback = Feedback::count();
         $averageRating = Feedback::avg('rating');
         $published = Feedback::where('status', 'Dipublikasikan')->count();
-        $draft = Feedback::where('status', 'Draft')->count();
+        $draft = Feedback::whereIn('status', ['Draft', 'baru'])->count();
 
         return view('admin.feedback.index', compact(
             'feedback',
@@ -69,10 +73,13 @@ class FeedbackController extends Controller
             'komentar'      => 'required|string',
             'tgl_feedback'  => 'required|date',
             'rating'        => 'required|integer|min:1|max:5',
-            'status'        => 'required|in:Draft,Dipublikasikan',
+            // 'status'        => 'required|in:Draft,Dipublikasikan', // Removed status validation
         ]);
 
-        Feedback::create($request->all());
+        $feedbackData = $request->all();
+        $feedbackData['status'] = 'Draft'; // Set status to Draft
+
+        Feedback::create($feedbackData);
 
         return redirect()->route('admin.feedback.index')->with('success', 'Feedback berhasil ditambahkan');
     }
@@ -130,7 +137,7 @@ class FeedbackController extends Controller
         $totalFeedback = Feedback::count();
         $averageRating = Feedback::avg('rating');
         $published = Feedback::where('status', 'Dipublikasikan')->count();
-        $draft = Feedback::where('status', 'Draft')->count();
+        $draft = Feedback::whereIn('status', ['Draft', 'baru'])->count();
 
         return view('admin.feedback.stats', compact('totalFeedback', 'averageRating', 'published', 'draft'));
     }
