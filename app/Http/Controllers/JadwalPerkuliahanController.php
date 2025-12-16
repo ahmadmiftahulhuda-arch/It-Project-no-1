@@ -31,9 +31,9 @@ class JadwalPerkuliahanController extends Controller
         if ($filters['search']) {
             $jadwal->where(function ($q) use ($filters) {
                 $q->where('kode_matkul', 'like', "%{$filters['search']}%")
-                  ->orWhere('nama_kelas', 'like', "%{$filters['search']}%")
-                  ->orWhere('ruangan', 'like', "%{$filters['search']}%")
-                  ->orWhere('hari', 'like', "%{$filters['search']}%");
+                    ->orWhere('nama_kelas', 'like', "%{$filters['search']}%")
+                    ->orWhere('ruangan', 'like', "%{$filters['search']}%")
+                    ->orWhere('hari', 'like', "%{$filters['search']}%");
             });
         }
 
@@ -60,7 +60,7 @@ class JadwalPerkuliahanController extends Controller
                 break;
             default:
                 $jadwal->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')")
-                       ->orderBy('jam_mulai');
+                    ->orderBy('jam_mulai');
                 break;
         }
 
@@ -72,11 +72,25 @@ class JadwalPerkuliahanController extends Controller
         $ruanganList = JadwalPerkuliahan::distinct()->pluck('ruangan');
         $sistemKuliahList = JadwalPerkuliahan::distinct()->pluck('sistem_kuliah');
 
-        // Statistik
+        // ==========================
+        // STATISTIK JADWAL
+        // ==========================
         $totalCount = JadwalPerkuliahan::count();
-        $hariCounts = JadwalPerkuliahan::select('hari', DB::raw('COUNT(*) as total'))
-            ->groupBy('hari')
+
+        $hariCounts = JadwalPerkuliahan::select(
+            DB::raw('TRIM(hari) as hari'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy(DB::raw('TRIM(hari)'))
             ->pluck('total', 'hari');
+
+        // Mapping ke variabel Blade (WAJIB)
+        $seninCount  = $hariCounts['Senin']  ?? 0;
+        $selasaCount = $hariCounts['Selasa'] ?? 0;
+        $rabuCount   = $hariCounts['Rabu']   ?? 0;
+        $kamisCount  = $hariCounts['Kamis']  ?? 0;
+        $jumatCount  = $hariCounts['Jumat']  ?? 0;
+
 
         return view('admin.jadwal-perkuliahan.index', compact(
             'jadwal',
@@ -84,7 +98,11 @@ class JadwalPerkuliahanController extends Controller
             'ruanganList',
             'sistemKuliahList',
             'totalCount',
-            'hariCounts',
+            'seninCount',
+            'selasaCount',
+            'rabuCount',
+            'kamisCount',
+            'jumatCount',
             'filters'
         ));
     }
