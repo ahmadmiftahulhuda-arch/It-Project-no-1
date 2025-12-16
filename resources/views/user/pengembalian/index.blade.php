@@ -1283,14 +1283,12 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th width="50">#</th>
-                                    <th>Tanggal</th>
+                                    <th width="50">No</th>
+                                    <th>Tanggal & Waktu</th>
                                     <th>Ruang</th>
-                                    <th>Dosen Pengampu</th>
-                                    <th>Waktu</th>
-                                    <th width="100" class="text-center">Proyektor</th>
+                                    <th class="text-center">Proyektor</th>
                                     <th>Keperluan</th>
-                                    <th width="150" class="text-center">Aksi</th>
+                                    <th width="120" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1301,67 +1299,84 @@
                                         data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
                                         data-tanggal-iso="{{ $p->tanggal }}"
                                         data-waktu-mulai="{{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}"
-                                        data-waktu-selesai="{{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}"
-                                        data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}">
-                                        <td class="fw-bold">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <i class="fas fa-calendar me-1 text-primary"></i>
-                                            {{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}
-                                        </td>
-                                        <td>
-                                            <i class="fas fa-door-open me-1 text-info"></i>
-                                            {{ $p->ruangan->nama_ruangan ?? $p->ruang }}
-                                        </td>
-                                        <td>
-                                            {{ $p->dosen->nama_dosen ?? '-' }}
-                                        </td>
-                                        <td>
-                                            <i class="fas fa-clock me-1 text-success"></i>
-                                            <i class="fas fa-clock me-1 text-success"></i>
-                                            {{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}
-                                            -
-                                            {{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}
+                                        data-waktu-selesai="{{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}">
 
-                                        </td>
-                                        <td class="text-center">
-                                            @if (isset($p->projector) && $p->projector)
-                                                <span
-                                                    class="badge bg-success status-badge">{{ $p->projector->kode_proyektor }}
-                                                    - {{ $p->projector->merk }} {{ $p->projector->model }}</span>
-                                            @elseif(!empty($p->projector_id))
-                                                <span class="badge bg-success status-badge">ID:
-                                                    {{ $p->projector_id }}</span>
-                                            @else
-                                                @if ($p->proyektor)
-                                                    <span class="badge bg-success status-badge"><i
-                                                            class="fas fa-check me-1"></i> Ya</span>
-                                                @else
-                                                    <span class="badge bg-secondary status-badge"><i
-                                                            class="fas fa-times me-1"></i> Tidak</span>
-                                                @endif
-                                            @endif
-                                        </td>
+                                        <!-- 1. NO -->
+                                        <td class="fw-bold text-center">{{ $loop->iteration }}</td>
+
+                                        <!-- 2. TANGGAL & WAKTU (SAMA SEPERTI PEMINJAMAN) -->
                                         <td>
-                                            <div class="text-truncate-custom">
-                                                {{ $p->keperluan }}
+                                            <div>
+                                                <i class="fas fa-calendar-day text-primary me-1"></i>
+                                                {{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}
+                                            </div>
+                                            <div>
+                                                <span class="time-badge">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }} -
+                                                    {{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}
+                                                </span>
                                             </div>
                                         </td>
+
+                                        <!-- 3. RUANG -->
+                                        <td>
+                                            <i class="fas fa-door-open text-info me-1"></i>
+                                            {{ $p->ruangan->nama_ruangan ?? $p->ruang }}
+                                        </td>
+
+                                        <!-- 4. PROYEKTOR -->
                                         <td class="text-center">
-                                            <button class="btn btn-success btn-sm ajukan-pengembalian"
-                                                data-id="{{ $p->id }}"
-                                                data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
-                                                data-dosen="{{ $p->dosen->nama_dosen ?? '' }}"
-                                                data-dosen-nip="{{ $p->dosen_nip ?? '' }}"
-                                                data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
-                                                data-tanggal-iso="{{ $p->tanggal }}"
-                                                data-waktu-mulai="{{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}"
-                                                data-waktu-selesai="{{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}"
-                                                data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}"
-                                                data-projector-id="{{ $p->projector->id ?? ($p->projector_id ?? '') }}"
-                                                data-projector-label="{{ isset($p->projector) && $p->projector ? $p->projector->kode_proyektor . ' - ' . $p->projector->merk . ' ' . $p->projector->model : ($p->proyektor ? 'Ya' : 'Tidak') }}"
-                                                data-proyektor="{{ $p->proyektor ? 'Ya' : 'Tidak' }}">
-                                                <i class="fas fa-paper-plane me-1"></i> Ajukan
-                                            </button>
+                                            @if ($p->projector)
+                                                <strong>{{ $p->projector->kode_proyektor }}</strong>
+                                                <div class="text-muted small">
+                                                    {{ $p->projector->merk }} {{ $p->projector->model }}
+                                                </div>
+                                            @else
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-times me-1"></i> Tidak
+                                                </span>
+                                            @endif
+                                        </td>
+
+                                        <!-- 5. KEPERLUAN -->
+                                        <td>
+                                            <span class="text-truncate-custom">
+                                                {{ \Illuminate\Support\Str::limit($p->keperluan, 40) }}
+                                            </span>
+                                        </td>
+
+                                        <!-- 6. AKSI -->
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-info btn-sm detail-pengembalian"
+                                                    data-bs-toggle="modal" data-bs-target="#detailPengembalianModal"
+                                                    data-tanggal-pinjam="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                    data-waktu-mulai="{{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}"
+                                                    data-waktu-selesai="{{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}"
+                                                    data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
+                                                    data-dosen="{{ $p->dosen->nama_dosen ?? '-' }}"
+                                                    data-projector-label="{{ $p->projector ? $p->projector->kode_proyektor . ' - ' . $p->projector->merk . ' ' . $p->projector->model : 'Tidak' }}"
+                                                    data-keperluan="{{ $p->keperluan }}">
+                                                    <i class="fas fa-eye me-1"></i> Detail
+                                                </button>
+
+                                                <button class="btn btn-success btn-sm ajukan-pengembalian"
+                                                    data-id="{{ $p->id }}"
+                                                    data-ruang="{{ $p->ruangan->nama_ruangan ?? $p->ruang }}"
+                                                    data-dosen="{{ $p->dosen->nama_dosen ?? '' }}"
+                                                    data-dosen-nip="{{ $p->dosen_nip ?? '' }}"
+                                                    data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('d M Y') }}"
+                                                    data-tanggal-iso="{{ $p->tanggal }}"
+                                                    data-waktu-mulai="{{ \Carbon\Carbon::parse($p->waktu_mulai)->format('H:i') }}"
+                                                    data-waktu-selesai="{{ \Carbon\Carbon::parse($p->waktu_selesai)->format('H:i') }}"
+                                                    data-is-ongoing="{{ $isOngoing ? 'true' : 'false' }}"
+                                                    data-projector-id="{{ $p->projector->id ?? '' }}"
+                                                    data-projector-label="{{ $p->projector ? $p->projector->kode_proyektor . ' - ' . $p->projector->merk . ' ' . $p->projector->model : 'Tidak' }}"
+                                                    data-proyektor="{{ $p->proyektor ? 'Ya' : 'Tidak' }}">
+                                                    <i class="fas fa-paper-plane me-1"></i> Ajukan
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
