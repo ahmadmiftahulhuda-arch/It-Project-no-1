@@ -311,9 +311,21 @@ class PeminjamanController extends Controller
                 ]);
             }
 
+            // 🔥 JIKA TERLAMBAT → TUTUP PEMINJAMAN OTOMATIS
+            if ($statusToSave === 'overdue') {
+                $peminjaman->update([
+                    'status' => 'selesai',
+                    'tanggal_kembali' => $tanggalPengembalian,
+                    'status_pengembalian' => 'sudah dikembalikan',
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan pengembalian berhasil diajukan.',
+                'status' => $statusToSave,
+                'message' => $statusToSave === 'overdue'
+                    ? 'Pengembalian diajukan (TERLAMBAT). Peminjaman otomatis diselesaikan.'
+                    : 'Pengajuan pengembalian berhasil diajukan dan menunggu verifikasi admin.',
             ]);
         } catch (\Exception $e) {
             return response()->json([
