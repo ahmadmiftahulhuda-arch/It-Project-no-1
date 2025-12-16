@@ -1345,15 +1345,10 @@
                                         data-waktu-pengembalian="{{ optional($item->pengembalian)->tanggal_pengembalian ? \Carbon\Carbon::parse(optional($item->pengembalian)->tanggal_pengembalian)->format('H:i') : '' }}">
                                         <td>{{ ($riwayat->currentPage() - 1) * $riwayat->perPage() + $loop->iteration }}
                                         </td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="user-avatar me-2"
-                                                    style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                                    {{ substr($item->user->name ?? 'G', 0, 1) }}
-                                                </div>
-                                                {{ $item->user->name ?? 'Guest' }}
-                                            </div>
-                                        </td>
+    <td>
+        <div class="fw-bold">{{ $item->user->name ?? 'Guest' }}</div>
+        <small class="text-muted">{{ $item->user->nim ?? '-' }}</small>
+    </td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                                             <br>
