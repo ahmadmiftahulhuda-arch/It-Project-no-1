@@ -1034,6 +1034,7 @@
                                 </label>
 
                                 <div class="input-icon">
+                                    <i class="fas fa-clipboard-list"></i>
                                     <select name="keperluan" id="keperluanSelect"
                                         class="form-select @error('keperluan') is-invalid @enderror" required>
                                         <option value="">-- Pilih Keperluan --</option>
