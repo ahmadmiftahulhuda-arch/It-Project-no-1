@@ -1043,20 +1043,16 @@
                                         <option value="Ujikom">Ujikom</option>
                                         <option value="Mentoring">Mentoring</option>
                                         <option value="Belajar Bersama">Belajar Bersama</option>
-                                        <option value="Konsultasi KRS">Konsultasi KRS</option>
-                                        <option value="UTS">UTS</option>
-                                        <option value="UAS">UAS</option>
+                                        <option value="Konsultasi KRS">Konsultasi KRS, UTS, UAS</option>
                                         <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
                             </div>
 
                             <!-- INPUT LAINNYA -->
-                            <div class="mt-3 {{ old('keperluan') == 'Lainnya' ? '' : 'd-none' }}"
-                                id="keperluanLainnyaWrapper">
+                            <div class="mt-3 d-none" id="keperluanLainnyaWrapper">
                                 <input type="text" name="keperluan_lainnya" id="keperluanLainnya"
-                                    class="form-control" value="{{ old('keperluan_lainnya') }}"
-                                    placeholder="Tuliskan keperluan lainnya">
+                                    class="form-control" placeholder="Tuliskan keperluan lainnya" disabled>
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
@@ -1195,23 +1191,31 @@
                 });
             });
 
-            document.addEventListener('DOMContentLoaded', function() {
+            (function() {
                 const keperluanSelect = document.getElementById('keperluanSelect');
                 const wrapper = document.getElementById('keperluanLainnyaWrapper');
                 const inputLainnya = document.getElementById('keperluanLainnya');
 
-                if (keperluanSelect) {
-                    keperluanSelect.addEventListener('change', function() {
-                        if (this.value === 'Lainnya') {
-                            wrapper.classList.remove('d-none');
-                            inputLainnya.focus();
-                        } else {
-                            wrapper.classList.add('d-none');
-                            inputLainnya.value = '';
-                        }
-                    });
+                if (!keperluanSelect || !wrapper || !inputLainnya) return;
+
+                keperluanSelect.addEventListener('change', function() {
+                    if (this.value === 'Lainnya') {
+                        wrapper.classList.remove('d-none');
+                        inputLainnya.removeAttribute('disabled');
+                        inputLainnya.focus();
+                    } else {
+                        wrapper.classList.add('d-none');
+                        inputLainnya.value = '';
+                        inputLainnya.setAttribute('disabled', 'disabled');
+                    }
+                });
+
+                // Handle reload / old value
+                if (keperluanSelect.value === 'Lainnya') {
+                    wrapper.classList.remove('d-none');
+                    inputLainnya.removeAttribute('disabled');
                 }
-            });
+            })();
 
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(e) {

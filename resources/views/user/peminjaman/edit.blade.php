@@ -964,11 +964,13 @@
 
                             <div class="mb-4">
                                 <label class="form-label">Keperluan</label>
-                                <div class="input-icon">
+
+                                <div class="input-icon mb-2">
                                     <i class="fas fa-clipboard-list"></i>
                                     <select name="keperluan" id="keperluanSelect" class="form-select"
                                         {{ $peminjaman->status != 'pending' ? 'disabled' : '' }} required>
                                         <option value="">-- Pilih Keperluan --</option>
+
                                         @php
                                             $opsi = [
                                                 'Perkuliahan',
@@ -977,15 +979,13 @@
                                                 'Ujikom',
                                                 'Mentoring',
                                                 'Belajar Bersama',
-                                                'Konsultasi KRS',
-                                                'UTS',
-                                                'UAS',
+                                                'Konsultasi KRS, UTS, UAS',
                                             ];
                                         @endphp
 
                                         @foreach ($opsi as $item)
                                             <option value="{{ $item }}"
-                                                {{ $peminjaman->keperluan == $item ? 'selected' : '' }}>
+                                                {{ old('keperluan', $peminjaman->keperluan) == $item ? 'selected' : '' }}>
                                                 {{ $item }}
                                             </option>
                                         @endforeach
@@ -995,19 +995,21 @@
                                             Lainnya
                                         </option>
                                     </select>
-
-                                    <div class="mt-3 {{ in_array($peminjaman->keperluan, $opsi) ? 'd-none' : '' }}"
-                                        id="keperluanLainnyaWrapper">
-                                        <input type="text" name="keperluan_lainnya" class="form-control"
-                                            value="{{ !in_array($peminjaman->keperluan, $opsi) ? $peminjaman->keperluan : '' }}"
-                                            placeholder="Tuliskan keperluan lainnya">
-                                    </div>
-
                                 </div>
+
+                                <!-- INPUT Lainnya -->
+                                <div id="keperluanLainnyaWrapper"
+                                    class="{{ !in_array($peminjaman->keperluan, $opsi) ? '' : 'd-none' }}">
+                                    <input type="text" name="keperluan_lainnya" class="form-control"
+                                        placeholder="Tuliskan keperluan lainnya"
+                                        value="{{ !in_array($peminjaman->keperluan, $opsi) ? $peminjaman->keperluan : '' }}">
+                                </div>
+
                                 @error('keperluan')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
+
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="{{ route('user.peminjaman.index') }}"
@@ -1248,6 +1250,37 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const keperluanSelect = document.getElementById('keperluanSelect');
+            const wrapper = document.getElementById('keperluanLainnyaWrapper');
+            const input = document.querySelector('input[name="keperluan_lainnya"]');
+
+            if (!keperluanSelect || !wrapper || !input) {
+                console.warn('Elemen keperluan tidak ditemukan');
+                return;
+            }
+
+            function toggleKeperluan() {
+                if (keperluanSelect.value === 'Lainnya') {
+                    wrapper.classList.remove('d-none');
+                    input.required = true;
+                    input.disabled = false;
+                    input.focus();
+                } else {
+                    wrapper.classList.add('d-none');
+                    input.required = false;
+                    input.value = '';
+                }
+            }
+
+            keperluanSelect.addEventListener('change', toggleKeperluan);
+
+            // 🔑 agar data lama edit langsung muncul
+            toggleKeperluan();
+        });
+    </script>
+
 </body>
 
 </html>

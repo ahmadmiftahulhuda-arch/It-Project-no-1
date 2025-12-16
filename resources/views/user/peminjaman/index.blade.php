@@ -1414,7 +1414,6 @@
                             <th width="50" class="text-center">No</th>
                             <th>Tanggal & Waktu</th>
                             <th>Ruang</th>
-                            <th>Dosen Pengampu</th>
                             <th width="100" class="text-center">Proyektor</th>
                             <th>Keperluan</th>
                             <th width="130" class="text-center">Status</th>
