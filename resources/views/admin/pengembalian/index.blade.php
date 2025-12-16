@@ -1111,8 +1111,6 @@
                             </option>
                             <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>
                                 Disetujui</option>
-                            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak
-                            </option>
                             <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>
                                 Terlambat</option>
                         </select>
