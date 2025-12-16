@@ -2006,10 +2006,15 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="kelas_mahasiswa"
-                                            name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa') }}" required>
+                                        <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa</label>
+                                        <select class="form-select" id="kelas_mahasiswa" name="kelas_mahasiswa">
+                                            <option value="">Pilih Kelas Mahasiswa</option>
+                                            @foreach ($kelas as $k)
+                                                <option value="{{ $k->nama_kelas }}"
+                                                    {{ old('kelas_mahasiswa') == $k->nama_kelas ? 'selected' : '' }}>
+                                                    {{ $k->nama_kelas }}</option>
+                                            @endforeach
+                                        </select>
                                         @error('kelas_mahasiswa')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -2202,14 +2207,18 @@
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-6">
-                                            <label for="edit_kelas_mahasiswa{{ $item->id }}"
-                                                class="form-label">Kelas Mahasiswa <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" class="form-control"
-                                                id="edit_kelas_mahasiswa{{ $item->id }}" name="kelas_mahasiswa"
-                                                value="{{ old('kelas_mahasiswa', $item->kelas_mahasiswa) }}"
-                                                required>
+<div class="col-md-6">
+                                            <label for="kelas_mahasiswa" class="form-label">Kelas
+                                                Mahasiswa</label>
+                                            <select class="form-select" id="kelas_mahasiswa"
+                                                name="kelas_mahasiswa">
+                                                <option value="">Pilih Kelas Mahasiswa</option>
+                                                @foreach ($kelas as $k)
+                                                    <option value="{{ $k->nama_kelas }}"
+                                                        {{ old('kelas_mahasiswa', $item->kelas_mahasiswa) == $k->nama_kelas ? 'selected' : '' }}>
+                                                        {{ $k->nama_kelas }}</option>
+                                                @endforeach
+                                            </select>
                                             @error('kelas_mahasiswa')
                                                 <div class="text-danger mt-1">{{ $message }}</div>
                                             @enderror
