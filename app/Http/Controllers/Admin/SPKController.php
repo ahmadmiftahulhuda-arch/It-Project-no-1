@@ -13,18 +13,24 @@ class SPKController extends Controller
     /* =====================================================
      * HALAMAN SPK UTAMA (AHP + SAW PEMINJAMAN ASLI)
      * ===================================================== */
-    public function index()
+    public function index(Request $request)
     {
+        // Ambil tanggal yang dipilih (default adalah hari ini)
+        $filterDate = $request->input('filter_date', date('Y-m-d'));
+
+        // Ambil kriteria SPK
         $criteria = SpkCriterion::orderBy('kode')->get();
 
+        // Ambil data peminjaman dengan filter berdasarkan tanggal
         $peminjamans = Peminjaman::with([
-                'user',
-                'ruangan',
-                'projector',
-                'spkPenilaian',
-                'feedback'
-            ])
+            'user',
+            'ruangan',
+            'projector',
+            'spkPenilaian',
+            'feedback'
+        ])
             ->where('status', 'pending')
+            ->whereDate('tanggal', $filterDate) // Filter berdasarkan tanggal
             ->get();
 
         $scores = [];
@@ -34,8 +40,12 @@ class SPKController extends Controller
             }
         }
 
+        // Urutkan berdasarkan nilai preferensi setelah dihitung
+        $this->hitungSAWPeminjaman($peminjamans, $criteria);
+
         $rankings = Peminjaman::whereNotNull('nilai_preferensi')
             ->where('status', 'pending')
+            ->whereDate('tanggal', $filterDate) // Filter berdasarkan tanggal
             ->orderByDesc('nilai_preferensi')
             ->get();
 
@@ -43,9 +53,11 @@ class SPKController extends Controller
             'criteria',
             'peminjamans',
             'scores',
-            'rankings'
+            'rankings',
+            'filterDate'
         ));
     }
+
 
     /* =====================================================
      * SIMPAN NILAI SPK PEMINJAMAN ASLI
@@ -58,6 +70,18 @@ class SPKController extends Controller
 
         $criteria = SpkCriterion::all();
 
+        // Ambil data peminjaman yang relevan
+        $peminjamans = Peminjaman::with([
+            'user',
+            'ruangan',
+            'projector',
+            'spkPenilaian',
+            'feedback'
+        ])
+            ->where('status', 'pending')
+            ->get();
+
+        // Simpan penilaian
         foreach ($request->scores as $peminjamanId => $nilaiInput) {
             foreach ($criteria as $c) {
                 if (!isset($nilaiInput[$c->kode])) continue;
@@ -74,7 +98,8 @@ class SPKController extends Controller
             }
         }
 
-        $this->hitungSAWPeminjaman();
+        // Panggil hitungSAWPeminjaman dengan parameter yang tepat
+        $this->hitungSAWPeminjaman($peminjamans, $criteria);
 
         return redirect()
             ->route('admin.spk.index')
@@ -84,23 +109,19 @@ class SPKController extends Controller
     /* =====================================================
      * SAW PEMINJAMAN ASLI
      * ===================================================== */
-    private function hitungSAWPeminjaman()
+    private function hitungSAWPeminjaman($peminjamans, $criteria)
     {
-        $criteria = SpkCriterion::all();
-        $peminjamans = Peminjaman::with('spkPenilaian')
-            ->where('status', 'pending')
-            ->get();
-
         if ($peminjamans->isEmpty() || $criteria->isEmpty()) return;
 
         $pembagi = [];
 
+        // Hitung pembagi untuk setiap kriteria (AHP)
         foreach ($criteria as $c) {
             $nilai = $peminjamans->pluck('spkPenilaian')
                 ->flatten()
                 ->where('criterion_id', $c->id)
                 ->pluck('nilai')
-                ->filter(fn ($v) => $v > 0)
+                ->filter(fn($v) => $v > 0)
                 ->toArray();
 
             $pembagi[$c->id] = empty($nilai)
@@ -108,6 +129,7 @@ class SPKController extends Controller
                 : ($c->tipe === 'cost' ? min($nilai) : max($nilai));
         }
 
+        // Hitung nilai preferensi untuk setiap peminjaman (SAW)
         foreach ($peminjamans as $p) {
             $preferensi = 0;
 

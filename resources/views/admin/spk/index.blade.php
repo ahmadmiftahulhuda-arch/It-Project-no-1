@@ -1006,6 +1006,15 @@
         </div>
 
         <!-- BAGIAN B: INPUT PENILAIAN PEMINJAMAN (SPK) -->
+        <!-- Filter Tanggal -->
+        <div class="mb-3">
+            <label for="filter-date" class="form-label">Filter Tanggal Peminjaman</label>
+            <form method="GET" action="{{ route('admin.spk.index') }}">
+                <input type="date" id="filter-date" class="form-control" name="filter_date"
+                    value="{{ old('filter_date', $filterDate) }}" onchange="this.form.submit()">
+            </form>
+        </div>
+
         <div class="spk-container">
             <h2 class="section-title">
                 <i class="fas fa-list-check"></i>
@@ -1046,6 +1055,7 @@
                                         'seminar' => 3,
                                         'pkl' => 3,
                                         'proposal' => 3,
+                                        'ujikom' => 3,
                                         'mentoring' => 2,
                                         'belajar' => 2,
                                         'konsultasi' => 1,
@@ -1245,7 +1255,7 @@
                                         {{ \Carbon\Carbon::parse($p->created_at)->format('H:i') }}
                                     </td>
                                     <td class="text-center fw-bold">
-                                        {{ number_format($p->nilai_preferensi, 4) }}
+                                        {{ number_format($p->nilai_preferensi, 4) ?? '0' }}
                                     </td>
                                     <td class="text-center">
                                         @if ($idx === 0)
@@ -1275,79 +1285,78 @@
                 </div>
             @endif
         </div>
-    </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Toggle theme
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Toggle theme
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
 
-            if (document.body.classList.contains('dark-mode')) {
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+
+            // Terapkan dark mode jika sebelumnya diaktifkan
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('darkMode', 'disabled');
             }
-        });
 
-        // Terapkan dark mode jika sebelumnya diaktifkan
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
+            // Auto-fill reciprocal values untuk matrix AHP
+            const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
 
-        // Auto-fill reciprocal values untuk matrix AHP
-        const matrixInputs = document.querySelectorAll('.matrix-table input[type="number"]');
+            matrixInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const name = this.name;
+                    const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
 
-        matrixInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                const name = this.name;
-                const matches = name.match(/matrix\[(\d+)\]\[(\d+)\]/);
+                    if (matches) {
+                        const row = parseInt(matches[1]);
+                        const col = parseInt(matches[2]);
 
-                if (matches) {
-                    const row = parseInt(matches[1]);
-                    const col = parseInt(matches[2]);
-
-                    if (row !== col) {
-                        const reciprocalInput = document.querySelector(
-                            `input[name="matrix[${col}][${row}]"]`
-                        );
-                        if (reciprocalInput && this.value !== '') {
-                            const value = parseFloat(this.value);
-                            if (value > 0) {
-                                reciprocalInput.value = (1 / value).toFixed(8);
+                        if (row !== col) {
+                            const reciprocalInput = document.querySelector(
+                                `input[name="matrix[${col}][${row}]"]`
+                            );
+                            if (reciprocalInput && this.value !== '') {
+                                const value = parseFloat(this.value);
+                                if (value > 0) {
+                                    reciprocalInput.value = (1 / value).toFixed(8);
+                                }
                             }
                         }
                     }
-                }
-            });
-        });
-
-        // Validasi AHP matrix
-        const ahpForm = document.querySelector('.ahp-container form');
-        ahpForm.addEventListener('submit', function(e) {
-            let isValid = true;
-            const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
-
-            inputs.forEach(input => {
-                if (input.value === '' || isNaN(parseFloat(input.value))) {
-                    isValid = false;
-                    input.style.borderColor = 'var(--danger)';
-                } else {
-                    input.style.borderColor = '';
-                }
+                });
             });
 
-            if (!isValid) {
-                e.preventDefault();
-                alert('Harap isi semua nilai perbandingan matriks AHP!');
-            }
-        });
-    </script>
+            // Validasi AHP matrix
+            const ahpForm = document.querySelector('.ahp-container form');
+            ahpForm.addEventListener('submit', function(e) {
+                let isValid = true;
+                const inputs = this.querySelectorAll('input[type="number"]:not([readonly])');
+
+                inputs.forEach(input => {
+                    if (input.value === '' || isNaN(parseFloat(input.value))) {
+                        isValid = false;
+                        input.style.borderColor = 'var(--danger)';
+                    } else {
+                        input.style.borderColor = '';
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Harap isi semua nilai perbandingan matriks AHP!');
+                }
+            });
+        </script>
 </body>
 
 </html>
