@@ -648,17 +648,6 @@
                                     <i class="fas fa-calendar me-2"></i> Kalender Akademik
                                 </a>
                             </li>
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-clock me-2"></i> Jadwal Kuliah
-                                </a>
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item-custom" href="#">
-                                    <i class="fas fa-download me-2"></i> Download Kalender
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

@@ -1495,26 +1495,6 @@
         
                                     </li>
         
-                                    <li>
-        
-                                        <a class="dropdown-item-custom" href="#">
-        
-                                            <i class="fas fa-clock me-2"></i> Jadwal Kuliah
-        
-                                        </a>
-        
-                                    </li>
-        
-                                    <li>
-        
-                                        <a class="dropdown-item-custom" href="#">
-        
-                                            <i class="fas fa-download me-2"></i> Download Kalender
-        
-                                        </a>
-        
-                                    </li>
-        
                                 </ul>
         
                             </li>
@@ -1747,76 +1727,6 @@
         
                 </div>
         
-        
-        
-                <div class="filter-section">
-        
-                    <h3 class="filter-title"><i class="fa-solid fa-filter"></i> Filter Jadwal</h3>
-        
-                    <div class="row">
-        
-                        <div class="col-md-4 mb-3">
-        
-                            <label for="programFilter" class="form-label">Program Studi</label>
-        
-                            <select class="form-select" id="programFilter">
-        
-                                <option selected>Semua Program Studi</option>
-        
-                                <option>Teknologi Informasi</option>
-        
-                                <option>Sistem Informasi</option>
-        
-                                <option>Informatika</option>
-        
-                            </select>
-        
-                        </div>
-        
-                        <div class="col-md-4 mb-3">
-        
-                            <label for="monthFilter" class="form-label">Bulan</label>
-        
-                            <select class="form-select" id="monthFilter">
-        
-                                <option selected>September 2025</option>
-        
-                                <option>Oktober 2025</option>
-        
-                                <option>November 2025</option>
-        
-                                <option>Desember 2025</option>
-        
-                            </select>
-        
-                        </div>
-        
-                        <div class="col-md-4 mb-3">
-        
-                            <label for="eventTypeFilter" class="form-label">Jenis Kegiatan</label>
-        
-                            <select class="form-select" id="eventTypeFilter">
-        
-                                <option selected>Semua Kegiatan</option>
-        
-                                <option>Perkuliahan</option>
-        
-                                <option>Praktikum</option>
-        
-                                <option>Ujian</option>
-        
-                                <option>Rapat</option>
-        
-                            </select>
-        
-                        </div>
-        
-                    </div>
-        
-                </div>
-        
-        
-        
                 <div class="calendar-container">
         
                     <div class="calendar-header">
@@ -1838,27 +1748,7 @@
                             </button>
         
                         </div>
-        
-                        <div class="calendar-controls">
-        
-                            <button class="btn btn-outline-primary">
-        
-                                <i class="fa-solid fa-download"></i> Unduh
-        
-                            </button>
-        
-                            <button class="btn btn-primary">
-        
-                                <i class="fa-solid fa-print"></i> Cetak
-        
-                            </button>
-        
-                        </div>
-        
                     </div>
-        
-                    
-        
                     <div class="table-responsive">
         
                         <table class="calendar table table-bordered">
