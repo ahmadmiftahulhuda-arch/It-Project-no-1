@@ -151,7 +151,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles */
+        /* Dropdown Menu Styles - Tanpa Icon Dropdown */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -178,21 +178,7 @@
             color: white;
         }
 
-        .dropdown-toggle-custom i:last-child {
-            transition: transform 0.3s;
-            margin-left: auto;
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
 
-        .dropdown-toggle-custom[aria-expanded="true"] {
-            background-color: rgba(255, 255, 255, 0.15);
-            border-left: 4px solid white;
-        }
-
-        .dropdown-toggle-custom[aria-expanded="true"] i:last-child {
-            transform: rotate(180deg);
-        }
 
         .dropdown-items {
             max-height: 0;
@@ -316,7 +302,268 @@
             gap: 15px;
         }
 
-        .notification-btn,
+        /* ============================
+           IMPROVED NOTIFICATION SYSTEM
+           ============================ */
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+            border: none;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 89, 152, 0.2);
+        }
+
+        .notification-btn .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            border: 2px solid var(--bg-card);
+        }
+
+        .dark-mode .notification-btn {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        .dark-mode .notification-btn:hover {
+            background: #3a3a3a;
+            color: var(--primary);
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            width: 380px !important;
+            max-height: 500px;
+            overflow: hidden;
+            border: none !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px !important;
+            padding: 0;
+            margin-top: 10px;
+            animation: notificationSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light) !important;
+        }
+
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Notification Header */
+        .notification-header {
+            padding: 18px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-actions .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Notification List */
+        .notification-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb:hover {
+            background: var(--gray);
+        }
+
+        /* Notification Item */
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(59, 89, 152, 0.05);
+        }
+
+        .dark-mode .notification-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.08);
+            border-left: 3px solid var(--primary);
+        }
+
+        .dark-mode .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.15);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        .notification-icon.success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .notification-icon.warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #f57c00;
+        }
+
+        .notification-icon.danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #d32f2f;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions-item {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .notification-actions-item .btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .notification-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .notification-footer {
+            padding: 15px 20px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .notification-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .notification-footer a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -331,19 +578,16 @@
             border: none;
         }
 
-        .notification-btn:hover,
         .theme-toggle:hover {
             background: #e4e6eb;
             color: var(--primary);
         }
 
-        .dark-mode .notification-btn,
         .dark-mode .theme-toggle {
             background: #2a2a2a;
             color: var(--text-dark);
         }
 
-        .dark-mode .notification-btn:hover,
         .dark-mode .theme-toggle:hover {
             background: #3a3a3a;
             color: var(--primary);
@@ -806,34 +1050,183 @@
             margin-top: 20px;
         }
 
-        /* Notification Styles */
-        .fixed-notification {
+        /* Notification Toast Styles */
+        .notification-toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 9999;
-            animation: slideInRight 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        @keyframes slideInRight {
+        .notification-toast {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            min-width: 300px;
+            max-width: 350px;
+            animation: toastSlideIn 0.3s ease, toastSlideOut 0.3s ease 4.7s forwards;
+            transform: translateX(0);
+            border: 1px solid var(--border-light);
+        }
+
+        @keyframes toastSlideIn {
             from {
-                transform: translateX(100%);
                 opacity: 0;
+                transform: translateX(100%);
             }
             to {
-                transform: translateX(0);
                 opacity: 1;
+                transform: translateX(0);
             }
         }
 
-        @keyframes slideOutRight {
+        @keyframes toastSlideOut {
             from {
-                transform: translateX(0);
                 opacity: 1;
+                transform: translateX(0);
             }
             to {
-                transform: translateX(100%);
                 opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .notification-toast.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification-toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification-toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-toast.danger {
+            border-left-color: #f44336;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .toast-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .toast-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .toast-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .toast-icon.danger {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast-body {
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .toast-progress {
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+            transform-origin: left;
+        }
+
+        .notification-toast.info .toast-progress-bar {
+            background: #2196f3;
+        }
+
+        .notification-toast.success .toast-progress-bar {
+            background: #4caf50;
+        }
+
+        .notification-toast.warning .toast-progress-bar {
+            background: #ff9800;
+        }
+
+        .notification-toast.danger .toast-progress-bar {
+            background: #f44336;
+        }
+
+        @keyframes progressBar {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
             }
         }
 
@@ -847,6 +1240,10 @@
             .settings-sidebar {
                 position: static;
                 top: auto;
+            }
+
+            .notification-dropdown {
+                width: 320px !important;
             }
         }
 
@@ -904,6 +1301,21 @@
                 grid-template-columns: 1fr;
                 gap: 0;
             }
+
+            .notification-dropdown {
+                width: 280px !important;
+                right: -100px !important;
+            }
+
+            .notification-toast-container {
+                right: 10px;
+                left: 10px;
+            }
+
+            .notification-toast {
+                min-width: auto;
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 576px) {
@@ -925,6 +1337,11 @@
                 align-self: flex-start;
                 margin-left: 0;
             }
+
+            .notification-dropdown {
+                width: 250px !important;
+                right: -80px !important;
+            }
         }
 
         /* Dark Mode Transition */
@@ -941,6 +1358,9 @@
 </head>
 
 <body>
+    <!-- Notification Toast Container -->
+    <div class="notification-toast-container"></div>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -953,6 +1373,7 @@
         <div class="sidebar-menu">
             <!-- Menu Utama -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
                     <span>Menu Utama</span>
@@ -968,6 +1389,7 @@
 
             <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
                     <span>Manajemen Peminjaman</span>
@@ -995,6 +1417,7 @@
 
             <!-- Manajemen Aset -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
                     <span>Manajemen Aset</span>
@@ -1018,6 +1441,7 @@
 
             <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
                     <span>Manajemen Akademik</span>
@@ -1049,6 +1473,7 @@
 
             <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
                     <span>Manajemen Pengguna</span>
@@ -1064,6 +1489,7 @@
 
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
@@ -1083,6 +1509,7 @@
 
             <!-- Sistem Pendukung Keputusan -->
             <div class="dropdown-custom">
+                <!-- Icon dropdown dihapus dari sini -->
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
                     <span>Sistem TPK</span>
@@ -1108,15 +1535,38 @@
             </div>
 
             <div class="user-actions">
-                <div class="notification-btn">
-                    <i class="fas fa-bell"></i>
+                <!-- Improved Notification Dropdown -->
+                <div class="dropdown">
+                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu notification-dropdown" aria-labelledby="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>Notifikasi</h6>
+                            <div class="notification-actions">
+                                <button type="button" class="btn btn-outline btn-sm" id="markAllRead">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline btn-sm" id="clearNotifications">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- Notifications will be dynamically added here -->
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" id="viewAllNotifications">Lihat semua notifikasi</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="theme-toggle" id="theme-toggle">
                     <i class="fas fa-moon"></i>
                 </div>
 
-                <!-- FIXED: User Profile dengan null safety -->
+                <!-- User Profile -->
                 <div class="dropdown">
                     <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
@@ -1189,9 +1639,6 @@
                     <li class="settings-nav-item active" data-target="profile">
                         <i class="fas fa-user"></i> Profil Akun
                     </li>
-                    <li class="settings-nav-item" data-target="system">
-                        <i class="fas fa-cog"></i> Pengaturan Sistem
-                    </li>
                     <li class="settings-nav-item" data-target="security">
                         <i class="fas fa-shield-alt"></i> Keamanan
                     </li>
@@ -1203,12 +1650,6 @@
 
             <!-- Settings Content -->
             <div class="settings-content">
-                @if(session('success_system'))
-                    <div class="alert alert-success">
-                        {{ session('success_system') }}
-                    </div>
-                @endif
-
                 <!-- Profile Settings Panel -->
                 <div id="profile-settings" class="settings-panel active">
                     <div class="settings-section">
@@ -1241,80 +1682,6 @@
                             </button>
                         </form>
                     </div>
-                </div>
-
-                <!-- System Settings Panel -->
-                <div id="system-settings" class="settings-panel">
-                    <form action="{{ route('admin.settings.system') }}" method="POST">
-                        @csrf
-                        <div class="settings-section">
-                            <h3>Pengaturan Umum Sistem</h3>
-                            
-                            <div class="form-group">
-                                <label for="system-name">Nama Sistem <span class="text-danger">*</span></label>
-                                <input type="text" id="system-name" name="system_name" class="form-control" value="{{ old('system_name', $user->system_settings['system_name'] ?? 'Sistem Manajemen Lab TIK') }}" required>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="max-loan">Maksimal Peminjaman (hari)</label>
-                                    <input type="number" id="max-loan" name="max_loan_days" class="form-control" value="{{ old('max_loan_days', $user->system_settings['max_loan_days'] ?? '7') }}" min="1" max="30">
-                                </div>
-                                <div class="form-group">
-                                    <label for="max-items">Maksimal Item per Peminjaman</label>
-                                    <input type="number" id="max-items" name="max_items_per_loan" class="form-control" value="{{ old('max_items_per_loan', $user->system_settings['max_items_per_loan'] ?? '5') }}" min="1" max="20">
-                                </div>
-                            </div>
-                            
-                            <div class="toggle-container">
-                                <div class="toggle-label">
-                                    <span>Maintenance Mode</span>
-                                    <span>Nonaktifkan akses pengguna ke sistem</span>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="hidden" name="maintenance_mode" value="0">
-                                    <input type="checkbox" id="maintenance-mode" name="maintenance_mode" value="1" {{ old('maintenance_mode', $user->system_settings['maintenance_mode'] ?? false) ? 'checked' : '' }}>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="settings-section">
-                            <h3>Pengaturan Peminjaman</h3>
-                            
-                            <div class="toggle-container">
-                                <div class="toggle-label">
-                                    <span>Persetujuan Otomatis</span>
-                                    <span>Izinkan peminjaman disetujui secara otomatis</span>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="hidden" name="auto_approval" value="0">
-                                    <input type="checkbox" id="auto-approval" name="auto_approval" value="1" {{ old('auto_approval', $user->system_settings['auto_approval'] ?? true) ? 'checked' : '' }}>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="toggle-container">
-                                <div class="toggle-label">
-                                    <span>Notifikasi Denda</span>
-                                    <span>Kirim notifikasi ketika peminjaman terlambat</span>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="hidden" name="late_fine_notification" value="0">
-                                    <input type="checkbox" id="late-notification" name="late_fine_notification" value="1" {{ old('late_fine_notification', $user->system_settings['late_fine_notification'] ?? true) ? 'checked' : '' }}>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="fine-amount">Jumlah Denda per Hari (Rp)</label>
-                                <input type="number" id="fine-amount" name="fine_amount_per_day" class="form-control" value="{{ old('fine_amount_per_day', $user->system_settings['fine_amount_per_day'] ?? '5000') }}" min="0">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Simpan Pengaturan Sistem
-                        </button>
-                    </form>
                 </div>
 
                 <!-- Security Settings Panel -->
@@ -1424,17 +1791,6 @@
                             
                             <div class="toggle-container">
                                 <div class="toggle-label">
-                                    <span>Notifikasi Email</span>
-                                    <span>Terima notifikasi melalui email</span>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" name="email_notifications" value="1" {{ old('email_notifications', isset($user) && ($user->notification_preferences['email_notifications'] ?? false)) ? 'checked' : '' }}>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="toggle-container">
-                                <div class="toggle-label">
                                     <span>Notifikasi Peminjaman Baru</span>
                                     <span>Dapatkan pemberitahuan untuk peminjaman baru</span>
                                 </div>
@@ -1483,6 +1839,60 @@
                             <i class="fas fa-save"></i> Simpan Pengaturan Notifikasi
                         </button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Setup Modal -->
+    <div class="modal fade" id="twoFactorAuthModal" tabindex="-1" aria-labelledby="twoFactorAuthModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="twoFactorAuthModalLabel">Konfigurasi Autentikasi Dua Faktor (2FA)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="2fa-step-1" class="text-center">
+                        <p>Pindai gambar QR di bawah ini menggunakan aplikasi authenticator Anda (misalnya Google Authenticator).</p>
+                        <div id="qr-code-container" class="my-3">
+                            <!-- QR Code will be loaded here -->
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <p class="text-muted">Setelah memindai, masukkan kode OTP yang muncul di aplikasi Anda untuk menyelesaikan proses aktivasi.</p>
+                    </div>
+                    <hr>
+                    <div id="2fa-step-2">
+                        <form id="activate-2fa-form">
+                            @csrf
+                            <div class="form-group mb-3">
+                                <label for="otp" class="form-label">Kode OTP</label>
+                                <input type="text" class="form-control" id="otp" name="otp" required placeholder="Masukkan 6 digit kode" maxlength="6">
+                                <div class="invalid-feedback" id="otp-error"></div>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-check-circle"></i> Aktifkan dan Verifikasi
+                            </button>
+                        </form>
+                    </div>
+                    <hr>
+                    <div id="2fa-step-3">
+                        <h5><i class="fas fa-key"></i> Simpan Kode Pemulihan Anda!</h5>
+                        <p>Simpan kode pemulihan ini di tempat yang aman. Anda dapat menggunakannya untuk mengakses akun jika kehilangan akses ke perangkat Anda.</p>
+                        <div id="recovery-codes-container" class="bg-light p-3 rounded">
+                            <ul id="recovery-codes-list" class="list-unstyled row">
+                               <!-- Recovery codes will be loaded here -->
+                            </ul>
+                        </div>
+                         <button class="btn btn-secondary mt-3" id="copy-recovery-codes">
+                            <i class="fas fa-copy"></i> Salin Kode
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -1540,7 +1950,7 @@
                 });
             });
 
-            // ========== PERBAIKAN UTAMA: Settings Navigation ==========
+            // ========== Settings Navigation ==========
             const navItems = document.querySelectorAll('.settings-nav-item');
             const panels = document.querySelectorAll('.settings-panel');
             
@@ -1584,7 +1994,6 @@
                     document.querySelector('.settings-nav-item[data-target="security"]').click();
                 @endif
             }
-            // ========== END PERBAIKAN UTAMA ==========
 
             // 2FA Setup
             const enable2faBtn = document.getElementById('enable-2fa-btn');
@@ -1659,7 +2068,7 @@
                     })
                     .then(data => {
                         twoFactorAuthModal.hide();
-                        showNotification(data.message, 'success');
+                        showToastNotification(data.message, 'success');
                         setTimeout(() => window.location.reload(), 1500);
                     })
                     .catch(error => {
@@ -1675,7 +2084,7 @@
                     const codes = Array.from(recoveryCodesList.querySelectorAll('code')).map(el => el.textContent);
                     const codesText = codes.join('\n');
                     navigator.clipboard.writeText(codesText).then(() => {
-                        showNotification('Kode pemulihan disalin ke clipboard!', 'success');
+                        showToastNotification('Kode pemulihan disalin ke clipboard!', 'success');
                     });
                 });
             }
@@ -1702,12 +2111,12 @@
                         return response.json().then(err => { throw new Error(err.message || 'Failed to disable 2FA.') });
                     })
                     .then(data => {
-                        showNotification(data.message, 'success');
+                        showToastNotification(data.message, 'success');
                         setTimeout(() => window.location.reload(), 1500);
                     })
                     .catch(error => {
                         console.error('Error during 2FA disable:', error);
-                        showNotification(`Gagal menonaktifkan 2FA. Error: ${error.message}`, 'danger');
+                        showToastNotification(`Gagal menonaktifkan 2FA. Error: ${error.message}`, 'danger');
                     });
                 });
             }
@@ -1769,23 +2178,361 @@
                     });
                 }
             });
+
+            // =================================================================
+            // IMPROVED NOTIFICATION SYSTEM
+            // =================================================================
+
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const notificationList = document.getElementById('notificationList');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const markAllReadBtn = document.getElementById('markAllRead');
+            const clearNotificationsBtn = document.getElementById('clearNotifications');
+            const viewAllNotificationsBtn = document.getElementById('viewAllNotifications');
+            const toastContainer = document.querySelector('.notification-toast-container');
+
+            // Sample notifications data
+            let notifications = [
+                {
+                    id: 1,
+                    title: 'Peminjaman Baru',
+                    message: 'John Doe mengajukan peminjaman proyektor untuk mata kuliah Basis Data',
+                    type: 'info',
+                    icon: 'fa-hand-holding-usd',
+                    time: '5 menit yang lalu',
+                    read: false,
+                    actions: ['Terima', 'Tolak']
+                },
+                {
+                    id: 2,
+                    title: 'Pengembalian Berhasil',
+                    message: 'Proyektor A telah dikembalikan oleh Jane Smith dalam kondisi baik',
+                    type: 'success',
+                    icon: 'fa-check-circle',
+                    time: '1 jam yang lalu',
+                    read: false,
+                    actions: ['Tandai']
+                },
+                {
+                    id: 3,
+                    title: 'Peringatan Jadwal',
+                    message: 'Jadwal perkuliahan Algoritma akan dimulai dalam 30 menit',
+                    type: 'warning',
+                    icon: 'fa-clock',
+                    time: '3 jam yang lalu',
+                    read: true,
+                    actions: []
+                },
+                {
+                    id: 4,
+                    title: 'Perawatan Rutin',
+                    message: 'Proyektor B memerlukan perawatan rutin bulan ini',
+                    type: 'danger',
+                    icon: 'fa-tools',
+                    time: '1 hari yang lalu',
+                    read: true,
+                    actions: ['Jadwalkan']
+                }
+            ];
+
+            // Initialize notification system
+            function initNotificationSystem() {
+                renderNotificationList();
+                updateNotificationBadge();
+            }
+
+            // Render notification list
+            function renderNotificationList() {
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>Tidak ada notifikasi</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                notificationList.innerHTML = '';
+                notifications.forEach(notif => {
+                    const notificationItem = createNotificationItem(notif);
+                    notificationList.appendChild(notificationItem);
+                });
+            }
+
+            // Create notification item element
+            function createNotificationItem(notif) {
+                const div = document.createElement('div');
+                div.className = `notification-item ${!notif.read ? 'unread' : ''}`;
+                div.dataset.id = notif.id;
+                
+                const iconClass = getIconClass(notif.type);
+                const timeAgo = formatTimeAgo(notif.time);
+                
+                div.innerHTML = `
+                    <div class="notification-icon ${notif.type}">
+                        <i class="fas ${notif.icon}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notif.title}</div>
+                        <div class="notification-message">${notif.message}</div>
+                        <div class="notification-time">
+                            <i class="far fa-clock"></i>
+                            ${timeAgo}
+                        </div>
+                        ${notif.actions.length > 0 ? `
+                            <div class="notification-actions-item">
+                                ${notif.actions.map(action => 
+                                    `<button class="btn btn-outline btn-sm" onclick="handleNotificationAction(${notif.id}, '${action.toLowerCase()}')">${action}</button>`
+                                ).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Add click event to mark as read
+                div.addEventListener('click', function(e) {
+                    if (!e.target.closest('.btn')) {
+                        markAsRead(notif.id);
+                    }
+                });
+                
+                return div;
+            }
+
+            // Get icon class based on notification type
+            function getIconClass(type) {
+                const iconMap = {
+                    'info': 'info',
+                    'success': 'success',
+                    'warning': 'warning',
+                    'danger': 'danger'
+                };
+                return iconMap[type] || 'info';
+            }
+
+            // Format time ago
+            function formatTimeAgo(timeStr) {
+                // This is a simple implementation
+                // In real app, you would parse the actual time string
+                return timeStr;
+            }
+
+            // Update notification badge
+            function updateNotificationBadge() {
+                const unreadCount = notifications.filter(n => !n.read).length;
+                if (unreadCount > 0) {
+                    notificationBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                    notificationBadge.style.display = 'flex';
+                } else {
+                    notificationBadge.style.display = 'none';
+                }
+            }
+
+            // Mark notification as read
+            function markAsRead(id) {
+                const notification = notifications.find(n => n.id === id);
+                if (notification && !notification.read) {
+                    notification.read = true;
+                    updateNotificationBadge();
+                    
+                    // Update the specific notification item
+                    const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
+                    if (notificationItem) {
+                        notificationItem.classList.remove('unread');
+                    }
+                }
+            }
+
+            // Mark all notifications as read
+            function markAllAsRead() {
+                notifications.forEach(notif => notif.read = true);
+                updateNotificationBadge();
+                renderNotificationList();
+                showToastNotification('Semua notifikasi ditandai sebagai sudah dibaca', 'success');
+            }
+
+            // Clear all notifications
+            function clearAllNotifications() {
+                if (confirm('Apakah Anda yakin ingin menghapus semua notifikasi?')) {
+                    notifications = [];
+                    updateNotificationBadge();
+                    renderNotificationList();
+                    showToastNotification('Semua notifikasi telah dihapus', 'info');
+                }
+            }
+
+            // Handle notification action
+            function handleNotificationAction(id, action) {
+                const notification = notifications.find(n => n.id === id);
+                if (notification) {
+                    switch(action) {
+                        case 'terima':
+                            showToastNotification(`Peminjaman dari ${notification.message.split(' ')[0]} telah diterima`, 'success');
+                            break;
+                        case 'tolak':
+                            showToastNotification(`Peminjaman dari ${notification.message.split(' ')[0]} telah ditolak`, 'danger');
+                            break;
+                        case 'tandai':
+                            showToastNotification('Notifikasi telah ditandai', 'info');
+                            break;
+                        case 'jadwalkan':
+                            showToastNotification('Perawatan telah dijadwalkan', 'success');
+                            break;
+                    }
+                    
+                    // Remove the notification after action
+                    notifications = notifications.filter(n => n.id !== id);
+                    updateNotificationBadge();
+                    renderNotificationList();
+                }
+            }
+
+            // Show toast notification
+            function showToastNotification(message, type = 'info') {
+                const toastId = Date.now();
+                const toast = document.createElement('div');
+                toast.className = `notification-toast ${type}`;
+                toast.dataset.id = toastId;
+                
+                const icon = getToastIcon(type);
+                const title = getToastTitle(type);
+                
+                toast.innerHTML = `
+                    <div class="toast-header">
+                        <div class="toast-icon ${type}">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="toast-title">${title}</div>
+                        <button class="toast-close" onclick="removeToast(${toastId})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="toast-body">${message}</div>
+                    <div class="toast-time">
+                        <i class="far fa-clock"></i>
+                        Baru saja
+                    </div>
+                    <div class="toast-progress">
+                        <div class="toast-progress-bar"></div>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    removeToast(toastId);
+                }, 5000);
+            }
+
+            // Remove toast by ID
+            window.removeToast = function(toastId) {
+                const toast = document.querySelector(`.notification-toast[data-id="${toastId}"]`);
+                if (toast) {
+                    toast.style.animation = 'toastSlideOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }
+            };
+
+            // Get toast icon based on type
+            function getToastIcon(type) {
+                const iconMap = {
+                    'info': 'fa-info-circle',
+                    'success': 'fa-check-circle',
+                    'warning': 'fa-exclamation-triangle',
+                    'danger': 'fa-exclamation-circle'
+                };
+                return iconMap[type] || 'fa-info-circle';
+            }
+
+            // Get toast title based on type
+            function getToastTitle(type) {
+                const titleMap = {
+                    'info': 'Informasi',
+                    'success': 'Berhasil',
+                    'warning': 'Peringatan',
+                    'danger': 'Error'
+                };
+                return titleMap[type] || 'Notifikasi';
+            }
+
+            // Simulate receiving new notifications
+            function simulateNewNotification() {
+                const notificationTypes = ['info', 'success', 'warning'];
+                const notificationTitles = [
+                    'Peminjaman Baru',
+                    'Pengembalian',
+                    'Jadwal Perkuliahan',
+                    'Maintenance'
+                ];
+                const notificationMessages = [
+                    'Ada peminjaman baru yang menunggu persetujuan',
+                    'Item telah berhasil dikembalikan',
+                    'Jadwal perkuliahan akan segera dimulai',
+                    'Perangkat memerlukan pemeriksaan rutin'
+                ];
+                
+                const randomType = notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
+                const randomTitle = notificationTitles[Math.floor(Math.random() * notificationTitles.length)];
+                const randomMessage = notificationMessages[Math.floor(Math.random() * notificationMessages.length)];
+                
+                const newNotification = {
+                    id: Date.now(),
+                    title: randomTitle,
+                    message: randomMessage,
+                    type: randomType,
+                    icon: randomType === 'success' ? 'fa-check-circle' : 'fa-bell',
+                    time: 'Baru saja',
+                    read: false,
+                    actions: []
+                };
+                
+                notifications.unshift(newNotification);
+                updateNotificationBadge();
+                renderNotificationList();
+                
+                // Show toast notification
+                showToastNotification(randomMessage, randomType);
+            }
+
+            // Event listeners
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', markAllAsRead);
+            }
+            
+            if (clearNotificationsBtn) {
+                clearNotificationsBtn.addEventListener('click', clearAllNotifications);
+            }
+            
+            if (viewAllNotificationsBtn) {
+                viewAllNotificationsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showToastNotification('Membuka semua notifikasi...', 'info');
+                });
+            }
+
+            // Initialize notification system
+            initNotificationSystem();
+
+            // Simulate receiving notifications every 30 seconds (for demo)
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30% chance
+                    simulateNewNotification();
+                }
+            }, 30000);
+
+            // Initial toast notification
+            setTimeout(() => {
+                showToastNotification('Sistem notifikasi telah aktif', 'success');
+            }, 1000);
         });
 
         // Save all settings
         function saveAllSettings() {
             const settings = {
-                systemName: document.getElementById('system-name').value,
-                maxLoanDays: document.getElementById('max-loan').value,
-                maxItems: document.getElementById('max-items').value,
-                fineAmount: document.getElementById('fine-amount').value,
-                maintenanceMode: document.getElementById('maintenance-mode').checked,
-                autoApproval: document.getElementById('auto-approval').checked,
-                lateNotification: document.getElementById('late-notification').checked,
-                emailNotifications: document.getElementById('email-notifications').checked,
-                newLoanNotifications: document.getElementById('new-loan-notifications').checked,
-                returnNotifications: document.getElementById('return-notifications').checked,
-                scheduleNotifications: document.getElementById('schedule-notifications')?.checked || false,
-                notificationFrequency: document.getElementById('notification-frequency').value,
                 twoFactorAuth: document.getElementById('two-factor-auth')?.checked || false,
                 themeColor: document.getElementById('theme-color').value,
                 fontSize: document.getElementById('font-size').value,
@@ -1794,10 +2541,10 @@
 
             console.log('Saving settings:', settings);
             
-            showNotification('Pengaturan berhasil disimpan!', 'success');
+            showToastNotification('Pengaturan berhasil disimpan!', 'success');
         }
 
-        // Show notification
+        // Show notification (legacy function)
         function showNotification(message, type = 'success') {
             // Remove existing notifications
             const existingNotifications = document.querySelectorAll('.fixed-notification');
@@ -1822,13 +2569,6 @@
         function confirmResetSettings() {
             if (confirm('Apakah Anda yakin ingin mereset semua pengaturan ke default? Tindakan ini tidak dapat dibatalkan.')) {
                 // Reset all form elements to default
-                document.getElementById('system-name').value = 'Sistem Manajemen Lab TIK';
-                document.getElementById('max-loan').value = '7';
-                document.getElementById('max-items').value = '5';
-                document.getElementById('fine-amount').value = '5000';
-                document.getElementById('maintenance-mode').checked = false;
-                document.getElementById('auto-approval').checked = true;
-                document.getElementById('late-notification').checked = true;
                 document.getElementById('email-notifications').checked = true;
                 document.getElementById('new-loan-notifications').checked = true;
                 document.getElementById('return-notifications').checked = true;
@@ -1836,72 +2576,10 @@
                     document.getElementById('schedule-notifications').checked = true;
                 }
                 document.getElementById('notification-frequency').value = 'realtime';
-                if (document.getElementById('two-factor-auth')) {
-                    document.getElementById('two-factor-auth').checked = false;
-                }
-                document.getElementById('theme-color').value = 'blue';
-                document.getElementById('font-size').value = 'medium';
-                if (document.getElementById('page-animations')) {
-                    document.getElementById('page-animations').checked = true;
-                }
                 
-                showNotification('Semua pengaturan telah direset ke nilai default.', 'success');
+                showToastNotification('Semua pengaturan telah direset ke nilai default.', 'success');
             }
         }
     </script>
-
-    <!-- 2FA Setup Modal -->
-    <div class="modal fade" id="twoFactorAuthModal" tabindex="-1" aria-labelledby="twoFactorAuthModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="twoFactorAuthModalLabel">Konfigurasi Autentikasi Dua Faktor (2FA)</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="2fa-step-1" class="text-center">
-                        <p>Pindai gambar QR di bawah ini menggunakan aplikasi authenticator Anda (misalnya Google Authenticator).</p>
-                        <div id="qr-code-container" class="my-3">
-                            <!-- QR Code will be loaded here -->
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                        <p class="text-muted">Setelah memindai, masukkan kode OTP yang muncul di aplikasi Anda untuk menyelesaikan proses aktivasi.</p>
-                    </div>
-                    <hr>
-                    <div id="2fa-step-2">
-                        <form id="activate-2fa-form">
-                            @csrf
-                            <div class="form-group mb-3">
-                                <label for="otp" class="form-label">Kode OTP</label>
-                                <input type="text" class="form-control" id="otp" name="otp" required placeholder="Masukkan 6 digit kode" maxlength="6">
-                                <div class="invalid-feedback" id="otp-error"></div>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100">
-                                <i class="fas fa-check-circle"></i> Aktifkan dan Verifikasi
-                            </button>
-                        </form>
-                    </div>
-                    <hr>
-                    <div id="2fa-step-3">
-                        <h5><i class="fas fa-key"></i> Simpan Kode Pemulihan Anda!</h5>
-                        <p>Simpan kode pemulihan ini di tempat yang aman. Anda dapat menggunakannya untuk mengakses akun jika kehilangan akses ke perangkat Anda.</p>
-                        <div id="recovery-codes-container" class="bg-light p-3 rounded">
-                            <ul id="recovery-codes-list" class="list-unstyled row">
-                               <!-- Recovery codes will be loaded here -->
-                            </ul>
-                        </div>
-                         <button class="btn btn-secondary mt-3" id="copy-recovery-codes">
-                            <i class="fas fa-copy"></i> Salin Kode
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>

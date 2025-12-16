@@ -162,7 +162,8 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
         Route::post('/{user}/verify', [App\Http\Controllers\Admin\UserController::class, 'verify'])->name('verify');
     });
 
-    // Redundant dashboard and auth routes can be cleaned up, but per instructions, I will leave them
+
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     // --- EKSPORT EXCEL FEEDBACK ---
     Route::get('/feedback/export', function (Request $request) {
         return Excel::download(new FeedbackExport($request), 'feedback.xlsx');
