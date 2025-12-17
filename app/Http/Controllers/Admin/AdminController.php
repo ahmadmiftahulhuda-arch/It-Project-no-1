@@ -133,6 +133,8 @@ class AdminController extends Controller
             ->latest()
             ->get();
 
+        $verifiedUsers = User::where('verified', 1)->orderBy('name')->get();
+
         return view('admin.peminjaman.index', compact(
             'peminjamans',
             'pendingCount',
@@ -144,7 +146,8 @@ class AdminController extends Controller
             'dosens',
             'slotwaktu',
             'peminjamanNotifications',
-            'pengembalianNotifications'
+            'pengembalianNotifications',
+            'verifiedUsers'
         ));
     }
 
@@ -385,7 +388,7 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'peminjam' => 'required|string|max:255',
+            'peminjam_id' => 'required|exists:users,id',
             'tanggal' => 'required|date',
             'waktu_mulai' => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i',
@@ -393,16 +396,12 @@ class AdminController extends Controller
             'projector_id' => 'nullable|exists:projectors,id',
             'dosen_nip' => 'nullable|exists:dosens,nip',
             'keperluan' => 'required|string|max:500',
+            'status' => 'required|in:pending,disetujui,ditolak,selesai',
         ]);
 
-        // Cari user berdasarkan nama
-        $user = User::where('name', $request->peminjam)->first();
+        $user = User::findOrFail($request->peminjam_id);
 
-        if (!$user) {
-            $user = User::first();
-        }
-
-        Peminjaman::create([
+        $data = [
             'user_id' => $user->id,
             'tanggal' => $request->tanggal,
             'waktu_mulai' => $request->waktu_mulai,
@@ -411,8 +410,14 @@ class AdminController extends Controller
             'projector_id' => $request->projector_id,
             'dosen_nip' => $request->dosen_nip ?? null,
             'keperluan' => $request->keperluan,
-            'status' => 'disetujui',
-        ]);
+            'status' => $request->status,
+        ];
+
+        if ($request->status === 'selesai') {
+            $data['tanggal_kembali'] = now();
+        }
+
+        Peminjaman::create($data);
 
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil ditambahkan.');

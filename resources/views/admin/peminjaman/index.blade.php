@@ -2049,9 +2049,15 @@
                                 <!-- PEMINJAM -->
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Nama Peminjam</label>
-                                    <input type="text" name="peminjam" class="form-control"
-                                        placeholder="Masukkan nama peminjam" required>
-                                    <small class="text-muted">Admin akan mencari user berdasarkan nama ini.</small>
+                                    <select name="peminjam_id" class="form-select js-choice" required>
+                                        <option value="">-- Pilih Peminjam (Terverifikasi) --</option>
+                                        @if(isset($verifiedUsers) && $verifiedUsers->count())
+                                            @foreach($verifiedUsers as $v)
+                                                <option value="{{ $v->id }}">{{ $v->name }} @if($v->nim) - {{ $v->nim }} @endif</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <small class="text-muted">Pilih user yang sudah terverifikasi.</small>
                                 </div>
 
                                 <!-- TANGGAL -->
