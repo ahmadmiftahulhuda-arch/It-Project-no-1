@@ -2262,8 +2262,8 @@
                                     <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
                                     <select class="form-select" id="sistem_kuliah" name="sistem_kuliah" required>
                                         <option value="">Pilih Sistem Kuliah</option>
-                                        <option value="Teori" {{ old('sistem_kuliah') == 'Teori' ? 'selected' : '' }}>Teori</option>
-                                        <option value="Praktikum" {{ old('sistem_kuliah') == 'Praktikum' ? 'selected' : '' }}>Praktikum</option>
+                                        <option value="Reguler" {{ old('sistem_kuliah') == 'Reguler' ? 'selected' : '' }}>Reguler</option>
+                                        <option value="Non Reguler" {{ old('sistem_kuliah') == 'Non Reguler' ? 'selected' : '' }}>Non Reguler</option>
                                     </select>
                                     @error('sistem_kuliah')
                                         <div class="text-danger mt-1">{{ $message }}</div>

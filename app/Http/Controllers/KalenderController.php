@@ -21,6 +21,16 @@ class KalenderController extends Controller
         $daysInMonth = $date->daysInMonth;
         $startOfMonth = $date->startOfMonth();
 
+        // Get all MataKuliah and assign colors
+        $mataKuliahs = MataKuliah::all();
+        $colors = ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF'];
+        $matakuliahColors = [];
+        $colorIndex = 0;
+        foreach ($mataKuliahs as $matakuliah) {
+            $matakuliahColors[$matakuliah->nama] = $colors[$colorIndex % count($colors)];
+            $colorIndex++;
+        }
+
         $events = [];
         $dayMapping = ['Monday' => 'Senin', 'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat'];
 
@@ -45,13 +55,15 @@ class KalenderController extends Controller
                             'end' => $currentDate->format('Y-m-d') . ' ' . $item->jam_selesai,
                             'hari' => $item->hari,
                             'day' => $day,
+                            'matakuliah' => $item->mataKuliah->nama,
+                            'color' => $matakuliahColors[$item->mataKuliah->nama] ?? '#E0E0E0'
                         ];
                     }
                 }
             }
         }
 
-        return view('kalender', compact('kelasMahasiswa', 'events', 'selectedKelas', 'month', 'year'));
+        return view('kalender', compact('kelasMahasiswa', 'events', 'selectedKelas', 'month', 'year', 'matakuliahColors'));
     }
 
     private function getEventDate($day, $time)

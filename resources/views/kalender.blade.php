@@ -372,6 +372,35 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
+
+        .legend-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .event {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #333;
+        }
     </style>
 </head>
 
@@ -532,7 +561,6 @@
                     <div class="col-md-4">
                         <label for="kelas_mahasiswa_filter" class="form-label">Filter per Kelas Mahasiswa</label>
                         <select id="kelas_mahasiswa_filter" name="kelas_mahasiswa" class="form-select" onchange="document.getElementById('filter-form').submit()">
-                            <option value="">Semua Kelas</option>
                             @foreach ($kelasMahasiswa as $kelas)
                                 <option value="{{ $kelas }}" {{ $selectedKelas == $kelas ? 'selected' : '' }}>{{ $kelas }}</option>
                             @endforeach
@@ -581,8 +609,8 @@
                                             <div class="day-number">{{ $dayCounter }}</div>
                                             @foreach ($events as $event)
                                                 @if ($event['day'] == $dayCounter)
-                                                    <div class="event lecture">
-                                                        {{ \Carbon\Carbon::parse($event['start'])->format('H:i') }} - {{ \Carbon\Carbon::parse($event['end'])->format('H:i') }}
+                                                    <div class="event" style="background-color: {{ $event['color'] }};">
+                                                        <strong>{{ \Carbon\Carbon::parse($event['start'])->format('H:i') }} - {{ \Carbon\Carbon::parse($event['end'])->format('H:i') }}</strong>
                                                         <br>
                                                         {{ $event['title'] }}
                                                     </div>

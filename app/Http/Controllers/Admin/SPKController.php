@@ -40,8 +40,9 @@ class SPKController extends Controller
             }
         }
 
-        // Urutkan berdasarkan nilai preferensi setelah dihitung
-        $this->hitungSAWPeminjaman($peminjamans, $criteria);
+        // Hitung SAW dan ranking
+        $calculationDetails = [];
+        $this->hitungSAWPeminjaman($peminjamans, $criteria, $calculationDetails);
 
         $rankings = Peminjaman::whereNotNull('nilai_preferensi')
             ->where('status', 'pending')
@@ -54,10 +55,10 @@ class SPKController extends Controller
             'peminjamans',
             'scores',
             'rankings',
-            'filterDate'
+            'filterDate',
+            'calculationDetails' // Passing calculation details to the view
         ));
     }
-
 
     /* =====================================================
      * SIMPAN NILAI SPK PEMINJAMAN ASLI
@@ -99,7 +100,8 @@ class SPKController extends Controller
         }
 
         // Panggil hitungSAWPeminjaman dengan parameter yang tepat
-        $this->hitungSAWPeminjaman($peminjamans, $criteria);
+        $calculationDetails = [];
+        $this->hitungSAWPeminjaman($peminjamans, $criteria, $calculationDetails);
 
         return redirect()
             ->route('admin.spk.index')
@@ -109,7 +111,7 @@ class SPKController extends Controller
     /* =====================================================
      * SAW PEMINJAMAN ASLI
      * ===================================================== */
-    private function hitungSAWPeminjaman($peminjamans, $criteria)
+    private function hitungSAWPeminjaman($peminjamans, $criteria, &$calculationDetails)
     {
         if ($peminjamans->isEmpty() || $criteria->isEmpty()) return;
 
@@ -132,6 +134,7 @@ class SPKController extends Controller
         // Hitung nilai preferensi untuk setiap peminjaman (SAW)
         foreach ($peminjamans as $p) {
             $preferensi = 0;
+            $stepDetails = []; // Collect steps for this peminjaman
 
             foreach ($criteria as $c) {
                 $nilai = optional(
@@ -140,13 +143,28 @@ class SPKController extends Controller
 
                 if (!$nilai || $nilai <= 0) continue;
 
+                // Normalize
                 $normalisasi = ($c->tipe === 'cost')
                     ? $pembagi[$c->id] / $nilai
                     : $nilai / $pembagi[$c->id];
 
+                // Store the normalization step
+                $stepDetails[] = [
+                    'criterion' => $c->nama,
+                    'nilai' => $nilai,
+                    'normalisasi' => $normalisasi,
+                    'bobot' => $c->bobot ?? 0,
+                    'nilai_bobot' => $normalisasi * ($c->bobot ?? 0)
+                ];
+
+                // Sum weighted values
                 $preferensi += $normalisasi * ($c->bobot ?? 0);
             }
 
+            // Store the calculation steps for this peminjaman
+            $calculationDetails[$p->id] = $stepDetails;
+
+            // Step 3: Update preference score
             $p->update([
                 'nilai_preferensi' => round($preferensi, 6)
             ]);
