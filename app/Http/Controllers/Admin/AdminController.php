@@ -343,15 +343,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Show admin profile page
-     */
-    public function profile(Request $request)
-    {
-        $user = auth()->user();
-        return view('admin.profile', compact('user'));
-    }
-
-    /**
      * Store new peminjaman from admin
      */
     public function store(Request $request)
@@ -653,7 +644,6 @@ class AdminController extends Controller
             ? \Carbon\Carbon::parse($request->tanggal_pengembalian . ' ' . now()->format('H:i'))
             : now();
 
-        // 3️⃣ STATUS FINAL
         // default: status dari admin
         $statusFinal = $request->status;
 

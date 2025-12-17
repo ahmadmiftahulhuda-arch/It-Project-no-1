@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin TI - Manajemen Barang</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         :root {
             --primary: #3b5998;
@@ -301,7 +303,6 @@
             gap: 15px;
         }
 
-        .notification-btn,
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -316,19 +317,16 @@
             border: none;
         }
 
-        .notification-btn:hover,
         .theme-toggle:hover {
             background: #e4e6eb;
             color: var(--primary);
         }
 
-        .dark-mode .notification-btn,
         .dark-mode .theme-toggle {
             background: #2a2a2a;
             color: var(--text-dark);
         }
 
-        .dark-mode .notification-btn:hover,
         .dark-mode .theme-toggle:hover {
             background: #3a3a3a;
             color: var(--primary);
@@ -435,6 +433,22 @@
 
         .btn-outline:hover {
             background: var(--primary);
+            color: white;
+        }
+
+        .dark-mode .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            border: none;
+            color: white;
+        }
+
+        .dark-mode .btn-warning {
+            background: #ff9800;
             color: white;
         }
 
@@ -1293,6 +1307,450 @@
             to { transform: rotate(360deg); }
         }
 
+        /* ============================
+           IMPROVED NOTIFICATION SYSTEM
+           ============================ */
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+            border: none;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 89, 152, 0.2);
+        }
+
+        .notification-btn .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FF5B5B, #D92525);
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 4px rgba(217, 37, 37, 0.4);
+            border-radius: 999px;
+        }
+
+        .dark-mode .notification-btn {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        .dark-mode .notification-btn:hover {
+            background: #3a3a3a;
+            color: var(--primary);
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            width: 380px !important;
+            max-height: 500px;
+            overflow: hidden;
+            border: none !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px !important;
+            padding: 0;
+            margin-top: 10px;
+            animation: notificationSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light) !important;
+        }
+
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Notification Header */
+        .notification-header {
+            padding: 18px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-actions .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Notification List */
+        .notification-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb:hover {
+            background: var(--gray);
+        }
+
+        /* Notification Item */
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(59, 89, 152, 0.05);
+        }
+
+        .dark-mode .notification-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.08);
+            border-left: 3px solid var(--primary);
+        }
+
+        .dark-mode .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.15);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        .notification-icon.success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .notification-icon.warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #f57c00;
+        }
+
+        .notification-icon.danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #d32f2f;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions-item {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .notification-actions-item .btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .notification-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .notification-footer {
+            padding: 15px 20px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .notification-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .notification-footer a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Notification Toast Styles */
+        .notification-toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification-toast {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            min-width: 300px;
+            max-width: 350px;
+            animation: toastSlideIn 0.3s ease, toastSlideOut 0.3s ease 4.7s forwards;
+            transform: translateX(0);
+            border: 1px solid var(--border-light);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .notification-toast.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification-toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification-toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-toast.danger {
+            border-left-color: #f44336;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .toast-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .toast-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .toast-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .toast-icon.danger {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast-body {
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .toast-progress {
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+            transform-origin: left;
+        }
+
+        .notification-toast.info .toast-progress-bar {
+            background: #2196f3;
+        }
+
+        .notification-toast.success .toast-progress-bar {
+            background: #4caf50;
+        }
+
+        .notification-toast.warning .toast-progress-bar {
+            background: #ff9800;
+        }
+
+        .notification-toast.danger .toast-progress-bar {
+            background: #f44336;
+        }
+
+        @keyframes progressBar {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .form-grid {
@@ -1420,6 +1878,11 @@
             .modal-footer {
                 padding: 20px;
             }
+
+            .notification-dropdown {
+                width: 320px !important;
+                margin-left: -150px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1482,6 +1945,11 @@
             .modal-footer {
                 padding: 15px;
             }
+
+            .notification-dropdown {
+                width: 280px !important;
+                margin-left: -120px;
+            }
         }
 
         /* HAPUS SEMUA ANIMASI UNTUK SELURUH ELEMEN */
@@ -1508,6 +1976,9 @@
     </style>
 </head>
 <body>
+    <!-- Notification Toast Container -->
+    <div class="notification-toast-container"></div>
+    
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -1667,8 +2138,31 @@
             </div>
 
             <div class="user-actions">
-                <div class="notification-btn" title="Notifikasi">
-                    <i class="fas fa-bell"></i>
+                <!-- Improved Notification Dropdown -->
+                <div class="dropdown">
+                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu notification-dropdown" aria-labelledby="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>Notifikasi</h6>
+                            <div class="notification-actions">
+                                <button type="button" class="btn btn-outline btn-sm" id="markAllRead">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline btn-sm" id="clearNotifications">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- Notifications will be dynamically added here -->
+                        </div>
+                        <div class="notification-footer">
+                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua notifikasi</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
@@ -2105,6 +2599,118 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Global variables untuk notification system
+        let notifications = [];
+        const notificationList = document.getElementById('notificationList');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const markAllReadBtn = document.getElementById('markAllRead');
+        const clearNotificationsBtn = document.getElementById('clearNotifications');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // ========== NOTIFICATION SYSTEM ==========
+        async function fetchNotifications() {
+            try {
+                const response = await fetch('{{ route('admin.notifications.index') }}');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                const data = await response.json();
+                notifications = data.notifications || [];
+                renderNotifications();
+            } catch (error) {
+                console.error('Failed to fetch notifications:', error);
+                if (notificationList) {
+                    notificationList.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                            <p>Gagal memuat notifikasi</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function renderNotifications() {
+            if (!notificationList) return;
+            notificationList.innerHTML = '';
+            if (notifications.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="notification-empty">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Tidak ada notifikasi baru</p>
+                    </div>
+                `;
+            } else {
+                notifications.forEach(notif => {
+                    const item = document.createElement('a');
+                    item.href = notif.url;
+                    item.className = 'notification-item unread';
+                    item.dataset.id = notif.id;
+                    item.innerHTML = `
+                        <div class="notification-icon ${notif.type}">
+                            <i class="fas ${notif.icon}"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notif.title}</div>
+                            <div class="notification-message">${notif.message}</div>
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>${notif.time}</span>
+                            </div>
+                        </div>
+                    `;
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.href = notif.url;
+                    });
+                    notificationList.appendChild(item);
+                });
+            }
+            updateBadge();
+        }
+
+        function updateBadge() {
+            if (!notificationBadge) return;
+            const unreadCount = notifications.length;
+            notificationBadge.textContent = unreadCount;
+            if (unreadCount > 0) {
+                notificationBadge.style.display = 'flex';
+            } else {
+                notificationBadge.style.display = 'none';
+            }
+        }
+
+        if (markAllReadBtn) {
+            markAllReadBtn.addEventListener('click', async () => {
+                notifications = [];
+                renderNotifications();
+                try {
+                    await fetch('{{ route('admin.notifications.markAllAsRead') }}', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                    });
+                } catch (error) {
+                    console.error('Failed to mark all as read:', error);
+                }
+            });
+        }
+
+        if (clearNotificationsBtn) {
+            clearNotificationsBtn.addEventListener('click', async () => {
+                notifications = [];
+                renderNotifications();
+                try {
+                    await fetch('{{ route('admin.notifications.clearAll') }}', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                    });
+                } catch (error) {
+                    console.error('Failed to clear notifications:', error);
+                }
+            });
+        }
+        // ========== END NOTIFICATION SYSTEM ==========
+
         document.addEventListener('DOMContentLoaded', function () {
             // DARK MODE LOGIC
             const themeToggle = document.getElementById('theme-toggle');
@@ -2180,13 +2786,97 @@
                 document.getElementById('detail_keterangan_barang').textContent = button.getAttribute('data-keterangan_barang');
                 document.getElementById('detail_created_at').textContent = button.getAttribute('data-created_at');
             });
+
+            // Fetch notifications on page load
+            fetchNotifications();
+
+            // Auto-hide success message
+            const successAlert = document.getElementById('successAlert');
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.classList.add('hiding');
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 300);
+                }, 5000);
+            }
+
+            // Filter form auto submit
+            document.getElementById('status_barang')?.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            document.getElementById('merek_barang')?.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            document.getElementById('sort')?.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            // Auto submit search dengan debounce
+            let searchTimeout;
+            document.getElementById('search')?.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    document.getElementById('filterForm').submit();
+                }, 800);
+            });
+
+            // DISABLE ALL BOOTSTRAP ANIMATIONS
+            disableAllAnimations();
         });
+
+        // Function to disable all animations
+        function disableAllAnimations() {
+            // Remove all transition and animation styles
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                element.style.animation = 'none !important';
+                element.style.transition = 'none !important';
+                element.style.transform = 'none !important';
+            });
+
+            // Override Bootstrap modal animations
+            const style = document.createElement('style');
+            style.textContent = `
+                .modal.fade .modal-dialog {
+                    transition: none !important;
+                    transform: none !important;
+                    animation: none !important;
+                }
+                .modal.show .modal-dialog {
+                    transform: none !important;
+                    animation: none !important;
+                }
+                .fade {
+                    transition: none !important;
+                    animation: none !important;
+                }
+                .modal-backdrop.fade {
+                    transition: none !important;
+                    animation: none !important;
+                    opacity: 0.5 !important;
+                }
+                .modal-backdrop.show {
+                    opacity: 0.5 !important;
+                }
+                * {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
 
         function filterByStatus(status) {
             const url = new URL(window.location);
             url.searchParams.set('status_barang', status);
             window.location.href = url.toString();
         }
+
+        // Notification polling (refresh every 30 seconds)
+        setInterval(fetchNotifications, 30000);
     </script>
 </body>
 </html>
