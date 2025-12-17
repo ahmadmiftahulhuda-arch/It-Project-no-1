@@ -809,7 +809,6 @@
                 </div>
             </div>
 
-            <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
@@ -821,7 +820,7 @@
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item">
+                    <a href="/admin/settings" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>
