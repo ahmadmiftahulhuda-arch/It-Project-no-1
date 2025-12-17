@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JadwalPerkuliahan;
+use App\Models\MataKuliah;
+use App\Models\Kelas;
+use App\Models\SlotWaktu;
+use App\Models\Ruangan;
 use App\Imports\JadwalPerkuliahanImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use App\Exports\JadwalPerkuliahanExport;
 
 class JadwalPerkuliahanController extends Controller
 {
@@ -20,6 +25,8 @@ class JadwalPerkuliahanController extends Controller
             'search' => $request->search,
             'hari' => $request->hari,
             'ruangan' => $request->ruangan,
+            'ruangan_id' => $request->ruangan_id ?? $request->ruangan, // accept either
+            'nama_kelas' => $request->nama_kelas,
             'sistem_kuliah' => $request->sistem_kuliah,
             'sort' => $request->sort ?? 'hari',
         ];
@@ -31,22 +38,32 @@ class JadwalPerkuliahanController extends Controller
         if ($filters['search']) {
             $jadwal->where(function ($q) use ($filters) {
                 $q->where('kode_matkul', 'like', "%{$filters['search']}%")
-                  ->orWhere('nama_kelas', 'like', "%{$filters['search']}%")
-                  ->orWhere('ruangan', 'like', "%{$filters['search']}%")
-                  ->orWhere('hari', 'like', "%{$filters['search']}%");
+                    ->orWhere('nama_kelas', 'like', "%{$filters['search']}%")
+                    ->orWhere('ruangan', 'like', "%{$filters['search']}%")
+                    ->orWhere('hari', 'like', "%{$filters['search']}%");
             });
         }
 
         // Filter spesifik
-        if ($filters['hari']) {
+        if (!empty($filters['hari'])) {
             $jadwal->where('hari', $filters['hari']);
         }
 
-        if ($filters['ruangan']) {
+        // filter by ruangan_id (preferred) or ruangan name
+        if (!empty($filters['ruangan_id'])) {
+            $room = Ruangan::find($filters['ruangan_id']);
+            if ($room) {
+                $jadwal->where('ruangan', $room->nama_ruangan ?? $room->name ?? $room->ruangan);
+            }
+        } elseif (!empty($filters['ruangan'])) {
             $jadwal->where('ruangan', $filters['ruangan']);
         }
 
-        if ($filters['sistem_kuliah']) {
+        if (!empty($filters['nama_kelas'])) {
+            $jadwal->where('nama_kelas', $filters['nama_kelas']);
+        }
+
+        if (!empty($filters['sistem_kuliah'])) {
             $jadwal->where('sistem_kuliah', $filters['sistem_kuliah']);
         }
 
@@ -60,7 +77,7 @@ class JadwalPerkuliahanController extends Controller
                 break;
             default:
                 $jadwal->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')")
-                       ->orderBy('jam_mulai');
+                    ->orderBy('jam_mulai');
                 break;
         }
 
@@ -71,12 +88,31 @@ class JadwalPerkuliahanController extends Controller
         $hariList = JadwalPerkuliahan::distinct()->pluck('hari');
         $ruanganList = JadwalPerkuliahan::distinct()->pluck('ruangan');
         $sistemKuliahList = JadwalPerkuliahan::distinct()->pluck('sistem_kuliah');
+        $mataKuliahs = MataKuliah::all();
+        $kelas = Kelas::all();
+        // provide slot and ruangan collections for modals
+        $slotwaktu = SlotWaktu::orderBy('waktu')->get();
+        $ruangan = Ruangan::orderBy('nama_ruangan')->get();
 
-        // Statistik
+        // ==========================
+        // STATISTIK JADWAL
+        // ==========================
         $totalCount = JadwalPerkuliahan::count();
-        $hariCounts = JadwalPerkuliahan::select('hari', DB::raw('COUNT(*) as total'))
-            ->groupBy('hari')
+
+        $hariCounts = JadwalPerkuliahan::select(
+            DB::raw('TRIM(hari) as hari'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy(DB::raw('TRIM(hari)'))
             ->pluck('total', 'hari');
+
+        // Mapping ke variabel Blade (WAJIB)
+        $seninCount  = $hariCounts['Senin']  ?? 0;
+        $selasaCount = $hariCounts['Selasa'] ?? 0;
+        $rabuCount   = $hariCounts['Rabu']   ?? 0;
+        $kamisCount  = $hariCounts['Kamis']  ?? 0;
+        $jumatCount  = $hariCounts['Jumat']  ?? 0;
+
 
         return view('admin.jadwal-perkuliahan.index', compact(
             'jadwal',
@@ -84,17 +120,30 @@ class JadwalPerkuliahanController extends Controller
             'ruanganList',
             'sistemKuliahList',
             'totalCount',
-            'hariCounts',
-            'filters'
+            'seninCount',
+            'selasaCount',
+            'rabuCount',
+            'kamisCount',
+            'jumatCount',
+            'filters',
+            'mataKuliahs',
+            'kelas',
+            'slotwaktu',
+            'ruangan'
         ));
     }
 
     /**
-     * Tampilkan form tambah jadwal baru
+                    $slotList = SlotWaktu::orderBy('waktu')->get();
+                    // Provide variables matching other views
+                    $slotwaktu = $slotList;
+                    $ruangan = Ruangan::all();
      */
     public function create()
     {
-        return view('admin.jadwal-perkuliahan.create');
+        $mataKuliahs = MataKuliah::all();
+        $kelas = Kelas::all();
+        return view('admin.jadwal-perkuliahan.create', compact('mataKuliahs', 'kelas'));
     }
 
     /**
@@ -111,9 +160,14 @@ class JadwalPerkuliahanController extends Controller
             'hari' => 'required|string',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
-            'ruangan' => 'required|string',
+            'ruangan_id' => 'required|exists:ruangan,id',
             'daya_tampung' => 'nullable|integer',
         ]);
+
+        // map ruangan_id to ruangan name for existing schema
+        $room = Ruangan::find($validated['ruangan_id']);
+        $validated['ruangan'] = $room->nama_ruangan ?? $room->name ?? '';
+        unset($validated['ruangan_id']);
 
         JadwalPerkuliahan::create($validated);
 
@@ -123,6 +177,8 @@ class JadwalPerkuliahanController extends Controller
 
     /**
      * Tampilkan form edit
+                        'slotwaktu',
+                        'ruangan'
      */
     public function edit(JadwalPerkuliahan $jadwalPerkuliahan)
     {
@@ -143,9 +199,13 @@ class JadwalPerkuliahanController extends Controller
             'hari' => 'required|string',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
-            'ruangan' => 'required|string',
+            'ruangan_id' => 'required|exists:ruangan,id',
             'daya_tampung' => 'nullable|integer',
         ]);
+
+        $room = Ruangan::find($validated['ruangan_id']);
+        $validated['ruangan'] = $room->nama_ruangan ?? $room->name ?? '';
+        unset($validated['ruangan_id']);
 
         $jadwalPerkuliahan->update($validated);
 
@@ -196,5 +256,19 @@ class JadwalPerkuliahanController extends Controller
             return redirect()->route('jadwal-perkuliahan.index')
                 ->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
+    }
+    public function export(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'hari' => $request->hari,
+            'ruangan' => $request->ruangan,
+            'sistem_kuliah' => $request->sistem_kuliah,
+        ];
+
+        return Excel::download(
+            new JadwalPerkuliahanExport($filters),
+            'jadwal_perkuliahan.xlsx'
+        );
     }
 }
