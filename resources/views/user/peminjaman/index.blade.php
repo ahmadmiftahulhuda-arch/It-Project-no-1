@@ -1380,15 +1380,28 @@
                     <div>
                         <select class="form-select" id="ruang-filter">
                             <option value="semua">Semua Ruang</option>
-                            <option value="Lab A">Lab A</option>
-                            <option value="Lab B">Lab B</option>
-                            <option value="Lab C">Lab C</option>
-                            <option value="Ruang Meeting">Ruang Meeting</option>
-                            <option value="Ruang Seminar">Ruang Seminar</option>
+                            @if(isset($ruangans))
+                                @foreach($ruangans as $r)
+                                    <option value="{{ $r->nama_ruangan }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>{{ $r->nama_ruangan }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
+
                     <div>
-                        <input type="date" class="form-control" id="tanggal-filter" placeholder="Filter Tanggal">
+                        <select class="form-select" id="projector-filter">
+                            <option value="semua">Semua Proyektor</option>
+                            @if(isset($projectors))
+                                @foreach($projectors as $p)
+                                    @php $label = ($p->kode_proyektor ?? 'P-'.$p->id) . ' - ' . trim(($p->merk ?? '') . ' ' . ($p->model ?? '')); @endphp
+                                    <option value="{{ $label }}" {{ request('projector_id') == $p->id ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div>
+                        <input type="date" class="form-control" id="tanggal-filter" name="tanggal" value="{{ request('tanggal') }}" placeholder="Filter Tanggal">
                     </div>
                 </div>
             </div>
@@ -1430,7 +1443,9 @@
                             @endphp
 
                             <tr class="{{ $isOngoing ? 'table-success' : '' }}"
-                                data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
+                                data-status="{{ $peminjaman->status }}"
+                                data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
+                                data-projector="{{ $peminjaman->projector ? ($peminjaman->projector->kode_proyektor . ' - ' . trim(($peminjaman->projector->merk ?? '') . ' ' . ($peminjaman->projector->model ?? ''))) : 'Tidak' }}"
                                 data-tanggal="{{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}"
                                 data-tanggal-iso="{{ $peminjaman->tanggal }}"
                                 data-waktu-mulai="{{ $peminjaman->display_waktu_mulai ?? ($peminjaman->waktu_mulai ?? '') }}"
@@ -1982,6 +1997,8 @@
                 const activeTab = document.querySelector('.filter-tab.active');
                 const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
                 const ruangFilter = document.getElementById('ruang-filter').value;
+                const proyekFilterEl = document.getElementById('projector-filter');
+                const proyekFilter = proyekFilterEl ? proyekFilterEl.value : 'semua';
                 const tanggalFilter = document.getElementById('tanggal-filter').value;
 
                 const rows = document.querySelectorAll('tbody tr');
@@ -1990,17 +2007,21 @@
                     const text = row.textContent.toLowerCase();
                     const rowStatus = row.getAttribute('data-status');
                     const rowRuang = row.getAttribute('data-ruang');
+                    const rowProjector = row.getAttribute('data-projector') || 'Tidak';
                     const rowTanggal = row.getAttribute('data-tanggal');
+                    const rowTanggalIso = row.getAttribute('data-tanggal-iso') || '';
 
-                    // Filter berdasarkan pencarian, status, ruang, dan tanggal
+                    // Filter berdasarkan pencarian, status, ruang, proyektor, dan tanggal
                     const textMatch = text.includes(searchText);
                     const statusMatch = statusFilter === 'semua' ||
                         (statusFilter === 'berlangsung' ? row.classList.contains('table-success') : rowStatus ===
                             statusFilter);
                     const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
-                    const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
+                    const proyekMatch = proyekFilter === 'semua' || rowProjector === proyekFilter;
+                    // Compare date input (YYYY-MM-DD) against row's ISO date attribute
+                    const tanggalMatch = !tanggalFilter || (rowTanggalIso && rowTanggalIso === tanggalFilter);
 
-                    if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
+                    if (textMatch && statusMatch && ruangMatch && proyekMatch && tanggalMatch) {
                         row.style.display = '';
                     } else {
                         row.style.display = 'none';
@@ -2092,6 +2113,12 @@
 
                 // Event listener untuk filter ruang
                 document.getElementById('ruang-filter').addEventListener('change', filterTable);
+
+                // Event listener untuk filter proyek (proyektor)
+                const projFilterEl = document.getElementById('projector-filter');
+                if (projFilterEl) {
+                    projFilterEl.addEventListener('change', filterTable);
+                }
 
                 // Event listener untuk filter tanggal
                 document.getElementById('tanggal-filter').addEventListener('change', filterTable);

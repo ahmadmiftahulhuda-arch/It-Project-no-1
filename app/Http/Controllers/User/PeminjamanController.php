@@ -36,8 +36,23 @@ class PeminjamanController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by ruangan_id (if provided)
+        if ($request->has('ruangan_id') && $request->ruangan_id != '' && $request->ruangan_id !== 'semua') {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
+
+        // Filter by projector_id (if provided)
+        if ($request->has('projector_id') && $request->projector_id != '' && $request->projector_id !== 'semua') {
+            $query->where('projector_id', $request->projector_id);
+        }
+
         $peminjamans = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('user.peminjaman.index', compact('peminjamans'));
+
+        // Provide room and projector lists for filters
+        $ruangans = Ruangan::orderBy('nama_ruangan')->get();
+        $projectors = Projector::orderBy('kode_proyektor')->get();
+
+        return view('user.peminjaman.index', compact('peminjamans', 'ruangans', 'projectors'));
     }
 
     public function create()
@@ -201,8 +216,23 @@ class PeminjamanController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by ruangan_id (if provided)
+        if ($request->has('ruangan_id') && $request->ruangan_id != '' && $request->ruangan_id !== 'semua') {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
+
+        // Filter by projector_id (if provided)
+        if ($request->has('projector_id') && $request->projector_id != '' && $request->projector_id !== 'semua') {
+            $query->where('projector_id', $request->projector_id);
+        }
+
         $riwayat = $query->orderBy('created_at', 'desc')->paginate(15);
-        return view('user.peminjaman.riwayat', compact('riwayat'));
+
+        // Provide room and projector lists for filters
+        $ruangans = Ruangan::orderBy('nama_ruangan')->get();
+        $projectors = Projector::orderBy('kode_proyektor')->get();
+
+        return view('user.peminjaman.riwayat', compact('riwayat', 'ruangans', 'projectors'));
     }
 
     public function pengembalianUser(Request $request)

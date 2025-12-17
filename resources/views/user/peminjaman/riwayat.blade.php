@@ -1415,11 +1415,17 @@
                     <div>
                         <select class="form-select" id="ruang-filter">
                             <option value="semua">Semua Ruang</option>
-                            <option value="Lab A">Lab A</option>
-                            <option value="Lab B">Lab B</option>
-                            <option value="Lab C">Lab C</option>
-                            <option value="Ruang Meeting">Ruang Meeting</option>
-                            <option value="Ruang Seminar">Ruang Seminar</option>
+                            @foreach($ruangans as $r)
+                                <option value="{{ $r->nama_ruangan }}">{{ $r->nama_ruangan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <select class="form-select" id="projector-filter">
+                            <option value="semua">Semua Proyektor</option>
+                            @foreach($projectors as $p)
+                                <option value="{{ $p->kode_proyektor }} - {{ $p->merk ?? '' }}">{{ $p->kode_proyektor }} - {{ $p->merk ?? '' }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div>
@@ -1457,8 +1463,10 @@
                             @endphp
 
                             <tr class="{{ $isOngoing ? 'table-success' : '' }}"
-                                data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruang }}"
+                                data-status="{{ $peminjaman->status }}" data-ruang="{{ $peminjaman->ruangan->nama_ruangan ?? $peminjaman->ruang }}"
                                 data-tanggal="{{ $peminjaman->tanggal }}"
+                                data-tanggal-iso="{{ $tanggal->format('Y-m-d') }}"
+                                data-projector="{{ $peminjaman->projector ? $peminjaman->projector->kode_proyektor . ' - ' . ($peminjaman->projector->merk ?? '') : 'Tidak' }}"
                                 data-waktu-pengajuan="{{ $peminjaman->created_at }}">
 
                                 <!-- NO -->
@@ -2066,7 +2074,9 @@
                 const searchText = document.querySelector('.search-input').value.toLowerCase();
                 const activeTab = document.querySelector('.filter-tab.active');
                 const statusFilter = activeTab ? activeTab.getAttribute('data-status') : 'semua';
-                const ruangFilter = document.getElementById('ruang-filter').value;
+                const ruangFilter = (document.getElementById('ruang-filter').value || 'semua').toLowerCase().trim();
+                const projectorFilterEl = document.getElementById('projector-filter');
+                const projectorFilter = projectorFilterEl ? (projectorFilterEl.value || 'semua').toLowerCase().trim() : 'semua';
                 const tanggalFilter = document.getElementById('tanggal-filter').value;
 
                 const rows = document.querySelectorAll('tbody tr');
@@ -2074,16 +2084,18 @@
                 rows.forEach(row => {
                     const text = row.textContent.toLowerCase();
                     const rowStatus = row.getAttribute('data-status');
-                    const rowRuang = row.getAttribute('data-ruang');
-                    const rowTanggal = row.getAttribute('data-tanggal');
+                    const rowRuang = (row.getAttribute('data-ruang') || '').toLowerCase().trim();
+                    const rowTanggal = row.getAttribute('data-tanggal-iso') || row.getAttribute('data-tanggal');
+                    const rowProjector = (row.getAttribute('data-projector') || 'Tidak').toLowerCase().trim();
 
-                    // Filter berdasarkan pencarian, status, ruang, dan tanggal
+                    // Filter berdasarkan pencarian, status, ruang, proyektor, dan tanggal
                     const textMatch = text.includes(searchText);
                     const statusMatch = statusFilter === 'semua' || rowStatus === statusFilter;
                     const ruangMatch = ruangFilter === 'semua' || rowRuang === ruangFilter;
+                    const projectorMatch = projectorFilter === 'semua' || rowProjector === projectorFilter;
                     const tanggalMatch = !tanggalFilter || rowTanggal === tanggalFilter;
 
-                    if (textMatch && statusMatch && ruangMatch && tanggalMatch) {
+                    if (textMatch && statusMatch && ruangMatch && projectorMatch && tanggalMatch) {
                         row.style.display = '';
                     } else {
                         row.style.display = 'none';
@@ -2158,6 +2170,10 @@
 
                 // Event listener untuk filter ruang
                 document.getElementById('ruang-filter').addEventListener('change', filterTable);
+
+                // Event listener untuk projector filter (jika ada)
+                const _projFilter = document.getElementById('projector-filter');
+                if (_projFilter) { _projFilter.addEventListener('change', filterTable); }
 
                 // Event listener untuk filter tanggal
                 document.getElementById('tanggal-filter').addEventListener('change', filterTable);
