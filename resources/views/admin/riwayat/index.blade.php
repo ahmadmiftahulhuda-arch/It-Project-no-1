@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Peminjaman - Sistem Manajemen Peminjaman</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
@@ -722,6 +723,450 @@
             border: 1px solid var(--border-light);
         }
 
+        /* ============================
+           IMPROVED NOTIFICATION SYSTEM
+           ============================ */
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+            border: none;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 89, 152, 0.2);
+        }
+
+        .notification-btn .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FF5B5B, #D92525);
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 4px rgba(217, 37, 37, 0.4);
+            border-radius: 999px;
+        }
+
+        .dark-mode .notification-btn {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        .dark-mode .notification-btn:hover {
+            background: #3a3a3a;
+            color: var(--primary);
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            width: 380px !important;
+            max-height: 500px;
+            overflow: hidden;
+            border: none !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px !important;
+            padding: 0;
+            margin-top: 10px;
+            animation: notificationSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light) !important;
+        }
+
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Notification Header */
+        .notification-header {
+            padding: 18px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-actions .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Notification List */
+        .notification-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb:hover {
+            background: var(--gray);
+        }
+
+        /* Notification Item */
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(59, 89, 152, 0.05);
+        }
+
+        .dark-mode .notification-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.08);
+            border-left: 3px solid var(--primary);
+        }
+
+        .dark-mode .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.15);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        .notification-icon.success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .notification-icon.warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #f57c00;
+        }
+
+        .notification-icon.danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #d32f2f;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions-item {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .notification-actions-item .btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .notification-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .notification-footer {
+            padding: 15px 20px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .notification-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .notification-footer a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Notification Toast Styles */
+        .notification-toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification-toast {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            min-width: 300px;
+            max-width: 350px;
+            animation: toastSlideIn 0.3s ease, toastSlideOut 0.3s ease 4.7s forwards;
+            transform: translateX(0);
+            border: 1px solid var(--border-light);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .notification-toast.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification-toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification-toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-toast.danger {
+            border-left-color: #f44336;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .toast-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .toast-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .toast-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .toast-icon.danger {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast-body {
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .toast-progress {
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+            transform-origin: left;
+        }
+
+        .notification-toast.info .toast-progress-bar {
+            background: #2196f3;
+        }
+
+        .notification-toast.success .toast-progress-bar {
+            background: #4caf50;
+        }
+
+        .notification-toast.warning .toast-progress-bar {
+            background: #ff9800;
+        }
+
+        .notification-toast.danger .toast-progress-bar {
+            background: #f44336;
+        }
+
+        @keyframes progressBar {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -907,6 +1352,8 @@
 </head>
 
 <body>
+    <!-- Notification Toast Container -->
+    <div class="notification-toast-container"></div>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -1076,8 +1523,31 @@
             </form>
 
             <div class="user-actions">
-                <div class="notification-btn">
-                    <i class="fas fa-bell"></i>
+                <!-- Improved Notification Dropdown -->
+                <div class="dropdown">
+                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu notification-dropdown" aria-labelledby="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>Notifikasi</h6>
+                            <div class="notification-actions">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="markAllRead">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="clearNotifications">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- Notifications will be dynamically added here -->
+                        </div>
+                        <div class="notification-footer">
+                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua notifikasi</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="theme-toggle" id="theme-toggle">
@@ -1679,8 +2149,8 @@
                                                 data-tanggal="{{ $item->tanggal }}"
                                                 data-ruangan-id="{{ $item->ruangan_id }}"
                                                 data-projector-id="{{ $item->projector_id }}"
-                                                data-waktu_mulai="{{ $item->waktu_mulai }}"
-                                                data-waktu_selesai="{{ $item->waktu_selesai }}"
+                                                data-waktu_mulai="{{ $item->waktu_mulai ?? '' }}"
+                                                data-waktu_selesai="{{ $item->waktu_selesai ?? '' }}"
                                                 data-keperluan="{{ $item->keperluan }}"
                                                 data-status="{{ $item->status }}"
                                                 data-status-pengembalian="{{ optional($item->pengembalian)->status }}"
@@ -1952,379 +2422,511 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
-        // Toggle theme
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
+        document.addEventListener('DOMContentLoaded', function() {
+            // ========== DYNAMIC NOTIFICATION SYSTEM ==========
+            let notifications = [];
+            const notificationList = document.getElementById('notificationList');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const markAllReadBtn = document.getElementById('markAllRead');
+            const clearNotificationsBtn = document.getElementById('clearNotifications');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
-
-        // Auto relod untuk filter tanggal 
-        document.getElementById('date_filter')?.addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
-        });
-
-        // Toggle sidebar on mobile
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        // Auto-submit form search ketika mengetik (dengan debounce)
-        let searchTimeout;
-        const searchInputs = document.querySelectorAll('input[name="search"]');
-
-        searchInputs.forEach(input => {
-            input.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    console.log('Auto-submitting search:', this.value);
-                    const form = this.closest('form');
-                    if (form) {
-                        form.submit();
+            async function fetchNotifications() {
+                try {
+                    const response = await fetch('{{ route('admin.notifications.index') }}');
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
                     }
-                }, 800);
-            });
-        });
+                    const data = await response.json();
+                    notifications = data.notifications || [];
+                    renderNotifications();
+                } catch (error) {
+                    console.error('Failed to fetch notifications:', error);
+                    if (notificationList) {
+                        notificationList.innerHTML = `
+                            <div class="notification-empty">
+                                <i class="fas fa-exclamation-triangle text-danger"></i>
+                                <p>Gagal memuat notifikasi</p>
+                            </div>
+                        `;
+                    }
+                }
+            }
 
-        // Auto-submit filter ketika perubahan select box
-        const filterSelects = document.querySelectorAll('#filterForm select');
-        filterSelects.forEach(select => {
-            select.addEventListener('change', function() {
-                console.log('Filter changed:', this.name, this.value);
+            function renderNotifications() {
+                if (!notificationList) return;
+                notificationList.innerHTML = '';
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Tidak ada notifikasi baru</p>
+                        </div>
+                    `;
+                } else {
+                    notifications.forEach(notif => {
+                        const item = document.createElement('a');
+                        item.href = notif.url;
+                        item.className = `notification-item ${notif.read_at ? '' : 'unread'}`; 
+                        item.dataset.id = notif.id;
+                        item.innerHTML = `
+                            <div class="notification-icon ${notif.type}">
+                                <i class="fas ${notif.icon}"></i>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">${notif.title}</div>
+                                <div class="notification-message">${notif.message}</div>
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${notif.time}</span>
+                                </div>
+                            </div>
+                        `;
+                        item.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            await markAsRead(notif.id);
+                            window.location.href = notif.url;
+                        });
+                        notificationList.appendChild(item);
+                    });
+                }
+                updateBadge();
+            }
+
+            function updateBadge() {
+                if (!notificationBadge) return;
+                const unreadCount = notifications.filter(notif => !notif.read_at).length;
+                notificationBadge.textContent = unreadCount;
+                if (unreadCount > 0) {
+                    notificationBadge.style.display = 'flex';
+                } else {
+                    notificationBadge.style.display = 'none';
+                }
+            }
+
+            async function markAsRead(notificationId) {
+                try {
+                    await fetch(`{{ url('admin/notifications') }}/${notificationId}/mark-as-read`, {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                    });
+                    notifications = notifications.map(notif => 
+                        notif.id === notificationId ? { ...notif, read_at: new Date().toISOString() } : notif
+                    );
+                    renderNotifications();
+                } catch (error) {
+                    console.error('Failed to mark notification as read:', error);
+                }
+            }
+
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', async () => {
+                    try {
+                        await fetch('{{ route('admin.notifications.markAllAsRead') }}', { 
+                            method: 'POST', 
+                            headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' } 
+                        });
+                        notifications = notifications.map(notif => ({ ...notif, read_at: new Date().toISOString() }));
+                        renderNotifications();
+                    } catch (error) {
+                        console.error('Failed to mark all as read:', error);
+                    }
+                });
+            }
+
+            if (clearNotificationsBtn) {
+                clearNotificationsBtn.addEventListener('click', async () => {
+                    try {
+                        await fetch('{{ route('admin.notifications.clearAll') }}', { 
+                            method: 'POST', 
+                            headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                        });
+                        notifications = [];
+                        renderNotifications();
+                    } catch (error) {
+                        console.error('Failed to clear notifications:', error);
+                    }
+                });
+            }
+            
+            fetchNotifications();
+            // ========== END DYNAMIC NOTIFICATION SYSTEM ==========
+
+            // Toggle theme
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-mode');
+
+                    if (document.body.classList.contains('dark-mode')) {
+                        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                        localStorage.setItem('darkMode', 'enabled');
+                    } else {
+                        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                        localStorage.setItem('darkMode', 'disabled');
+                    }
+                });
+            }
+
+            // Auto relod untuk filter tanggal 
+            document.getElementById('date_filter')?.addEventListener('change', function() {
                 document.getElementById('filterForm').submit();
             });
-        });
 
-        // Handler untuk modal detail
-        const detailModal = document.getElementById('detailModal');
-        if (detailModal) {
-            detailModal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const id = button.getAttribute('data-id');
-                const peminjam = button.getAttribute('data-peminjam');
-                const dosen = button.getAttribute('data-dosen');
-                const dosenNip = button.getAttribute('data-dosen-nip');
-                const tanggal = button.getAttribute('data-tanggal');
-                const waktuMulai = button.getAttribute('data-waktu-mulai');
-                const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                const ruang = button.getAttribute('data-ruang');
-                const proyektor = button.getAttribute('data-projector-label');
-                const keperluan = button.getAttribute('data-keperluan');
-                const status = button.getAttribute('data-status');
-                const statusPengembalian = button.getAttribute('data-status-pengembalian');
-                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
-                const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
-                const keterangan = button.getAttribute('data-keterangan');
-                const created = button.getAttribute('data-created');
-                const updated = button.getAttribute('data-updated');
+            // Toggle sidebar on mobile
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
 
-                // Isi data detail 
-                document.getElementById('detail_id').textContent = id;
-                document.getElementById('detail_peminjam').textContent = peminjam;
-                document.getElementById('detail_dosen').textContent = dosen + (dosenNip !== '-' ? ` (${dosenNip})` :
-                    '');
-                document.getElementById('detail_tanggal').textContent = formatDate(tanggal);
-                document.getElementById('detail_waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
-                document.getElementById('detail_ruang').textContent = ruang;
-                document.getElementById('detail_proyektor').textContent = proyektor;
-                document.getElementById('detail_keperluan').textContent = keperluan;
-                document.getElementById('detail_keterangan').textContent = keterangan;
-                document.getElementById('detail_created').textContent = formatDate(created);
-                document.getElementById('detail_updated').textContent = formatDate(updated);
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
+            }
 
+            // Auto-submit form search ketika mengetik (dengan debounce)
+            let searchTimeout;
+            const searchInputs = document.querySelectorAll('input[name="search"]');
 
-                // Tampilkan juga waktu jatuh tempo / pengembalian jika ada
-                if (waktuSelesai) {
-                    const el = document.getElementById('detail_tanggal');
-                    el.innerHTML += '<br><small class="text-muted">Slot: ' + formatTime(waktuMulai) + ' - ' +
-                        formatTime(waktuSelesai) + '</small>';
-                }
-
-                // Format status peminjaman
-                let statusText = '';
-                if (status === 'selesai') {
-                    statusText =
-                        '<span class="badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
-                } else if (status === 'disetujui') {
-                    statusText =
-                        '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
-                } else if (status === 'berlangsung') {
-                    statusText =
-                        '<span class="badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
-                } else if (status === 'ditolak') {
-                    statusText =
-                        '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
-                } else {
-                    statusText =
-                        '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
-                }
-                document.getElementById('detail_status').innerHTML = statusText;
-
-                // Format status pengembalian (gunakan nilai DB canonical)
-                let statusPengembalianText = '';
-                const pj = (statusPengembalian || '').toString().toLowerCase();
-                if (pj === 'verified' || pj === 'disetujui') {
-                    statusPengembalianText =
-                        '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' +
-                        (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                } else if (pj === 'pending' || pj === 'menunggu') {
-                    statusPengembalianText =
-                        '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' +
-                        (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                } else if (pj === 'rejected' || pj === 'ditolak') {
-                    statusPengembalianText =
-                        '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (
-                            waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                } else if (pj === 'overdue' || pj === 'terlambat') {
-                    statusPengembalianText =
-                        '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' +
-                        (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
-                } else if (waktuPengembalian) {
-                    statusPengembalianText =
-                        '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' +
-                        formatTime(waktuPengembalian) + ')</span>';
-                } else {
-                    statusPengembalianText =
-                        '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
-                }
-                document.getElementById('detail_status_pengembalian').innerHTML = statusPengembalianText;
-
-                document.getElementById('detail_keterangan').textContent = keterangan || '-';
-            });
-        }
-
-        // Handler untuk modal edit
-        const editModal = document.getElementById('editModal');
-        if (editModal) {
-            editModal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const id = button.getAttribute('data-id');
-                const peminjam = button.getAttribute('data-peminjam');
-                const tanggal = button.getAttribute('data-tanggal');
-                const ruanganId = button.getAttribute('data-ruangan-id') || button.getAttribute('data-ruang-id') ||
-                    button.getAttribute('data-ruang');
-                const projectorId = button.getAttribute('data-projector-id') || button.getAttribute(
-                    'data-projector') || '';
-                const waktuMulai = button.getAttribute('data-waktu_mulai') || button.getAttribute(
-                    'data-waktu-mulai') || '';
-                const waktuSelesai = button.getAttribute('data-waktu_selesai') || button.getAttribute(
-                    'data-waktu-selesai') || '';
-                let statusPengembalian = button.getAttribute('data-status-pengembalian') || button.getAttribute(
-                    'data-status_pengembalian') || '';
-                const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || button.getAttribute(
-                    'data-tanggal_pengembalian') || '';
-                const keperluan = button.getAttribute('data-keperluan') || button.getAttribute('data-keperluan') ||
-                    '';
-                const status = button.getAttribute('data-status') || '';
-                const catatan = button.getAttribute('data-catatan') || button.getAttribute('data-keterangan') || '';
-
-                // Normalize display value 'terlambat' to DB-safe 'overdue' for the select
-                if (statusPengembalian === 'terlambat') {
-                    statusPengembalian = 'overdue';
-                }
-
-                // Update form action URL
-                const form = document.getElementById('editForm');
-                form.action = `/admin/riwayat/${id}`;
-
-                // Normalize date to YYYY-MM-DD for input[type=date]
-                function normalizeDateForInput(d) {
-                    if (!d) return '';
-                    // If already in YYYY-MM-DD format, return as-is
-                    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-                    // Try parsing with Date
-                    const parsed = new Date(d);
-                    if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
-                    // Fallback: try common US format MM/DD/YYYY
-                    const parts = d.split('/');
-                    if (parts.length === 3) {
-                        const mm = parts[0].padStart(2, '0');
-                        const dd = parts[1].padStart(2, '0');
-                        const yyyy = parts[2];
-                        return `${yyyy}-${mm}-${dd}`;
-                    }
-                    return '';
-                }
-
-                // Normalize time to HH:MM (24-hour) for input[type=time]
-                function normalizeTimeForInput(t) {
-                    if (!t) return '';
-                    t = t.trim();
-                    // If contains AM/PM, convert
-                    const ampmMatch = t.match(/(\d{1,2}:\d{2})(?:[:\d{2}]*)?\s*(AM|PM)/i);
-                    if (ampmMatch) {
-                        let [, timePart, ampm] = ampmMatch;
-                        let [hh, mm] = timePart.split(':').map(s => parseInt(s, 10));
-                        if (ampm.toUpperCase() === 'PM' && hh < 12) hh += 12;
-                        if (ampm.toUpperCase() === 'AM' && hh === 12) hh = 0;
-                        return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
-                    }
-                    // If time includes seconds like 15:30:00, strip seconds
-                    const secMatch = t.match(/^(\d{1,2}:\d{2}):\d{2}$/);
-                    if (secMatch) return secMatch[1].padStart(5, '0');
-                    // If already HH:MM or H:MM, pad
-                    const simpleMatch = t.match(/^(\d{1,2}:\d{2})$/);
-                    if (simpleMatch) {
-                        const [hh, mm] = simpleMatch[1].split(':').map(s => s.padStart(2, '0'));
-                        return `${hh}:${mm}`;
-                    }
-                    // Last resort: try parsing as Date and extract time
-                    const dt = new Date(`1970-01-01T${t}`);
-                    if (!isNaN(dt)) return dt.toTimeString().slice(0, 5);
-                    return '';
-                }
-
-                // Isi data form
-                document.getElementById('edit_peminjam').value = peminjam;
-                document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
-                document.getElementById('edit_ruangan_id').value = ruanganId || '';
-                document.getElementById('edit_projector_id').value = projectorId || '';
-                document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai) || '';
-                document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai) || '';
-                document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
-                document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
-                document.getElementById('edit_keperluan').value = keperluan;
-                document.getElementById('edit_catatan').value = catatan || '';
-
-                // Handle status peminjaman
-                let statusValue = status;
-                const today = new Date().toISOString().split('T')[0];
-
-                // Jika status adalah disetujui dan tanggal hari ini, tampilkan sebagai berlangsung
-                if (status === 'disetujui' && tanggal === today) {
-                    statusValue = 'berlangsung';
-                }
-                document.getElementById('edit_status').value = statusValue;
-
-                // Debug log
-                console.log('Data yang akan diisi:', {
-                    id,
-                    peminjam,
-                    tanggal,
-                    ruanganId,
-                    projectorId,
-                    keperluan,
-                    status,
-                    catatan,
-                    selectedStatus: statusValue
+            searchInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        console.log('Auto-submitting search:', this.value);
+                        const form = this.closest('form');
+                        if (form) {
+                            form.submit();
+                        }
+                    }, 800);
                 });
             });
-        }
 
-        // Handler untuk modal hapus
-        const deleteModal = document.getElementById('deleteModal');
-        if (deleteModal) {
-            deleteModal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const id = button.getAttribute('data-id');
-                const peminjam = button.getAttribute('data-peminjam');
-                const tanggal = button.getAttribute('data-tanggal');
-
-                // Update form action URL
-                const form = document.getElementById('deleteForm');
-                form.action = `/admin/riwayat/${id}`;
-
-                // Isi data konfirmasi
-                document.getElementById('delete_peminjam').textContent = peminjam;
-                document.getElementById('delete_tanggal').textContent = formatDate(tanggal);
-            });
-        }
-
-        // Format tanggal
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('id-ID', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        // Format waktu sederhana (HH:mm)
-        function formatTime(timeString) {
-            if (!timeString) return '-';
-            if (typeof timeString !== 'string') return String(timeString);
-            if (timeString.indexOf(':') > -1) {
-                const parts = timeString.split(':');
-                return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
-            }
-            try {
-                const d = new Date(timeString);
-                return d.toLocaleTimeString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit'
+            // Auto-submit filter ketika perubahan select box
+            const filterSelects = document.querySelectorAll('#filterForm select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    console.log('Filter changed:', this.name, this.value);
+                    document.getElementById('filterForm').submit();
                 });
-            } catch (e) {
-                return timeString;
+            });
+
+            // Handler untuk modal detail
+            const detailModal = document.getElementById('detailModal');
+            if (detailModal) {
+                detailModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const peminjam = button.getAttribute('data-peminjam');
+                    const dosen = button.getAttribute('data-dosen');
+                    const dosenNip = button.getAttribute('data-dosen-nip');
+                    const tanggal = button.getAttribute('data-tanggal');
+                    const waktuMulai = button.getAttribute('data-waktu-mulai');
+                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
+                    const ruang = button.getAttribute('data-ruang');
+                    const proyektor = button.getAttribute('data-projector-label');
+                    const keperluan = button.getAttribute('data-keperluan');
+                    const status = button.getAttribute('data-status');
+                    const statusPengembalian = button.getAttribute('data-status-pengembalian');
+                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian');
+                    const waktuPengembalian = button.getAttribute('data-waktu-pengembalian');
+                    const keterangan = button.getAttribute('data-keterangan');
+                    const created = button.getAttribute('data-created');
+                    const updated = button.getAttribute('data-updated');
+
+                    // Isi data detail 
+                    document.getElementById('detail_id').textContent = id;
+                    document.getElementById('detail_peminjam').textContent = peminjam;
+                    document.getElementById('detail_dosen').textContent = dosen + (dosenNip !== '-' ? ` (${dosenNip})` :
+                        '');
+                    document.getElementById('detail_tanggal').textContent = formatDate(tanggal);
+                    document.getElementById('detail_waktu').textContent = `${waktuMulai} - ${waktuSelesai}`;
+                    document.getElementById('detail_ruang').textContent = ruang;
+                    document.getElementById('detail_proyektor').textContent = proyektor;
+                    document.getElementById('detail_keperluan').textContent = keperluan;
+                    document.getElementById('detail_keterangan').textContent = keterangan;
+                    document.getElementById('detail_created').textContent = formatDate(created);
+                    document.getElementById('detail_updated').textContent = formatDate(updated);
+
+
+                    // Tampilkan juga waktu jatuh tempo / pengembalian jika ada
+                    if (waktuSelesai) {
+                        const el = document.getElementById('detail_tanggal');
+                        el.innerHTML += '<br><small class="text-muted">Slot: ' + formatTime(waktuMulai) + ' - ' +
+                            formatTime(waktuSelesai) + '</small>';
+                    }
+
+                    // Format status peminjaman
+                    let statusText = '';
+                    if (status === 'selesai') {
+                        statusText =
+                            '<span class="badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
+                    } else if (status === 'disetujui') {
+                        statusText =
+                            '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
+                    } else if (status === 'berlangsung') {
+                        statusText =
+                            '<span class="badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
+                    } else if (status === 'ditolak') {
+                        statusText =
+                            '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
+                    } else {
+                        statusText =
+                            '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
+                    }
+                    document.getElementById('detail_status').innerHTML = statusText;
+
+                    // Format status pengembalian (gunakan nilai DB canonical)
+                    let statusPengembalianText = '';
+                    const pj = (statusPengembalian || '').toString().toLowerCase();
+                    if (pj === 'verified' || pj === 'disetujui') {
+                        statusPengembalianText =
+                            '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui' +
+                            (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (pj === 'pending' || pj === 'menunggu') {
+                        statusPengembalianText =
+                            '<span class="badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu Verifikasi' +
+                            (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (pj === 'rejected' || pj === 'ditolak') {
+                        statusPengembalianText =
+                            '<span class="badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak' + (
+                                waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (pj === 'overdue' || pj === 'terlambat') {
+                        statusPengembalianText =
+                            '<span class="badge status-terlambat"><i class="fas fa-exclamation-circle me-1"></i> Terlambat' +
+                            (waktuPengembalian ? ' (' + formatTime(waktuPengembalian) + ')' : '') + '</span>';
+                    } else if (waktuPengembalian) {
+                        statusPengembalianText =
+                            '<span class="badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Dikembalikan (' +
+                            formatTime(waktuPengembalian) + ')</span>';
+                    } else {
+                        statusPengembalianText =
+                            '<span class="badge status-belum-dikembalikan"><i class="fas fa-box-open me-1"></i> Belum Dikembalikan</span>';
+                    }
+                    document.getElementById('detail_status_pengembalian').innerHTML = statusPengembalianText;
+
+                    document.getElementById('detail_keterangan').textContent = keterangan || '-';
+                });
             }
-        }
 
-        // Fungsi cetak riwayat
-        function cetakRiwayat(id) {
-            console.log('Mencetak riwayat dengan ID:', id);
-            // Implementasi cetak riwayat
-            alert(`Fitur cetak untuk riwayat ID ${id} akan segera tersedia!`);
-        }
+            // Handler untuk modal edit
+            const editModal = document.getElementById('editModal');
+            if (editModal) {
+                editModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const peminjam = button.getAttribute('data-peminjam');
+                    const tanggal = button.getAttribute('data-tanggal');
+                    const ruanganId = button.getAttribute('data-ruangan-id') || button.getAttribute('data-ruang-id') ||
+                        button.getAttribute('data-ruang');
+                    const projectorId = button.getAttribute('data-projector-id') || button.getAttribute(
+                        'data-projector') || '';
+                    const waktuMulai = button.getAttribute('data-waktu_mulai') || button.getAttribute(
+                        'data-waktu-mulai') || '';
+                    const waktuSelesai = button.getAttribute('data-waktu_selesai') || button.getAttribute(
+                        'data-waktu-selesai') || '';
+                    let statusPengembalian = button.getAttribute('data-status-pengembalian') || button.getAttribute(
+                        'data-status_pengembalian') || '';
+                    const tanggalPengembalian = button.getAttribute('data-tanggal-pengembalian') || button.getAttribute(
+                        'data-tanggal_pengembalian') || '';
+                    const keperluan = button.getAttribute('data-keperluan') || button.getAttribute('data-keperluan') ||
+                        '';
+                    const status = button.getAttribute('data-status') || '';
+                    const catatan = button.getAttribute('data-catatan') || button.getAttribute('data-keterangan') || '';
 
-        function cetakDetail() {
-            console.log('Mencetak detail riwayat');
-            // Implementasi cetak detail
-            alert('Fitur cetak detail akan segera tersedia!');
-        }
+                    // Normalize display value 'terlambat' to DB-safe 'overdue' for the select
+                    if (statusPengembalian === 'terlambat') {
+                        statusPengembalian = 'overdue';
+                    }
 
-        // Tampilkan parameter filter yang aktif
-        function showActiveFilters() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const activeFilters = [];
+                    // Update form action URL
+                    const form = document.getElementById('editForm');
+                    form.action = `/admin/riwayat/${id}`;
 
-            if (urlParams.get('search')) {
-                activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
+                    // Normalize date to YYYY-MM-DD for input[type=date]
+                    function normalizeDateForInput(d) {
+                        if (!d) return '';
+                        // If already in YYYY-MM-DD format, return as-is
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+                        // Try parsing with Date
+                        const parsed = new Date(d);
+                        if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
+                        // Fallback: try common US format MM/DD/YYYY
+                        const parts = d.split('/');
+                        if (parts.length === 3) {
+                            const mm = parts[0].padStart(2, '0');
+                            const dd = parts[1].padStart(2, '0');
+                            const yyyy = parts[2];
+                            return `${yyyy}-${mm}-${dd}`;
+                        }
+                        return '';
+                    }
+
+                    // Normalize time to HH:MM (24-hour) for input[type=time]
+                    function normalizeTimeForInput(t) {
+                        if (!t) return '';
+                        t = t.trim();
+                        // If contains AM/PM, convert
+                        const ampmMatch = t.match(/(\d{1,2}:\d{2})(?:[:\d{2}]*)?\s*(AM|PM)/i);
+                        if (ampmMatch) {
+                            let [, timePart, ampm] = ampmMatch;
+                            let [hh, mm] = timePart.split(':').map(s => parseInt(s, 10));
+                            if (ampm.toUpperCase() === 'PM' && hh < 12) hh += 12;
+                            if (ampm.toUpperCase() === 'AM' && hh === 12) hh = 0;
+                            return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+                        }
+                        // If time includes seconds like 15:30:00, strip seconds
+                        const secMatch = t.match(/^(\d{1,2}:\d{2}):\d{2}$/);
+                        if (secMatch) return secMatch[1].padStart(5, '0');
+                        // If already HH:MM or H:MM, pad
+                        const simpleMatch = t.match(/^(\d{1,2}:\d{2})$/);
+                        if (simpleMatch) {
+                            const [hh, mm] = simpleMatch[1].split(':').map(s => s.padStart(2, '0'));
+                            return `${hh}:${mm}`;
+                        }
+                        // Last resort: try parsing as Date and extract time
+                        const dt = new Date(`1970-01-01T${t}`);
+                        if (!isNaN(dt)) return dt.toTimeString().slice(0, 5);
+                        return '';
+                    }
+
+                    // Isi data form
+                    document.getElementById('edit_peminjam').value = peminjam;
+                    document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
+                    document.getElementById('edit_ruangan_id').value = ruanganId || '';
+                    document.getElementById('edit_projector_id').value = projectorId || '';
+                    document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai) || '';
+                    document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai) || '';
+                    document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
+                    document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
+                    document.getElementById('edit_keperluan').value = keperluan;
+                    document.getElementById('edit_catatan').value = catatan || '';
+
+                    // Handle status peminjaman
+                    let statusValue = status;
+                    const today = new Date().toISOString().split('T')[0];
+
+                    // Jika status adalah disetujui dan tanggal hari ini, tampilkan sebagai berlangsung
+                    if (status === 'disetujui' && tanggal === today) {
+                        statusValue = 'berlangsung';
+                    }
+                    document.getElementById('edit_status').value = statusValue;
+
+                    // Debug log
+                    console.log('Data yang akan diisi:', {
+                        id,
+                        peminjam,
+                        tanggal,
+                        ruanganId,
+                        projectorId,
+                        keperluan,
+                        status,
+                        catatan,
+                        selectedStatus: statusValue
+                    });
+                });
             }
-            if (urlParams.get('status')) {
-                const statusText = {
-                    'disetujui': 'Disetujui',
-                    'ditolak': 'Ditolak',
-                    'pending': 'Menunggu',
-                    'selesai': 'Selesai',
-                    'berlangsung': 'Berlangsung'
-                } [urlParams.get('status')] || urlParams.get('status');
-                activeFilters.push(`Status: ${statusText}`);
-            }
-            if (urlParams.get('date_from') || urlParams.get('date_to')) {
-                const dateFrom = urlParams.get('date_from') || '';
-                const dateTo = urlParams.get('date_to') || '';
-                activeFilters.push(`Periode: ${dateFrom} - ${dateTo}`);
+
+            // Handler untuk modal hapus
+            const deleteModal = document.getElementById('deleteModal');
+            if (deleteModal) {
+                deleteModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const peminjam = button.getAttribute('data-peminjam');
+                    const tanggal = button.getAttribute('data-tanggal');
+
+                    // Update form action URL
+                    const form = document.getElementById('deleteForm');
+                    form.action = `/admin/riwayat/${id}`;
+
+                    // Isi data konfirmasi
+                    document.getElementById('delete_peminjam').textContent = peminjam;
+                    document.getElementById('delete_tanggal').textContent = formatDate(tanggal);
+                });
             }
 
-            if (activeFilters.length > 0) {
-                const existingAlert = document.querySelector('.filter-alert');
-                if (existingAlert) {
-                    existingAlert.remove();
+            // Format tanggal
+            function formatDate(dateString) {
+                if (!dateString) return '-';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            // Format waktu sederhana (HH:mm)
+            function formatTime(timeString) {
+                if (!timeString) return '-';
+                if (typeof timeString !== 'string') return String(timeString);
+                if (timeString.indexOf(':') > -1) {
+                    const parts = timeString.split(':');
+                    return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
+                }
+                try {
+                    const d = new Date(timeString);
+                    return d.toLocaleTimeString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (e) {
+                    return timeString;
+                }
+            }
+
+            // Fungsi cetak riwayat
+            function cetakRiwayat(id) {
+                console.log('Mencetak riwayat dengan ID:', id);
+                // Implementasi cetak riwayat
+                alert(`Fitur cetak untuk riwayat ID ${id} akan segera tersedia!`);
+            }
+
+            function cetakDetail() {
+                console.log('Mencetak detail riwayat');
+                // Implementasi cetak detail
+                alert('Fitur cetak detail akan segera tersedia!');
+            }
+
+            // Tampilkan parameter filter yang aktif
+            function showActiveFilters() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const activeFilters = [];
+
+                if (urlParams.get('search')) {
+                    activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
+                }
+                if (urlParams.get('status')) {
+                    const statusText = {
+                        'disetujui': 'Disetujui',
+                        'ditolak': 'Ditolak',
+                        'pending': 'Menunggu',
+                        'selesai': 'Selesai',
+                        'berlangsung': 'Berlangsung'
+                    } [urlParams.get('status')] || urlParams.get('status');
+                    activeFilters.push(`Status: ${statusText}`);
+                }
+                if (urlParams.get('date_from') || urlParams.get('date_to')) {
+                    const dateFrom = urlParams.get('date_from') || '';
+                    const dateTo = urlParams.get('date_to') || '';
+                    activeFilters.push(`Periode: ${dateFrom} - ${dateTo}`);
                 }
 
-                const filterInfo = document.createElement('div');
-                filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
-                filterInfo.innerHTML = `
+                if (activeFilters.length > 0) {
+                    const existingAlert = document.querySelector('.filter-alert');
+                    if (existingAlert) {
+                        existingAlert.remove();
+                    }
+
+                    const filterInfo = document.createElement('div');
+                    filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
+                    filterInfo.innerHTML = `
                         <strong>Filter Aktif:</strong> ${activeFilters.join(', ')}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     `;
-                document.querySelector('.filter-section').appendChild(filterInfo);
+                    document.querySelector('.filter-section').appendChild(filterInfo);
+                }
             }
-        }
 
-        // Panggil fungsi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
             showActiveFilters();
 
             // Debug: Tampilkan jumlah data yang difilter
@@ -2334,18 +2936,35 @@
             // Terapkan dark mode jika sebelumnya diaktifkan
             if (localStorage.getItem('darkMode') === 'enabled') {
                 document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                const themeToggle = document.getElementById('theme-toggle'); // Redeclare themeToggle inside DOMContentLoaded
+                if (themeToggle) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
             }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+
             document.querySelectorAll('.js-choice').forEach(function(el) {
                 new Choices(el, {
                     searchEnabled: true,
                     shouldSort: false,
                     position: 'bottom',
                     itemSelectText: '',
+                });
+            });
+
+            // Handles the dropdown menu toggling
+            const dropdownToggle = document.querySelectorAll('.dropdown-toggle-custom');
+            dropdownToggle.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const target = document.querySelector(this.dataset.bsTarget);
+                    if (target) {
+                        const isShown = target.classList.contains('show');
+                        this.setAttribute('aria-expanded', !isShown);
+                        if (isShown) {
+                            target.classList.remove('show');
+                        } else {
+                            target.classList.add('show');
+                        }
+                    }
                 });
             });
         });

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Peminjaman - Sistem Manajemen Peminjaman</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
@@ -644,6 +645,450 @@
             filter: invert(1);
         }
 
+        /* ============================
+           IMPROVED NOTIFICATION SYSTEM
+           ============================ */
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+            border: none;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 89, 152, 0.2);
+        }
+
+        .notification-btn .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FF5B5B, #D92525);
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 4px rgba(217, 37, 37, 0.4);
+            border-radius: 999px;
+        }
+
+        .dark-mode .notification-btn {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        .dark-mode .notification-btn:hover {
+            background: #3a3a3a;
+            color: var(--primary);
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            width: 380px !important;
+            max-height: 500px;
+            overflow: hidden;
+            border: none !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px !important;
+            padding: 0;
+            margin-top: 10px;
+            animation: notificationSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light) !important;
+        }
+
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Notification Header */
+        .notification-header {
+            padding: 18px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-actions .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Notification List */
+        .notification-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb:hover {
+            background: var(--gray);
+        }
+
+        /* Notification Item */
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(59, 89, 152, 0.05);
+        }
+
+        .dark-mode .notification-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.08);
+            border-left: 3px solid var(--primary);
+        }
+
+        .dark-mode .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.15);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        .notification-icon.success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .notification-icon.warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #f57c00;
+        }
+
+        .notification-icon.danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #d32f2f;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions-item {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .notification-actions-item .btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .notification-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .notification-footer {
+            padding: 15px 20px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .notification-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .notification-footer a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Notification Toast Styles */
+        .notification-toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification-toast {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            min-width: 300px;
+            max-width: 350px;
+            animation: toastSlideIn 0.3s ease, toastSlideOut 0.3s ease 4.7s forwards;
+            transform: translateX(0);
+            border: 1px solid var(--border-light);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .notification-toast.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification-toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification-toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-toast.danger {
+            border-left-color: #f44336;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .toast-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .toast-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .toast-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .toast-icon.danger {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast-body {
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .toast-progress {
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+            transform-origin: left;
+        }
+
+        .notification-toast.info .toast-progress-bar {
+            background: #2196f3;
+        }
+
+        .notification-toast.success .toast-progress-bar {
+            background: #4caf50;
+        }
+
+        .notification-toast.warning .toast-progress-bar {
+            background: #ff9800;
+        }
+
+        .notification-toast.danger .toast-progress-bar {
+            background: #f44336;
+        }
+
+        @keyframes progressBar {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -833,6 +1278,8 @@
 </head>
 
 <body>
+    <!-- Notification Toast Container -->
+    <div class="notification-toast-container"></div>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -1001,8 +1448,31 @@
             </form>
 
             <div class="user-actions">
-                <div class="notification-btn">
-                    <i class="fas fa-bell"></i>
+                <!-- Improved Notification Dropdown -->
+                <div class="dropdown">
+                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu notification-dropdown" aria-labelledby="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>Notifikasi</h6>
+                            <div class="notification-actions">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="markAllRead">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="clearNotifications">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- Notifications will be dynamically added here -->
+                        </div>
+                        <div class="notification-footer">
+                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua notifikasi</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="theme-toggle" id="theme-toggle">
@@ -1687,399 +2157,311 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
         <script>
-            // Toggle theme
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
+            // ========== DYNAMIC NOTIFICATION SYSTEM FUNCTIONS ==========
+            let notifications = [];
+            const notificationList = document.getElementById('notificationList');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const markAllReadBtn = document.getElementById('markAllRead');
+            const clearNotificationsBtn = document.getElementById('clearNotifications');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                if (document.body.classList.contains('dark-mode')) {
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                    localStorage.setItem('darkMode', 'enabled');
-                } else {
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                    localStorage.setItem('darkMode', 'disabled');
+            async function fetchNotifications() {
+                try {
+                    const response = await fetch('{{ route('admin.notifications.index') }}');
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    const data = await response.json();
+                    notifications = data.notifications || [];
+                    renderNotifications();
+                } catch (error) {
+                    console.error('Failed to fetch notifications:', error);
+                    if (notificationList) {
+                        notificationList.innerHTML = `
+                            <div class="notification-empty">
+                                <i class="fas fa-exclamation-triangle text-danger"></i>
+                                <p>Gagal memuat notifikasi</p>
+                            </div>
+                        `;
+                    }
                 }
-            });
+            }
 
-            // Toggle sidebar on mobile
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.querySelector('.sidebar');
+            function renderNotifications() {
+                if (!notificationList) return;
+                notificationList.innerHTML = '';
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Tidak ada notifikasi baru</p>
+                        </div>
+                    `;
+                } else {
+                    notifications.forEach(notif => {
+                        const item = document.createElement('a');
+                        item.href = notif.url;
+                        item.className = 'notification-item unread';
+                        item.dataset.id = notif.id;
+                        item.innerHTML = `
+                            <div class="notification-icon ${notif.type}">
+                                <i class="fas ${notif.icon}"></i>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">${notif.title}</div>
+                                <div class="notification-message">${notif.message}</div>
+                                <div class="notification-time">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${notif.time}</span>
+                                </div>
+                            </div>
+                        `;
+                        item.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            window.location.href = notif.url;
+                        });
+                        notificationList.appendChild(item);
+                    });
+                }
+                updateBadge();
+            }
 
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-            });
+            function updateBadge() {
+                if (!notificationBadge) return;
+                const unreadCount = notifications.length;
+                notificationBadge.textContent = unreadCount;
+                if (unreadCount > 0) {
+                    notificationBadge.style.display = 'flex';
+                } else {
+                    notificationBadge.style.display = 'none';
+                }
+            }
 
-            // waktu
+            // ========== OTHER HELPER FUNCTIONS ==========
             function formatJamMenit(waktu) {
                 if (!waktu) return '-';
-                // jika format HH:mm:ss → ambil HH:mm
-                if (waktu.length >= 5) {
-                    return waktu.substring(0, 5);
-                }
+                if (waktu.length >= 5) return waktu.substring(0, 5);
                 return waktu;
             }
 
-            // Auto-submit form search ketika mengetik (dengan debounce)
-            let searchTimeout;
-            const searchInputs = document.querySelectorAll('.search-bar input[name="search"]');
-
-            searchInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        console.log('Auto-submitting search:', this.value);
-                        // Submit form yang sesuai
-                        const form = this.closest('form');
-                        if (form) {
-                            form.submit();
-                        }
-                    }, 800);
-                });
-            });
-
-            // Auto-submit filter ketika perubahan select box
-            const filterSelects = document.querySelectorAll('#filterForm select');
-            filterSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    console.log('Filter changed:', this.name, this.value);
-                    document.getElementById('filterForm').submit();
-                });
-            });
-
-            // Tangani date filter change
-            const dateFilter = document.getElementById('date_filter');
-            if (dateFilter) {
-                dateFilter.addEventListener('change', function() {
-                    console.log('Date filter changed:', this.value);
-                    document.getElementById('filterForm').submit();
-                });
+            function normalizeDateForInput(dateStr) {
+                if (!dateStr) return '';
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+                let parts;
+                if (dateStr.indexOf('/') !== -1) parts = dateStr.split('/');
+                else if (dateStr.indexOf('-') !== -1) parts = dateStr.split('-');
+                else return '';
+                if (parts[0].length === 4) return parts.join('-');
+                let d = parts[0], m = parts[1], y = parts[2];
+                if (parseInt(d, 10) > 12) {
+                    return `${y.padStart(4,'0')}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+                }
+                return `${y.padStart(4,'0')}-${d.padStart(2,'0')}-${m.padStart(2,'0')}`;
             }
 
-            // Handler untuk modal detail
-            const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
-            const viewDetailButtons = document.querySelectorAll('.view-detail');
-
-            viewDetailButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const peminjam = this.getAttribute('data-peminjam');
-                    const nim = this.getAttribute('data-nim');
-                    const email = this.getAttribute('data-email');
-                    const noHp = this.getAttribute('data-no-hp');
-                    const tanggal = this.getAttribute('data-tanggal');
-                    const dosen = this.getAttribute('data-dosen');
-                    const dosenNip = this.getAttribute('data-dosen-nip');
-                    const waktuMulai = this.getAttribute('data-waktu-mulai');
-                    const waktuSelesai = this.getAttribute('data-waktu-selesai');
-                    const ruang = this.getAttribute('data-ruang');
-                    const proyektorLabel = this.getAttribute('data-projector-label');
-                    const keperluan = this.getAttribute('data-keperluan');
-                    const status = this.getAttribute('data-status');
-                    const isOngoing = this.getAttribute('data-is-ongoing') === 'true';
-
-                    let statusBadge = '';
-                    if (isOngoing) {
-                        statusBadge =
-                            '<span class="badge status-badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
-                    } else {
-                        switch (status) {
-                            case 'disetujui':
-                                statusBadge =
-                                    '<span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>';
-                                break;
-                            case 'selesai':
-                                statusBadge =
-                                    '<span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>';
-                                break;
-                            case 'ditolak':
-                                statusBadge =
-                                    '<span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>';
-                                break;
-                            default:
-                                statusBadge =
-                                    '<span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
-                        }
-                    }
-
-                    const modalContent = `
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-user me-2"></i>Informasi Peminjam</h6>
-                                <p><strong>Nama:</strong> ${peminjam}</p>
-                                <p><strong>NIM:</strong> ${nim || '-'}</p>
-                                <p><strong>Email:</strong> ${email || '-'}</p>
-                                <p><strong>No. HP:</strong> ${noHp || '-'}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-calendar me-2"></i>Informasi Peminjaman</h6>
-                                <p><strong>Tanggal:</strong> ${tanggal}</p>                              
-<p><strong>Waktu:</strong> ${formatJamMenit(waktuMulai)} - ${formatJamMenit(waktuSelesai)}</p>
-                                <p><strong>Ruang:</strong> ${ruang}</p>
-                                <p><strong>Proyektor:</strong> ${proyektorLabel}</p>
-                                <p><strong>Dosen Pengampu:</strong> ${dosen || '-'}</p>
-                                <p><strong>Status:</strong> ${statusBadge}</p>
-                            </div>
-                            <div class="col-12 mt-3">
-                                <h6><i class="fas fa-clipboard-list me-2"></i>Keperluan</h6>
-                                <p>${keperluan}</p>
-                            </div>
-                        </div>
-                    `;
-
-                    document.getElementById('modalBody').innerHTML = modalContent;
-                    detailModal.show();
-                });
-            });
-
-            // Handler untuk modal edit
-            const editModal = document.getElementById('editModal');
-            if (editModal) {
-                function normalizeDateForInput(dateStr) {
-                    if (!dateStr) return '';
-                    // If already YYYY-MM-DD, return as is
-                    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
-                    // Try common formats: DD/MM/YYYY or MM/DD/YYYY or DD-MM-YYYY
-                    let parts;
-                    if (dateStr.indexOf('/') !== -1) parts = dateStr.split('/');
-                    else if (dateStr.indexOf('-') !== -1) parts = dateStr.split('-');
-                    else return '';
-
-                    // If parts[0] is 4 -> already YYYY-MM-DD-like
-                    if (parts[0].length === 4) return parts.join('-');
-
-                    // If ambiguous (MM/DD/YYYY or DD/MM/YYYY), try to detect by value >12
-                    let d = parts[0],
-                        m = parts[1],
-                        y = parts[2];
-                    if (parseInt(d, 10) > 12) {
-                        // d is day
-                        return `${y.padStart(4,'0')}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
-                    }
-                    // else assume MM/DD/YYYY -> convert to YYYY-MM-DD
-                    return `${y.padStart(4,'0')}-${d.padStart(2,'0')}-${m.padStart(2,'0')}`;
-                }
-
-                function normalizeTimeForInput(timeStr) {
-                    if (!timeStr) return '';
-                    // If already HH:MM (24h), return
-                    if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
-                    // Handle formats like 03:00 PM or 3:00 PM
-                    const m = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-                    if (m) {
-                        let hh = parseInt(m[1], 10);
-                        const mm = m[2];
-                        const ampm = m[3].toUpperCase();
-                        if (ampm === 'PM' && hh < 12) hh += 12;
-                        if (ampm === 'AM' && hh === 12) hh = 0;
-                        return `${String(hh).padStart(2,'0')}:${mm}`;
-                    }
-                    // Fallback: try to extract digits
-                    const simple = timeStr.match(/(\d{1,2}):(\d{2})/);
-                    return simple ? `${String(simple[1]).padStart(2,'0')}:${simple[2]}` : '';
-                }
-
-                editModal.addEventListener('show.bs.modal', function(event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const peminjam = button.getAttribute('data-peminjam');
-                    const nim = button.getAttribute('data-nim');
-                    const email = button.getAttribute('data-email');
-                    const noHp = button.getAttribute('data-no-hp');
-                    const tanggal = button.getAttribute('data-tanggal');
-                    const waktuMulai = button.getAttribute('data-waktu-mulai');
-                    const waktuSelesai = button.getAttribute('data-waktu-selesai');
-                    const ruanganId = button.getAttribute('data-ruangan-id');
-                    const dosenNip = button.getAttribute('data-dosen-nip');
-                    const projectorId = button.getAttribute('data-projector-id');
-                    const keperluan = button.getAttribute('data-keperluan');
-                    const status = button.getAttribute('data-status');
-                    const isOngoing = button.getAttribute('data-is-ongoing') === 'true';
-
-                    // Update form action
-                    const form = document.getElementById('editForm');
-                    form.action = `/admin/peminjaman/${id}`;
-
-                    // Isi form dengan data yang ada (gunakan edit_ prefixed IDs)
-                    document.getElementById('edit_peminjam').value = peminjam;
-                    document.getElementById('edit_nim').value = nim;
-                    document.getElementById('edit_email').value = email;
-                    // Normalize date and time for HTML inputs
-                    try {
-                        document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
-                    } catch (e) {
-                        document.getElementById('edit_tanggal').value = '';
-                    }
-                    document.getElementById('edit_waktu_mulai').value = waktuMulai?.substring(0, 5) || '';
-                    document.getElementById('edit_waktu_selesai').value = waktuSelesai?.substring(0, 5) || '';
-
-                    // Set ruangan_id langsung dari data attribute
-                    const ruanganSelect = document.getElementById('edit_ruangan_id');
-                    if (ruanganId && ruanganId !== '') {
-                        ruanganSelect.value = ruanganId;
-                    } else {
-                        ruanganSelect.value = '';
-                    }
-
-                    document.getElementById('edit_keperluan').value = keperluan;
-                    document.getElementById('edit_status').value = status;
-
-                    // Toggle 'Berlangsung' badge if this peminjaman is ongoing
-                    const ongoingContainer = document.getElementById('edit_is_ongoing_container');
-                    if (isOngoing) {
-                        ongoingContainer.style.display = 'block';
-                    } else {
-                        ongoingContainer.style.display = 'none';
-                    }
-
-                    // Set projector berdasarkan ID
-                    const projectorSelect = document.getElementById('edit_projector_id');
-                    if (projectorId && projectorId !== '') {
-                        projectorSelect.value = projectorId;
-                    } else {
-                        projectorSelect.value = '';
-                    }
-
-                    // Set dosen select
-                    const dosenSelect = document.getElementById('edit_dosen_nip');
-                    if (dosenSelect) {
-                        dosenSelect.value = dosenNip || '';
-                    }
-                });
-            }
-
-            // Konfirmasi untuk semua aksi (kecuali form filter dan search)
-            document.querySelectorAll('form').forEach(form => {
-                if (form.id !== 'filterForm' && form.id !== 'searchForm') {
-                    form.addEventListener('submit', function(e) {
-                        const button = this.querySelector('button[type="submit"]');
-                        const actionText = button.textContent.trim();
-
-                        if (!confirm(`Apakah Anda yakin ingin ${actionText.toLowerCase()} peminjaman ini?`)) {
-                            e.preventDefault();
-                        }
-                    });
-                }
-            });
-
-            // Terapkan dark mode jika sebelumnya diaktifkan
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-
-            // Tampilkan parameter filter yang aktif
             function showActiveFilters() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const activeFilters = [];
-
-                if (urlParams.get('search')) {
-                    activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
-                }
+                if (urlParams.get('search')) activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
                 if (urlParams.get('status')) {
-                    const statusText = {
-                        'pending': 'Menunggu',
-                        'disetujui': 'Disetujui',
-                        'ditolak': 'Ditolak',
-                        'selesai': 'Selesai'
-                    } [urlParams.get('status')] || urlParams.get('status');
+                    const statusText = { 'pending': 'Menunggu', 'disetujui': 'Disetujui', 'ditolak': 'Ditolak', 'selesai': 'Selesai' }[urlParams.get('status')] || urlParams.get('status');
                     activeFilters.push(`Status: ${statusText}`);
                 }
-                if (urlParams.get('date')) {
-                    activeFilters.push(`Tanggal: ${urlParams.get('date')}`);
-                }
-                if (urlParams.get('ruang')) {
-                    activeFilters.push(`Ruang: ${urlParams.get('ruang')}`);
-                }
-
+                if (urlParams.get('date')) activeFilters.push(`Tanggal: ${urlParams.get('date')}`);
+                if (urlParams.get('ruang')) activeFilters.push(`Ruang: ${urlParams.get('ruang')}`);
                 if (activeFilters.length > 0) {
-                    // Hapus alert existing jika ada
                     const existingAlert = document.querySelector('.filter-alert');
-                    if (existingAlert) {
-                        existingAlert.remove();
-                    }
-
+                    if (existingAlert) existingAlert.remove();
                     const filterInfo = document.createElement('div');
                     filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
-                    filterInfo.innerHTML = `
-                        <strong>Filter Aktif:</strong> ${activeFilters.join(', ')}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    `;
+                    filterInfo.innerHTML = `<strong>Filter Aktif:</strong> ${activeFilters.join(', ')}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
                     document.querySelector('.filter-section').appendChild(filterInfo);
                 }
             }
 
-            // Client-side: update badges to 'Berlangsung' when local time is inside booking window
             function updateOngoingBadges() {
                 const rows = document.querySelectorAll('tbody tr[data-tanggal-iso]');
                 const now = new Date();
-
                 rows.forEach(row => {
                     const tanggalIso = row.getAttribute('data-tanggal-iso');
                     const waktuMulai = row.getAttribute('data-waktu-mulai') || '';
                     const waktuSelesai = row.getAttribute('data-waktu-selesai') || '';
-
                     if (!tanggalIso || !waktuMulai || !waktuSelesai) return;
-
-                    // build local Date objects
                     const [y, m, d] = tanggalIso.split('-').map(Number);
-                    const parseTime = (t) => {
-                        const parts = t.split(':').map(Number);
-                        return {
-                            h: parts[0] || 0,
-                            min: parts[1] || 0
-                        };
-                    };
-
+                    const parseTime = t => { const parts = t.split(':').map(Number); return { h: parts[0] || 0, min: parts[1] || 0 }; };
                     const s = parseTime(waktuMulai);
                     const e = parseTime(waktuSelesai);
                     const start = new Date(y, m - 1, d, s.h, s.min, 0);
                     const end = new Date(y, m - 1, d, e.h, e.min, 59);
-
                     const isOngoing = now >= start && now <= end;
-
-                    // Only switch to 'Berlangsung' client-side when server status is 'disetujui'
                     const rowStatus = (row.getAttribute('data-status') || '').toLowerCase();
                     if (rowStatus !== 'disetujui') return;
-
-                    // Prefer the status column badge to avoid overwriting the time-range badge
                     const badge = row.querySelector('.status-badge') || row.querySelector('span.badge');
                     if (!badge) return;
-
-                    if (isOngoing) {
-                        // update visual only if not already 'Berlangsung'
-                        if (!/Berlangsung/i.test(badge.textContent)) {
-                            // keep status-badge classes for styling consistency
-                            badge.innerHTML = '<i class="fas fa-play-circle me-1"></i> Berlangsung';
-                            badge.className = 'badge status-badge status-berlangsung';
-                        }
-                    } else {
-                        // optional: do nothing — server render keeps canonical statuses
+                    if (isOngoing && !/Berlangsung/i.test(badge.textContent)) {
+                        badge.innerHTML = '<i class="fas fa-play-circle me-1"></i> Berlangsung';
+                        badge.className = 'badge status-badge status-berlangsung';
                     }
                 });
             }
 
-            // Panggil fungsi saat halaman dimuat
+            // ========== INITIALIZATION ON DOM CONTENT LOADED ==========
             document.addEventListener('DOMContentLoaded', function() {
-                showActiveFilters();
-
-                // Update badges on load and every minute
-                updateOngoingBadges();
-                setInterval(updateOngoingBadges, 60000);
-
-                // Debug: Tampilkan jumlah data yang difilter
-                const tableRows = document.querySelectorAll('tbody tr');
-                console.log('Jumlah data yang ditampilkan:', tableRows.length);
-            });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Choices.js
                 document.querySelectorAll('.js-choice').forEach(function(el) {
-                    new Choices(el, {
-                        searchEnabled: true,
-                        shouldSort: false,
-                        position: 'bottom',
-                        itemSelectText: '',
+                    new Choices(el, { searchEnabled: true, shouldSort: false, position: 'bottom', itemSelectText: '' });
+                });
+                
+                // Initialize Theme
+                const themeToggle = document.getElementById('theme-toggle');
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-mode');
+                    if (document.body.classList.contains('dark-mode')) {
+                        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                        localStorage.setItem('darkMode', 'enabled');
+                    } else {
+                        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                        localStorage.setItem('darkMode', 'disabled');
+                    }
+                });
+
+                // Initialize mobile sidebar toggle
+                const menuToggle = document.getElementById('menu-toggle');
+                const sidebar = document.querySelector('.sidebar');
+                menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+
+                // Auto-submit search form
+                let searchTimeout;
+                document.querySelectorAll('.search-bar input[name="search"]').forEach(input => {
+                    input.addEventListener('input', function() {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            const form = this.closest('form');
+                            if (form) form.submit();
+                        }, 800);
                     });
                 });
+
+                // Auto-submit filter form
+                document.querySelectorAll('#filterForm select').forEach(select => {
+                    select.addEventListener('change', () => document.getElementById('filterForm').submit());
+                });
+                const dateFilter = document.getElementById('date_filter');
+                if (dateFilter) {
+                    dateFilter.addEventListener('change', () => document.getElementById('filterForm').submit());
+                }
+
+                // Initialize Detail Modal
+                const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+                document.querySelectorAll('.view-detail').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const isOngoing = this.getAttribute('data-is-ongoing') === 'true';
+                        const status = this.getAttribute('data-status');
+                        let statusBadge = '';
+                        if (isOngoing) {
+                            statusBadge = '<span class="badge status-badge status-berlangsung"><i class="fas fa-play-circle me-1"></i> Berlangsung</span>';
+                        } else {
+                            switch (status) {
+                                case 'disetujui': statusBadge = '<span class="badge status-badge status-disetujui"><i class="fas fa-check-circle me-1"></i> Disetujui</span>'; break;
+                                case 'selesai': statusBadge = '<span class="badge status-badge status-selesai"><i class="fas fa-check-double me-1"></i> Selesai</span>'; break;
+                                case 'ditolak': statusBadge = '<span class="badge status-badge status-ditolak"><i class="fas fa-times-circle me-1"></i> Ditolak</span>'; break;
+                                default: statusBadge = '<span class="badge status-badge status-menunggu"><i class="fas fa-clock me-1"></i> Menunggu</span>';
+                            }
+                        }
+                        const modalContent = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-user me-2"></i>Informasi Peminjam</h6>
+                                    <p><strong>Nama:</strong> ${this.getAttribute('data-peminjam')}</p>
+                                    <p><strong>NIM:</strong> ${this.getAttribute('data-nim') || '-'}</p>
+                                    <p><strong>Email:</strong> ${this.getAttribute('data-email') || '-'}</p>
+                                    <p><strong>No. HP:</strong> ${this.getAttribute('data-no-hp') || '-'}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-calendar me-2"></i>Informasi Peminjaman</h6>
+                                    <p><strong>Tanggal:</strong> ${this.getAttribute('data-tanggal')}</p>
+                                    <p><strong>Waktu:</strong> ${formatJamMenit(this.getAttribute('data-waktu-mulai'))} - ${formatJamMenit(this.getAttribute('data-waktu-selesai'))}</p>
+                                    <p><strong>Ruang:</strong> ${this.getAttribute('data-ruang')}</p>
+                                    <p><strong>Proyektor:</strong> ${this.getAttribute('data-projector-label')}</p>
+                                    <p><strong>Dosen Pengampu:</strong> ${this.getAttribute('data-dosen') || '-'}</p>
+                                    <p><strong>Status:</strong> ${statusBadge}</p>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <h6><i class="fas fa-clipboard-list me-2"></i>Keperluan</h6>
+                                    <p>${this.getAttribute('data-keperluan')}</p>
+                                </div>
+                            </div>`;
+                        document.getElementById('modalBody').innerHTML = modalContent;
+                        detailModal.show();
+                    });
+                });
+
+                // Initialize Edit Modal
+                const editModal = document.getElementById('editModal');
+                if (editModal) {
+                    editModal.addEventListener('show.bs.modal', function(event) {
+                        const button = event.relatedTarget;
+                        const id = button.getAttribute('data-id');
+                        document.getElementById('editForm').action = `/admin/peminjaman/${id}`;
+                        document.getElementById('edit_peminjam').value = button.getAttribute('data-peminjam');
+                        document.getElementById('edit_nim').value = button.getAttribute('data-nim');
+                        document.getElementById('edit_email').value = button.getAttribute('data-email');
+                        document.getElementById('edit_tanggal').value = normalizeDateForInput(button.getAttribute('data-tanggal'));
+                        document.getElementById('edit_waktu_mulai').value = (button.getAttribute('data-waktu-mulai') || '').substring(0,5);
+                        document.getElementById('edit_waktu_selesai').value = (button.getAttribute('data-waktu-selesai') || '').substring(0,5);
+                        document.getElementById('edit_ruangan_id').value = button.getAttribute('data-ruangan-id') || '';
+                        document.getElementById('edit_keperluan').value = button.getAttribute('data-keperluan');
+                        document.getElementById('edit_status').value = button.getAttribute('data-status');
+                        document.getElementById('edit_projector_id').value = button.getAttribute('data-projector-id') || '';
+                        const dosenSelect = document.getElementById('edit_dosen_nip');
+                        if (dosenSelect) dosenSelect.value = button.getAttribute('data-dosen-nip') || '';
+                        const ongoingContainer = document.getElementById('edit_is_ongoing_container');
+                        ongoingContainer.style.display = button.getAttribute('data-is-ongoing') === 'true' ? 'block' : 'none';
+                    });
+                }
+
+                // Initialize form submission confirmation
+                document.querySelectorAll('form').forEach(form => {
+                    if (form.id !== 'filterForm' && form.id !== 'searchForm') {
+                        form.addEventListener('submit', function(e) {
+                            const button = this.querySelector('button[type="submit"]');
+                            const actionText = button.textContent.trim();
+                            if (!confirm(`Apakah Anda yakin ingin ${actionText.toLowerCase()} peminjaman ini?`)) {
+                                e.preventDefault();
+                            }
+                        });
+                    }
+                });
+
+                // Initialize notification listeners
+                if (markAllReadBtn) {
+                    markAllReadBtn.addEventListener('click', async () => {
+                        notifications = [];
+                        renderNotifications();
+                        try {
+                            await fetch('{{ route('admin.notifications.markAllAsRead') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' } });
+                        } catch (error) { console.error('Failed to mark all as read:', error); }
+                    });
+                }
+                if (clearNotificationsBtn) {
+                    clearNotificationsBtn.addEventListener('click', async () => {
+                        notifications = [];
+                        renderNotifications();
+                        try {
+                            await fetch('{{ route('admin.notifications.clearAll') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' } });
+                        } catch (error) { console.error('Failed to clear notifications:', error); }
+                    });
+                }
+
+                // Initial data fetch
+                showActiveFilters();
+                updateOngoingBadges();
+                setInterval(updateOngoingBadges, 60000);
+                fetchNotifications();
             });
         </script>
     </div>
