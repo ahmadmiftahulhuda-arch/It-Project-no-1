@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin TI - Manajemen Jadwal Perkuliahan</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -49,7 +50,7 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles - DIPERBAIKI dengan dropdown yang rapi */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -151,7 +152,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Dropdown Menu Styles - DIPERBAIKI */
+        /* Dropdown Menu Styles */
         .dropdown-custom {
             margin-bottom: 5px;
         }
@@ -297,7 +298,58 @@
             gap: 15px;
         }
 
-        .notification-btn,
+        /* NOTIFICATION SYSTEM STYLES */
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+            border: none;
+        }
+
+        .notification-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 89, 152, 0.2);
+        }
+
+        .notification-btn .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FF5B5B, #D92525);
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 4px rgba(217, 37, 37, 0.4);
+            border-radius: 999px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dark-mode .notification-btn {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+
+        .dark-mode .notification-btn:hover {
+            background: #3a3a3a;
+            color: white;
+        }
+
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -312,19 +364,16 @@
             border: none;
         }
 
-        .notification-btn:hover,
         .theme-toggle:hover {
             background: #e4e6eb;
             color: var(--primary);
         }
 
-        .dark-mode .notification-btn,
         .dark-mode .theme-toggle {
             background: #2a2a2a;
             color: var(--text-dark);
         }
 
-        .dark-mode .notification-btn:hover,
         .dark-mode .theme-toggle:hover {
             background: #3a3a3a;
             color: var(--primary);
@@ -349,7 +398,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* PERBAIKAN: Dark Mode for Header Dropdown */
+        /* Dark Mode for Header Dropdown */
         .dark-mode .dropdown-menu {
             background-color: var(--bg-card);
             border-color: var(--border-light);
@@ -368,6 +417,397 @@
 
         .dark-mode .dropdown-menu .dropdown-divider {
             border-color: var(--border-light);
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            width: 380px !important;
+            max-height: 500px;
+            overflow: hidden;
+            border: none !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px !important;
+            padding: 0;
+            margin-top: 10px;
+            animation: notificationSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light) !important;
+        }
+
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Notification Header */
+        .notification-header {
+            padding: 18px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notification-actions .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Notification List */
+        .notification-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb:hover {
+            background: var(--gray);
+        }
+
+        /* Notification Item */
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(59, 89, 152, 0.05);
+        }
+
+        .dark-mode .notification-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.08);
+            border-left: 3px solid var(--primary);
+        }
+
+        .dark-mode .notification-item.unread {
+            background-color: rgba(59, 89, 152, 0.15);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+        }
+
+        .notification-icon.success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .notification-icon.warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #f57c00;
+        }
+
+        .notification-icon.danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #d32f2f;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-actions-item {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .notification-actions-item .btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .notification-empty p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .notification-footer {
+            padding: 15px 20px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .notification-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .notification-footer a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Notification Toast Styles */
+        .notification-toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification-toast {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            min-width: 300px;
+            max-width: 350px;
+            animation: toastSlideIn 0.3s ease, toastSlideOut 0.3s ease 4.7s forwards;
+            transform: translateX(0);
+            border: 1px solid var(--border-light);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .notification-toast.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification-toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification-toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-toast.danger {
+            border-left-color: #f44336;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .toast-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .toast-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .toast-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .toast-icon.danger {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast-body {
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .toast-progress {
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+            transform-origin: left;
+        }
+
+        .notification-toast.info .toast-progress-bar {
+            background: #2196f3;
+        }
+
+        .notification-toast.success .toast-progress-bar {
+            background: #4caf50;
+        }
+
+        .notification-toast.warning .toast-progress-bar {
+            background: #ff9800;
+        }
+
+        .notification-toast.danger .toast-progress-bar {
+            background: #f44336;
+        }
+
+        @keyframes progressBar {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
         }
 
         /* Page Title */
@@ -649,93 +1089,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Table Header dengan Filter */
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border-light);
-            background: var(--bg-light);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .dark-mode .table-header {
-            background: #252525;
-            border-color: var(--border-light);
-        }
-
-        .table-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .table-filters {
-            display: flex;
-            gap: 12px;
-            align-items: end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 140px;
-        }
-
-        .filter-group label {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-light);
-            white-space: nowrap;
-        }
-
-        .filter-group select,
-        .filter-group input {
-            padding: 8px 12px;
-            border: 1px solid var(--border-light);
-            border-radius: 6px;
-            background: var(--bg-card);
-            font-size: 0.85rem;
-            color: var(--text-dark);
-            transition: all 0.3s;
-            width: 100%;
-            height: 38px;
-        }
-
-        .filter-group select:focus,
-        .filter-group input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
-        }
-
-        .dark-mode .filter-group select,
-        .dark-mode .filter-group input {
-            background: #2a2a2a;
-            border-color: var(--border-light);
-            color: var(--text-dark);
-        }
-
-        .filter-actions {
-            display: flex;
-            gap: 8px;
-            align-items: end;
-            height: 38px;
-        }
-
-        .filter-actions .btn {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            font-size: 0.85rem;
-        }
-
         /* Table */
         .table {
             margin: 0;
@@ -984,6 +1337,53 @@
             color: var(--text-light);
         }
 
+        /* Filter Section */
+        .filter-section {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.1);
+        }
+
+        .dark-mode .filter-group input,
+        .dark-mode .filter-group select {
+            background: #2a2a2a;
+            border-color: var(--border-light);
+        }
+
         /* Success Message dengan Auto-hide */
         .alert-auto-hide {
             background: #d4edda;
@@ -1011,7 +1411,6 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1023,54 +1422,13 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-
             to {
                 opacity: 0;
                 transform: translateY(-20px);
             }
         }
 
-        /* Info Jumlah Data */
-        .data-info {
-            text-align: center;
-            margin: 20px 0;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            padding: 12px;
-            background: var(--bg-light);
-            border-radius: 6px;
-            border: 1px solid var(--border-light);
-        }
-
-        .data-info strong {
-            color: var(--primary);
-        }
-
         /* Responsive */
-        @media (max-width: 1200px) {
-            .table-filters {
-                gap: 10px;
-            }
-
-            .filter-group {
-                min-width: 130px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .stats-container {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-
-            .table-filters {
-                gap: 8px;
-            }
-
-            .filter-group {
-                min-width: 120px;
-            }
-        }
-
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -1111,63 +1469,6 @@
                 gap: 15px;
             }
 
-            .table-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-                padding: 15px;
-            }
-
-            .table-filters {
-                flex-direction: column;
-                gap: 10px;
-                width: 100%;
-            }
-
-            .filter-group {
-                min-width: auto;
-                width: 100%;
-            }
-
-            .filter-actions {
-                width: 100%;
-                justify-content: stretch;
-            }
-
-            .filter-actions .btn {
-                flex: 1;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .pagination {
-                gap: 3px;
-            }
-
-            .page-item .page-link {
-                padding: 6px 10px;
-                font-size: 0.8rem;
-            }
-
-            .table thead th,
-            .table tbody td {
-                padding: 10px 8px;
-                font-size: 0.85rem;
-            }
-
-            .page-title {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .page-title h1 {
-                font-size: 1.5rem;
-            }
-
             .import-header {
                 flex-direction: column;
                 align-items: stretch;
@@ -1183,6 +1484,16 @@
                 max-width: none;
             }
 
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+
             .page-title-actions {
                 flex-direction: column;
                 gap: 10px;
@@ -1193,19 +1504,33 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .table {
+                font-size: 0.8rem;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 10px 8px;
+            }
         }
 
         @media (max-width: 576px) {
             .main-content {
                 padding: 10px;
-            }
-
-            .header {
-                margin-bottom: 15px;
-            }
-
-            .stats-container {
-                margin-bottom: 20px;
             }
 
             .stat-card {
@@ -1223,39 +1548,9 @@
                 font-size: 1.5rem;
             }
 
-            .table {
-                font-size: 0.8rem;
-            }
-
-            .table thead th,
-            .table tbody td {
-                padding: 8px 6px;
-            }
-
-            .btn-warning-custom,
-            .btn-danger-custom {
-                padding: 4px 8px;
-                font-size: 0.7rem;
-            }
-
             .pagination-container {
                 padding: 15px 0;
             }
-        }
-
-        /* Dark Mode Transition */
-        body,
-        .header,
-        .table-container,
-        .stat-card,
-        .table thead th,
-        .table tbody td,
-        .page-link,
-        .search-bar input,
-        .filter-group select,
-        .filter-group input,
-        .table {
-            transition: all 0.3s ease;
         }
 
         /* Page Title Actions */
@@ -1304,6 +1599,9 @@
 </head>
 
 <body>
+    <!-- Notification Toast Container -->
+    <div class="notification-toast-container"></div>
+    
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -1314,7 +1612,7 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- Menu Utama - DIPERBAIKI -->
+            <!-- Menu Utama -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#menuUtama" aria-expanded="false" aria-controls="menuUtama">
@@ -1329,7 +1627,7 @@
                 </div>
             </div>
 
-            <!-- Manajemen Peminjaman - DROPDOWN -->
+            <!-- Manajemen Peminjaman -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#peminjamanMenu" aria-expanded="false" aria-controls="peminjamanMenu">
@@ -1356,7 +1654,7 @@
                 </div>
             </div>
 
-            <!-- Manajemen Aset - DROPDOWN -->
+            <!-- Manajemen Aset -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#asetMenu" aria-expanded="false" aria-controls="asetMenu">
@@ -1368,6 +1666,10 @@
                         <i class="fas fa-video"></i>
                         <span>Proyektor</span>
                     </a>
+                    <a href="{{ route('barangs.index') }}" class="dropdown-item">
+                        <i class="fas fa-box"></i>
+                        <span>Barang</span>
+                    </a>
                     <a href="/admin/ruangan" class="dropdown-item">
                         <i class="fas fa-door-open"></i>
                         <span>Ruangan</span>
@@ -1375,7 +1677,7 @@
                 </div>
             </div>
 
-            <!-- Manajemen Akademik - DROPDOWN -->
+            <!-- Manajemen Akademik -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#akademikMenu" aria-expanded="false" aria-controls="akademikMenu">
@@ -1406,7 +1708,7 @@
                 </div>
             </div>
 
-            <!-- Manajemen Pengguna - DROPDOWN -->
+            <!-- Manajemen Pengguna -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#penggunaMenu" aria-expanded="false" aria-controls="penggunaMenu">
@@ -1421,7 +1723,7 @@
                 </div>
             </div>
 
-            <!-- Laporan & Pengaturan - DROPDOWN -->
+            <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
                     data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
@@ -1433,7 +1735,7 @@
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
                     </a>
-                    <a href="/admin/pengaturan" class="dropdown-item">
+                    <a href="/admin/settings" class="dropdown-item">
                         <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>
@@ -1468,8 +1770,31 @@
             </div>
 
             <div class="user-actions">
-                <div class="notification-btn">
-                    <i class="fas fa-bell"></i>
+                <!-- Notification Dropdown -->
+                <div class="dropdown">
+                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu notification-dropdown" aria-labelledby="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>Notifikasi</h6>
+                            <div class="notification-actions">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="markAllRead">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="clearNotifications">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- Notifications will be dynamically added here -->
+                        </div>
+                        <div class="notification-footer">
+                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua notifikasi</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="theme-toggle" id="theme-toggle">
@@ -1477,7 +1802,9 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+                    <button class="user-profile dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
                         <div class="user-avatar">
                             @auth
                                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -1503,11 +1830,22 @@
                         </div>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }} @else Pengguna @endauth</h6></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-user-circle me-2"></i> Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
+                                @else
+                                Pengguna @endauth
+                            </h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-user-circle me-2"></i> Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                    class="fas fa-cog me-2"></i> Pengaturan</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -1528,7 +1866,6 @@
                 <p>Kelola jadwal perkuliahan Lab Teknologi Informasi</p>
             </div>
             <div class="page-title-actions">
-                <!-- GANTI LINK DENGAN BUTTON MODAL -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
                     <i class="fas fa-plus"></i> Tambah Jadwal
                 </button>
@@ -1557,10 +1894,8 @@
                     <button class="btn btn-success" type="submit">
                         <i class="fas fa-upload me-1"></i> Import Excel
                     </button>
-
                 </div>
             </div>
-            <!-- Alert untuk pesan sukses/error import -->
             @if (session('import_success'))
                 <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
                     <i class="fas fa-check-circle me-2"></i>
@@ -1648,83 +1983,88 @@
             </div>
         </div>
 
-        <!-- Table Container -->
-        <div class="table-container">
-            <!-- Table Header dengan Filter -->
-            <div class="table-header">
-                <div class="table-title">
-                    Daftar Jadwal Perkuliahan
-                </div>
-                <form id="filterForm" method="GET" action="{{ route('jadwal-perkuliahan.index') }}"
-                    class="table-filters">
-                    <div class="filter-group">
-                        <label for="search">Cari</label>
-                        <input type="text" id="search" name="search" placeholder="Mata Kuliah/Dosen/Kelas"
-                            value="{{ request('search') ?? '' }}">
-                    </div>
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <form id="filterForm" method="GET" action="{{ route('jadwal-perkuliahan.index') }}">
+                <input type="hidden" name="search" id="search" value="{{ request('search') ?? '' }}">
+                <div class="filter-grid">
                     <div class="filter-group">
                         <label for="hari">Hari</label>
                         <select id="hari" name="hari">
                             <option value="">Semua Hari</option>
-                            <option value="Senin" {{ request('hari') == 'Senin' ? 'selected' : '' }}>Senin</option>
-                            <option value="Selasa" {{ request('hari') == 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                            <option value="Rabu" {{ request('hari') == 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                            <option value="Kamis" {{ request('hari') == 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                            <option value="Jumat" {{ request('hari') == 'Jumat' ? 'selected' : '' }}>Jumat</option>
+                            @if (!empty($hariList) && $hariList->count())
+                                @foreach ($hariList as $h)
+                                    <option value="{{ $h }}"
+                                        {{ request('hari') == $h ? 'selected' : '' }}>{{ $h }}</option>
+                                @endforeach
+                            @else
+                                <option value="Senin" {{ request('hari') == 'Senin' ? 'selected' : '' }}>Senin</option>
+                                <option value="Selasa" {{ request('hari') == 'Selasa' ? 'selected' : '' }}>Selasa</option>
+                                <option value="Rabu" {{ request('hari') == 'Rabu' ? 'selected' : '' }}>Rabu</option>
+                                <option value="Kamis" {{ request('hari') == 'Kamis' ? 'selected' : '' }}>Kamis</option>
+                                <option value="Jumat" {{ request('hari') == 'Jumat' ? 'selected' : '' }}>Jumat</option>
+                            @endif
                         </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="ruangan">Ruangan</label>
-                        <select id="ruangan" name="ruangan">
+                        <label for="ruangan_id">Ruangan</label>
+                        <select id="ruangan_id" name="ruangan_id">
                             <option value="">Semua Ruangan</option>
-                            <option value="Lab TIK 1" {{ request('ruangan') == 'Lab TIK 1' ? 'selected' : '' }}>Lab
-                                TIK 1</option>
-                            <option value="Lab TIK 2" {{ request('ruangan') == 'Lab TIK 2' ? 'selected' : '' }}>Lab
-                                TIK 2</option>
-                            <option value="Lab TIK 3" {{ request('ruangan') == 'Lab TIK 3' ? 'selected' : '' }}>Lab
-                                TIK 3</option>
-                            <option value="Lab TIK 4" {{ request('ruangan') == 'Lab TIK 4' ? 'selected' : '' }}>Lab
-                                TIK 4</option>
-                            <option value="Ruang Teori 1"
-                                {{ request('ruangan') == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1</option>
-                            <option value="Ruang Teori 2"
-                                {{ request('ruangan') == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2</option>
+                            @if (!empty($ruangan) && $ruangan->count())
+                                @foreach ($ruangan as $r)
+                                    @php $roomName = $r->nama_ruangan ?? $r->name ?? $r->ruangan ?? ''; @endphp
+                                    <option value="{{ $r->id }}" {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>{{ $roomName }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="semester">Semester</label>
-                        <select id="semester" name="semester">
-                            <option value="">Semua Semester</option>
-                            @for ($i = 1; $i <= 8; $i++)
-                                <option value="{{ $i }}"
-                                    {{ request('semester') == $i ? 'selected' : '' }}>Semester {{ $i }}
-                                </option>
-                            @endfor
+                        <label for="nama_kelas">Nama Kelas</label>
+                        <select id="nama_kelas" name="nama_kelas">
+                            <option value="">Semua Kelas</option>
+                            @if(!empty($kelas) && $kelas->count())
+                                @foreach($kelas as $k)
+                                    <option value="{{ $k->nama_kelas ?? $k->nama }}" {{ request('nama_kelas') == ($k->nama_kelas ?? $k->nama) ? 'selected' : '' }}>{{ $k->nama_kelas ?? $k->nama }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
+
                     <div class="filter-group">
-                        <label for="sort">Urutkan</label>
-                        <select id="sort" name="sort">
-                            <option value="hari" {{ request('sort', 'hari') == 'hari' ? 'selected' : '' }}>Hari
-                            </option>
-                            <option value="waktu" {{ request('sort') == 'waktu' ? 'selected' : '' }}>Waktu</option>
-                            <option value="matakuliah" {{ request('sort') == 'matakuliah' ? 'selected' : '' }}>Mata
-                                Kuliah</option>
+                        <label for="sistem_kuliah">Sistem Kuliah</label>
+                        <select id="sistem_kuliah" name="sistem_kuliah">
+                            <option value="">Semua Sistem</option>
+                            @if (!empty($sistemKuliahList) && $sistemKuliahList->count())
+                                @foreach ($sistemKuliahList as $sk)
+                                    <option value="{{ $sk }}"
+                                        {{ request('sistem_kuliah') == $sk ? 'selected' : '' }}>{{ $sk }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
-                    <div class="filter-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <a href="{{ route('jadwal-perkuliahan.index') }}" class="btn btn-outline">
-                            <i class="fas fa-refresh"></i> Reset
+                </div>
+
+                <div class="filter-actions" style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <a href="{{ route('jadwal-perkuliahan.index') }}" class="btn btn-outline btn-sm">
+                            <i class="fas fa-refresh me-1"></i> Reset
                         </a>
                     </div>
-                </form>
-            </div>
 
-            <!-- Table -->
-            <div style="overflow-x: auto;">
+                    <div>
+                        <a href="{{ route('jadwal-perkuliahan.export', request()->query()) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-export me-1"></i> Ekspor
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -1753,8 +2093,7 @@
                                 <td>{{ $item->sebaran_mahasiswa ?? '-' }}</td>
                                 <td>
                                     @if ($item->hari)
-                                        <span
-                                            class="badge status-{{ strtolower($item->hari) }}">{{ $item->hari }}</span>
+                                        <span class="badge status-{{ strtolower($item->hari) }}">{{ $item->hari }}</span>
                                     @else
                                         -
                                     @endif
@@ -1765,7 +2104,6 @@
                                 <td>{{ $item->daya_tampung ?? '-' }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <!-- GANTI LINK EDIT DENGAN BUTTON MODAL -->
                                         <button type="button" class="btn-warning-custom" data-bs-toggle="modal"
                                             data-bs-target="#editModal{{ $item->id }}">
                                             <i class="fas fa-edit"></i> Edit
@@ -1786,7 +2124,7 @@
                             <tr>
                                 <td colspan="12" class="empty-state">
                                     <i class="fas fa-calendar-times"></i><br>
-                                    @if (request()->anyFilled(['search', 'hari', 'ruangan', 'semester']))
+                                    @if (request()->anyFilled(['search', 'hari', 'ruangan', 'sistem_kuliah']))
                                         Tidak ada data jadwal yang sesuai dengan filter
                                     @else
                                         Belum ada data jadwal perkuliahan
@@ -1803,7 +2141,6 @@
                 <div class="pagination-container">
                     <nav>
                         <ul class="pagination">
-                            {{-- Previous Page Link --}}
                             @if ($jadwal->onFirstPage())
                                 <li class="page-item disabled">
                                     <span class="page-link">Sebelumnya</span>
@@ -1815,7 +2152,6 @@
                                 </li>
                             @endif
 
-                            {{-- Pagination Elements --}}
                             @for ($page = 1; $page <= $jadwal->lastPage(); $page++)
                                 @if ($page == $jadwal->currentPage())
                                     <li class="page-item active">
@@ -1829,7 +2165,6 @@
                                 @endif
                             @endfor
 
-                            {{-- Next Page Link --}}
                             @if ($jadwal->hasMorePages())
                                 <li class="page-item">
                                     <a class="page-link"
@@ -1851,56 +2186,52 @@
                 {{ $jadwal->total() }} data
             </div>
 
-            <!-- Success Message dengan Auto-hide -->
+            <!-- Success Message -->
             @if (session('success'))
                 <div class="alert-auto-hide" id="successAlert">
                     <i class="fas fa-check-circle"></i> {{ session('success') }}
                 </div>
             @endif
         </div>
-        <!-- =========================== -->
-        <!-- MODAL CREATE (Tanpa AJAX) -->
-        <!-- =========================== -->
+
+        <!-- MODAL CREATE -->
         <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createModalLabel">Tambah Jadwal Perkuliahan</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- FORM CREATE SAMA PERSIS DENGAN create.blade.php -->
                         <form action="{{ route('jadwal-perkuliahan.store') }}" method="POST">
                             @csrf
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="hari" class="form-label">Hari <span
-                                            class="text-danger">*</span></label>
+                                    <label for="hari" class="form-label">Hari <span class="text-danger">*</span></label>
                                     <select class="form-select" id="hari" name="hari" required>
                                         <option value="">Pilih Hari</option>
-                                        <option value="Senin" {{ old('hari') == 'Senin' ? 'selected' : '' }}>Senin
-                                        </option>
-                                        <option value="Selasa" {{ old('hari') == 'Selasa' ? 'selected' : '' }}>Selasa
-                                        </option>
-                                        <option value="Rabu" {{ old('hari') == 'Rabu' ? 'selected' : '' }}>Rabu
-                                        </option>
-                                        <option value="Kamis" {{ old('hari') == 'Kamis' ? 'selected' : '' }}>Kamis
-                                        </option>
-                                        <option value="Jumat" {{ old('hari') == 'Jumat' ? 'selected' : '' }}>Jumat
-                                        </option>
+                                        <option value="Senin" {{ old('hari') == 'Senin' ? 'selected' : '' }}>Senin</option>
+                                        <option value="Selasa" {{ old('hari') == 'Selasa' ? 'selected' : '' }}>Selasa</option>
+                                        <option value="Rabu" {{ old('hari') == 'Rabu' ? 'selected' : '' }}>Rabu</option>
+                                        <option value="Kamis" {{ old('hari') == 'Kamis' ? 'selected' : '' }}>Kamis</option>
+                                        <option value="Jumat" {{ old('hari') == 'Jumat' ? 'selected' : '' }}>Jumat</option>
                                     </select>
                                     @error('hari')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="jam_mulai" class="form-label">Jam Mulai <span
-                                            class="text-danger">*</span></label>
-                                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai"
-                                        value="{{ old('jam_mulai') }}" required>
+                                    <label for="jam_mulai" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="jam_mulai" name="jam_mulai" required>
+                                        <option value="">Pilih Jam Mulai</option>
+                                        @if(!empty($slotwaktu))
+                                            @foreach($slotwaktu as $slot)
+                                                <option value="{{ $slot->waktu }}" {{ old('jam_mulai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                     @error('jam_mulai')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -1909,33 +2240,31 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="jam_selesai" class="form-label">Jam Selesai <span
-                                            class="text-danger">*</span></label>
-                                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai"
-                                        value="{{ old('jam_selesai') }}" required>
+                                    <label for="jam_selesai" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="jam_selesai" name="jam_selesai" required>
+                                        <option value="">Pilih Jam Selesai</option>
+                                        @if(!empty($slotwaktu))
+                                            @foreach($slotwaktu as $slot)
+                                                <option value="{{ $slot->waktu }}" {{ old('jam_selesai') == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                     @error('jam_selesai')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="ruangan" class="form-label">Ruangan <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select" id="ruangan" name="ruangan" required>
+                                    <label for="ruangan" class="form-label">Ruangan <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="ruangan_id" name="ruangan_id" required>
                                         <option value="">Pilih Ruangan</option>
-                                        <option value="Lab TIK 1"
-                                            {{ old('ruangan') == 'Lab TIK 1' ? 'selected' : '' }}>Lab TIK 1</option>
-                                        <option value="Lab TIK 2"
-                                            {{ old('ruangan') == 'Lab TIK 2' ? 'selected' : '' }}>Lab TIK 2</option>
-                                        <option value="Lab TIK 3"
-                                            {{ old('ruangan') == 'Lab TIK 3' ? 'selected' : '' }}>Lab TIK 3</option>
-                                        <option value="Lab TIK 4"
-                                            {{ old('ruangan') == 'Lab TIK 4' ? 'selected' : '' }}>Lab TIK 4</option>
-                                        <option value="Ruang Teori 1"
-                                            {{ old('ruangan') == 'Ruang Teori 1' ? 'selected' : '' }}>Ruang Teori 1
-                                        </option>
-                                        <option value="Ruang Teori 2"
-                                            {{ old('ruangan') == 'Ruang Teori 2' ? 'selected' : '' }}>Ruang Teori 2
-                                        </option>
+                                        @if(!empty($ruangan) && $ruangan->count())
+                                            @foreach($ruangan as $r)
+                                                @php
+                                                    $roomName = $r->nama_ruangan ?? $r->name ?? $r->ruangan ?? '';
+                                                @endphp
+                                                <option value="{{ $r->id }}" {{ old('ruangan_id') == $r->id ? 'selected' : '' }}>{{ $roomName }} {{ $r->lokasi ?? $r->building ?? '' }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                     @error('ruangan')
                                         <div class="text-danger mt-1">{{ $message }}</div>
@@ -1945,24 +2274,26 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="kode_matkul" name="kode_matkul"
-                                        value="{{ old('kode_matkul') }}" required>
+                                    <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="kode_matkul" name="kode_matkul" required>
+                                        <option value="">Pilih Kode Mata Kuliah</option>
+                                        @foreach ($mataKuliahs as $matakuliah)
+                                            <option value="{{ $matakuliah->kode }}"
+                                                {{ old('kode_matkul') == $matakuliah->kode ? 'selected' : '' }}>
+                                                {{ $matakuliah->kode }} - {{ $matakuliah->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('kode_matkul')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span
-                                            class="text-danger">*</span></label>
+                                    <label for="sistem_kuliah" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
                                     <select class="form-select" id="sistem_kuliah" name="sistem_kuliah" required>
                                         <option value="">Pilih Sistem Kuliah</option>
-                                        <option value="Teori"
-                                            {{ old('sistem_kuliah') == 'Teori' ? 'selected' : '' }}>Teori</option>
-                                        <option value="Praktikum"
-                                            {{ old('sistem_kuliah') == 'Praktikum' ? 'selected' : '' }}>Praktikum
-                                        </option>
+                                        <option value="Reguler" {{ old('sistem_kuliah') == 'Reguler' ? 'selected' : '' }}>Reguler</option>
+                                        <option value="Non Reguler" {{ old('sistem_kuliah') == 'Non Reguler' ? 'selected' : '' }}>Non Reguler</option>
                                     </select>
                                     @error('sistem_kuliah')
                                         <div class="text-danger mt-1">{{ $message }}</div>
@@ -1972,8 +2303,7 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="nama_kelas" class="form-label">Nama Kelas <span
-                                            class="text-danger">*</span></label>
+                                    <label for="nama_kelas" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="nama_kelas" name="nama_kelas"
                                         value="{{ old('nama_kelas') }}" required>
                                     @error('nama_kelas')
@@ -1981,10 +2311,16 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="kelas_mahasiswa"
-                                        name="kelas_mahasiswa" value="{{ old('kelas_mahasiswa') }}" required>
+                                    <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa</label>
+                                    <select class="form-select" id="kelas_mahasiswa" name="kelas_mahasiswa">
+                                        <option value="">Pilih Kelas Mahasiswa</option>
+                                        @foreach ($kelas as $k)
+                                            <option value="{{ $k->nama_kelas }}"
+                                                {{ old('kelas_mahasiswa') == $k->nama_kelas ? 'selected' : '' }}>
+                                                {{ $k->nama_kelas }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('kelas_mahasiswa')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -2001,8 +2337,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="daya_tampung" class="form-label">Daya Tampung <span
-                                            class="text-danger">*</span></label>
+                                    <label for="daya_tampung" class="form-label">Daya Tampung <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="daya_tampung" name="daya_tampung"
                                         value="{{ old('daya_tampung') }}" required>
                                     @error('daya_tampung')
@@ -2025,59 +2360,46 @@
             </div>
         </div>
 
-        <!-- =========================== -->
         <!-- MODAL EDIT UNTUK SETIAP DATA -->
-        <!-- =========================== -->
         @foreach ($jadwal as $item)
             <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
                 aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Jadwal Perkuliahan
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Jadwal Perkuliahan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <!-- FORM EDIT SAMA PERSIS DENGAN edit.blade.php -->
                             <form action="{{ route('jadwal-perkuliahan.update', $item->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="edit_hari{{ $item->id }}" class="form-label">Hari <span
-                                                class="text-danger">*</span></label>
-                                        <select class="form-select" id="edit_hari{{ $item->id }}"
-                                            name="hari" required>
+                                        <label for="edit_hari{{ $item->id }}" class="form-label">Hari <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_hari{{ $item->id }}" name="hari" required>
                                             <option value="">Pilih Hari</option>
-                                            <option value="Senin"
-                                                {{ old('hari', $item->hari) == 'Senin' ? 'selected' : '' }}>Senin
-                                            </option>
-                                            <option value="Selasa"
-                                                {{ old('hari', $item->hari) == 'Selasa' ? 'selected' : '' }}>Selasa
-                                            </option>
-                                            <option value="Rabu"
-                                                {{ old('hari', $item->hari) == 'Rabu' ? 'selected' : '' }}>Rabu
-                                            </option>
-                                            <option value="Kamis"
-                                                {{ old('hari', $item->hari) == 'Kamis' ? 'selected' : '' }}>Kamis
-                                            </option>
-                                            <option value="Jumat"
-                                                {{ old('hari', $item->hari) == 'Jumat' ? 'selected' : '' }}>Jumat
-                                            </option>
+                                            <option value="Senin" {{ old('hari', $item->hari) == 'Senin' ? 'selected' : '' }}>Senin</option>
+                                            <option value="Selasa" {{ old('hari', $item->hari) == 'Selasa' ? 'selected' : '' }}>Selasa</option>
+                                            <option value="Rabu" {{ old('hari', $item->hari) == 'Rabu' ? 'selected' : '' }}>Rabu</option>
+                                            <option value="Kamis" {{ old('hari', $item->hari) == 'Kamis' ? 'selected' : '' }}>Kamis</option>
+                                            <option value="Jumat" {{ old('hari', $item->hari) == 'Jumat' ? 'selected' : '' }}>Jumat</option>
                                         </select>
                                         @error('hari')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="edit_jam_mulai{{ $item->id }}" class="form-label">Jam Mulai
-                                            <span class="text-danger">*</span></label>
-                                        <input type="time" class="form-control"
-                                            id="edit_jam_mulai{{ $item->id }}" name="jam_mulai"
-                                            value="{{ old('jam_mulai', $item->jam_mulai) }}" required>
+                                        <label for="edit_jam_mulai{{ $item->id }}" class="form-label">Jam Mulai <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_jam_mulai{{ $item->id }}" name="jam_mulai" required>
+                                            <option value="">Pilih Jam Mulai</option>
+                                            @if(!empty($slotwaktu))
+                                                @foreach($slotwaktu as $slot)
+                                                    <option value="{{ $slot->waktu }}" {{ old('jam_mulai', $item->jam_mulai) == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                         @error('jam_mulai')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -2086,39 +2408,37 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="edit_jam_selesai{{ $item->id }}" class="form-label">Jam
-                                            Selesai <span class="text-danger">*</span></label>
-                                        <input type="time" class="form-control"
-                                            id="edit_jam_selesai{{ $item->id }}" name="jam_selesai"
-                                            value="{{ old('jam_selesai', $item->jam_selesai) }}" required>
+                                        <label for="edit_jam_selesai{{ $item->id }}" class="form-label">Jam Selesai <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_jam_selesai{{ $item->id }}" name="jam_selesai" required>
+                                            <option value="">Pilih Jam Selesai</option>
+                                            @if(!empty($slotwaktu))
+                                                @foreach($slotwaktu as $slot)
+                                                    <option value="{{ $slot->waktu }}" {{ old('jam_selesai', $item->jam_selesai) == $slot->waktu ? 'selected' : '' }}>{{ $slot->waktu }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                         @error('jam_selesai')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="edit_ruangan{{ $item->id }}" class="form-label">Ruangan
-                                            <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="edit_ruangan{{ $item->id }}"
-                                            name="ruangan" required>
+                                        <label for="edit_ruangan{{ $item->id }}" class="form-label">Ruangan <span class="text-danger">*</span></label>
+                                        @php
+                                            $selectedRuanganId = old('ruangan_id');
+                                            if (!$selectedRuanganId) {
+                                                // try to find by name match
+                                                $found = $ruangan->firstWhere('nama_ruangan', $item->ruangan) ?? $ruangan->firstWhere('name', $item->ruangan);
+                                                $selectedRuanganId = $found->id ?? '';
+                                            }
+                                        @endphp
+                                        <select class="form-select" id="edit_ruangan{{ $item->id }}" name="ruangan_id" required>
                                             <option value="">Pilih Ruangan</option>
-                                            <option value="Lab TIK 1"
-                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 1' ? 'selected' : '' }}>
-                                                Lab TIK 1</option>
-                                            <option value="Lab TIK 2"
-                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 2' ? 'selected' : '' }}>
-                                                Lab TIK 2</option>
-                                            <option value="Lab TIK 3"
-                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 3' ? 'selected' : '' }}>
-                                                Lab TIK 3</option>
-                                            <option value="Lab TIK 4"
-                                                {{ old('ruangan', $item->ruangan) == 'Lab TIK 4' ? 'selected' : '' }}>
-                                                Lab TIK 4</option>
-                                            <option value="Ruang Teori 1"
-                                                {{ old('ruangan', $item->ruangan) == 'Ruang Teori 1' ? 'selected' : '' }}>
-                                                Ruang Teori 1</option>
-                                            <option value="Ruang Teori 2"
-                                                {{ old('ruangan', $item->ruangan) == 'Ruang Teori 2' ? 'selected' : '' }}>
-                                                Ruang Teori 2</option>
+                                            @if(!empty($ruangan) && $ruangan->count())
+                                                @foreach($ruangan as $r)
+                                                    @php $roomName = $r->nama_ruangan ?? $r->name ?? $r->ruangan ?? ''; @endphp
+                                                    <option value="{{ $r->id }}" {{ (string) $selectedRuanganId === (string) $r->id ? 'selected' : '' }}>{{ $roomName }} {{ $r->lokasi ?? $r->building ?? '' }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                         @error('ruangan')
                                             <div class="text-danger mt-1">{{ $message }}</div>
@@ -2128,27 +2448,26 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="edit_kode_matkul{{ $item->id }}" class="form-label">Kode
-                                            Mata Kuliah <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control"
-                                            id="edit_kode_matkul{{ $item->id }}" name="kode_matkul"
-                                            value="{{ old('kode_matkul', $item->kode_matkul) }}" required>
+                                        <label for="kode_matkul" class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="kode_matkul" name="kode_matkul" required>
+                                            <option value="">Pilih Kode Mata Kuliah</option>
+                                            @foreach ($mataKuliahs as $matakuliah)
+                                                <option value="{{ $matakuliah->kode }}"
+                                                    {{ old('kode_matkul', $item->kode_matkul) == $matakuliah->kode ? 'selected' : '' }}>
+                                                    {{ $matakuliah->kode }} - {{ $matakuliah->nama }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                         @error('kode_matkul')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="edit_sistem_kuliah{{ $item->id }}" class="form-label">Sistem
-                                            Kuliah <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="edit_sistem_kuliah{{ $item->id }}"
-                                            name="sistem_kuliah" required>
+                                        <label for="edit_sistem_kuliah{{ $item->id }}" class="form-label">Sistem Kuliah <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="edit_sistem_kuliah{{ $item->id }}" name="sistem_kuliah" required>
                                             <option value="">Pilih Sistem Kuliah</option>
-                                            <option value="Teori"
-                                                {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Teori' ? 'selected' : '' }}>
-                                                Teori</option>
-                                            <option value="Praktikum"
-                                                {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Praktikum' ? 'selected' : '' }}>
-                                                Praktikum</option>
+                                            <option value="Teori" {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Teori' ? 'selected' : '' }}>Teori</option>
+                                            <option value="Praktikum" {{ old('sistem_kuliah', $item->sistem_kuliah) == 'Praktikum' ? 'selected' : '' }}>Praktikum</option>
                                         </select>
                                         @error('sistem_kuliah')
                                             <div class="text-danger mt-1">{{ $message }}</div>
@@ -2158,22 +2477,24 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="edit_nama_kelas{{ $item->id }}" class="form-label">Nama
-                                            Kelas <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control"
-                                            id="edit_nama_kelas{{ $item->id }}" name="nama_kelas"
-                                            value="{{ old('nama_kelas', $item->nama_kelas) }}" required>
+                                        <label for="edit_nama_kelas{{ $item->id }}" class="form-label">Nama Kelas <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="edit_nama_kelas{{ $item->id }}"
+                                            name="nama_kelas" value="{{ old('nama_kelas', $item->nama_kelas) }}" required>
                                         @error('nama_kelas')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="edit_kelas_mahasiswa{{ $item->id }}"
-                                            class="form-label">Kelas Mahasiswa <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" class="form-control"
-                                            id="edit_kelas_mahasiswa{{ $item->id }}" name="kelas_mahasiswa"
-                                            value="{{ old('kelas_mahasiswa', $item->kelas_mahasiswa) }}" required>
+                                        <label for="kelas_mahasiswa" class="form-label">Kelas Mahasiswa</label>
+                                        <select class="form-select" id="kelas_mahasiswa" name="kelas_mahasiswa">
+                                            <option value="">Pilih Kelas Mahasiswa</option>
+                                            @foreach ($kelas as $k)
+                                                <option value="{{ $k->nama_kelas }}"
+                                                    {{ old('kelas_mahasiswa', $item->kelas_mahasiswa) == $k->nama_kelas ? 'selected' : '' }}>
+                                                    {{ $k->nama_kelas }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                         @error('kelas_mahasiswa')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -2182,21 +2503,17 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="edit_sebaran_mahasiswa{{ $item->id }}"
-                                            class="form-label">Sebaran Mahasiswa</label>
-                                        <input type="text" class="form-control"
-                                            id="edit_sebaran_mahasiswa{{ $item->id }}" name="sebaran_mahasiswa"
-                                            value="{{ old('sebaran_mahasiswa', $item->sebaran_mahasiswa) }}">
+                                        <label for="edit_sebaran_mahasiswa{{ $item->id }}" class="form-label">Sebaran Mahasiswa</label>
+                                        <input type="text" class="form-control" id="edit_sebaran_mahasiswa{{ $item->id }}"
+                                            name="sebaran_mahasiswa" value="{{ old('sebaran_mahasiswa', $item->sebaran_mahasiswa) }}">
                                         @error('sebaran_mahasiswa')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="edit_daya_tampung{{ $item->id }}" class="form-label">Daya
-                                            Tampung <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control"
-                                            id="edit_daya_tampung{{ $item->id }}" name="daya_tampung"
-                                            value="{{ old('daya_tampung', $item->daya_tampung) }}" required>
+                                        <label for="edit_daya_tampung{{ $item->id }}" class="form-label">Daya Tampung <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="edit_daya_tampung{{ $item->id }}"
+                                            name="daya_tampung" value="{{ old('daya_tampung', $item->daya_tampung) }}" required>
                                         @error('daya_tampung')
                                             <div class="text-danger mt-1">{{ $message }}</div>
                                         @enderror
@@ -2217,13 +2534,182 @@
                 </div>
             </div>
         @endforeach
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Toggle Dark Mode
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ========== DYNAMIC NOTIFICATION SYSTEM FUNCTIONS ==========
+        let notifications = [];
+        const notificationList = document.getElementById('notificationList');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const markAllReadBtn = document.getElementById('markAllRead');
+        const clearNotificationsBtn = document.getElementById('clearNotifications');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        async function fetchNotifications() {
+            try {
+                const response = await fetch('{{ route('admin.notifications.index') }}');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                const data = await response.json();
+                notifications = data.notifications || [];
+                renderNotifications();
+            } catch (error) {
+                console.error('Failed to fetch notifications:', error);
+                if (notificationList) {
+                    notificationList.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                            <p>Gagal memuat notifikasi</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function renderNotifications() {
+            if (!notificationList) return;
+            notificationList.innerHTML = '';
+            if (notifications.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="notification-empty">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Tidak ada notifikasi baru</p>
+                    </div>
+                `;
+            } else {
+                notifications.forEach(notif => {
+                    const item = document.createElement('a');
+                    item.href = notif.url;
+                    item.className = 'notification-item unread';
+                    item.dataset.id = notif.id;
+                    item.innerHTML = `
+                        <div class="notification-icon ${notif.type}">
+                            <i class="fas ${notif.icon}"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notif.title}</div>
+                            <div class="notification-message">${notif.message}</div>
+                            <div class="notification-time">
+                                <i class="fas fa-clock"></i>
+                                <span>${notif.time}</span>
+                            </div>
+                        </div>
+                    `;
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.href = notif.url;
+                    });
+                    notificationList.appendChild(item);
+                });
+            }
+            updateBadge();
+        }
+
+        function updateBadge() {
+            if (!notificationBadge) return;
+            const unreadCount = notifications.length;
+            notificationBadge.textContent = unreadCount;
+            if (unreadCount > 0) {
+                notificationBadge.style.display = 'flex';
+            } else {
+                notificationBadge.style.display = 'none';
+            }
+        }
+
+        function showNotificationToast(type, title, message) {
+            const container = document.querySelector('.notification-toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `notification-toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <div class="toast-icon ${type}">
+                        <i class="fas ${getIconForType(type)}"></i>
+                    </div>
+                    <div class="toast-title">${title}</div>
+                    <button class="toast-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="toast-body">${message}</div>
+                <div class="toast-time">
+                    <i class="fas fa-clock"></i>
+                    <span>Baru saja</span>
+                </div>
+                <div class="toast-progress">
+                    <div class="toast-progress-bar"></div>
+                </div>
+            `;
+
+            container.appendChild(toast);
+
+            // Remove toast when close button clicked
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.style.animation = 'toastSlideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'toastSlideOut 0.3s ease forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        function getIconForType(type) {
+            switch (type) {
+                case 'success': return 'fa-check-circle';
+                case 'warning': return 'fa-exclamation-triangle';
+                case 'danger': return 'fa-times-circle';
+                default: return 'fa-info-circle';
+            }
+        }
+
+        function showActiveFilters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeFilters = [];
+            if (urlParams.get('search')) activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
+            if (urlParams.get('hari')) activeFilters.push(`Hari: ${urlParams.get('hari')}`);
+            // ruangan_id preferred
+            if (urlParams.get('ruangan_id')) {
+                let roomLabel = urlParams.get('ruangan_id');
+                const roomEl = document.getElementById('ruangan_id');
+                if (roomEl) {
+                    const opt = roomEl.querySelector(`option[value="${urlParams.get('ruangan_id')}"]`);
+                    if (opt) roomLabel = opt.textContent.trim();
+                }
+                activeFilters.push(`Ruangan: ${roomLabel}`);
+            } else if (urlParams.get('ruangan')) {
+                activeFilters.push(`Ruangan: ${urlParams.get('ruangan')}`);
+            }
+
+            if (urlParams.get('nama_kelas')) activeFilters.push(`Kelas: ${urlParams.get('nama_kelas')}`);
+            if (urlParams.get('sistem_kuliah')) activeFilters.push(`Sistem: ${urlParams.get('sistem_kuliah')}`);
+            if (activeFilters.length > 0) {
+                const existingAlert = document.querySelector('.filter-alert');
+                if (existingAlert) existingAlert.remove();
+                const filterInfo = document.createElement('div');
+                filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
+                filterInfo.innerHTML = `<strong>Filter Aktif:</strong> ${activeFilters.join(', ')}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+                const filterSection = document.querySelector('.filter-section');
+                if (filterSection) filterSection.appendChild(filterInfo);
+            }
+        }
+
+        // ========== INITIALIZATION ON DOM CONTENT LOADED ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Theme
             const themeToggle = document.getElementById('theme-toggle');
-
-            function toggleDarkMode() {
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 if (document.body.classList.contains('dark-mode')) {
                     themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
@@ -2232,104 +2718,37 @@
                     themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                     localStorage.setItem('darkMode', 'disabled');
                 }
+            });
+
+            // Auto-submit search form
+            let searchTimeout;
+            const globalSearchEl = document.getElementById('globalSearch');
+            const searchHidden = document.getElementById('search');
+            if (globalSearchEl && searchHidden) {
+                globalSearchEl.addEventListener('input', function() {
+                    searchHidden.value = this.value;
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        document.getElementById('filterForm').submit();
+                    }, 800);
+                });
             }
 
-            themeToggle.addEventListener('click', toggleDarkMode);
-
-            // Load saved theme preference
-            document.addEventListener('DOMContentLoaded', function() {
-                const darkMode = localStorage.getItem('darkMode');
-                if (darkMode === 'enabled') {
-                    document.body.classList.add('dark-mode');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
-
-                // Auto-hide success message setelah 3 detik
-                const successAlert = document.getElementById('successAlert');
-                if (successAlert) {
-                    setTimeout(() => {
-                        successAlert.classList.add('hiding');
-                        setTimeout(() => {
-                            successAlert.remove();
-                        }, 300);
-                    }, 3000);
-                }
-
-                // ==========================================
-                // VALIDASI WAKTU PADA SEMUA FORM MODAL
-                // ==========================================
-
-                // Validasi untuk form CREATE
-                const createForm = document.querySelector('#createModal form');
-                if (createForm) {
-                    initializeTimeValidation(createForm);
-                }
-
-                // Validasi untuk semua form EDIT
-                document.querySelectorAll('[id^="editModal"] form').forEach(form => {
-                    initializeTimeValidation(form);
+            // Auto-submit filter form on select change (behaviour like riwayat page)
+            document.querySelectorAll('#filterForm select').forEach(select => {
+                select.addEventListener('change', () => {
+                    document.getElementById('filterForm').submit();
                 });
-
-                // ==========================================
-                // AUTO BUKA MODAL JIKA ADA ERROR VALIDASI
-                // ==========================================
-                @if ($errors->any())
-                    // Cek apakah error berasal dari create
-                    @if (request()->isMethod('post') && !isset($jadwalPerkuliahan))
-                        // Error dari create, buka modal create
-                        setTimeout(function() {
-                            const createModal = new bootstrap.Modal(document.getElementById('createModal'));
-                            createModal.show();
-                        }, 300);
-                    @endif
-
-                    // Untuk error edit, modal akan terbuka ketika user klik edit lagi
-                @endif
             });
 
             // Filter dari stats cards
-            function filterByDay(hari) {
+            window.filterByDay = function(hari) {
                 document.getElementById('hari').value = hari;
                 document.getElementById('filterForm').submit();
             }
 
-            // Auto submit filter changes
-            document.getElementById('hari').addEventListener('change', function() {
-                document.getElementById('filterForm').submit();
-            });
-
-            document.getElementById('ruangan').addEventListener('change', function() {
-                document.getElementById('filterForm').submit();
-            });
-
-            document.getElementById('semester').addEventListener('change', function() {
-                document.getElementById('filterForm').submit();
-            });
-
-            document.getElementById('sort').addEventListener('change', function() {
-                document.getElementById('filterForm').submit();
-            });
-
-            // Auto submit search dengan debounce
-            let searchTimeout;
-            document.getElementById('search').addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    document.getElementById('filterForm').submit();
-                }, 800);
-            });
-
-            // Global search
-            document.getElementById('globalSearch').addEventListener('input', function() {
-                document.getElementById('search').value = this.value;
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    document.getElementById('filterForm').submit();
-                }, 800);
-            });
-
             // Konfirmasi hapus semua data
-            function confirmDeleteAll() {
+            window.confirmDeleteAll = function() {
                 const totalData = {{ $jadwal->total() ?? 0 }};
                 if (totalData === 0) {
                     alert('Tidak ada data yang bisa dihapus!');
@@ -2338,70 +2757,130 @@
 
                 return confirm(
                     `Apakah Anda yakin ingin menghapus SEMUA data jadwal perkuliahan?\n\nTotal data yang akan dihapus: ${totalData} jadwal\n\nTindakan ini tidak dapat dibatalkan!`
-                    );
+                );
             }
 
-            // Konfirmasi hapus single data dengan SweetAlert (optional)
-            function confirmDeleteSingle(event, kodeMatkul) {
-                if (!confirm(`Hapus jadwal ${kodeMatkul}?`)) {
-                    event.preventDefault();
-                }
-            }
-
-            // ==========================================
-            // FUNGSI VALIDASI WAKTU
-            // ==========================================
-            function initializeTimeValidation(form) {
-                const jamMulai = form.querySelector('[name="jam_mulai"]');
-                const jamSelesai = form.querySelector('[name="jam_selesai"]');
-
-                if (jamMulai && jamSelesai) {
-                    // Fungsi validasi
-                    function validateTime() {
-                        if (jamMulai.value && jamSelesai.value) {
-                            if (jamMulai.value >= jamSelesai.value) {
-                                jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
-                                jamSelesai.reportValidity();
-                                return false;
-                            } else {
-                                jamSelesai.setCustomValidity('');
-                            }
-                        }
-                        return true;
+            // Initialize notification listeners
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', async () => {
+                    notifications = [];
+                    renderNotifications();
+                    try {
+                        await fetch('{{ route('admin.notifications.markAllAsRead') }}', { 
+                            method: 'POST', 
+                            headers: { 
+                                'X-CSRF-TOKEN': csrfToken, 
+                                'Content-Type': 'application/json' 
+                            } 
+                        });
+                    } catch (error) { 
+                        console.error('Failed to mark all as read:', error); 
                     }
-
-                    // Event listeners
-                    jamMulai.addEventListener('change', validateTime);
-                    jamSelesai.addEventListener('change', validateTime);
-
-                    // Validasi sebelum submit
-                    form.addEventListener('submit', function(e) {
-                        if (!validateTime()) {
-                            e.preventDefault();
-                            return false;
-                        }
-                        return true;
-                    });
-                }
+                });
+            }
+            
+            if (clearNotificationsBtn) {
+                clearNotificationsBtn.addEventListener('click', async () => {
+                    notifications = [];
+                    renderNotifications();
+                    try {
+                        await fetch('{{ route('admin.notifications.clearAll') }}', { 
+                            method: 'POST', 
+                            headers: { 
+                                'X-CSRF-TOKEN': csrfToken, 
+                                'Content-Type': 'application/json' 
+                            } 
+                        });
+                    } catch (error) { 
+                        console.error('Failed to clear notifications:', error); 
+                    }
+                });
             }
 
-            // ==========================================
-            // FUNGSI UNTUK MENGHANDLE ERROR PADA MODAL
-            // ==========================================
-            // Reset form validation ketika modal ditutup
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('hidden.bs.modal', function() {
-                    // Reset semua validasi custom
-                    const form = this.querySelector('form');
-                    if (form) {
-                        const jamSelesai = form.querySelector('[name="jam_selesai"]');
-                        if (jamSelesai) {
+            // Show success notification from session
+            @if(session('success'))
+                showNotificationToast('success', 'Sukses!', '{{ session('success') }}');
+            @endif
+
+            @if(session('error'))
+                showNotificationToast('danger', 'Error!', '{{ session('error') }}');
+            @endif
+
+            @if(session('import_success'))
+                showNotificationToast('success', 'Import Berhasil!', '{{ session('import_success') }}');
+            @endif
+
+            @if(session('import_error'))
+                showNotificationToast('danger', 'Import Gagal!', '{{ session('import_error') }}');
+            @endif
+
+            // Auto-hide success alert
+            const successAlert = document.getElementById('successAlert');
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.classList.add('hiding');
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 300);
+                }, 3000);
+            }
+
+            // Initial data fetch
+            showActiveFilters();
+            fetchNotifications();
+
+            // Poll for new notifications every 30 seconds
+            setInterval(fetchNotifications, 30000);
+        });
+
+        // Time validation functions
+        function initializeTimeValidation(form) {
+            const jamMulai = form.querySelector('[name="jam_mulai"]');
+            const jamSelesai = form.querySelector('[name="jam_selesai"]');
+
+            if (jamMulai && jamSelesai) {
+                function validateTime() {
+                    if (jamMulai.value && jamSelesai.value) {
+                        if (jamMulai.value >= jamSelesai.value) {
+                            jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
+                            jamSelesai.reportValidity();
+                            return false;
+                        } else {
                             jamSelesai.setCustomValidity('');
                         }
                     }
-                });
-            });
-        </script>
-</body>
+                    return true;
+                }
 
+                jamMulai.addEventListener('change', validateTime);
+                jamSelesai.addEventListener('change', validateTime);
+
+                form.addEventListener('submit', function(e) {
+                    if (!validateTime()) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        }
+
+        // Initialize time validation for all modals
+        document.querySelectorAll('form').forEach(form => {
+            if (form.querySelector('[name="jam_mulai"]') && form.querySelector('[name="jam_selesai"]')) {
+                initializeTimeValidation(form);
+            }
+        });
+
+        // Auto open modal if there are validation errors
+        @if($errors->any())
+            @if(request()->isMethod('post') && !isset($jadwalPerkuliahan))
+                setTimeout(function() {
+                    const createModal = new bootstrap.Modal(document.getElementById('createModal'));
+                    createModal.show();
+                }, 300);
+            @endif
+        @endif
+    </script>
+</body>
 </html>
