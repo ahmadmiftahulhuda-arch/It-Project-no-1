@@ -47,7 +47,7 @@ class AuthController extends Controller
                     ->log('Login');
             }
 
-            if ($user->peran === 'Admin') {
+            if (strtolower($user->peran) === 'administrator' || strtolower($user->peran) === 'admin') {
                 return redirect()->intended('/admin/dashboard');
             }
 

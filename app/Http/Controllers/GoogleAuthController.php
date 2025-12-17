@@ -86,7 +86,12 @@ class GoogleAuthController extends Controller
             // Login user
             Auth::login($user, true);
 
-            return redirect('/home');
+            // Redirect berdasarkan peran
+            if (strtolower($user->peran) === 'administrator' || strtolower($user->peran) === 'admin') {
+                return redirect()->intended('/admin/dashboard');
+            }
+
+            return redirect()->intended('/home');
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Login gagal, coba lagi.');
         }
