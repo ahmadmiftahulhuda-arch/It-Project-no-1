@@ -100,8 +100,12 @@ class AuthController extends Controller
 
         // Log aktivitas (opsional) — hanya jika helper tersedia
         if (function_exists('activity')) {
-            \activity('auth')
-                ->performedOn($user)
+            activity('auth')
+                ->causedBy($user)  // PERUBAHAN: causedBy() bukan performedOn()
+                ->withProperties([
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent()
+                ])
                 ->log('Admin logged in');
         }
 
@@ -115,8 +119,13 @@ class AuthController extends Controller
     {
         // Log aktivitas sebelum logout (opsional)
         if (Auth::check() && function_exists('activity')) {
-            \activity('auth')
-                ->performedOn(Auth::user())
+            $user = Auth::user();
+            activity('auth')
+                ->causedBy($user)  // PERUBAHAN: causedBy() bukan performedOn()
+                ->withProperties([
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent()
+                ])
                 ->log('Admin logged out');
         }
 
