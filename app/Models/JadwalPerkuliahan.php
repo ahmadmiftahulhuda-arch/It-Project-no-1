@@ -97,4 +97,9 @@ class JadwalPerkuliahan extends Model
         }
         return null;
     }
+
+    public function mataKuliah()
+    {
+        return $this->belongsTo(MataKuliah::class, 'kode_matkul', 'kode');
+    }
 }
