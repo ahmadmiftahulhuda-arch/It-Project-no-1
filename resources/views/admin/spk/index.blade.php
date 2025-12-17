@@ -1205,86 +1205,112 @@
 
         </div>
 
-        <!-- BAGIAN C: HASIL RANKING SAW -->
-        <div class="ranking-container">
-            <h2 class="section-title">
-                <i class="fas fa-ranking-star"></i>
-                C. Hasil Perankingan Peminjaman (SAW)
-            </h2>
+<!-- BAGIAN C: HASIL RANKING SAW -->
+<div class="ranking-container">
+    <h2 class="section-title">
+        <i class="fas fa-ranking-star"></i>
+        C. Hasil Perankingan Peminjaman (SAW)
+    </h2>
 
-            <p class="text-muted mb-3">
-                Tabel berikut menampilkan nilai preferensi dan urutan prioritas peminjaman
-                berdasarkan metode SAW dengan bobot dari AHP.
-            </p>
+    <p class="text-muted mb-3">
+        Tabel berikut menampilkan nilai preferensi dan urutan prioritas peminjaman
+        berdasarkan metode SAW dengan bobot dari AHP.
+    </p>
 
-            @if (!empty($rankings) && count($rankings) > 0)
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Peringkat</th>
-                                <th>Kode Peminjaman</th>
-                                <th>Peminjam</th>
-                                <th>Ruang / Proyektor</th>
-                                <th>Tanggal & Jam</th>
-                                <th class="text-center">Nilai Preferensi</th>
-                                <th class="text-center">Status Prioritas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($rankings as $idx => $item)
-                                @php
-                                    $p = $item;
-                                @endphp
-                                <tr>
-                                    <td class="text-center fw-bold">{{ $idx + 1 }}</td>
-                                    <td>{{ $p->kode_peminjaman ?? 'PMJ-' . $p->id }}</td>
-                                    <td>{{ $p->user->name ?? ($p->nama_peminjam ?? '-') }}</td>
-                                    <td>
-                                        <strong>Ruang:</strong>
-                                        {{ $p->ruangan->nama_ruangan ?? '-' }}<br>
-
-                                        <strong>Proyektor:</strong>
-                                        {{ $p->projector->kode_proyektor ?? '-' }}
-                                    </td>
-                                    <td>
-                                        <strong>Tanggal:</strong>
-                                        {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}<br>
-
-                                        <strong>Jam:</strong>
-                                        {{ \Carbon\Carbon::parse($p->created_at)->format('H:i') }}
-                                    </td>
-                                    <td class="text-center fw-bold">
-                                        {{ number_format($p->nilai_preferensi, 4) ?? '0' }}
-                                    </td>
-                                    <td class="text-center">
-                                        @if ($idx === 0)
-                                            <span class="badge bg-success badge-priority">
-                                                Prioritas Utama
-                                            </span>
-                                        @elseif($idx < 3)
-                                            <span class="badge bg-info badge-priority">
-                                                Prioritas Tinggi
-                                            </span>
-                                        @else
-                                            <span class="badge bg-secondary badge-priority">
-                                                Prioritas Normal
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Belum ada hasil perankingan. Silakan isi penilaian pada bagian B dan klik
-                    <strong>"Simpan Penilaian & Hitung SAW"</strong>.
-                </div>
-            @endif
+    @if (!empty($rankings) && count($rankings) > 0)
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th class="text-center">Peringkat</th>
+                        <th>Kode Peminjaman</th>
+                        <th>Peminjam</th>
+                        <th>Ruang / Proyektor</th>
+                        <th>Tanggal & Jam</th>
+                        <th class="text-center">Nilai Preferensi</th>
+                        <th class="text-center">Status Prioritas</th>
+                        <th>Detail Perhitungan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($rankings as $idx => $item)
+                        <tr>
+                            <td class="text-center fw-bold">{{ $idx + 1 }}</td>
+                            <td>{{ $item->kode_peminjaman ?? 'PMJ-' . $item->id }}</td>
+                            <td>{{ $item->user->name ?? ($item->nama_peminjam ?? '-') }}</td>
+                            <td>
+                                <strong>Ruang:</strong>
+                                {{ $item->ruangan->nama_ruangan ?? '-' }}<br>
+                                <strong>Proyektor:</strong>
+                                {{ $item->projector->kode_proyektor ?? '-' }}
+                            </td>
+                            <td>
+                                <strong>Tanggal:</strong>
+                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}<br>
+                                <strong>Jam:</strong>
+                                {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}
+                            </td>
+                            <td class="text-center fw-bold">
+                                {{ number_format($item->nilai_preferensi, 4) ?? '0' }}
+                            </td>
+                            <td class="text-center">
+                                @if ($idx === 0)
+                                    <span class="badge bg-success badge-priority">
+                                        Prioritas Utama
+                                    </span>
+                                @elseif($idx < 3)
+                                    <span class="badge bg-info badge-priority">
+                                        Prioritas Tinggi
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary badge-priority">
+                                        Prioritas Normal
+                                    </span>
+                                @endif
+                            </td>
+                            <td>
+                                <!-- Show calculation details -->
+                                <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#details-{{ $item->id }}">
+                                    Lihat Detail
+                                </button>
+                                <div id="details-{{ $item->id }}" class="collapse mt-2">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Kriteria</th>
+                                                <th>Nilai</th>
+                                                <th>Normalisasi</th>
+                                                <th>Bobot</th>
+                                                <th>Nilai x Bobot</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($calculationDetails[$item->id] as $detail)
+                                                <tr>
+                                                    <td>{{ $detail['criterion'] }}</td>
+                                                    <td>{{ $detail['nilai'] }}</td>
+                                                    <td>{{ number_format($detail['normalisasi'], 4) }}</td>
+                                                    <td>{{ number_format($detail['bobot'], 4) }}</td>
+                                                    <td>{{ number_format($detail['nilai_bobot'], 4) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+    @else
+        <div class="alert alert-info mb-0">
+            <i class="fas fa-info-circle me-2"></i>
+            Belum ada hasil perankingan. Silakan isi penilaian pada bagian B dan klik
+            <strong>"Simpan Penilaian & Hitung SAW"</strong>.
+        </div>
+    @endif
+</div>
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
