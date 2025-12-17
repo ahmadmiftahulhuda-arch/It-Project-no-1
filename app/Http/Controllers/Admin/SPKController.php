@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
+use App\Models\Pengembalian;
 use App\Models\SpkCriterion;
 use App\Models\SpkPenilaian;
 use Illuminate\Http\Request;
@@ -40,6 +41,14 @@ class SPKController extends Controller
             }
         }
 
+        // Determine users who ever had overdue pengembalian.
+        // Use join to get the user_id from the related peminjaman to avoid any mismatch
+        $usersWithOverdue = Pengembalian::whereIn('pengembalians.status', ['overdue', 'terlambat'])
+            ->join('peminjamans', 'pengembalians.peminjaman_id', '=', 'peminjamans.id')
+            ->pluck('peminjamans.user_id')
+            ->unique()
+            ->toArray();
+
         // Hitung SAW dan ranking
         $calculationDetails = [];
         $this->hitungSAWPeminjaman($peminjamans, $criteria, $calculationDetails);
@@ -56,7 +65,8 @@ class SPKController extends Controller
             'scores',
             'rankings',
             'filterDate',
-            'calculationDetails' // Passing calculation details to the view
+            'calculationDetails', // Passing calculation details to the view
+            'usersWithOverdue'
         ));
     }
 
@@ -71,7 +81,10 @@ class SPKController extends Controller
 
         $criteria = SpkCriterion::all();
 
-        // Ambil data peminjaman yang relevan
+        // Ambil tanggal filter agar operasi dan redirect mempertahankan konteks tanggal
+        $filterDate = $request->input('filter_date', date('Y-m-d'));
+
+        // Ambil data peminjaman yang relevan sesuai tanggal filter
         $peminjamans = Peminjaman::with([
             'user',
             'ruangan',
@@ -80,6 +93,7 @@ class SPKController extends Controller
             'feedback'
         ])
             ->where('status', 'pending')
+            ->whereDate('tanggal', $filterDate)
             ->get();
 
         // Simpan penilaian
@@ -104,7 +118,7 @@ class SPKController extends Controller
         $this->hitungSAWPeminjaman($peminjamans, $criteria, $calculationDetails);
 
         return redirect()
-            ->route('admin.spk.index')
+            ->route('admin.spk.index', ['filter_date' => $filterDate])
             ->with('success', 'Penilaian SPK & SAW peminjaman berhasil dihitung.');
     }
 
