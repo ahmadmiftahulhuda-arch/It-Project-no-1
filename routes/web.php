@@ -269,6 +269,8 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     // Laporan
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
     Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->name('admin.laporan.data');
+    Route::get('/laporan/export', [AdminController::class, 'exportLaporan'])->name('admin.laporan.export');
+
 
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');

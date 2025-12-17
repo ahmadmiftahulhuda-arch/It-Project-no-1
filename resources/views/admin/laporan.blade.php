@@ -718,6 +718,15 @@
                 display: flex;
                 gap: 10px;
             }
+
+            .notification-toast-container {
+                right: 10px;
+                left: 10px;
+            }
+            .notification-toast {
+                min-width: auto;
+                max-width: 100%;
+            }
         }
 
         /* Dark Mode */
@@ -1044,10 +1053,254 @@
             color: var(--secondary);
             text-decoration: underline;
         }
+
+        /* Notification Toast Styles */
+        .notification-toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification-toast {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            min-width: 300px;
+            max-width: 350px;
+            animation: toastSlideIn 0.3s ease, toastSlideOut 0.3s ease 4.7s forwards;
+            transform: translateX(0);
+            border: 1px solid var(--border-light);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastSlideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .notification-toast.info {
+            border-left-color: #2196f3;
+        }
+
+        .notification-toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .notification-toast.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-toast.danger {
+            border-left-color: #f44336;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .toast-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .toast-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .toast-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .toast-icon.danger {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-close:hover {
+            color: var(--danger);
+        }
+
+        .toast-body {
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .toast-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .toast-progress {
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+            transform-origin: left;
+        }
+
+        .notification-toast.info .toast-progress-bar {
+            background: #2196f3;
+        }
+
+        .notification-toast.success .toast-progress-bar {
+            background: #4caf50;
+        }
+
+        .notification-toast.warning .toast-progress-bar {
+            background: #ff9800;
+        }
+
+        .notification-toast.danger .toast-progress-bar {
+            background: #f44336;
+        }
+
+        @keyframes progressBar {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        /* Print Styles */
+        #print-section {
+            display: none;
+        }
+
+        @media print {
+            body > *:not(#print-section) {
+                display: none;
+            }
+
+            #print-section {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+
+            .print-page-break {
+                page-break-after: always;
+            }
+
+            .print-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            .print-table th, .print-table td {
+                border: 1px solid #dee2e6;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .print-table th {
+                background-color: #f8f9fa;
+            }
+
+            .print-chart-container {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            #print-section .row::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            #print-section .col-6 {
+                float: left;
+                width: 50%;
+                padding: 0 15px;
+                box-sizing: border-box;
+            }
+
+            #print-section img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Notification Toast Container -->
+    <div class="notification-toast-container"></div>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -1172,11 +1425,11 @@
             <!-- Laporan & Pengaturan -->
             <div class="dropdown-custom">
                 <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#laporanMenu" aria-expanded="false" aria-controls="laporanMenu">
+                    data-bs-target="#laporanMenu" aria-expanded="true" aria-controls="laporanMenu">
                     <span>Laporan & Pengaturan</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse" id="laporanMenu">
+                <div class="dropdown-items collapse show" id="laporanMenu">
                     <a href="/admin/laporan" class="dropdown-item active">
                         <i class="fas fa-chart-bar"></i>
                         <span>Statistik</span>
@@ -1311,6 +1564,10 @@
                 <h1>Laporan & Statistik</h1>
                 <p>Analisis data dan statistik penggunaan Laboratorium Teknologi Informasi</p>
             </div>
+            <div>
+                <button class="btn btn-primary" id="exportBtn" style="margin-right: 10px;"><i class="fas fa-download me-2"></i> Ekspor</button>
+                <button class="btn btn-primary" id="printBtn"><i class="fas fa-print me-2"></i> Cetak</button>
+            </div>
         </div>
 
         <!-- Filter Section -->
@@ -1318,30 +1575,10 @@
             <div class="filter-grid">
                 <div class="filter-group">
                     <label for="report-type">Jenis Laporan</label>
-                    <select id="report-type">
-                        <option value="peminjaman">Laporan Peminjaman</option>
-                        <option value="penggunaan">Laporan Penggunaan</option>
-                        <option value="inventaris">Laporan Inventaris</option>
-                        <option value="pengguna">Laporan Pengguna</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="date-range">Rentang Waktu</label>
-                    <select id="date-range">
-                        <option value="week">Minggu Ini</option>
-                        <option value="month" selected>Bulan Ini</option>
-                        <option value="quarter">Kuartal Ini</option>
-                        <option value="year">Tahun Ini</option>
-                        <option value="custom">Kustom</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="department">Jurusan</label>
-                    <select id="department">
-                        <option value="">Semua Jurusan</option>
-                        <option value="ti">Teknik Informatika</option>
-                        <option value="si">Sistem Informasi</option>
-                        <option value="tk">Teknik Komputer</option>
+                    <select id="report-type" class="form-select">
+                    <option value="keseluruhan" selected>Laporan Keseluruhan</option>
+                    <option value="peminjaman">Laporan Peminjaman</option>
+                    <option value="pengembalian">Laporan Pengembalian</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -1354,772 +1591,527 @@
         </div>
 
         <!-- Stats Cards -->
-
         <div class="stats-container">
-
             <!-- Stat cards will be dynamically generated here -->
-
         </div>
 
         <!-- Charts Section -->
-
         <div class="charts-grid">
-
             <div class="chart-card">
-
                 <div class="chart-header">
-
                     <div class="section-title" id="monthlyChartTitle">Statistik Peminjaman Bulanan</div>
-
-                    <select id="yearSelect"
+                    <select id="yearSelect" class="form-select"
                         style="padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-light); color: var(--text-dark); font-size: 0.9rem;">
-
                         @foreach ($years as $year)
                             <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
                                 {{ $year }}</option>
                         @endforeach
-
                     </select>
-
                 </div>
-
                 <div class="chart-container">
-
                     <canvas id="monthlyChart"></canvas>
-
                 </div>
-
             </div>
-
             <div class="chart-card">
-
                 <div class="chart-header">
-
                     <div class="section-title" id="distributionChartTitle">Distribusi Peminjaman</div>
-
                 </div>
-
                 <div class="chart-container">
-
                     <canvas id="distributionChart"></canvas>
-
                 </div>
-
             </div>
-
         </div>
-
-
 
         <!-- Recent Activity -->
-
         <div class="activity-container">
-
             <div class="chart-header">
-
                 <div class="section-title">Aktivitas Terbaru</div>
-
                 <a href="{{ route('admin.riwayat') }}" class="view-all">Lihat Semua</a>
-
             </div>
-
             <ul class="activity-list" id="recentActivityList">
-
                 <!-- Activity items will be populated by JavaScript -->
-
             </ul>
-
         </div>
-
     </div>
 
     <div class="menu-toggle" id="menu-toggle">
-
         <i class="fas fa-bars"></i>
+    </div>
 
+    <!-- Area Cetak (Tersembunyi) -->
+    <div id="print-section">
+        <h2 id="print-title">Laporan Peminjaman</h2>
+        <hr>
+
+        <h4>Ringkasan Peminjaman</h4>
+        <div class="row">
+            <div class="col-6">
+                <table class="print-table" id="print-summary-monthly-table">
+                    <!-- Data Ringkasan Bulanan -->
+                </table>
+            </div>
+            <div class="col-6">
+                <table class="print-table" id="print-summary-dist-table">
+                    <!-- Data Distribusi -->
+                </table>
+            </div>
+        </div>
+
+        <div class="print-page-break"></div>
+
+        <div class="row">
+            <div class="col-6 print-chart-container">
+                <h5>Grafik Peminjaman Bulanan</h5>
+                <img id="print-monthly-chart-img" />
+            </div>
+            <div class="col-6 print-chart-container">
+                <h5>Grafik Distribusi Peminjaman</h5>
+                <img id="print-dist-chart-img" />
+            </div>
+        </div>
+
+        <div class="print-page-break"></div>
+
+        <h4>Data Detail Peminjaman</h4>
+        <table class="print-table" id="print-main-data-table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
     </div>
 
     <!-- Bootstrap JS -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        let monthlyChart, distributionChart;
-
-        // Initialize when document is ready
-
-        $(document).ready(function() {
-
-            initializeEventListeners();
-
-            initializeTheme();
-
-            // Generate report on page load
-
-            generateReport();
-
-        });
-
-        function initializeEventListeners() {
-
-            $('#theme-toggle').on('click', toggleTheme);
-
-            $('#menu-toggle').on('click', toggleSidebar);
-
-            $('#printBtn').on('click', () => window.print());
-
-            $('#exportBtn').on('click', exportReport);
-
-            $('#generateBtn').on('click', generateReport);
-
-            $('#yearSelect').on('change', generateReport);
-
-            $('#report-type').on('change', generateReport);
-
-        }
-
-        function initializeTheme() {
-
-            if (localStorage.getItem('darkMode') === 'enabled') {
-
-                document.body.classList.add('dark-mode');
-
-                $('#theme-toggle').html('<i class="fas fa-sun"></i>');
-
-            }
-
-        }
-
-        function toggleTheme() {
-
-            document.body.classList.toggle('dark-mode');
-
-            const isDarkMode = document.body.classList.contains('dark-mode');
-
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-
-            $('#theme-toggle').html(isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
-
-            updateChartColors();
-
-        }
-
-        function toggleSidebar() {
-
-            // Implement sidebar toggle logic if needed, especially for mobile
-
-        }
-
-        function updateUI(data) {
-
-            const uiConfig = data.uiConfig;
-
-            const stats = data.stats;
-
-
-
-            // 1. Update Stats Cards dynamically
-
-            const statsContainer = $('.stats-container');
-
-            statsContainer.empty(); // Clear existing cards
-
-            const icons = ['fa-hand-holding', 'fa-laptop', 'fa-users', 'fa-times-circle'];
-
-            const colors = ['primary', 'success', 'warning', 'danger'];
-
-            let i = 0;
-
-            for (const key in stats) {
-
-                const title = uiConfig.stat_titles[i] || key;
-
-                const value = stats[key];
-
-                const icon = icons[i % icons.length];
-
-                const color = colors[i % colors.length];
-
-
-
-                const statCardHtml = `
-
-                            <div class="stat-card">
-
-                                <div class="stat-icon ${color}">
-
-                                    <i class="fas ${icon}"></i>
-
-                                </div>
-
-                                <div class="stat-info">
-
-                                    <h3>${value}</h3>
-
-                                    <p>${title}</p>
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                statsContainer.append(statCardHtml);
-
-                i++;
-
-            }
-
-            // 2. Update Chart Titles
-
-            $('#monthlyChartTitle').text(uiConfig.chart_titles[0]);
-
-            $('#distributionChartTitle').text(uiConfig.chart_titles[1]);
-
-
-
-
-
-            // 3. Update Recent Activity
-
-            const activityList = $('#recentActivityList');
-
-            activityList.empty();
-
-            if (data.recentActivity && data.recentActivity.length > 0) {
-
-                data.recentActivity.forEach(item => {
-
-                    let iconClass = 'primary';
-
-                    if (item.status === 'selesai' || item.status === 'disetujui') iconClass = 'success';
-
-                    if (item.status === 'ditolak') iconClass = 'danger';
-
-                    if (item.status === 'pending') iconClass = 'warning';
-
-                    const activityHtml = `
-
-                                <li class="activity-item">
-
-                                    <div class="activity-icon ${iconClass}"><i class="fas fa-hand-holding"></i></div>
-
-                                    <div class="activity-content">
-
-                                        <div class="activity-title">${item.title}</div>
-
-                                        <div class="activity-desc">${item.description}</div>
-
-                                        <div class="activity-time">${item.time}</div>
-
-                                    </div>
-
-                                </li>`;
-
-                    activityList.append(activityHtml);
-
-                });
-
-            } else {
-
-                activityList.append('<li class="text-center p-3 text-muted">Tidak ada aktivitas terbaru.</li>');
-
-            }
-
-
-
-            // 4. Update Charts
-
-            const isDarkMode = document.body.classList.contains('dark-mode');
-
-            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-
-            if (monthlyChart) {
-
-                monthlyChart.destroy();
-
-            }
-
-            monthlyChart = new Chart(monthlyCtx, {
-
-                type: 'bar',
-
-                data: {
-
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-
-                    datasets: [{
-
-                        label: 'Jumlah',
-
-                        data: data.monthlyChart,
-
-                        backgroundColor: isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)',
-
-                        borderColor: isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)',
-
-                        borderWidth: 1,
-
-                        borderRadius: 4
-
-                    }]
-
-                },
-
-                options: getChartOptions()
-
-            });
-
-
-
-            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-
-            if (distributionChart) {
-
-                distributionChart.destroy();
-
-            }
-
-            distributionChart = new Chart(distributionCtx, {
-
-                type: 'doughnut',
-
-                data: {
-
-                    labels: data.distributionChart.labels,
-
-                    datasets: [{
-
-                        data: data.distributionChart.data,
-
-                        backgroundColor: ['rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)',
-                            'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'
-                        ],
-
-                        borderColor: isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-
-                        borderWidth: 2,
-
-                        hoverOffset: 15
-
-                    }]
-
-                },
-
-                options: getDoughnutChartOptions()
-
-            });
-
-
-
-            updateChartColors();
-
-        }
-
-
-
-        function getChartOptions() {
-
-            const isDarkMode = document.body.classList.contains('dark-mode');
-
-            return {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                scales: {
-
-                    y: {
-
-                        beginAtZero: true,
-
-                        grid: {
-                            color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                        },
-
-                        ticks: {
-                            color: isDarkMode ? '#a0a0a0' : '#495057'
-                        }
-
-                    },
-
-                    x: {
-
-                        grid: {
-                            display: false
-                        },
-
-                        ticks: {
-                            color: isDarkMode ? '#a0a0a0' : '#495057'
-                        }
-
-                    }
-
-                },
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    },
-
-                    tooltip: getTooltipOptions()
-
+        <script>
+            // Helper to show toast notifications (from settings/index.blade.php)
+            function showToast(type, title, message) {
+                const toastContainer = document.querySelector('.notification-toast-container');
+                if (!toastContainer) return;
+    
+                const toast = document.createElement('div');
+                toast.className = `notification-toast ${type}`;
+    
+                const iconClass = {
+                    success: 'fa-check-circle',
+                    info: 'fa-info-circle',
+                    warning: 'fa-exclamation-triangle',
+                    danger: 'fa-exclamation-circle'
+                }[type];
+    
+                toast.innerHTML = `
+                    <div class="toast-header">
+                        <div class="toast-icon ${type}"><i class="fas ${iconClass}"></i></div>
+                        <strong class="toast-title me-auto">${title}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">${message}</div>
+                    <div class="toast-progress"><div class="toast-progress-bar"></div></div>
+                `;
+                            toast.querySelector('.btn-close').addEventListener('click', () => {
+                                const instance = bootstrap.Toast.getInstance(toast);
+                                if (instance) {
+                                    instance.hide();
+                                } else {
+                                    toast.remove();
+                                }
+                            });
+                
+                            toastContainer.appendChild(toast);
+                
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+                                const toastInstance = new bootstrap.Toast(toast, { delay: 5000 });
+                                toastInstance.show();
+                
+                                toast.addEventListener('hidden.bs.toast', () => {
+                                    toast.remove();
+                                });
+                            } else {                    setTimeout(() => {
+                        if (toast.parentNode === toastContainer) toast.remove();
+                    }, 5000);
                 }
-
-            };
-
-        }
-
-        function getDoughnutChartOptions() {
-
-            const isDarkMode = document.body.classList.contains('dark-mode');
-
-            return {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-
-                        position: 'bottom',
-
-                        labels: {
-
-                            color: isDarkMode ? '#a0a0a0' : '#495057',
-
-                            padding: 20,
-
-                            usePointStyle: true,
-
-                            pointStyle: 'circle'
-
+            }
+    
+            let monthlyChart, distributionChart;
+            let latestReportData = null; // Variable to store the latest report data
+    
+            $(document).ready(function() {
+                // Notification System Variables and Functions (adapted from settings/index.blade.php)
+                let notifications = [];
+                const notificationList = document.getElementById('notificationList');
+                const notificationBadge = document.getElementById('notificationBadge');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+                async function fetchNotifications() {
+                    try {
+                        const response = await fetch('{{ route('admin.notifications.index') }}');
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok.');
                         }
-
-                    },
-
-                    tooltip: getTooltipOptions()
-
+                        const data = await response.json();
+    
+                        const currentIds = new Set(notifications.map(n => n.id));
+                        const newNotifications = (data.notifications || []).filter(newNotif => !currentIds.has(newNotif.id));
+    
+                        if (newNotifications.length > 0) {
+                            const message = newNotifications.length === 1
+                                ? `1 notifikasi baru: ${newNotifications[0].message}`
+                                : `Anda memiliki ${newNotifications.length} notifikasi baru.`;
+                            showToast('info', 'Notifikasi Baru', message);
+                        }
+    
+                        notifications = data.notifications || [];
+                        renderNotifications();
+                    } catch (error) {
+                        console.error('Failed to fetch notifications:', error);
+                        if (notificationList) {
+                            notificationList.innerHTML = `
+                                <div class="notification-empty">
+                                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                                    <p>Gagal memuat notifikasi</p>
+                                </div>
+                            `;
+                        }
+                    }
                 }
-
-            };
-
-        }
-
-        function getTooltipOptions() {
-
-            const isDarkMode = document.body.classList.contains('dark-mode');
-
-            return {
-
-                backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-
-                titleColor: isDarkMode ? '#fff' : '#000',
-
-                bodyColor: isDarkMode ? '#fff' : '#000',
-
-                borderColor: isDarkMode ? '#333' : '#ddd',
-
-                borderWidth: 1
-
-            };
-
-        }
-
-        function updateChartColors() {
-
-            const chartOptions = getChartOptions();
-
-            const doughnutOptions = getDoughnutChartOptions();
-
-            if (monthlyChart) {
-
-                const isDarkMode = document.body.classList.contains('dark-mode');
-
-                monthlyChart.options = chartOptions;
-
-                monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(59, 89, 152, 0.7)' :
-                    'rgba(59, 89, 152, 0.8)';
-
-                monthlyChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
-
-                monthlyChart.update();
-
-            }
-
-            if (distributionChart) {
-
-                const isDarkMode = document.body.classList.contains('dark-mode');
-
-                distributionChart.options = doughnutOptions;
-
-                distributionChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(30, 30, 30, 0.8)' :
-                    'rgba(255, 255, 255, 0.8)';
-
-                distributionChart.update();
-
-            }
-
-        }
-
-        function generateReport() {
-
-            const reportType = $('#report-type').val();
-
-            const dateRange = $('#date-range').val();
-
-            const department = $('#department').val();
-
-            const year = $('#yearSelect').val();
-
-            const btn = $('#generateBtn');
-
-            const originalHtml = btn.html();
-
-            btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
-
-            btn.prop('disabled', true);
-
-            const url =
-                `{{ route('admin.laporan.data') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
-
-            fetch(url, {
-
-                    headers: {
-
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-
-                        'Accept': 'application/json'
-
-                    }
-
-                })
-
-                .then(response => {
-
-                    if (!response.ok) {
-
-                        throw new Error('Network response was not ok');
-
-                    }
-
-                    return response.json();
-
-                })
-
-                .then(data => {
-
-                    updateUI(data);
-
-                    btn.html(originalHtml);
-
-                    btn.prop('disabled', false);
-
-                })
-
-                .catch(error => {
-
-                    console.error('Error fetching report data:', error);
-
-                    alert('Gagal memuat data laporan. Silakan coba lagi.');
-
-                    btn.html(originalHtml);
-
-                    btn.prop('disabled', false);
-
-                });
-
-        }
-
-        function exportReport() {
-
-            const reportType = $('#report-type').val();
-
-            const dateRange = $('#date-range').val();
-
-            const department = $('#department').val();
-
-            const year = $('#yearSelect').val();
-
-
-
-            // Note: You need to create a route and controller method for this export.
-
-            // For example: Route::get('/admin/laporan/export', [AdminController::class, 'exportReport'])->name('admin.laporan.export');
-
-            const exportUrl =
-                `{{ route('admin.laporan') }}/export?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
-
-
-
-            alert(`Fungsi ekspor belum diimplementasikan di backend. URL yang akan digunakan: ${exportUrl}`);
-
-            // window.location.href = exportUrl; // Uncomment this line when backend is ready
-
-        }
-    </script>
-
-    <script>
-        // ========== NOTIFICATION SYSTEM ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            let notifications = [];
-            const notificationList = document.getElementById('notificationList');
-            const notificationBadge = document.getElementById('notificationBadge');
-            const markAllReadBtn = document.getElementById('markAllRead');
-            const clearNotificationsBtn = document.getElementById('clearNotifications');
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
-            async function fetchNotifications() {
-                try {
-                    const response = await fetch('{{ route('admin.notifications.index') }}');
-                    if (!response.ok) throw new Error('Failed to fetch');
-                    const data = await response.json();
-                    
-                    notifications = data.notifications || [];
-                    renderNotifications();
-
-                } catch (error) {
-                    console.error('Failed to fetch notifications:', error);
-                    if (notificationList) {
+    
+                function renderNotifications() {
+                    if (!notificationList) return;
+                    notificationList.innerHTML = '';
+    
+                    if (notifications.length === 0) {
                         notificationList.innerHTML = `
                             <div class="notification-empty">
-                                <i class="fas fa-exclamation-triangle text-danger"></i>
-                                <p>Gagal memuat notifikasi</p>
+                                <i class="fas fa-check-circle"></i>
+                                <p>Tidak ada notifikasi baru</p>
                             </div>
                         `;
+                    } else {
+                        notifications.forEach(notif => {
+                            const item = document.createElement('a');
+                            item.href = notif.url || '#';
+                            item.className = `notification-item ${!notif.read ? 'unread' : ''}`;
+                            item.dataset.id = notif.id;
+    
+                            item.innerHTML = `
+                                <div class="notification-icon ${notif.type || 'info'}">
+                                    <i class="fas ${notif.icon || 'fa-info-circle'}"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">${notif.title}</div>
+                                    <div class="notification-message">${notif.message}</div>
+                                    <div class="notification-time">
+                                        <i class="fas fa-clock"></i>
+                                        <span>${notif.time}</span>
+                                    </div>
+                                </div>
+                            `;
+    
+                            item.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                markAsRead(notif.id).then(() => {
+                                    window.location.href = notif.url || '#';
+                                });
+                            });
+    
+                            notificationList.appendChild(item);
+                        });
+                    }
+                    updateBadge();
+                }
+    
+                function updateBadge() {
+                    if (!notificationBadge) return;
+                    const unreadCount = notifications.filter(n => !n.read).length;
+                    notificationBadge.textContent = unreadCount;
+                    if (unreadCount > 0) {
+                        notificationBadge.style.display = 'flex';
+                    } else {
+                        notificationBadge.style.display = 'none';
                     }
                 }
-            }
-
-            function renderNotifications() {
-                if (!notificationList) return;
-                notificationList.innerHTML = '';
+    
+                            async function markAsRead(id) {
+                                const notification = notifications.find(n => n.id === id);
+                                // Only proceed if the notification exists and is unread
+                                if (notification && !notification.read) {
+                                    notification.read = true; // Optimistic update for model
                 
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = `
-                        <div class="notification-empty">
-                            <i class="fas fa-check-circle"></i>
-                            <p>Tidak ada notifikasi baru</p>
-                        </div>
-                    `;
-                } else {
-                    notifications.forEach(notif => {
-                        const item = document.createElement('a');
-                        item.href = notif.url || '#';
-                        item.className = `notification-item ${!notif.read ? 'unread' : ''}`;
-                        item.dataset.id = notif.id;
-                        
-                        item.innerHTML = `
-                            <div class="notification-icon ${notif.type || 'info'}">
-                                <i class="fas ${notif.icon || 'fa-info-circle'}"></i>
-                            </div>
-                            <div class="notification-content">
-                                <div class="notification-title">${notif.title}</div>
-                                <div class="notification-message">${notif.message}</div>
-                                <div class="notification-time">
-                                    <i class="fas fa-clock"></i>
-                                    <span>${notif.time}</span>
-                                </div>
-                            </div>
-                        `;
-                        
-                        item.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            markAsRead(notif.id).then(() => {
-                                window.location.href = notif.url || '#';
-                            });
-                        });
-                        
-                        notificationList.appendChild(item);
-                    });
-                }
-                updateBadge();
-            }
-
-            function updateBadge() {
-                if (!notificationBadge) return;
-                const unreadCount = notifications.filter(n => !n.read).length;
-                notificationBadge.textContent = unreadCount;
-                if (unreadCount > 0) {
-                    notificationBadge.style.display = 'flex';
-                } else {
-                    notificationBadge.style.display = 'none';
-                }
-            }
-
-            async function markAsRead(id) {
-                const notification = notifications.find(n => n.id === id);
-                if (notification && !notification.read) {
-                    notification.read = true;
+                                    // UI update:
+                                    const itemElement = notificationList.querySelector(`.notification-item[data-id="${id}"]`);
+                                    if (itemElement) {
+                                        itemElement.classList.remove('unread');
+                                    }
+                                    updateBadge();
+                
+                                    try {
+                                        await fetch(`/admin/notifications/${id}/mark-as-read`, {
+                                            method: 'POST',
+                                            headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                                        });
+                                    } catch (error) {
+                                        console.error(`Failed to mark notification ${id} as read:`, error);
+                                        // Revert on failure
+                                        notification.read = false; // revert model
+                                        if (itemElement) {
+                                            itemElement.classList.add('unread');
+                                        }
+                                        updateBadge();
+                                    }
+                                }
+                            }    
+                async function markAllAsRead() {
+                    const currentlyUnread = notifications.filter(n => !n.read);
+                    if (currentlyUnread.length === 0) return;
+    
+                    notifications.forEach(n => n.read = true);
                     renderNotifications();
+                    showToast('success', 'Berhasil', 'Semua notifikasi telah ditandai sebagai dibaca');
                     try {
-                        await fetch(`/admin/notifications/${id}/mark-as-read`, {
+                        await fetch('{{ route('admin.notifications.markAllAsRead') }}', {
                             method: 'POST',
                             headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
                         });
                     } catch (error) {
-                        console.error(`Failed to mark notification ${id} as read:`, error);
-                        notification.read = false;
+                        console.error('Failed to mark all as read:', error);
+                        currentlyUnread.forEach(notifToRevert => {
+                            const notif = notifications.find(n => n.id === notifToRevert.id);
+                            if (notif) notif.read = false;
+                        });
                         renderNotifications();
                     }
                 }
-            }
-
-            async function markAllAsRead() {
-                const currentlyUnread = notifications.filter(n => !n.read);
-                if (currentlyUnread.length === 0) return;
-
-                notifications.forEach(n => n.read = true);
-                renderNotifications();
-                try {
-                    await fetch('{{ route('admin.notifications.markAllAsRead') }}', {
-                        method: 'POST',
-                        headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
-                    });
-                } catch (error) {
-                    console.error('Failed to mark all as read:', error);
-                    currentlyUnread.forEach(notifToRevert => {
-                        const notif = notifications.find(n => n.id === notifToRevert.id);
-                        if (notif) notif.read = false;
-                    });
+    
+                async function clearAllNotifications() {
+                    const backupNotifications = [...notifications];
+                    notifications = [];
                     renderNotifications();
+                    showToast('info', 'Informasi', 'Semua notifikasi telah dihapus');
+                    try {
+                        await fetch('{{ route('admin.notifications.clearAll') }}', {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
+                        });
+                    } catch (error) {
+                        console.error('Failed to clear notifications:', error);
+                        notifications = backupNotifications;
+                        renderNotifications();
+                    }
+                }
+                // End Notification System
+    
+                // --- Original Event Listeners and other functions ---
+                initializeEventListeners(fetchNotifications, markAllAsRead, clearAllNotifications); // Pass notification functions
+                initializeTheme();
+                generateReport();
+                fetchNotifications(); // Initial fetch on page load
+            });
+    
+            function initializeEventListeners(fetchNotifications, markAllAsRead, clearAllNotifications) {
+                $('#theme-toggle').on('click', toggleTheme);
+                $('#menu-toggle').on('click', toggleSidebar);
+                $('#printBtn').on('click', () => {
+                    if (latestReportData) {
+                        populatePrintSection(latestReportData);
+                        setTimeout(() => { window.print(); }, 1000); // Increased timeout for rendering
+                    } else {
+                        alert('Silakan generate laporan terlebih dahulu sebelum mencetak.');
+                    }
+                });
+                $('#exportBtn').on('click', exportReport);
+                $('#generateBtn').on('click', generateReport);
+                $('#yearSelect').on('change', generateReport);
+                $('#report-type').on('change', generateReport);
+    
+                // Notification listeners
+                // Now referring to the functions defined within $(document).ready()
+                if (document.getElementById('markAllRead')) {
+                    document.getElementById('markAllRead').addEventListener('click', markAllAsRead);
+                }
+                if (document.getElementById('clearNotifications')) {
+                    document.getElementById('clearNotifications').addEventListener('click', clearAllNotifications);
                 }
             }
-
-            async function clearAllNotifications() {
-                const backupNotifications = [...notifications];
-                notifications = [];
-                renderNotifications();
-                try {
-                    await fetch('{{ route('admin.notifications.clearAll') }}', {
-                        method: 'POST',
-                        headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json' }
-                    });
-                } catch (error) {
-                    console.error('Failed to clear notifications:', error);
-                    notifications = backupNotifications;
-                    renderNotifications();
+    
+            function initializeTheme() {
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                    $('#theme-toggle').html('<i class="fas fa-sun"></i>');
                 }
             }
-            
-            // Initialize listeners
-            if (markAllReadBtn) {
-                markAllReadBtn.addEventListener('click', markAllAsRead);
+    
+            function toggleTheme() {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+                $('#theme-toggle').html(isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
+                updateChartColors();
             }
-            if (clearNotificationsBtn) {
-                clearNotificationsBtn.addEventListener('click', clearAllNotifications);
+    
+            function toggleSidebar() { /* ... */ }
+    
+            function updateUI(data) {
+                latestReportData = data; // Store the data
+                const uiConfig = data.uiConfig;
+                const stats = data.stats;
+    
+                // 1. Update Stats Cards
+                const statsContainer = $('.stats-container');
+                statsContainer.empty();
+                const icons = ['fa-hand-holding', 'fa-building', 'fa-video', 'fa-times-circle', 'fa-users', 'fa-clock', 'fa-box', 'fa-undo'];
+                const colors = ['primary', 'success', 'warning', 'danger'];
+                let i = 0;
+                for (const key in stats) {
+                    const title = uiConfig.stat_titles[i] || key;
+                    const value = stats[key];
+                    statsContainer.append(`<div class="stat-card"><div class="stat-icon ${colors[i % colors.length]}"><i class="fas ${icons[i % icons.length]}"></i></div><div class="stat-info"><h3>${value}</h3><p>${title}</p></div></div>`);
+                    i++;
+                }
+    
+                // 2. Update Chart Titles
+                $('#monthlyChartTitle').text(uiConfig.chart_titles[0]);
+                $('#distributionChartTitle').text(uiConfig.chart_titles[1]);
+    
+                // 3. Update Recent Activity
+                const activityList = $('#recentActivityList');
+                activityList.empty();
+                if (data.recentActivity && data.recentActivity.length > 0) {
+                    data.recentActivity.forEach(item => {
+                        let iconClass = 'primary';
+                        if (item.status === 'selesai' || item.status === 'disetujui') iconClass = 'success';
+                        if (item.status === 'ditolak') iconClass = 'danger';
+                        if (item.status === 'pending') iconClass = 'warning';
+                        activityList.append(`<li class="activity-item"><div class="activity-icon ${iconClass}"><i class="fas fa-hand-holding"></i></div><div class="activity-content"><div class="activity-title">${item.title}</div><div class="activity-desc">${item.description}</div><div class="activity-time">${item.time}</div></div></li>`);
+                    });
+                } else {
+                    activityList.append('<li class="text-center p-3 text-muted">Tidak ada aktivitas terbaru.</li>');
+                }
+    
+                // 4. Update Charts
+                updateCharts(data);
+    
+                // 5. Populate Print Section
+                populatePrintSection(data);
             }
-
-            // Initial fetch and polling
-            fetchNotifications();
-            setInterval(fetchNotifications, 15000);
-        });
-    </script>
-
+    
+            function updateCharts(data) {
+                 const isDarkMode = document.body.classList.contains('dark-mode');
+                if (monthlyChart) monthlyChart.destroy();
+                monthlyChart = new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                        datasets: [{ label: 'Jumlah', data: data.monthlyChart, backgroundColor: isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)', borderColor: isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)', borderWidth: 1, borderRadius: 4 }]
+                    },
+                    options: getChartOptions()
+                });
+                if (distributionChart) distributionChart.destroy();
+                distributionChart = new Chart(document.getElementById('distributionChart').getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.distributionChart.labels,
+                        datasets: [{ data: data.distributionChart.data, backgroundColor: ['rgba(59, 89, 152, 0.8)', 'rgba(76, 175, 80, 0.8)', 'rgba(255, 152, 0, 0.8)', 'rgba(155, 89, 182, 0.8)'], borderColor: isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)', borderWidth: 2, hoverOffset: 15 }]
+                    },
+                    options: getDoughnutChartOptions()
+                });
+            }
+    
+            function populatePrintSection(data) {
+                const reportType = $('#report-type option:selected').text();
+                const dateRange = $('#date-range option:selected').text();
+                $('#print-title').text(`${reportType} - ${dateRange}`);
+                const monthlyTable = $('#print-summary-monthly-table');
+                monthlyTable.empty().append('<thead><tr><th>Bulan</th><th>Jumlah</th></tr></thead>');
+                const monthlyBody = $('<tbody></tbody>');
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                months.forEach((month, index) => { monthlyBody.append(`<tr><td>${month}</td><td>${data.monthlyChart[index] || 0}</td></tr>`); });
+                monthlyTable.append(monthlyBody);
+                const distTable = $('#print-summary-dist-table');
+                distTable.empty().append('<thead><tr><th>Tipe</th><th>Jumlah</th></tr></thead>');
+                const distBody = $('<tbody></tbody>');
+                data.distributionChart.labels.forEach((label, index) => { distBody.append(`<tr><td>${label}</td><td>${data.distributionChart.data[index] || 0}</td></tr>`); });
+                distTable.append(distBody);
+                const mainTable = $('#print-main-data-table');
+                const mainThead = mainTable.find('thead').empty();
+                const mainTbody = mainTable.find('tbody').empty();
+                if(data.mainData && data.mainData.length > 0) {
+                    const headers = Object.keys(data.mainData[0]);
+                    let headerRow = '<tr>';
+                    headers.forEach(h => headerRow += `<th>${h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`);
+                    headerRow += '</tr>';
+                    mainThead.append(headerRow);
+                    data.mainData.forEach(row => {
+                        let tableRow = '<tr>';
+                        headers.forEach(h => tableRow += `<td>${row[h] || 'N/A'}</td>`);
+                        tableRow += '</tr>';
+                        mainTbody.append(tableRow);
+                    });
+                } else {
+                     mainThead.append('<tr><th>Info</th></tr>');
+                     mainTbody.append('<tr><td>Tidak ada data detail untuk ditampilkan.</td></tr>');
+                }
+                setTimeout(() => {
+                    if (monthlyChart) { $('#print-monthly-chart-img').attr('src', monthlyChart.toBase64Image()); }
+                    if (distributionChart) { $('#print-dist-chart-img').attr('src', distributionChart.toBase64Image()); }
+                }, 500);
+            }
+    
+            function getChartOptions() {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                return { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' }, ticks: { color: isDarkMode ? '#a0a0a0' : '#495057' } }, x: { grid: { display: false }, ticks: { color: isDarkMode ? '#a0a0a0' : '#495057' } } }, plugins: { legend: { display: false }, tooltip: getTooltipOptions() } };
+            }
+    
+            function getDoughnutChartOptions() {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                return { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: isDarkMode ? '#a0a0a0' : '#495057', padding: 20, usePointStyle: true, pointStyle: 'circle' } }, tooltip: getTooltipOptions() } };
+            }
+    
+            function getTooltipOptions() {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                return { backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)', titleColor: isDarkMode ? '#fff' : '#000', bodyColor: isDarkMode ? '#fff' : '#000', borderColor: isDarkMode ? '#333' : '#ddd', borderWidth: 1 };
+            }
+    
+            function updateChartColors() {
+                if (monthlyChart) {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    monthlyChart.options = getChartOptions();
+                    monthlyChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(59, 89, 152, 0.7)' : 'rgba(59, 89, 152, 0.8)';
+                    monthlyChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(59, 89, 152, 0.9)' : 'rgba(59, 89, 152, 1)';
+                    monthlyChart.update();
+                }
+                if (distributionChart) {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    distributionChart.options = getDoughnutChartOptions();
+                    distributionChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+                    distributionChart.update();
+                }
+            }
+    
+            function generateReport() {
+                const reportType = $('#report-type').val();
+                const dateRange = $('#date-range').val();
+                const department = $('#department').val();
+                const year = $('#yearSelect').val();
+                const btn = $('#generateBtn');
+                const originalHtml = btn.html();
+                btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Generating...');
+                btn.prop('disabled', true);
+                const url = `{{ route('admin.laporan.data') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
+                fetch(url, { headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), 'Accept': 'application/json' } })
+                    .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+                    .then(data => { updateUI(data); })
+                    .catch(error => { console.error('Error fetching report data:', error); showToast('danger', 'Error', 'Gagal memuat data laporan. Silakan coba lagi.'); })
+                    .finally(() => { btn.html(originalHtml).prop('disabled', false); });
+            }
+    
+            function exportReport() {
+                const reportType = $('#report-type').val();
+                const dateRange = $('#date-range').val();
+                const department = $('#department').val();
+                const year = $('#yearSelect').val();
+                const exportUrl = `{{ route('admin.laporan.export') }}?report_type=${reportType}&date_range=${dateRange}&department=${department}&year=${year}`;
+                window.location.href = exportUrl;
+            }
+        </script>
 </body>
 
 </html>
