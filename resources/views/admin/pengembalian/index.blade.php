@@ -1773,6 +1773,7 @@
                                             <button type="button" class="btn btn-warning-custom btn-sm"
                                                 data-bs-toggle="modal" data-bs-target="#editModal"
                                                 {{-- ID pengembalian --}} data-id="{{ $pengembalian->id }}"
+                                                data-has-projector="{{ $pengembalian->peminjaman->projector ? '1' : '0' }}"
                                                 {{-- Kondisi --}}
                                                 data-kondisi-ruang="{{ $pengembalian->kondisi_ruang ?? '' }}"
                                                 data-kondisi-proyektor="{{ $pengembalian->kondisi_proyektor ?? '' }}"
@@ -1923,19 +1924,6 @@
                                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
                             </div>
                         </div>
-                        <div class="filter-group">
-                            <label for="ruang_filter">Ruang</label>
-                            <select id="ruang_filter" name="ruangan_id" class="form-select">
-                                <option value="">Semua Ruang</option>
-                                @if (isset($ruangans) && $ruangans->count())
-                                    @foreach ($ruangans as $r)
-                                        <option value="{{ $r->id }}"
-                                            {{ request('ruangan_id') == $r->id ? 'selected' : '' }}>
-                                            {{ $r->nama_ruangan }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary">Simpan Pengembalian</button>
@@ -2041,8 +2029,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="edit_kondisi_proyektor" class="form-label">Kondisi Proyektor</label>
-                                <select class="form-select" id="edit_kondisi_proyektor" name="kondisi_proyektor"
-                                    required>
+                                <select class="form-select" id="edit_kondisi_proyektor" name="kondisi_proyektor">
                                     <option value="">-- Pilih Kondisi --</option>
                                     <option value="baik">Baik</option>
                                     <option value="rusak_ringan">Rusak Ringan</option>
@@ -2157,6 +2144,14 @@
                         notificationList.innerHTML = `<div class="notification-empty"><i class="fas fa-exclamation-triangle text-danger"></i><p>Gagal memuat notifikasi</p></div>`;
                     }
                 }
+                if (editModal) {
+                    editModal.addEventListener('hidden.bs.modal', function() {
+                        const projSelect = document.getElementById('edit_kondisi_proyektor');
+                        if (projSelect) {
+                            projSelect.removeAttribute('disabled');
+                        }
+                    });
+                }
             }
 
             function renderNotifications() {
@@ -2231,14 +2226,43 @@
                 if (urlParams.get('search')) {
                     activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
                 }
+                // Status (map internal values to friendly labels)
                 if (urlParams.get('status')) {
-                    const statusText = {
-                        'belum_dikembalikan': 'Belum Dikembalikan',
-                        'dikembalikan': 'Dikembalikan',
-                        'terlambat': 'Terlambat'
-                    } [urlParams.get('status')] || urlParams.get('status');
+                    const rawStatus = urlParams.get('status');
+                    const statusMap = {
+                        'pending': 'Menunggu Verifikasi',
+                        'verified': 'Disetujui',
+                        'overdue': 'Terlambat',
+                        'rejected': 'Ditolak'
+                    };
+                    const statusText = statusMap[rawStatus] || rawStatus;
                     activeFilters.push(`Status: ${statusText}`);
                 }
+
+                // Ruang — resolve readable label from the select if possible
+                if (urlParams.get('ruangan_id')) {
+                    const ruangId = urlParams.get('ruangan_id');
+                    let ruangLabel = ruangId;
+                    const ruangSelect = document.getElementById('ruang_filter');
+                    if (ruangSelect) {
+                        const opt = ruangSelect.querySelector(`option[value="${ruangId}"]`);
+                        if (opt) ruangLabel = opt.textContent.trim();
+                    }
+                    activeFilters.push(`Ruang: ${ruangLabel}`);
+                }
+
+                // Proyektor — resolve readable label from the select if possible
+                if (urlParams.get('projector_id')) {
+                    const projId = urlParams.get('projector_id');
+                    let projLabel = projId;
+                    const projSelect = document.getElementById('projector_filter');
+                    if (projSelect) {
+                        const opt = projSelect.querySelector(`option[value="${projId}"]`);
+                        if (opt) projLabel = opt.textContent.trim();
+                    }
+                    activeFilters.push(`Proyektor: ${projLabel}`);
+                }
+
                 if (urlParams.get('date')) {
                     activeFilters.push(`Tanggal: ${urlParams.get('date')}`);
                 }
@@ -2381,7 +2405,20 @@
                         const id = button.getAttribute('data-id');
                         document.getElementById('editForm').action = `/admin/pengembalian/${id}`;
                         document.getElementById('edit_kondisi_ruang').value = button.getAttribute('data-kondisi-ruang') || '';
-                        document.getElementById('edit_kondisi_proyektor').value = button.getAttribute('data-kondisi-proyektor') || '';
+                        const projValue = button.getAttribute('data-kondisi-proyektor') || '';
+                        const projSelect = document.getElementById('edit_kondisi_proyektor');
+                        // If the peminjaman did not include a projector, disable the projector select
+                        const hasProjector = button.getAttribute('data-has-projector') === '1';
+                        if (projSelect) {
+                            if (!hasProjector) {
+                                projSelect.value = '';
+                                projSelect.setAttribute('disabled', 'disabled');
+                                projSelect.removeAttribute('required');
+                            } else {
+                                projSelect.removeAttribute('disabled');
+                                projSelect.value = projValue;
+                            }
+                        }
                         document.getElementById('edit_catatan').value = button.getAttribute('data-catatan') || '';
                         document.getElementById('edit_tanggal_pengembalian').value = button.getAttribute('data-tanggal-pengembalian') || '';
                         document.getElementById('edit_status').value = button.getAttribute('data-status') || 'pending';
