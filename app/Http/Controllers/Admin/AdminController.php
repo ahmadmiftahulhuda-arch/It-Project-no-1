@@ -163,10 +163,17 @@ class AdminController extends Controller
         // 2. Pengembalian yang diajukan user - dengan filter
         $query = \App\Models\Pengembalian::with(['peminjaman', 'user', 'peminjaman.ruangan', 'peminjaman.projector']);
 
-        // Filter ruangan
+        // Filter ruangan (by peminjaman.ruangan_id)
+        if ($request->has('ruangan_id') && $request->ruangan_id != '') {
+            $ruanganId = $request->ruangan_id;
+            $query->whereHas('peminjaman', function ($q) use ($ruanganId) {
+                $q->where('ruangan_id', $ruanganId);
+            });
+        }
+
+        // Filter proyektor (by peminjaman.projector_id)
         if ($request->has('projector_id') && $request->projector_id != '') {
             $projectorId = $request->projector_id;
-
             $query->whereHas('peminjaman', function ($q) use ($projectorId) {
                 $q->where('projector_id', $projectorId);
             });

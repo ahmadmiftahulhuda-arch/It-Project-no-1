@@ -2226,14 +2226,43 @@
                 if (urlParams.get('search')) {
                     activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
                 }
+                // Status (map internal values to friendly labels)
                 if (urlParams.get('status')) {
-                    const statusText = {
-                        'belum_dikembalikan': 'Belum Dikembalikan',
-                        'dikembalikan': 'Dikembalikan',
-                        'terlambat': 'Terlambat'
-                    } [urlParams.get('status')] || urlParams.get('status');
+                    const rawStatus = urlParams.get('status');
+                    const statusMap = {
+                        'pending': 'Menunggu Verifikasi',
+                        'verified': 'Disetujui',
+                        'overdue': 'Terlambat',
+                        'rejected': 'Ditolak'
+                    };
+                    const statusText = statusMap[rawStatus] || rawStatus;
                     activeFilters.push(`Status: ${statusText}`);
                 }
+
+                // Ruang — resolve readable label from the select if possible
+                if (urlParams.get('ruangan_id')) {
+                    const ruangId = urlParams.get('ruangan_id');
+                    let ruangLabel = ruangId;
+                    const ruangSelect = document.getElementById('ruang_filter');
+                    if (ruangSelect) {
+                        const opt = ruangSelect.querySelector(`option[value="${ruangId}"]`);
+                        if (opt) ruangLabel = opt.textContent.trim();
+                    }
+                    activeFilters.push(`Ruang: ${ruangLabel}`);
+                }
+
+                // Proyektor — resolve readable label from the select if possible
+                if (urlParams.get('projector_id')) {
+                    const projId = urlParams.get('projector_id');
+                    let projLabel = projId;
+                    const projSelect = document.getElementById('projector_filter');
+                    if (projSelect) {
+                        const opt = projSelect.querySelector(`option[value="${projId}"]`);
+                        if (opt) projLabel = opt.textContent.trim();
+                    }
+                    activeFilters.push(`Proyektor: ${projLabel}`);
+                }
+
                 if (urlParams.get('date')) {
                     activeFilters.push(`Tanggal: ${urlParams.get('date')}`);
                 }
