@@ -2890,44 +2890,126 @@
             // Tampilkan parameter filter yang aktif
             function showActiveFilters() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const activeFilters = [];
+                const parts = [];
 
-                if (urlParams.get('search')) {
-                    activeFilters.push(`Pencarian: "${urlParams.get('search')}"`);
-                }
-                if (urlParams.get('status')) {
-                    const statusText = {
-                        'disetujui': 'Disetujui',
-                        'ditolak': 'Ditolak',
-                        'pending': 'Menunggu',
-                        'selesai': 'Selesai',
-                        'berlangsung': 'Berlangsung'
-                    } [urlParams.get('status')] || urlParams.get('status');
-                    activeFilters.push(`Status: ${statusText}`);
-                }
-                if (urlParams.get('date_from') || urlParams.get('date_to')) {
-                    const dateFrom = urlParams.get('date_from') || '';
-                    const dateTo = urlParams.get('date_to') || '';
-                    activeFilters.push(`Periode: ${dateFrom} - ${dateTo}`);
-                }
+                const search = urlParams.get('search');
+                const status = urlParams.get('status');
+                const ruang = urlParams.get('ruangan_id');
+                const proj = urlParams.get('projector_id');
+                const date = urlParams.get('date');
+                const dateFrom = urlParams.get('date_from');
+                const dateTo = urlParams.get('date_to');
 
-                if (activeFilters.length > 0) {
+                // Use readableFilterLabel helper to build labels where possible
+                if (search) parts.push(readableFilterLabel('search', search));
+                if (status) parts.push(readableFilterLabel('status', status));
+                if (ruang) parts.push(readableFilterLabel('ruangan_id', ruang));
+                if (proj) parts.push(readableFilterLabel('projector_id', proj));
+                if (date) parts.push(readableFilterLabel('date', date));
+                if (dateFrom || dateTo) parts.push(`Periode: ${dateFrom || ''} - ${dateTo || ''}`);
+
+                if (parts.length > 0) {
                     const existingAlert = document.querySelector('.filter-alert');
-                    if (existingAlert) {
-                        existingAlert.remove();
-                    }
+                    if (existingAlert) existingAlert.remove();
 
                     const filterInfo = document.createElement('div');
                     filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
                     filterInfo.innerHTML = `
-                        <strong>Filter Aktif:</strong> ${activeFilters.join(', ')}
+                        <strong>Filter Aktif:</strong> ${parts.join(', ')}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    const container = document.querySelector('.filter-section') || document.body;
+                    container.appendChild(filterInfo);
+                }
+            }
+
+            // Build a human-readable label for a filter value
+            function readableFilterLabel(key, value) {
+                if (!value) return null;
+                if (key === 'status') {
+                    const map = {
+                        'pending': 'Menunggu',
+                        'disetujui': 'Disetujui',
+                        'ditolak': 'Ditolak',
+                        'selesai': 'Selesai',
+                        'berlangsung': 'Berlangsung',
+                        'terlambat': 'Terlambat',
+                        'overdue': 'Terlambat'
+                    };
+                    return `Status: ${map[value] || value}`;
+                }
+                if (key === 'ruangan_id') {
+                    const sel = document.getElementById('ruang_filter');
+                    if (sel) {
+                        const opt = sel.querySelector(`option[value="${value}"]`);
+                        return opt ? `Ruang: ${opt.textContent.trim()}` : null;
+                    }
+                }
+                if (key === 'projector_id') {
+                    const sel = document.getElementById('projector_filter');
+                    if (sel) {
+                        const opt = sel.querySelector(`option[value="${value}"]`);
+                        return opt ? `Proyektor: ${opt.textContent.trim()}` : null;
+                    }
+                }
+                if (key === 'date') {
+                    return `Tanggal: ${value}`;
+                }
+                if (key === 'search') {
+                    return `Pencarian: "${value}"`;
+                }
+                return null;
+            }
+
+            // Show filter alert from current URL (on load)
+            showActiveFilters();
+
+            // Show filter alert built from form values (called on change/submit)
+            function showActiveFiltersFromForm() {
+                const activeFilters = [];
+                const status = document.getElementById('status_filter')?.value || '';
+                const ruang = document.getElementById('ruang_filter')?.value || '';
+                const proj = document.getElementById('projector_filter')?.value || '';
+                const date = document.getElementById('date_filter')?.value || '';
+                const search = document.querySelector('input[name="search"]')?.value || '';
+
+                const parts = [
+                    readableFilterLabel('status', status),
+                    readableFilterLabel('ruangan_id', ruang),
+                    readableFilterLabel('projector_id', proj),
+                    readableFilterLabel('date', date),
+                    readableFilterLabel('search', search)
+                ].filter(Boolean);
+
+                const existingAlert = document.querySelector('.filter-alert');
+                if (existingAlert) existingAlert.remove();
+
+                if (parts.length > 0) {
+                    const filterInfo = document.createElement('div');
+                    filterInfo.className = 'alert alert-info alert-dismissible fade show mt-3 filter-alert';
+                    filterInfo.innerHTML = `
+                        <strong>Filter Aktif:</strong> ${parts.join(', ')}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     `;
                     document.querySelector('.filter-section').appendChild(filterInfo);
                 }
             }
 
-            showActiveFilters();
+            // Wire up form change and submit to show the alert
+            const filterFormEl = document.getElementById('filterForm');
+            if (filterFormEl) {
+                // On submit, show the active filters (will also reload page)
+                filterFormEl.addEventListener('submit', function() {
+                    showActiveFiltersFromForm();
+                });
+
+                // On change of any control, show the alert immediately
+                filterFormEl.querySelectorAll('select, input').forEach(function(el) {
+                    el.addEventListener('change', function() {
+                        showActiveFiltersFromForm();
+                    });
+                });
+            }
 
             // Debug: Tampilkan jumlah data yang difilter
             const tableRows = document.querySelectorAll('tbody tr');

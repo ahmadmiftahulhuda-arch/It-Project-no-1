@@ -83,6 +83,21 @@ class AdminController extends Controller
             }
         }
 
+        // Filter ruangan (dropdown in view uses name=ruangan_id)
+        if ($request->has('ruangan_id') && $request->ruangan_id != '') {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
+
+        // Filter proyektor (dropdown in view uses name=projector_id)
+        if ($request->has('projector_id') && $request->projector_id != '') {
+            $query->where('projector_id', $request->projector_id);
+        }
+
+        // Single-date filter (view sends name=date)
+        if ($request->has('date') && $request->date != '') {
+            $query->whereDate('tanggal', $request->date);
+        }
+
         // Filter tanggal
         if ($request->has('date') && $request->date != '') {
             $query->whereDate('tanggal', $request->date);
@@ -288,6 +303,21 @@ class AdminController extends Controller
         // Filter tanggal sampai
         if ($request->has('date_to') && $request->date_to != '') {
             $query->whereDate('tanggal', '<=', $request->date_to);
+        }
+
+        // Filter ruangan (single dropdown name=ruangan_id in view)
+        if ($request->has('ruangan_id') && $request->ruangan_id != '') {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
+
+        // Filter proyektor (single dropdown name=projector_id in view)
+        if ($request->has('projector_id') && $request->projector_id != '') {
+            $query->where('projector_id', $request->projector_id);
+        }
+
+        // Single-date shortcut (view sends `date` for exact tanggal match)
+        if ($request->has('date') && $request->date != '') {
+            $query->whereDate('tanggal', $request->date);
         }
 
         // Hitung statistik untuk riwayat
