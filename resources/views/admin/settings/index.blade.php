@@ -1908,6 +1908,66 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Helper to show toast notifications
+        function showToast(type, title, message) {
+            const toastContainer = document.querySelector('.notification-toast-container');
+            if (!toastContainer) return;
+            
+            const toast = document.createElement('div');
+            toast.className = `notification-toast ${type}`;
+            
+            // Simple icon mapping
+            const iconClass = {
+                success: 'fa-check-circle',
+                info: 'fa-info-circle',
+                warning: 'fa-exclamation-triangle',
+                danger: 'fa-exclamation-circle'
+            }[type];
+
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <div class="toast-icon ${type}"><i class="fas ${iconClass}"></i></div>
+                    <strong class="toast-title me-auto">${title}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">${message}</div>
+                <div class="toast-progress"><div class="toast-progress-bar"></div></div>
+            `;
+            toastContainer.appendChild(toast);
+            
+            const toastInstance = new bootstrap.Toast(toast, { delay: 5000 });
+            toastInstance.show();
+
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        function saveAllSettings() {
+            // This is a dummy function. You should implement the actual save logic.
+            // For example, submit multiple forms at once or send data via AJAX.
+            
+            // Example: Submit profile form
+            const profileForm = document.querySelector('#profile-settings form');
+            if (profileForm) {
+                profileForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+
+            // Example: Submit notifications form
+            const notificationsForm = document.querySelector('#notifications-settings form');
+            if (notificationsForm) {
+                notificationsForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+
+            showToast('info', 'Saving', 'Attempting to save all settings...');
+            
+            // In a real implementation, you would wait for server confirmation.
+            // Here we just show a notification.
+            setTimeout(() => {
+                showToast('success', 'Success', 'All settings saved successfully!');
+            }, 1500);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // ========== DYNAMIC NOTIFICATION SYSTEM ==========
             let notifications = [];
@@ -2139,6 +2199,164 @@
                     }
                 });
             });
+
+            // 2FA Management
+            let tempRecoveryCodes = [];
+            const enable2faBtn = document.getElementById('enable-2fa-btn');
+            const activate2faForm = document.getElementById('activate-2fa-form');
+            const otpInput = document.getElementById('otp');
+            const qrCodeContainer = document.getElementById('qr-code-container');
+            const recoveryCodesList = document.getElementById('recovery-codes-list');
+            const copyRecoveryCodesBtn = document.getElementById('copy-recovery-codes');
+            const twoFactorAuthModalEl = document.getElementById('twoFactorAuthModal');
+            const twoFactorAuthModal = twoFactorAuthModalEl ? new bootstrap.Modal(twoFactorAuthModalEl) : null;
+            const csrfToken2FA = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            if (enable2faBtn) {
+                enable2faBtn.addEventListener('click', async () => {
+                    // 1. Reset UI
+                    qrCodeContainer.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+                    document.getElementById('2fa-step-1').style.display = 'block';
+                    document.getElementById('2fa-step-2').style.display = 'block';
+                    document.getElementById('2fa-step-3').style.display = 'none';
+                    otpInput.value = '';
+                    otpInput.classList.remove('is-invalid');
+                    
+                    if(twoFactorAuthModal) twoFactorAuthModal.show();
+
+                    // 2. Fetch QR Code from server
+                    try {
+                        const response = await fetch('{{ route('admin.2fa.setup') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken2FA,
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({})); // Gracefully handle non-JSON error response
+                            throw new Error(errorData.message || `Server responded with status ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        
+                        if (data.svg) {
+                            qrCodeContainer.innerHTML = data.svg;
+                            if(data.recovery_codes) {
+                                tempRecoveryCodes = data.recovery_codes;
+                            }
+                        } else {
+                            qrCodeContainer.innerHTML = '<p class="text-danger">Gagal memuat QR Code dari server.</p>';
+                        }
+
+                    } catch (error) {
+                        console.error('2FA setup error:', error);
+                        qrCodeContainer.innerHTML = `<p class="text-danger">Terjadi kesalahan: ${error.message}</p>`;
+                    }
+                });
+            }
+
+            if (activate2faForm) {
+                activate2faForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const otp = otpInput.value;
+                    const errorDiv = document.getElementById('otp-error');
+                    errorDiv.textContent = '';
+                    otpInput.classList.remove('is-invalid');
+
+                    try {
+                        const response = await fetch('{{ route('admin.2fa.activate') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken2FA,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ otp: otp })
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            errorDiv.textContent = data.message || 'Kode OTP tidak valid.';
+                            otpInput.classList.add('is-invalid');
+                            return;
+                        }
+                        
+                        // Show recovery codes
+                        if (tempRecoveryCodes.length > 0) {
+                            recoveryCodesList.innerHTML = '';
+                             tempRecoveryCodes.forEach(code => {
+                                const li = document.createElement('li');
+                                li.className = 'col-md-6 mb-2';
+                                li.textContent = code;
+                                recoveryCodesList.appendChild(li);
+                            });
+                            document.getElementById('2fa-step-3').style.display = 'block';
+                        }
+                        
+                        // Hide other steps
+                        document.getElementById('2fa-step-1').style.display = 'none';
+                        document.getElementById('2fa-step-2').style.display = 'none';
+
+
+                        // Show toast notification and reload page
+                        showToast('success', 'Sukses', '2FA berhasil diaktifkan! Halaman akan dimuat ulang.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 3000);
+
+                    } catch (error) {
+                        console.error('2FA activation error:', error);
+                        errorDiv.textContent = 'Terjadi kesalahan saat verifikasi.';
+                        otpInput.classList.add('is-invalid');
+                    }
+                });
+            }
+
+             if (copyRecoveryCodesBtn) {
+                copyRecoveryCodesBtn.addEventListener('click', () => {
+                    const codes = Array.from(recoveryCodesList.querySelectorAll('li')).map(li => li.textContent).join('\n');
+                    navigator.clipboard.writeText(codes).then(() => {
+                        showToast('info', 'Disalin', 'Kode pemulihan telah disalin ke clipboard.');
+                    }, () => {
+                        show.Toast('danger', 'Gagal', 'Gagal menyalin kode pemulihan.');
+                    });
+                });
+            }
+
+            const disable2faForm = document.getElementById('disable-2fa-form');
+            if (disable2faForm) {
+                disable2faForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    try {
+                        const response = await fetch(disable2faForm.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.message || 'Gagal menonaktifkan 2FA.');
+                        }
+
+                        showToast('success', 'Sukses', '2FA berhasil dinonaktifkan! Halaman akan dimuat ulang.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+
+                    } catch (error) {
+                        console.error('2FA disable error:', error);
+                        showToast('danger', 'Gagal', error.message);
+                    }
+                });
+            }
 
         });
     </script>

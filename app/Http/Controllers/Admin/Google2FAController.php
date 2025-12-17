@@ -65,10 +65,10 @@ class Google2FAController extends Controller
             $svg = $writer->writeString($otpAuthUri);
             
             // Create a base64 Data URI for the SVG
-            $qrCodeDataUri = 'data:image/svg+xml;base64,' . base64_encode($svg);
+            $svg = $writer->writeString($otpAuthUri);
 
             return response()->json([
-                'qr_code_url' => $qrCodeDataUri,
+                'svg' => $svg,
                 'recovery_codes' => $recoveryCodes,
             ]);
         } catch (\Exception $e) {
