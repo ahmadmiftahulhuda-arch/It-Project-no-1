@@ -64,7 +64,11 @@ Route::get('/', function () {
     ));
 })->name('home');
 Route::view('/about', 'about')->name('about');
+use App\Http\Controllers\KalenderController;
+
 Route::view('/kalender', 'kalender');
+Route::get('/kalender/events', [KalenderController::class, 'events'])->name('kalender.events');
+Route::get('/kalender', [KalenderController::class, 'index'])->name('kalender.index');
 Route::view('/peminjaman1', 'peminjaman1');
 Route::view('/berita', 'berita');
 Route::view('/post', 'post');
