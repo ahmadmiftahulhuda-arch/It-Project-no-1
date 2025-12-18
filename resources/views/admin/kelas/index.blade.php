@@ -1507,6 +1507,9 @@
                 </div>
             @endforelse
         </div>
+        <div class="d-flex justify-content-center mt-4">
+            {{ $kelas->appends(request()->query())->links() }}
+        </div>
     </div>
 
     <div class="modal fade" id="modalTambahKelas" tabindex="-1">
