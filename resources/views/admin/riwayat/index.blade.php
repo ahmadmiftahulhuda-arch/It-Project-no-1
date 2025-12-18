@@ -1774,11 +1774,10 @@
                             <tbody id="riwayat-table-body">
                                 @forelse($riwayat as $item)
                                     @php
-                                        // Tentukan apakah peminjaman sedang berlangsung
-                                        $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
-                                        $isOngoing = $isToday && $item->status == 'disetujui';
-                                        // Tentukan pengembalian dan keterlambatan lebih awal untuk dipakai di beberapa kolom
+                                        // Tentukan pengembalian dan apakah peminjaman masih berlaku
+                                        // Jika belum ada pengembalian tercatat, anggap peminjaman masih berlangsung
                                         $pj = $item->pengembalian ?? null;
+                                        $isOngoing = ($item->status == 'disetujui') && empty($pj);
                                         $isLate = false;
                                         try {
                                             // Compute booking end datetime using waktu_selesai when available
@@ -2041,8 +2040,9 @@
                 <div class="table-container p-4">
                     @forelse($riwayat as $item)
                         @php
-                            $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
-                            $isOngoing = $isToday && $item->status == 'disetujui';
+                            // Jika belum ada pengembalian tercatat, anggap peminjaman masih berlangsung
+                            $pj = $item->pengembalian ?? null;
+                            $isOngoing = ($item->status == 'disetujui') && empty($pj);
                         @endphp
 
                         <div class="timeline-item">

@@ -152,8 +152,14 @@ class Peminjaman extends Model
             $end = null;
         }
 
-        if ($this->status === 'disetujui' && $start && $end) {
-            if ($now->between($start, $end)) return true;
+        if ($this->status === 'disetujui' && $start) {
+            // If current time is within the booking window → ongoing
+            if ($end && $now->between($start, $end)) return true;
+            // If booking has started and ended but user hasn't submitted pengembalian,
+            // keep it considered 'ongoing' (still in use) until pengembalian is recorded.
+            if ($end && $now->gt($end) && !$this->pengembalian) return true;
+            // If no explicit end time, consider ongoing once started
+            if (!$end && $now->gte($start) && !$this->pengembalian) return true;
         }
 
         // Fallback: if booking is today, compare H:i strings
