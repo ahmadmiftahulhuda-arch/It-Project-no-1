@@ -1028,6 +1028,7 @@
 
             <form action="{{ route('admin.spk.scores.save') }}" method="POST">
                 @csrf
+                <input type="hidden" name="filter_date" value="{{ $filterDate }}">
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-spk align-middle">
@@ -1049,24 +1050,24 @@
                                     // ======================
                                     // K1 KEPERLUAN (DARI TEKS USER)
                                     // ======================
-                                    $mapKeperluan = [
-                                        'perkuliahan' => 5,
-                                        'kelas pengganti' => 4,
-                                        'seminar' => 3,
-                                        'pkl' => 3,
-                                        'proposal' => 3,
-                                        'ujikom' => 3,
-                                        'mentoring' => 2,
-                                        'belajar' => 2,
-                                        'konsultasi' => 1,
-                                        'uas' => 1,
+                                    $k1 = 1;
+                                    $keperluanText = strtolower(trim($p->keperluan ?? ''));
+
+                                    $keperluanGroups = [
+                                        ['keywords' => ['perkuliahan'], 'score' => 5],
+                                        ['keywords' => ['kelas pengganti'], 'score' => 4],
+                                        ['keywords' => ['seminar', 'ta', 'tugas akhir', 'pkl', 'proposal', 'ujikom', 'uji kom', 'uji praktik'], 'score' => 3],
+                                        ['keywords' => ['mentoring'], 'score' => 2],
+                                        ['keywords' => ['belajar bersama', 'belajar', 'konsultasi krs', 'konsultasi', 'uas', 'uts'], 'score' => 1],
                                     ];
 
-                                    $k1 = 1;
-                                    foreach ($mapKeperluan as $key => $val) {
-                                        if (str_contains(strtolower($p->keperluan), $key)) {
-                                            $k1 = $val;
-                                            break;
+                                    foreach ($keperluanGroups as $group) {
+                                        foreach ($group['keywords'] as $kw) {
+                                            if ($kw === '') continue;
+                                            if (preg_match('/\\b' . preg_quote($kw, '/') . '\\b/u', $keperluanText)) {
+                                                $k1 = $group['score'];
+                                                break 2;
+                                            }
                                         }
                                     }
 
@@ -1084,15 +1085,22 @@
                                     // ======================
                                     // K4 CATATAN RIWAYAT (DARI FEEDBACK)
                                     // ======================
-                                    $k4 = 1; // default
-                                    if ($p->feedback) {
-                                        if ($p->feedback->rating === 'cukup') {
+                                        $k4 = 1; // default
+                                        // If the user has historical overdue returns, mark history as 'cukup' (0.5)
+                                        $userHadOverdue = in_array(optional($p->user)->id, $usersWithOverdue ?? []);
+
+                                        if ($p->feedback) {
+                                            if ($p->feedback->rating === 'buruk') {
+                                                $k4 = 0;
+                                            } elseif ($p->feedback->rating === 'cukup') {
+                                                $k4 = 0.5;
+                                            }
+                                        }
+
+                                        // If user ever had overdue, ensure k4 is at most 0.5 (unless explicit 'buruk')
+                                        if ($userHadOverdue && $k4 !== 0) {
                                             $k4 = 0.5;
                                         }
-                                        if ($p->feedback->rating === 'buruk') {
-                                            $k4 = 0;
-                                        }
-                                    }
 
                                     // ======================
                                     // K5 SARANA PRASARANA

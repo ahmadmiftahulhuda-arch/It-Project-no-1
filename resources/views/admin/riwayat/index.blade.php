@@ -1774,11 +1774,22 @@
                             <tbody id="riwayat-table-body">
                                 @forelse($riwayat as $item)
                                     @php
-                                        // Tentukan apakah peminjaman sedang berlangsung
-                                        $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
-                                        $isOngoing = $isToday && $item->status == 'disetujui';
-                                        // Tentukan pengembalian dan keterlambatan lebih awal untuk dipakai di beberapa kolom
+                                        // Tentukan pengembalian dan apakah peminjaman masih berlaku
+                                        // Hanya anggap 'berlangsung' jika status disetujui, belum ada pengembalian,
+                                        // dan tanggal peminjaman adalah hari ini atau sudah lewat (bukan untuk besok/masa depan)
                                         $pj = $item->pengembalian ?? null;
+                                        try {
+                                            $tanggalBooking = \Carbon\Carbon::parse($item->tanggal);
+                                        } catch (\Exception $e) {
+                                            $tanggalBooking = null;
+                                        }
+                                        $isOngoing = false;
+                                        if ($item->status == 'disetujui' && empty($pj) && $tanggalBooking) {
+                                            $today = \Carbon\Carbon::today();
+                                            if ($tanggalBooking->isToday() || $tanggalBooking->lt($today)) {
+                                                $isOngoing = true;
+                                            }
+                                        }
                                         $isLate = false;
                                         try {
                                             // Compute booking end datetime using waktu_selesai when available
@@ -2041,8 +2052,21 @@
                 <div class="table-container p-4">
                     @forelse($riwayat as $item)
                         @php
-                            $isToday = \Carbon\Carbon::parse($item->tanggal)->isToday();
-                            $isOngoing = $isToday && $item->status == 'disetujui';
+                            // Jika belum ada pengembalian tercatat, anggap peminjaman masih berlangsung
+                            // tetapi hanya untuk peminjaman hari ini atau yang sudah lewat — bukan jadwal di masa depan
+                            $pj = $item->pengembalian ?? null;
+                            try {
+                                $tanggalBooking = \Carbon\Carbon::parse($item->tanggal);
+                            } catch (\Exception $e) {
+                                $tanggalBooking = null;
+                            }
+                            $isOngoing = false;
+                            if ($item->status == 'disetujui' && empty($pj) && $tanggalBooking) {
+                                $today = \Carbon\Carbon::today();
+                                if ($tanggalBooking->isToday() || $tanggalBooking->lt($today)) {
+                                    $isOngoing = true;
+                                }
+                            }
                         @endphp
 
                         <div class="timeline-item">
@@ -2358,13 +2382,22 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Waktu Mulai</label>
-                                <input type="time" class="form-control" id="edit_waktu_mulai" name="waktu_mulai">
+                                <label class="form-label fw-bold">Waktu Mulai (Pilih Slot)</label>
+                                <select class="form-select" id="edit_waktu_mulai" name="waktu_mulai">
+                                    <option value="">-- Pilih Slot Waktu Mulai --</option>
+                                    @foreach($slotwaktu as $slot)
+                                        <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Waktu Selesai</label>
-                                <input type="time" class="form-control" id="edit_waktu_selesai"
-                                    name="waktu_selesai">
+                                <label class="form-label fw-bold">Waktu Selesai (Pilih Slot)</label>
+                                <select class="form-select" id="edit_waktu_selesai" name="waktu_selesai">
+                                    <option value="">-- Pilih Slot Waktu Selesai --</option>
+                                    @foreach($slotwaktu as $slot)
+                                        <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Catatan</label>
@@ -2793,8 +2826,44 @@
                     document.getElementById('edit_tanggal').value = normalizeDateForInput(tanggal);
                     document.getElementById('edit_ruangan_id').value = ruanganId || '';
                     document.getElementById('edit_projector_id').value = projectorId || '';
-                    document.getElementById('edit_waktu_mulai').value = normalizeTimeForInput(waktuMulai) || '';
-                    document.getElementById('edit_waktu_selesai').value = normalizeTimeForInput(waktuSelesai) || '';
+                    // If edit_waktu_* are selects populated with slot strings, try to match slot value.
+                    function selectOptionByTime(selectId, timeStr) {
+                        const sel = document.getElementById(selectId);
+                        if (!sel) return;
+                        if (!timeStr) { sel.value = ''; return; }
+                        // direct match
+                        for (let i = 0; i < sel.options.length; i++) {
+                            if (sel.options[i].value === timeStr) {
+                                    sel.value = sel.options[i].value;
+                                    sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                    return;
+                                }
+                        }
+                        const norm = normalizeTimeForInput(timeStr);
+                        if (norm) {
+                            for (let i = 0; i < sel.options.length; i++) {
+                                if (sel.options[i].value === norm) {
+                                        sel.value = sel.options[i].value;
+                                        sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                        return;
+                                    }
+                            }
+                            // fallback: choose option that contains the normalized time (e.g. "08:00 - 09:30")
+                            for (let i = 0; i < sel.options.length; i++) {
+                                if (sel.options[i].value.indexOf(norm) !== -1) {
+                                        sel.value = sel.options[i].value;
+                                        sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                        return;
+                                    }
+                            }
+                        }
+                        // else leave blank
+                        sel.value = '';
+                        sel.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+
+                    selectOptionByTime('edit_waktu_mulai', waktuMulai);
+                    selectOptionByTime('edit_waktu_selesai', waktuSelesai);
                     document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
                     document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
                     document.getElementById('edit_keperluan').value = keperluan;

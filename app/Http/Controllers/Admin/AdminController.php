@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\FonnteService; // <-- Ditambahkan
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\User;
@@ -13,13 +13,48 @@ use App\Models\Dosen;
 use App\Models\SlotWaktu;
 use Carbon\Carbon;
 use App\Exports\PeminjamanExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Pengembalian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exports\LaporanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
+    public function exportReport(Request $request)
+    {
+        $reportType = $request->input('report_type', 'peminjaman');
+        $dateRange = $request->input('date_range', 'month');
+        $year = $request->input('year', now()->year);
+        $today = Carbon::now();
+
+        $startDate = $today->copy()->startOfMonth();
+        $endDate = $today->copy()->endOfMonth();
+
+        switch ($dateRange) {
+            case 'week':
+                $startDate = $today->copy()->startOfWeek();
+                $endDate = $today->copy()->endOfWeek();
+                break;
+            case 'month':
+                // default is this month
+                break;
+            case 'quarter':
+                $startDate = $today->copy()->startOfQuarter();
+                $endDate = $today->copy()->endOfQuarter();
+                break;
+            case 'year':
+                $startDate = $today->copy()->startOfYear();
+                $endDate = $today->copy()->endOfYear();
+                break;
+        }
+
+        $fileName = "laporan_{$reportType}_{$dateRange}_{$year}.xlsx";
+
+        return Excel::download(new LaporanExport($reportType, $year, $startDate, $endDate), $fileName);
+    }
+
+
     /**
      * Display halaman peminjaman admin (menggantikan dashboard)
      */
@@ -122,12 +157,12 @@ class AdminController extends Controller
         $projectors = Projector::where('status', 'tersedia')->get();
         $dosens = Dosen::orderBy('nama_dosen')->get();
         $slotwaktu = SlotWaktu::orderBy('waktu', 'asc')->get();
-        
+
         $peminjamanNotifications = Peminjaman::with('user', 'ruangan')
             ->where('status', 'pending')
             ->latest()
             ->get();
-            
+
         $pengembalianNotifications = Pengembalian::with('user', 'peminjaman')
             ->where('status', 'pending')
             ->latest()
@@ -254,12 +289,12 @@ class AdminController extends Controller
         $totalReturns = Pengembalian::count();
 
         $totalReturns = \App\Models\Pengembalian::count();
-        
+
         $peminjamanNotifications = Peminjaman::with('user', 'ruangan')
             ->where('status', 'pending')
             ->latest()
             ->get();
-            
+
         $pengembalianNotifications = Pengembalian::with('user', 'peminjaman')
             ->where('status', 'pending')
             ->latest()
@@ -339,9 +374,10 @@ class AdminController extends Controller
 
         $riwayat = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        // Ambil data ruangan dan projector untuk dropdown di modal edit
+        // Ambil data ruangan, projector, dan slot waktu untuk dropdown di modal edit
         $ruangans = \App\Models\Ruangan::orderBy('nama_ruangan')->get();
         $projectors = \App\Models\Projector::orderBy('kode_proyektor')->get();
+        $slotwaktu = \App\Models\SlotWaktu::orderBy('waktu', 'asc')->get();
 
         return view('admin.riwayat.index', compact(
             'riwayat',
@@ -350,7 +386,8 @@ class AdminController extends Controller
             'ongoingCount',
             'totalCount',
             'ruangans',
-            'projectors'
+            'projectors',
+            'slotwaktu'
         ));
     }
 
@@ -720,7 +757,7 @@ class AdminController extends Controller
                     : 'Pengembalian berhasil diperbarui.'
             );
     }
-    
+
     /**
      * Hapus RIWAYAT peminjaman
      */
@@ -869,6 +906,39 @@ class AdminController extends Controller
         return view('admin.laporan', compact('years'));
     }
 
+    public function exportLaporan(Request $request)
+    {
+        $reportType = $request->input('report_type', 'peminjaman');
+        $dateRange = $request->input('date_range', 'month');
+        $year = $request->input('year', now()->year);
+        $today = Carbon::now();
+
+        $startDate = $today->copy()->startOfMonth();
+        $endDate = $today->copy()->endOfMonth();
+
+        switch ($dateRange) {
+            case 'week':
+                $startDate = $today->copy()->startOfWeek();
+                $endDate = $today->copy()->endOfWeek();
+                break;
+            case 'month':
+                // default is this month
+                break;
+            case 'quarter':
+                $startDate = $today->copy()->startOfQuarter();
+                $endDate = $today->copy()->endOfQuarter();
+                break;
+            case 'year':
+                $startDate = $today->copy()->startOfYear();
+                $endDate = $today->copy()->endOfYear();
+                break;
+        }
+
+        $fileName = "laporan_{$reportType}_{$dateRange}_{$year}.xlsx";
+
+        return Excel::download(new LaporanExport($reportType, $year, $startDate, $endDate), $fileName);
+    }
+    
     public function getReportData(Request $request)
     {
         $reportType = $request->input('report_type', 'peminjaman');
@@ -897,12 +967,145 @@ class AdminController extends Controller
                 break;
         }
 
+        // === Main Data for Print View ===
+        $mainData = [];
+        switch ($reportType) {
+            case 'keseluruhan':
+            case 'peminjaman':
+            case 'penggunaan':
+            default:
+                $mainDataQuery = Peminjaman::with('user', 'dosen', 'ruangan')
+                    ->whereBetween('tanggal', [$startDate, $endDate]);
+                $mainData = $mainDataQuery->orderBy('created_at', 'desc')->get()->map(function($peminjaman) {
+                    return [
+                        'id' => $peminjaman->id,
+                        'user' => $peminjaman->user->name ?? 'N/A',
+                        'tanggal' => $peminjaman->tanggal,
+                        'tanggal_kembali' => $peminjaman->tanggal_kembali,
+                        'dosen' => $peminjaman->dosen->nama_dosen ?? 'N/A',
+                        'keperluan' => $peminjaman->keperluan,
+                        'ruangan' => $peminjaman->ruangan->nama_ruangan ?? 'N/A',
+                        'status' => $peminjaman->status,
+                    ];
+                });
+                break;
+            case 'pengembalian':
+                $mainDataQuery = Pengembalian::with('peminjaman.user', 'peminjaman.ruangan')
+                    ->whereBetween('created_at', [$startDate, $endDate]);
+                $mainData = $mainDataQuery->orderBy('created_at', 'desc')->get()->map(function($pengembalian) {
+                    return [
+                        'id' => $pengembalian->id,
+                        'user' => $pengembalian->peminjaman->user->name ?? 'N/A',
+                        'tanggal_pengembalian' => $pengembalian->created_at->format('Y-m-d'),
+                        'ruangan' => $pengembalian->peminjaman->ruangan->nama_ruangan ?? 'N/A',
+                        'kondisi_ruang' => $pengembalian->kondisi_ruang,
+                        'kondisi_proyektor' => $pengembalian->kondisi_proyektor,
+                        'status' => $pengembalian->status,
+                    ];
+                });
+                break;
+            case 'inventaris':
+                $mainData = Ruangan::all()->map(function($ruangan) {
+                    return [
+                        'nama' => $ruangan->nama_ruangan,
+                        'kapasitas' => $ruangan->kapasitas,
+                        'fasilitas' => $ruangan->fasilitas,
+                        'status' => $ruangan->status,
+                    ];
+                })->merge(Projector::all()->map(function($projector) {
+                    return [
+                        'kode' => $projector->kode_proyektor,
+                        'merek' => $projector->merek,
+                        'status' => $projector->status,
+                    ];
+                }));
+                break;
+            case 'pengguna':
+                $mainData = User::withCount('peminjaman')->orderBy('peminjaman_count', 'desc')->get()->map(function($user) {
+                    return [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'peran' => $user->peran,
+                        'total_peminjaman' => $user->peminjaman_count,
+                    ];
+                });
+                break;
+        }
+        // ============================
+
+
         $stats = [];
         $monthlyChartData = [];
         $distributionChartData = [];
         $uiConfig = [];
 
         switch ($reportType) {
+            case 'keseluruhan':
+                // Gabungan semua statistik utama
+                $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
+                $stats = [
+                    'Total Peminjaman' => $peminjamanQuery->count(),
+                    'Total Ruangan' => Ruangan::count(),
+                    'Total Proyektor' => Projector::count(),
+                    'Total Pengguna' => User::count(),
+                    'Pengguna Aktif' => $peminjamanQuery->distinct('user_id')->count(),
+                    'Barang Rusak' => Pengembalian::whereBetween('created_at', [$startDate, $endDate])
+                        ->where(fn ($q) => $q->where('kondisi_ruang', 'like', 'rusak%')->orWhere('kondisi_proyektor', 'like', 'rusak%'))->count()
+                ];
+
+                // Monthly chart: Peminjaman bulanan
+                $monthlyData = Peminjaman::select(DB::raw('MONTH(tanggal) as month'), DB::raw('COUNT(*) as count'))
+                    ->whereYear('tanggal', $year)->groupBy('month')->orderBy('month')->pluck('count', 'month')->all();
+                for ($m = 1; $m <= 12; $m++) {
+                    $monthlyChartData[] = $monthlyData[$m] ?? 0;
+                }
+
+                // Distribution chart: Status peminjaman
+                $statusCounts = Peminjaman::whereBetween('tanggal', [$startDate, $endDate])
+                    ->select('status', DB::raw('COUNT(*) as count'))->groupBy('status')->pluck('count', 'status');
+                $distributionChartData = [
+                    'labels' => $statusCounts->keys()->all(),
+                    'data' => $statusCounts->values()->all()
+                ];
+                $uiConfig = [
+                    'stat_titles' => ['Total Peminjaman', 'Total Ruangan', 'Total Proyektor', 'Total Pengguna', 'Pengguna Aktif', 'Barang Rusak'],
+                    'chart_titles' => ['Peminjaman Bulanan', 'Distribusi Status Peminjaman']
+                ];
+                break;
+
+            case 'pengembalian':
+                $pengembalianQuery = Pengembalian::whereBetween('created_at', [$startDate, $endDate]);
+                $stats = [
+                    'Total Pengembalian' => $pengembalianQuery->count(),
+                    'Pengembalian Tepat Waktu' => $pengembalianQuery->where('status', 'tepat_waktu')->count(),
+                    'Pengembalian Terlambat' => $pengembalianQuery->where('status', 'terlambat')->count(),
+                    'Barang Rusak' => $pengembalianQuery->where(fn ($q) => $q->where('kondisi_ruang', 'like', 'rusak%')->orWhere('kondisi_proyektor', 'like', 'rusak%'))->count()
+                ];
+
+                // Monthly chart: Pengembalian bulanan
+                $monthlyData = Pengembalian::select(DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as count'))
+                    ->whereYear('created_at', $year)->groupBy('month')->orderBy('month')->pluck('count', 'month')->all();
+                for ($m = 1; $m <= 12; $m++) {
+                    $monthlyChartData[] = $monthlyData[$m] ?? 0;
+                }
+
+                // Distribution chart: Kondisi barang
+                $kondisiCounts = Pengembalian::whereBetween('created_at', [$startDate, $endDate])
+                    ->select(DB::raw("CASE 
+                        WHEN kondisi_ruang = 'baik' AND kondisi_proyektor = 'baik' THEN 'Baik'
+                        WHEN kondisi_ruang LIKE 'rusak%' OR kondisi_proyektor LIKE 'rusak%' THEN 'Rusak'
+                        ELSE 'Lainnya' END as kondisi"), DB::raw('COUNT(*) as count'))
+                    ->groupBy('kondisi')->pluck('count', 'kondisi');
+                $distributionChartData = [
+                    'labels' => $kondisiCounts->keys()->all(),
+                    'data' => $kondisiCounts->values()->all()
+                ];
+                $uiConfig = [
+                    'stat_titles' => ['Total Pengembalian', 'Tepat Waktu', 'Terlambat', 'Barang Rusak'],
+                    'chart_titles' => ['Pengembalian Bulanan', 'Distribusi Kondisi Barang']
+                ];
+                break;
+
             case 'penggunaan':
                 $peminjamanQuery = Peminjaman::whereBetween('tanggal', [$startDate, $endDate]);
 
@@ -923,7 +1126,7 @@ class AdminController extends Controller
                     ->groupBy('ruangan_id')->with('ruangan')->get();
 
                 $distributionChartData = [
-                    'labels' => $distribusiRuangan->map(fn($item) => $item->ruangan->nama_ruangan ?? 'N/A'),
+                    'labels' => $distribusiRuangan->map(fn ($item) => $item->ruangan->nama_ruangan ?? 'N/A'),
                     'data' => $distribusiRuangan->pluck('count')
                 ];
                 $uiConfig = [
@@ -954,7 +1157,7 @@ class AdminController extends Controller
                 break;
 
             case 'pengguna':
-                $userQuery = User::whereHas('peminjaman', fn($q) => $q->whereBetween('tanggal', [$startDate, $endDate]));
+                $userQuery = User::whereHas('peminjaman', fn ($q) => $q->whereBetween('tanggal', [$startDate, $endDate]));
                 $topUser = User::withCount('peminjaman')->orderBy('peminjaman_count', 'desc')->first();
 
                 $stats = [
@@ -983,7 +1186,7 @@ class AdminController extends Controller
                     'Barang Dipinjam' => $peminjamanQuery->clone()->whereIn('status', ['disetujui', 'selesai'])->count(),
                     'Pengguna Aktif' => $peminjamanQuery->clone()->distinct('user_id')->count('user_id'),
                     'Barang Rusak' => Pengembalian::whereBetween('created_at', [$startDate, $endDate])
-                        ->where(fn($q) => $q->where('kondisi_ruang', 'like', 'rusak%')->orWhere('kondisi_proyektor', 'like', 'rusak%'))->count()
+                        ->where(fn ($q) => $q->where('kondisi_ruang', 'like', 'rusak%')->orWhere('kondisi_proyektor', 'like', 'rusak%'))->count()
                 ];
 
                 $monthlyData = Peminjaman::select(DB::raw('MONTH(tanggal) as month'), DB::raw('COUNT(*) as count'))
@@ -1008,7 +1211,7 @@ class AdminController extends Controller
         }
 
         $recentActivity = Peminjaman::with('user', 'ruangan')->orderBy('created_at', 'desc')->take(5)
-            ->get()->map(fn($item) => [
+            ->get()->map(fn ($item) => [
                 'title' => 'Peminjaman ' . $item->status,
                 'description' => ($item->user->name ?? 'User') . ' meminjam ' . ($item->ruangan->nama_ruangan ?? 'ruangan'),
                 'time' => $item->created_at->diffForHumans(),
@@ -1020,6 +1223,7 @@ class AdminController extends Controller
             'monthlyChart' => $monthlyChartData,
             'distributionChart' => $distributionChartData,
             'recentActivity' => $recentActivity,
+            'mainData' => $mainData,
             'uiConfig' => $uiConfig
         ]);
     }
