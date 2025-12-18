@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Kelas;
-use App\Models\Mahasiswa; 
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Imports\MahasiswaImport;
 use App\Exports\MahasiswaExport;
@@ -11,32 +12,57 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class KelasController extends Controller
 {
-    public function index()
+    /**
+     * Tampilkan daftar kelas
+     */
+    public function index(Request $request)
     {
-        $kelas = Kelas::withCount('mahasiswa')->get();
+        // Query utama
+        $query = Kelas::withCount('mahasiswa');
 
-        // Hitung total mahasiswa keseluruhan
+        // 🔍 Search nama kelas
+        if ($request->filled('search')) {
+            $query->where('nama_kelas', 'like', '%' . $request->search . '%');
+        }
+
+        // 📄 Pagination
+        $kelas = $query->paginate(10)->withQueryString();
+
+        // 📊 Statistik GLOBAL
         $totalMahasiswa = Mahasiswa::count();
+        $totalKelas = Kelas::count();
 
-        // Hitung total kelas
-        $totalKelas = $kelas->count();
+        $rataRata = $totalKelas > 0
+            ? round($totalMahasiswa / $totalKelas, 2)
+            : 0;
 
-        // Hitung rata-rata
-        $rataRata = $totalKelas > 0 ? round($totalMahasiswa / $totalKelas, 2) : 0;
-
-        return view('admin.kelas.index', compact('kelas', 'totalMahasiswa', 'totalKelas', 'rataRata'));
+        return view('admin.kelas.index', compact(
+            'kelas',
+            'totalMahasiswa',
+            'totalKelas',
+            'rataRata'
+        ));
     }
-    
+
+    /**
+     * Simpan kelas baru
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:50|unique:kelas,nama_kelas'
+            'nama_kelas' => 'required|string|max:50|unique:kelas,nama_kelas',
         ]);
 
-        Kelas::create($request->all());
+        Kelas::create([
+            'nama_kelas' => $request->nama_kelas,
+        ]);
+
         return redirect()->back()->with('success', 'Kelas berhasil ditambahkan');
     }
 
+    /**
+     * Update data kelas
+     */
     public function update(Request $request, Kelas $kela)
     {
         $request->validate([
@@ -48,35 +74,60 @@ class KelasController extends Controller
             ],
         ]);
 
-        $kela->update($request->all());
-        return redirect()->back()->with('success', 'Kelas berhasil diupdate');
+        $kela->update([
+            'nama_kelas' => $request->nama_kelas,
+        ]);
+
+        return redirect()->back()->with('success', 'Kelas berhasil diperbarui');
     }
 
+    /**
+     * Hapus kelas
+     */
     public function destroy(Kelas $kela)
     {
         $kela->delete();
         return redirect()->back()->with('success', 'Kelas berhasil dihapus');
     }
 
+    /**
+     * Detail kelas & mahasiswa
+     */
     public function show(Kelas $kela)
     {
-        $mahasiswa = $kela->mahasiswa;
-        return view('admin.kelas.detail', compact('kela', 'mahasiswa'));
+        $mahasiswa = $kela->mahasiswa()->orderBy('nama')->get();
+
+        return view('admin.kelas.detail', compact(
+            'kela',
+            'mahasiswa'
+        ));
     }
 
+    /**
+     * Import mahasiswa ke kelas tertentu
+     */
     public function importMahasiswa(Request $request, $kelas_id)
     {
         $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        Excel::import(new MahasiswaImport($kelas_id), $request->file('file'));
+        Excel::import(
+            new MahasiswaImport($kelas_id),
+            $request->file('file')
+        );
 
         return redirect()->back()->with('success', 'Data mahasiswa berhasil diimport');
     }
 
+    /**
+     * Export mahasiswa per kelas
+     */
     public function exportMahasiswa(Kelas $kela)
     {
-        return Excel::download(new MahasiswaExport($kela->id), 'mahasiswa-' . $kela->nama_kelas . '.xlsx');
+        return Excel::download(
+            new MahasiswaExport($kela->id),
+            'mahasiswa-' . $kela->nama_kelas . '.xlsx'
+        );
     }
 }
