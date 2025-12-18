@@ -8,16 +8,15 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class MataKuliahImport implements ToModel, WithHeadingRow
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
     public function model(array $row)
     {
+        if (empty($row['nama'])) {
+            return null; // skip baris rusak
+        }
+
         return new MataKuliah([
-            'nama'     => $row['nama'],
-            'kode'    => $row['kode'],
+            'nama'     => trim($row['nama']),
+            'kode'     => $row['kode'],
             'semester' => $row['semester'],
         ]);
     }

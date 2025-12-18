@@ -224,6 +224,10 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
     Route::delete('/admin/kelas/{kela_id}/mahasiswa/destroy-all', [MahasiswaController::class, 'destroyAllByKelas'])->name('admin.kelas.mahasiswa.destroyAll');
+    // Route untuk pencarian AJAX
+    Route::get('/admin/kelas/{kelas}/mahasiswa/search', [MahasiswaController::class, 'searchByKelas'])->name('admin.kelas.mahasiswa.search');
+    // Route alternatif untuk halaman dengan pencarian GET
+    Route::get('/admin/kelas/{kelas}/detail', [MahasiswaController::class, 'showDetailWithSearch'])->name('admin.kelas.detail.search');
 
     // Route Dosen
     Route::resource('dosen', \App\Http\Controllers\Admin\DosenController::class);
