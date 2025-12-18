@@ -1775,9 +1775,21 @@
                                 @forelse($riwayat as $item)
                                     @php
                                         // Tentukan pengembalian dan apakah peminjaman masih berlaku
-                                        // Jika belum ada pengembalian tercatat, anggap peminjaman masih berlangsung
+                                        // Hanya anggap 'berlangsung' jika status disetujui, belum ada pengembalian,
+                                        // dan tanggal peminjaman adalah hari ini atau sudah lewat (bukan untuk besok/masa depan)
                                         $pj = $item->pengembalian ?? null;
-                                        $isOngoing = ($item->status == 'disetujui') && empty($pj);
+                                        try {
+                                            $tanggalBooking = \Carbon\Carbon::parse($item->tanggal);
+                                        } catch (\Exception $e) {
+                                            $tanggalBooking = null;
+                                        }
+                                        $isOngoing = false;
+                                        if ($item->status == 'disetujui' && empty($pj) && $tanggalBooking) {
+                                            $today = \Carbon\Carbon::today();
+                                            if ($tanggalBooking->isToday() || $tanggalBooking->lt($today)) {
+                                                $isOngoing = true;
+                                            }
+                                        }
                                         $isLate = false;
                                         try {
                                             // Compute booking end datetime using waktu_selesai when available
@@ -2041,8 +2053,20 @@
                     @forelse($riwayat as $item)
                         @php
                             // Jika belum ada pengembalian tercatat, anggap peminjaman masih berlangsung
+                            // tetapi hanya untuk peminjaman hari ini atau yang sudah lewat — bukan jadwal di masa depan
                             $pj = $item->pengembalian ?? null;
-                            $isOngoing = ($item->status == 'disetujui') && empty($pj);
+                            try {
+                                $tanggalBooking = \Carbon\Carbon::parse($item->tanggal);
+                            } catch (\Exception $e) {
+                                $tanggalBooking = null;
+                            }
+                            $isOngoing = false;
+                            if ($item->status == 'disetujui' && empty($pj) && $tanggalBooking) {
+                                $today = \Carbon\Carbon::today();
+                                if ($tanggalBooking->isToday() || $tanggalBooking->lt($today)) {
+                                    $isOngoing = true;
+                                }
+                            }
                         @endphp
 
                         <div class="timeline-item">
