@@ -374,9 +374,10 @@ class AdminController extends Controller
 
         $riwayat = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        // Ambil data ruangan dan projector untuk dropdown di modal edit
+        // Ambil data ruangan, projector, dan slot waktu untuk dropdown di modal edit
         $ruangans = \App\Models\Ruangan::orderBy('nama_ruangan')->get();
         $projectors = \App\Models\Projector::orderBy('kode_proyektor')->get();
+        $slotwaktu = \App\Models\SlotWaktu::orderBy('waktu', 'asc')->get();
 
         return view('admin.riwayat.index', compact(
             'riwayat',
@@ -385,7 +386,8 @@ class AdminController extends Controller
             'ongoingCount',
             'totalCount',
             'ruangans',
-            'projectors'
+            'projectors',
+            'slotwaktu'
         ));
     }
 
