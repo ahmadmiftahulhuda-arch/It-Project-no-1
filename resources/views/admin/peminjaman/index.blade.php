@@ -2018,8 +2018,19 @@
                                     </div>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label for="edit_keperluan" class="form-label">Keperluan</label>
-                                    <textarea class="form-control" id="edit_keperluan" name="keperluan" rows="3" required></textarea>
+                                    <label for="edit_keperluan_select" class="form-label">Keperluan</label>
+                                    <select id="edit_keperluan_select" class="form-select">
+                                        <option value="">-- Pilih Keperluan --</option>
+                                        <option value="Perkuliahan">Perkuliahan</option>
+                                        <option value="Kelas Pengganti">Kelas Pengganti</option>
+                                        <option value="Seminar TA/PKL/Proposal">Seminar TA/PKL/Proposal</option>
+                                        <option value="Ujikom">Ujikom</option>
+                                        <option value="Mentoring">Mentoring</option>
+                                        <option value="Belajar Bersama">Belajar Bersama</option>
+                                        <option value="Konsultasi KRS, UTS, UAS">Konsultasi KRS, UTS, UAS</option>
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" id="edit_keperluan" name="keperluan" rows="3" required readonly></textarea>
                                 </div>
                             </div>
                         </div>
@@ -2139,8 +2150,19 @@
 
                                 <!-- KEPERLUAN -->
                                 <div class="col-12 mb-3">
-                                    <label class="form-label">Keperluan</label>
-                                    <textarea name="keperluan" class="form-control" rows="3" required></textarea>
+                                    <label for="add_keperluan_select" class="form-label">Keperluan</label>
+                                    <select id="add_keperluan_select" class="form-select">
+                                        <option value="">-- Pilih Keperluan --</option>
+                                        <option value="Perkuliahan">Perkuliahan</option>
+                                        <option value="Kelas Pengganti">Kelas Pengganti</option>
+                                        <option value="Seminar TA/PKL/Proposal">Seminar TA/PKL/Proposal</option>
+                                        <option value="Ujikom">Ujikom</option>
+                                        <option value="Mentoring">Mentoring</option>
+                                        <option value="Belajar Bersama">Belajar Bersama</option>
+                                        <option value="Konsultasi KRS, UTS, UAS">Konsultasi KRS, UTS, UAS</option>
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                    <textarea name="keperluan" id="add_keperluan" class="form-control mt-2" rows="3" required readonly></textarea>
                                 </div>
 
                             </div>
@@ -2420,7 +2442,35 @@
                         document.getElementById('edit_waktu_mulai').value = (button.getAttribute('data-waktu-mulai') || '').substring(0,5);
                         document.getElementById('edit_waktu_selesai').value = (button.getAttribute('data-waktu-selesai') || '').substring(0,5);
                         document.getElementById('edit_ruangan_id').value = button.getAttribute('data-ruangan-id') || '';
-                        document.getElementById('edit_keperluan').value = button.getAttribute('data-keperluan');
+                        // Keperluan: try to match existing value to one of the predefined options.
+                        (function() {
+                            const raw = button.getAttribute('data-keperluan') || '';
+                            const sel = document.getElementById('edit_keperluan_select');
+                            const ta = document.getElementById('edit_keperluan');
+                            if (sel && ta) {
+                                let matched = false;
+                                for (let i = 0; i < sel.options.length; i++) {
+                                    const opt = sel.options[i].value || '';
+                                    if (opt && opt.toLowerCase() === raw.toLowerCase()) {
+                                        sel.value = opt;
+                                        ta.value = opt;
+                                        ta.readOnly = true;
+                                        matched = true;
+                                        break;
+                                    }
+                                }
+                                if (!matched) {
+                                    // not one of the predefined options -> treat as 'lainnya'
+                                    sel.value = 'lainnya';
+                                    ta.value = raw;
+                                    ta.readOnly = false;
+                                }
+                            } else {
+                                // fallback: set textarea if select not present
+                                const fallbackTa = document.getElementById('edit_keperluan');
+                                if (fallbackTa) fallbackTa.value = raw;
+                            }
+                        })();
                         document.getElementById('edit_status').value = button.getAttribute('data-status');
                         document.getElementById('edit_projector_id').value = button.getAttribute('data-projector-id') || '';
                         const dosenSelect = document.getElementById('edit_dosen_nip');
@@ -2429,6 +2479,32 @@
                         ongoingContainer.style.display = button.getAttribute('data-is-ongoing') === 'true' ? 'block' : 'none';
                     });
                 }
+
+                // Keperluan select/textarea behavior (add & edit)
+                function bindKeperluan(selectId, textareaId) {
+                    const sel = document.getElementById(selectId);
+                    const ta = document.getElementById(textareaId);
+                    if (!sel || !ta) return;
+                    // initialize state
+                    if (!sel.value) { ta.value = ''; ta.readOnly = true; }
+                    sel.addEventListener('change', function() {
+                        const v = (this.value || '').toString();
+                        if (!v) {
+                            ta.value = '';
+                            ta.readOnly = true;
+                        } else if (v === 'lainnya') {
+                            ta.value = '';
+                            ta.readOnly = false;
+                            ta.focus();
+                        } else {
+                            ta.value = v;
+                            ta.readOnly = true;
+                        }
+                    });
+                }
+
+                bindKeperluan('add_keperluan_select', 'add_keperluan');
+                bindKeperluan('edit_keperluan_select', 'edit_keperluan');
 
                 // Initialize form submission confirmation
                 document.querySelectorAll('form').forEach(form => {
