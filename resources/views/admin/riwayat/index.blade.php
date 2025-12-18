@@ -2354,7 +2354,18 @@
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Keperluan</label>
-                                <textarea class="form-control" id="edit_keperluan" name="keperluan" rows="3" required></textarea>
+                                <select id="edit_keperluan_select" class="form-select">
+                                    <option value="">-- Pilih Keperluan --</option>
+                                    <option value="Perkuliahan">Perkuliahan</option>
+                                    <option value="Kelas Pengganti">Kelas Pengganti</option>
+                                    <option value="Seminar TA/PKL/Proposal">Seminar TA/PKL/Proposal</option>
+                                    <option value="Ujikom">Ujikom</option>
+                                    <option value="Mentoring">Mentoring</option>
+                                    <option value="Belajar Bersama">Belajar Bersama</option>
+                                    <option value="Konsultasi KRS, UTS, UAS">Konsultasi KRS, UTS, UAS</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                                <textarea class="form-control mt-2" id="edit_keperluan" name="keperluan" rows="3" required readonly></textarea>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Status Pengembalian</label>
@@ -2371,7 +2382,7 @@
                                 <input type="date" class="form-control" id="edit_tanggal_pengembalian"
                                     name="tanggal_pengembalian">
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Status Peminjaman</label>
                                 <select class="form-select" id="edit_status" name="status" required>
                                     <option value="pending">Menunggu</option>
@@ -2382,18 +2393,18 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Waktu Mulai (Pilih Slot)</label>
+                                <label class="form-label fw-bold">Waktu Mulai</label>
                                 <select class="form-select" id="edit_waktu_mulai" name="waktu_mulai">
-                                    <option value="">-- Pilih Slot Waktu Mulai --</option>
+                                    <option value="">Pilih Slot</option>
                                     @foreach($slotwaktu as $slot)
                                         <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Waktu Selesai (Pilih Slot)</label>
+                                <label class="form-label fw-bold">Waktu Selesai</label>
                                 <select class="form-select" id="edit_waktu_selesai" name="waktu_selesai">
-                                    <option value="">-- Pilih Slot Waktu Selesai --</option>
+                                    <option value="">Pilih Slot</option>
                                     @foreach($slotwaktu as $slot)
                                         <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
                                     @endforeach
@@ -2830,31 +2841,31 @@
                     function selectOptionByTime(selectId, timeStr) {
                         const sel = document.getElementById(selectId);
                         if (!sel) return;
-                        if (!timeStr) { sel.value = ''; return; }
+                        if (!timeStr) { sel.value = ''; sel.dispatchEvent(new Event('change', { bubbles: true })); return; }
                         // direct match
                         for (let i = 0; i < sel.options.length; i++) {
                             if (sel.options[i].value === timeStr) {
-                                    sel.value = sel.options[i].value;
-                                    sel.dispatchEvent(new Event('change', { bubbles: true }));
-                                    return;
-                                }
+                                sel.value = sel.options[i].value;
+                                sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                return;
+                            }
                         }
                         const norm = normalizeTimeForInput(timeStr);
                         if (norm) {
                             for (let i = 0; i < sel.options.length; i++) {
                                 if (sel.options[i].value === norm) {
-                                        sel.value = sel.options[i].value;
-                                        sel.dispatchEvent(new Event('change', { bubbles: true }));
-                                        return;
-                                    }
+                                    sel.value = sel.options[i].value;
+                                    sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                    return;
+                                }
                             }
                             // fallback: choose option that contains the normalized time (e.g. "08:00 - 09:30")
                             for (let i = 0; i < sel.options.length; i++) {
                                 if (sel.options[i].value.indexOf(norm) !== -1) {
-                                        sel.value = sel.options[i].value;
-                                        sel.dispatchEvent(new Event('change', { bubbles: true }));
-                                        return;
-                                    }
+                                    sel.value = sel.options[i].value;
+                                    sel.dispatchEvent(new Event('change', { bubbles: true }));
+                                    return;
+                                }
                             }
                         }
                         // else leave blank
@@ -2866,7 +2877,37 @@
                     selectOptionByTime('edit_waktu_selesai', waktuSelesai);
                     document.getElementById('edit_pengembalian_status').value = statusPengembalian || '';
                     document.getElementById('edit_tanggal_pengembalian').value = tanggalPengembalian || '';
-                    document.getElementById('edit_keperluan').value = keperluan;
+
+                    // Keperluan: try to match existing value to one of the predefined options.
+                    (function() {
+                        const raw = keperluan || '';
+                        const sel = document.getElementById('edit_keperluan_select');
+                        const ta = document.getElementById('edit_keperluan');
+                        if (sel && ta) {
+                            let matched = false;
+                            for (let i = 0; i < sel.options.length; i++) {
+                                const opt = sel.options[i].value || '';
+                                if (opt && opt.toLowerCase() === raw.toLowerCase()) {
+                                    sel.value = opt;
+                                    ta.value = opt;
+                                    ta.readOnly = true;
+                                    matched = true;
+                                    break;
+                                }
+                            }
+                            if (!matched) {
+                                // not one of the predefined options -> treat as 'lainnya'
+                                sel.value = 'lainnya';
+                                ta.value = raw;
+                                ta.readOnly = false;
+                            }
+                        } else {
+                            // fallback: set textarea if select not present
+                            const fallbackTa = document.getElementById('edit_keperluan');
+                            if (fallbackTa) fallbackTa.value = raw;
+                        }
+                    })();
+
                     document.getElementById('edit_catatan').value = catatan || '';
 
                     // Handle status peminjaman
@@ -2893,6 +2934,22 @@
                     });
                 });
             }
+
+            // Bind keperluan select -> textarea behavior on riwayat page
+            function bindKeperluan(selectId, textareaId) {
+                const sel = document.getElementById(selectId);
+                const ta = document.getElementById(textareaId);
+                if (!sel || !ta) return;
+                if (!sel.value) { ta.value = ''; ta.readOnly = true; }
+                sel.addEventListener('change', function() {
+                    const v = (this.value || '').toString();
+                    if (!v) { ta.value = ''; ta.readOnly = true; }
+                    else if (v === 'lainnya') { ta.value = ''; ta.readOnly = false; ta.focus(); }
+                    else { ta.value = v; ta.readOnly = true; }
+                });
+            }
+
+            bindKeperluan('edit_keperluan_select', 'edit_keperluan');
 
             // Handler untuk modal hapus
             const deleteModal = document.getElementById('deleteModal');
