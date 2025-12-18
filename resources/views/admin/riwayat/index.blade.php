@@ -2371,7 +2371,7 @@
                                 <input type="date" class="form-control" id="edit_tanggal_pengembalian"
                                     name="tanggal_pengembalian">
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Status Peminjaman</label>
                                 <select class="form-select" id="edit_status" name="status" required>
                                     <option value="pending">Menunggu</option>
@@ -2382,18 +2382,18 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Waktu Mulai (Pilih Slot)</label>
+                                <label class="form-label fw-bold">Waktu Mulai</label>
                                 <select class="form-select" id="edit_waktu_mulai" name="waktu_mulai">
-                                    <option value="">-- Pilih Slot Waktu Mulai --</option>
+                                    <option value="">Pilih Slot</option>
                                     @foreach($slotwaktu as $slot)
                                         <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Waktu Selesai (Pilih Slot)</label>
+                                <label class="form-label fw-bold">Waktu Selesai</label>
                                 <select class="form-select" id="edit_waktu_selesai" name="waktu_selesai">
-                                    <option value="">-- Pilih Slot Waktu Selesai --</option>
+                                    <option value="">Pilih Slot</option>
                                     @foreach($slotwaktu as $slot)
                                         <option value="{{ $slot->waktu }}">{{ $slot->waktu }}</option>
                                     @endforeach
