@@ -109,6 +109,9 @@ class AuthController extends Controller
                 ->log('Admin logged in');
         }
 
+        // Catat Audit Trail resmi
+        \App\Models\AuditLog::record('LOGIN', 'Administrator (' . $user->name . ') berhasil login ke panel admin');
+
         return redirect()->intended(route('admin.dashboard'))->with('success', 'Login berhasil!');
     }
 
@@ -117,16 +120,19 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        // Log aktivitas sebelum logout (opsional)
-        if (Auth::check() && function_exists('activity')) {
+        // Log aktivitas sebelum logout
+        if (Auth::check()) {
             $user = Auth::user();
-            activity('auth')
-                ->causedBy($user)  // PERUBAHAN: causedBy() bukan performedOn()
-                ->withProperties([
-                    'ip' => $request->ip(),
-                    'user_agent' => $request->userAgent()
-                ])
-                ->log('Admin logged out');
+            if (function_exists('activity')) {
+                activity('auth')
+                    ->causedBy($user)
+                    ->withProperties([
+                        'ip' => $request->ip(),
+                        'user_agent' => $request->userAgent()
+                    ])
+                    ->log('Admin logged out');
+            }
+            \App\Models\AuditLog::record('LOGOUT', 'Administrator (' . $user->name . ') logout dari panel admin');
         }
 
         Auth::logout();

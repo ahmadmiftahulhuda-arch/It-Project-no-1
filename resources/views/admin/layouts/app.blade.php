@@ -1247,6 +1247,32 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Keamanan & RBAC (Hasil Integrasi) -->
+            @php
+                $isOnKeamananPage = request()->routeIs('admin.rbac.index') || request()->routeIs('admin.audit-logs.index');
+            @endphp
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#rbacMenu"
+                    aria-expanded="{{ $isOnKeamananPage ? 'true' : 'false' }}"
+                    aria-controls="rbacMenu">
+                    <span>Keamanan & Hak Akses</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse {{ $isOnKeamananPage ? 'show' : '' }}" id="rbacMenu">
+                    <a href="{{ route('admin.rbac.index') }}"
+                       class="dropdown-item {{ request()->routeIs('admin.rbac.index') ? 'active' : '' }}">
+                        <i class="fas fa-user-shield"></i>
+                        <span>RBAC & Peran</span>
+                    </a>
+                    <a href="{{ route('admin.audit-logs.index') }}"
+                       class="dropdown-item {{ request()->routeIs('admin.audit-logs.index') ? 'active' : '' }}">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Log Audit Sistem</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -24,14 +24,27 @@ class CheckUserRole
 
         $user = Auth::user();
 
-        // If the user's role is in the list of allowed roles, let them proceed.
+        // 1. Cek peran kolom database bawaan PINTER
         if (isset($user->peran) && in_array($user->peran, $roles)) {
             return $next($request);
         }
 
-        // If the user's role is not in the allowed list, redirect them.
+        // 2. Cek role Spatie Permission jika terpasang
+        if (method_exists($user, 'hasAnyRole')) {
+            try {
+                if ($user->hasAnyRole($roles)) {
+                    return $next($request);
+                }
+            } catch (\Throwable $e) {
+                // Lewati jika role belum terdaftar
+            }
+        }
+
         // Admins trying to access user pages are sent to the admin dashboard.
-        if (isset($user->peran) && $user->peran === 'Administrator') {
+        $isAdmin = (isset($user->peran) && in_array($user->peran, ['Administrator', 'Admin'])) ||
+                   (method_exists($user, 'hasAnyRole') && $user->hasAnyRole(['Administrator', 'Admin', 'Superadmin']));
+
+        if ($isAdmin) {
             return redirect()->route('admin.dashboard');
         }
 

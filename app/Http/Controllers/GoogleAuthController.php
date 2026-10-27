@@ -81,13 +81,24 @@ class GoogleAuthController extends Controller
                 }
 
                 $user = User::create($newUser);
+
+                // Sinkronkan peran ke Spatie Roles
+                if (!empty($user->peran) && method_exists($user, 'syncRoles')) {
+                    $user->syncRoles([$user->peran]);
+                }
             }
 
             // Login user
             Auth::login($user, true);
 
+            \App\Models\AuditLog::record('LOGIN_GOOGLE', "Pengguna ({$user->name} - {$user->email}) berhasil login menggunakan Google Auth.");
+
             // Redirect berdasarkan peran
-            if (strtolower($user->peran) === 'administrator' || strtolower($user->peran) === 'admin') {
+            $isAdmin = strtolower($user->peran ?? '') === 'administrator' ||
+                       strtolower($user->peran ?? '') === 'admin' ||
+                       (method_exists($user, 'hasAnyRole') && $user->hasAnyRole(['Administrator', 'Superadmin', 'Admin']));
+
+            if ($isAdmin) {
                 return redirect()->intended('/admin/dashboard');
             }
 

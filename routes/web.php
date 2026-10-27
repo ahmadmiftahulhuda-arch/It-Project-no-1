@@ -28,7 +28,6 @@ use App\Models\SlotWaktu;
 use App\Models\Projector;
 use App\Http\Controllers\Admin\AHPController;
 use App\Http\Controllers\Admin\SPKController;
-use App\Http\Controllers\Admin\SPKDummyController;
 use App\Http\Controllers\Admin\DosenController;
 use App\Http\Controllers\Admin\NotificationController;
 
@@ -133,9 +132,8 @@ Route::prefix('admin')->group(function () {
 
 
 // ================================
-// HALAMAN LOGIN DAN DASHBOARD (split for RBAC)
+// HALAMAN DASHBOARD USER (split for RBAC)
 // ================================
-Route::get('/login', fn() => view('auth.login'))->name('login');
 
 // Route group for Mahasiswa and Dosen
 Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function () {
@@ -145,7 +143,7 @@ Route::middleware(['auth', 'role:Mahasiswa,Dosen'])->group(function () {
 });
 
 // Route group for Administrator
-Route::middleware(['auth', 'role:Administrator'])->group(function () {
+Route::middleware(['auth', 'role:Administrator,Admin,Superadmin'])->group(function () {
     Route::get('/admin/dashboard-main', [AdminController::class, 'dashboard'])->name('dashboard'); // Keep old dashboard name if needed
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
 });
@@ -154,9 +152,7 @@ Route::middleware(['auth', 'role:Administrator'])->group(function () {
 // ADMIN ROUTES
 // ================================
 
-Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin')->group(function () {
-    // Dashboard is now defined in a separate group, but we can keep this for structure
-    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::middleware(['auth', 'role:Administrator,Admin,Superadmin', '2fa.verified'])->prefix('admin')->group(function () {
 
     Route::prefix('users')->name('admin.users.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
@@ -167,8 +163,8 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
         Route::post('/{user}/verify', [App\Http\Controllers\Admin\UserController::class, 'verify'])->name('verify');
     });
 
-
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
     // --- EKSPORT EXCEL FEEDBACK ---
     Route::get('/feedback/export', function (Request $request) {
         return Excel::download(new FeedbackExport($request), 'feedback.xlsx');
@@ -177,7 +173,7 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     // Feedback
     Route::resource('feedback', FeedbackController::class)->names('admin.feedback');
 
-    // Projector 
+    // Projector & Barangs
     Route::resource('projectors', ProjectorController::class)->except(['show']);
     Route::resource('barangs', \App\Http\Controllers\Admin\BarangController::class)->except(['show']);
 
@@ -186,21 +182,20 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::post('/jadwal-perkuliahan/import', [JadwalPerkuliahanController::class, 'import'])->name('jadwal-perkuliahan.import');
     Route::get('/template', [JadwalPerkuliahanController::class, 'downloadTemplate'])->name('template');
     Route::post('/jadwal-perkuliahan/delete-all', [JadwalPerkuliahanController::class, 'deleteAll'])->name('jadwal-perkuliahan.delete-all');
-    Route::get('/admin/jadwal-perkuliahan/export', [JadwalPerkuliahanController::class, 'export'])->name('jadwal-perkuliahan.export');
-
+    Route::get('/jadwal-perkuliahan/export', [JadwalPerkuliahanController::class, 'export'])->name('jadwal-perkuliahan.export');
 
     // Ruangan, Mata Kuliah, Slot Waktu
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('slotwaktu', App\Http\Controllers\SlotWaktuController::class);
-    });
-    Route::resource('ruangan', RuanganController::class);
+    Route::resource('ruangan', RuanganController::class)->names('admin.ruangan');
     Route::post('/ruangan/import', [RuanganController::class, 'import'])->name('ruangan.import');
+
+    Route::resource('slotwaktu', SlotWaktuController::class)->names('admin.slotwaktu');
     Route::post('/slotwaktu/import', [SlotWaktuController::class, 'import'])->name('slotwaktu.import');
+
+    Route::resource('mata_kuliah', MataKuliahController::class);
     Route::post('/mata_kuliah/import', [MataKuliahController::class, 'import'])->name('mata_kuliah.import');
     Route::get('/mata_kuliah/export', [MataKuliahController::class, 'export'])->name('mata_kuliah.export');
-    Route::resource('mata_kuliah', MataKuliahController::class);
-    Route::resource('slotwaktu', SlotWaktuController::class);
 
+    // Settings
     Route::get('/settings', [App\Http\Controllers\Admin\PengaturanController::class, 'index'])->name('admin.settings.index');
     Route::post('/settings/profile', [App\Http\Controllers\Admin\PengaturanController::class, 'updateProfile'])->name('admin.settings.profile');
     Route::post('/settings/password', [App\Http\Controllers\Admin\PengaturanController::class, 'updatePassword'])->name('admin.settings.password');
@@ -214,25 +209,20 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::post('/settings/2fa/disable', [App\Http\Controllers\Admin\Google2FAController::class, 'disable'])->name('admin.2fa.disable');
 
     // Kelas & Mahasiswa
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('kelas', KelasController::class);
-        Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('kelas.importMahasiswa');
-        Route::get('/kelas/{kela}/mahasiswa/export', [KelasController::class, 'exportMahasiswa'])->name('kelas.mahasiswa.export');
-    });
-    Route::resource('kelas', KelasController::class);
+    Route::resource('kelas', KelasController::class)->names('admin.kelas');
+    Route::post('/kelas/{kela}/import-mahasiswa', [KelasController::class, 'importMahasiswa'])->name('admin.kelas.importMahasiswa');
+    Route::get('/kelas/{kela}/mahasiswa/export', [KelasController::class, 'exportMahasiswa'])->name('admin.kelas.mahasiswa.export');
+    Route::delete('/kelas/{kela_id}/mahasiswa/destroy-all', [MahasiswaController::class, 'destroyAllByKelas'])->name('admin.kelas.mahasiswa.destroyAll');
+    Route::get('/kelas/{kelas}/mahasiswa/search', [MahasiswaController::class, 'searchByKelas'])->name('admin.kelas.mahasiswa.search');
+    Route::get('/kelas/{kelas}/detail', [MahasiswaController::class, 'showDetailWithSearch'])->name('admin.kelas.detail.search');
+
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
-    Route::delete('/admin/kelas/{kela_id}/mahasiswa/destroy-all', [MahasiswaController::class, 'destroyAllByKelas'])->name('admin.kelas.mahasiswa.destroyAll');
-    // Route untuk pencarian AJAX
-    Route::get('/admin/kelas/{kelas}/mahasiswa/search', [MahasiswaController::class, 'searchByKelas'])->name('admin.kelas.mahasiswa.search');
-    // Route alternatif untuk halaman dengan pencarian GET
-    Route::get('/admin/kelas/{kelas}/detail', [MahasiswaController::class, 'showDetailWithSearch'])->name('admin.kelas.detail.search');
 
     // Route Dosen
     Route::resource('dosen', \App\Http\Controllers\Admin\DosenController::class);
     Route::post('/dosen/import', [\App\Http\Controllers\Admin\DosenController::class, 'import'])->name('dosen.import');
-    Route::get('/dosen', [\App\Http\Controllers\Admin\DosenController::class, 'index'])->name('dosen.index');
 
     // Notification Routes
     Route::get('/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
@@ -260,21 +250,17 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::prefix('pengembalian')->group(function () {
         Route::get('/', [AdminController::class, 'pengembalian'])->name('admin.pengembalian');
         Route::post('/', [AdminController::class, 'storePengembalian'])->name('admin.pengembalian.store');
-        // Approve/reject pengembalian (admin)
         Route::put('/{id}/approve', [AdminController::class, 'approvePengembalian'])->name('admin.pengembalian.approve');
         Route::put('/{id}/reject', [AdminController::class, 'rejectPengembalian'])->name('admin.pengembalian.reject');
         Route::put('/{id}', [AdminController::class, 'updatePengembalian'])->name('admin.pengembalian.update');
-        Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])
-            ->name('admin.pengembalian.kembalikan');
-        Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])
-            ->name('admin.pengembalian.destroy');
+        Route::put('/{id}/kembalikan', [AdminController::class, 'prosesPengembalian'])->name('admin.pengembalian.kembalikan');
+        Route::delete('/{id}', [AdminController::class, 'destroyPengembalian'])->name('admin.pengembalian.destroy');
     });
 
     // Laporan
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
-    Route::get('/admin/laporan/data', [AdminController::class, 'getReportData'])->name('admin.laporan.data');
+    Route::get('/laporan/data', [AdminController::class, 'getReportData'])->name('admin.laporan.data');
     Route::get('/laporan/export', [AdminController::class, 'exportLaporan'])->name('admin.laporan.export');
-
 
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [AdminController::class, 'riwayat'])->name('admin.riwayat');
@@ -285,7 +271,63 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])->prefix('admin
     Route::get('/riwayat/export', function (Request $request) {
         return Excel::download(new RiwayatExport($request), 'riwayat_peminjaman.xlsx');
     })->name('admin.riwayat.export');
+
+    // --- RBAC & LOG AUDIT ---
+    Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('admin.audit-logs.index');
+    Route::get('/rbac', [\App\Http\Controllers\Admin\RbacController::class, 'index'])->name('admin.rbac.index');
+    Route::post('/rbac/sync', [\App\Http\Controllers\Admin\RbacController::class, 'syncAll'])->name('admin.rbac.sync');
+    Route::post('/rbac/assign-role', [\App\Http\Controllers\Admin\RbacController::class, 'assignRole'])->name('admin.rbac.assignRole');
 });
+
+// ================================
+// ENDPOINT PENGUJIAN RBAC (TESTING)
+// ================================
+Route::get('/test-rbac', function () {
+    $user = auth()->user();
+    if (!$user) {
+        return response()->json(['status' => 'unauthenticated', 'message' => 'Silakan login terlebih dahulu.'], 401);
+    }
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Integrasi RBAC Berhasil Berjalan di PINTER!',
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'peran_db' => $user->peran,
+            'spatie_roles' => $user->getRoleNames(),
+            'spatie_permissions' => $user->getAllPermissions()->pluck('name'),
+        ]
+    ]);
+})->middleware('auth')->name('test.rbac');
+
+Route::get('/test-perm-admin', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'BERHASIL: Anda lolos verifikasi permission [manage users]!'
+    ]);
+})->middleware(['auth', 'permission:manage users']);
+
+Route::get('/test-perm-peminjaman', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'BERHASIL: Anda lolos verifikasi permission [create peminjaman]!'
+    ]);
+})->middleware(['auth', 'permission:create peminjaman']);
+
+Route::get('/test-perm-check', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'BERHASIL: Anda lolos verifikasi permission [check transactions] (Checker/Admin)!'
+    ]);
+})->middleware(['auth', 'permission:check transactions']);
+
+Route::get('/test-perm-approve', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'BERHASIL: Anda lolos verifikasi permission [approve transactions] (Approver/Admin)!'
+    ]);
+})->middleware(['auth', 'permission:approve transactions']);
 
 // ================================
 // ROUTES UNTUK USER
@@ -340,21 +382,4 @@ Route::middleware(['auth', 'role:Administrator', '2fa.verified'])
 
         Route::post('/spk/scores', [SPKController::class, 'storeScores'])
             ->name('admin.spk.scores.save');
-
-        /* =========================
-       SPK DUMMY (EXCEL)
-    ========================= */
-        Route::get('/spk/dummy', [SPKDummyController::class, 'index'])
-            ->name('admin.spk.dummy');
-
-        Route::post('/spk/dummy/hitung', [SPKDummyController::class, 'hitungSAW'])
-            ->name('admin.spk.dummy.hitung');
-
-        Route::post('/spk/dummy/import', [SPKDummyController::class, 'import'])
-            ->name('admin.spk.import');
-    });;
-
-
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('ruangan', RuanganController::class);
-});
+    });

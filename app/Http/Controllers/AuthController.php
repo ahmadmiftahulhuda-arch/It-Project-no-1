@@ -26,6 +26,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
+            // Cek apakah 2FA diaktifkan untuk user ini
+            if ($user->two_factor_enabled) {
+                $request->session()->put('2fa_in_progress', true);
+                return redirect()->route('admin.2fa.verify');
+            }
+
             // Invalidate semua session lain untuk user ini (1 akun 1 device)
             // Query tabel sessions dan hapus session lain yang memiliki user_id yang sama
             DB::table('sessions')
@@ -47,7 +53,13 @@ class AuthController extends Controller
                     ->log('Login');
             }
 
-            if (strtolower($user->peran) === 'administrator' || strtolower($user->peran) === 'admin') {
+            \App\Models\AuditLog::record('LOGIN', 'Pengguna (' . $user->name . ' - ' . ($user->peran ?? 'User') . ') berhasil login ke sistem');
+
+            $isAdmin = strtolower($user->peran ?? '') === 'administrator' ||
+                       strtolower($user->peran ?? '') === 'admin' ||
+                       (method_exists($user, 'hasAnyRole') && $user->hasAnyRole(['Administrator', 'Superadmin', 'Admin']));
+
+            if ($isAdmin) {
                 return redirect()->intended('/admin/dashboard');
             }
 
@@ -78,6 +90,10 @@ class AuthController extends Controller
                     'ip_address' => $request->ip(),
                 ])
                 ->log('Logout');
+        }
+
+        if ($user) {
+            \App\Models\AuditLog::record('LOGOUT', 'Pengguna (' . $user->name . ') logout dari sistem');
         }
         
         Auth::logout();

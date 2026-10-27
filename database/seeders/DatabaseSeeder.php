@@ -15,11 +15,20 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'), // tambahkan password agar tidak null
-        ]);
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+                'peran' => 'Mahasiswa',
+                'status' => 'Aktif',
+                'verified' => 1,
+            ]
+        );
 
+        $this->call([
+            RbacSeeder::class,
+            SpkCriteriaSeeder::class,
+        ]);
     }
 }

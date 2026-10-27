@@ -17,16 +17,14 @@ class EnsureSingleSession
         if (Auth::check()) {
             $currentSessionId = session()->getId();
 
-            // Ambil semua session aktif untuk user ini
-            $sessions = DB::table('sessions')
-                ->where('user_id', Auth::id())
-                ->pluck('id');
-
-            // Hapus semua session lain selain session saat ini
-            foreach ($sessions as $sessionId) {
-                if ($sessionId !== $currentSessionId) {
-                    DB::table('sessions')->where('id', $sessionId)->delete();
-                }
+            // Hapus semua session lain milik user ini dalam satu query efisien
+            try {
+                DB::table('sessions')
+                    ->where('user_id', Auth::id())
+                    ->where('id', '!=', $currentSessionId)
+                    ->delete();
+            } catch (\Throwable $e) {
+                // Abaikan jika driver session bukan database
             }
         }
 

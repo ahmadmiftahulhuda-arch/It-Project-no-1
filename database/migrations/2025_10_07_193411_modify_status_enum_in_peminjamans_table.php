@@ -14,7 +14,9 @@ return new class extends Migration
     {
         // Perintah ini akan mengubah definisi ENUM pada kolom 'status'
         // untuk menyertakan 'proses-pengembalian' dan 'selesai'
-        DB::statement("ALTER TABLE peminjamans CHANGE COLUMN status status ENUM('pending', 'disetujui', 'ditolak', 'proses-pengembalian', 'selesai') NOT NULL DEFAULT 'pending'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE peminjamans CHANGE COLUMN status status ENUM('pending', 'disetujui', 'ditolak', 'proses-pengembalian', 'selesai') NOT NULL DEFAULT 'pending'");
+        }
     }
 
     /**
@@ -24,6 +26,8 @@ return new class extends Migration
     {
         // Perintah ini akan mengembalikan definisi ENUM ke keadaan semula
         // jika suatu saat kita perlu membatalkan (rollback) migrasi ini.
-        DB::statement("ALTER TABLE peminjamans CHANGE COLUMN status status ENUM('pending', 'disetujui', 'ditolak') NOT NULL DEFAULT 'pending'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE peminjamans CHANGE COLUMN status status ENUM('pending', 'disetujui', 'ditolak') NOT NULL DEFAULT 'pending'");
+        }
     }
 };

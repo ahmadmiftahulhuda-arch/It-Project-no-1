@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -99,6 +100,15 @@ class UserController extends Controller
 
             $user->save();
 
+            // Sinkronkan peran ke Spatie Roles
+            if (in_array($user->peran, ['Administrator', 'Admin', 'Superadmin'])) {
+                $user->syncRoles(['Administrator', 'Superadmin', 'Admin']);
+            } else {
+                $user->syncRoles([$user->peran]);
+            }
+
+            AuditLog::record('USER_CREATED', "Pengguna baru '{$user->name}' ({$user->email}) berhasil dibuat dengan peran {$user->peran}.");
+
             return response()->json(['success' => 'Pengguna baru berhasil ditambahkan.']);
 
         } catch (\Exception $e) {
@@ -141,6 +151,17 @@ class UserController extends Controller
             }
             
             $user->update($validatedData);
+
+            // Sinkronkan peran ke Spatie Roles
+            if (isset($validatedData['peran'])) {
+                if (in_array($validatedData['peran'], ['Administrator', 'Admin', 'Superadmin'])) {
+                    $user->syncRoles(['Administrator', 'Superadmin', 'Admin']);
+                } else {
+                    $user->syncRoles([$validatedData['peran']]);
+                }
+            }
+
+            AuditLog::record('USER_UPDATED', "Data pengguna '{$user->name}' ({$user->email}) diperbarui dengan peran {$user->peran}.");
             
             return response()->json(['success' => 'Pengguna berhasil diperbarui.']);
 
@@ -154,7 +175,10 @@ class UserController extends Controller
     {
         try {
             $userName = $user->name;
+            $userEmail = $user->email;
             $user->delete();
+
+            AuditLog::record('USER_DELETED', "Pengguna '{$userName}' ({$userEmail}) berhasil dihapus oleh admin.");
             
             return redirect()->route('admin.users.index')->with('success', "Pengguna '{$userName}' berhasil dihapus");
         } catch (\Exception $e) {
@@ -168,6 +192,8 @@ class UserController extends Controller
         try {
             $user->verified = true;
             $user->save();
+
+            AuditLog::record('USER_VERIFIED', "Pengguna '{$user->name}' ({$user->email}) berhasil diverifikasi oleh admin.");
 
             return redirect()->route('admin.users.index')->with('success', 'User berhasil diverifikasi.');
         } catch (\Exception $e) {

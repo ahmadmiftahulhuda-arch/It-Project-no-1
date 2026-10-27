@@ -1756,6 +1756,28 @@
                     </a>
                 </div>
             </div>
+            <!-- Keamanan & Hak Akses -->
+            <div class="dropdown-custom">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#rbacMenu"
+                    aria-expanded="{{ request()->routeIs('admin.rbac.*') || request()->routeIs('admin.audit-logs.*') ? 'true' : 'false' }}"
+                    aria-controls="rbacMenu">
+                    <span>Keamanan & Hak Akses</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-items collapse {{ request()->routeIs('admin.rbac.*') || request()->routeIs('admin.audit-logs.*') ? 'show' : '' }}" id="rbacMenu">
+                    <a href="{{ route('admin.rbac.index') }}"
+                       class="dropdown-item {{ request()->routeIs('admin.rbac.*') ? 'active' : '' }}">
+                        <i class="fas fa-user-shield"></i>
+                        <span>RBAC & Peran</span>
+                    </a>
+                    <a href="{{ route('admin.audit-logs.index') }}"
+                       class="dropdown-item {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Log Audit Sistem</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Exports\LaporanExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\AuditLog;
 
 class AdminController extends Controller
 {
@@ -468,9 +469,11 @@ class AdminController extends Controller
         $peminjaman = Peminjaman::with(['user', 'ruangan', 'dosen'])->findOrFail($id);
         $peminjaman->update(['status' => 'disetujui']);
 
+        $ruangName = $peminjaman->ruangan ? $peminjaman->ruangan->nama_ruangan : 'ruang';
+        AuditLog::record('APPROVE_PEMINJAMAN', "Peminjaman #{$id} ({$peminjaman->user?->name} - {$ruangName}) disetujui oleh admin.");
+
         // Kirim notifikasi WhatsApp
         if ($peminjaman->user && $peminjaman->user->no_hp) {
-            $ruangName = $peminjaman->ruangan ? $peminjaman->ruangan->nama_ruangan : 'ruang';
             $message = "Peminjaman Anda untuk ruang {$ruangName} pada tanggal {$peminjaman->tanggal} telah DISETUJUI.";
             try {
                 $fonnteService = resolve(FonnteService::class);
@@ -494,9 +497,11 @@ class AdminController extends Controller
         $peminjaman = Peminjaman::with(['user', 'ruangan', 'dosen'])->findOrFail($id);
         $peminjaman->update(['status' => 'ditolak']);
 
+        $ruangName = $peminjaman->ruangan ? $peminjaman->ruangan->nama_ruangan : 'ruang';
+        AuditLog::record('REJECT_PEMINJAMAN', "Peminjaman #{$id} ({$peminjaman->user?->name} - {$ruangName}) ditolak oleh admin.");
+
         // Kirim notifikasi WhatsApp
         if ($peminjaman->user && $peminjaman->user->no_hp) {
-            $ruangName = $peminjaman->ruangan ? $peminjaman->ruangan->nama_ruangan : 'ruang';
             $message = "Mohon maaf, peminjaman Anda untuk ruang {$ruangName} pada tanggal {$peminjaman->tanggal} telah DITOLAK.";
             try {
                 $fonnteService = resolve(FonnteService::class);
@@ -522,6 +527,8 @@ class AdminController extends Controller
             'status' => 'selesai',
             'tanggal_kembali' => Carbon::now()
         ]);
+
+        AuditLog::record('COMPLETE_PEMINJAMAN', "Peminjaman #{$id} dinyatakan selesai oleh admin.");
 
         return redirect()->route('admin.pengembalian')
             ->with('success', 'Peminjaman berhasil diselesaikan.');
@@ -563,6 +570,8 @@ class AdminController extends Controller
 
         $peminjaman->update($data);
 
+        AuditLog::record('UPDATE_PEMINJAMAN', "Data peminjaman #{$id} diperbarui oleh admin (Status: {$request->status}).");
+
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil diperbarui.');
     }
@@ -574,6 +583,8 @@ class AdminController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->delete();
+
+        AuditLog::record('DELETE_PEMINJAMAN', "Peminjaman #{$id} dihapus dari sistem oleh admin.");
 
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil dihapus.');
@@ -675,6 +686,8 @@ class AdminController extends Controller
             'status_pengembalian' => 'sudah dikembalikan'
         ]);
 
+        AuditLog::record('APPROVE_PENGEMBALIAN', "Pengembalian #{$id} untuk peminjaman #{$peminjaman->id} disetujui (Status: {$statusFinal}).");
+
         return redirect()->route('admin.pengembalian')
             ->with(
                 'success',
@@ -693,8 +706,25 @@ class AdminController extends Controller
             'status' => 'rejected'
         ]);
 
+        AuditLog::record('REJECT_PENGEMBALIAN', "Pengembalian #{$id} untuk peminjaman #{$pengembalian->peminjaman_id} ditolak oleh admin.");
+
         return redirect()->route('admin.pengembalian')
             ->with('success', 'Pengembalian ditolak.');
+    }
+
+    /**
+     * Hapus data pengembalian
+     */
+    public function destroyPengembalian($id)
+    {
+        $pengembalian = \App\Models\Pengembalian::findOrFail($id);
+        $peminjamanId = $pengembalian->peminjaman_id;
+        $pengembalian->delete();
+
+        AuditLog::record('DELETE_PENGEMBALIAN', "Data pengembalian #{$id} (Peminjaman #{$peminjamanId}) berhasil dihapus oleh admin.");
+
+        return redirect()->route('admin.pengembalian')
+            ->with('success', 'Data pengembalian berhasil dihapus.');
     }
 
     /**
@@ -765,6 +795,8 @@ class AdminController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->delete();
+
+        AuditLog::record('DELETE_RIWAYAT', "Riwayat peminjaman #{$id} dihapus oleh admin.");
 
         return redirect()
             ->route('admin.riwayat')
