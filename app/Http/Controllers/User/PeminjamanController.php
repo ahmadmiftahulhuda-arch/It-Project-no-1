@@ -10,6 +10,7 @@ use App\Models\Projector;
 use App\Models\SlotWaktu;
 use App\Models\Dosen;
 use App\Models\User; // Tambahan untuk mencari Admin
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -129,6 +130,8 @@ class PeminjamanController extends Controller
             $admin->notify(new PeminjamanBaruNotification($peminjaman));
         }
 
+        AuditLog::record('CREATE_PEMINJAMAN', "Pengguna " . Auth::user()->name . " mengajukan peminjaman baru #{$peminjaman->id} untuk keperluan: {$keperluanFinal}.");
+
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil disimpan');
     }
 
@@ -186,6 +189,8 @@ class PeminjamanController extends Controller
             'dosen_nip'     => $request->dosen_nip,
         ]);
 
+        AuditLog::record('UPDATE_PEMINJAMAN', "Pengguna " . Auth::user()->name . " memperbarui data peminjaman #{$id}.");
+
         return redirect()->route('user.peminjaman.index')
             ->with('success', 'Data berhasil diupdate');
     }
@@ -194,6 +199,8 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::where('user_id', Auth::id())->findOrFail($id);
         $peminjaman->delete();
+
+        AuditLog::record('DELETE_PEMINJAMAN', "Pengguna " . Auth::user()->name . " menghapus/membatalkan peminjaman #{$id}.");
 
         return redirect()->route('user.peminjaman.index')->with('success', 'Data berhasil dihapus');
     }
@@ -366,6 +373,8 @@ class PeminjamanController extends Controller
             foreach ($admins as $admin) {
                 $admin->notify(new PengembalianBaruNotification($pengembalian));
             }
+
+            AuditLog::record('AJUKAN_PENGEMBALIAN', "Pengguna " . Auth::user()->name . " mengajukan pengembalian untuk peminjaman #{$peminjaman->id} (Status: {$statusToSave}).");
 
             return response()->json([
                 'success' => true,

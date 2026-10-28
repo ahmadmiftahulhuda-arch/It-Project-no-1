@@ -455,7 +455,9 @@ class AdminController extends Controller
             $data['tanggal_kembali'] = now();
         }
 
-        Peminjaman::create($data);
+        $peminjaman = Peminjaman::create($data);
+
+        AuditLog::record('CREATE_PEMINJAMAN', "Peminjaman #{$peminjaman->id} untuk pengguna '{$user->name}' berhasil dibuat oleh admin.");
 
         return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman berhasil ditambahkan.');
@@ -628,6 +630,8 @@ class AdminController extends Controller
             'tanggal_kembali' => $now,
             'status_pengembalian' => 'sudah dikembalikan',
         ]);
+
+        AuditLog::record('CREATE_PENGEMBALIAN', "Pengembalian untuk peminjaman #{$peminjaman->id} berhasil dicatat oleh admin (Status: {$statusPengembalian}).");
 
         return redirect()->route('admin.pengembalian')
             ->with('success', $statusPengembalian === 'overdue'
