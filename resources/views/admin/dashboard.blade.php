@@ -715,6 +715,7 @@
                 opacity: 0;
                 transform: translateY(-10px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -936,6 +937,7 @@
                 opacity: 0;
                 transform: translateX(100%);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -947,6 +949,7 @@
                 opacity: 1;
                 transform: translateX(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateX(100%);
@@ -1082,6 +1085,7 @@
             from {
                 transform: scaleX(1);
             }
+
             to {
                 transform: scaleX(0);
             }
@@ -1398,8 +1402,8 @@
 
             <!-- Sistem Pendukung Keputusan -->
             <div class="dropdown-custom">
-                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#spkMenu" aria-expanded="false" aria-controls="spkMenu">
+                <button class="dropdown-toggle-custom" type="button" data-bs-toggle="collapse" data-bs-target="#spkMenu"
+                    aria-expanded="false" aria-controls="spkMenu">
                     <span>Sistem TPK</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1419,14 +1423,15 @@
                     <span>Keamanan & Hak Akses</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-items collapse {{ request()->routeIs('admin.rbac.*') || request()->routeIs('admin.audit-logs.*') ? 'show' : '' }}" id="rbacMenu">
+                <div class="dropdown-items collapse {{ request()->routeIs('admin.rbac.*') || request()->routeIs('admin.audit-logs.*') ? 'show' : '' }}"
+                    id="rbacMenu">
                     <a href="{{ route('admin.rbac.index') }}"
-                       class="dropdown-item {{ request()->routeIs('admin.rbac.*') ? 'active' : '' }}">
+                        class="dropdown-item {{ request()->routeIs('admin.rbac.*') ? 'active' : '' }}">
                         <i class="fas fa-user-shield"></i>
                         <span>RBAC & Peran</span>
                     </a>
                     <a href="{{ route('admin.audit-logs.index') }}"
-                       class="dropdown-item {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}">
+                        class="dropdown-item {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}">
                         <i class="fas fa-shield-alt"></i>
                         <span>Log Audit Sistem</span>
                     </a>
@@ -1447,7 +1452,8 @@
             <div class="user-actions">
                 <!-- Improved Notification Dropdown -->
                 <div class="dropdown">
-                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="notification-btn" type="button" id="notificationDropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                     </button>
@@ -1467,7 +1473,8 @@
                             <!-- Notifications will be dynamically added here -->
                         </div>
                         <div class="notification-footer">
-                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua notifikasi</a>
+                            <a href="{{ route('admin.notifications.all') }}" id="viewAllNotifications">Lihat semua
+                                notifikasi</a>
                         </div>
                     </div>
                 </div>
@@ -1507,7 +1514,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li>
                             <h6 class="dropdown-header">Selamat Datang, @auth {{ auth()->user()->name }}
-                                @else
+                            @else
                                 Pengguna @endauth
                             </h6>
                         </li>
@@ -1762,7 +1769,7 @@
 
     <script>
         // Initialize when document is ready
-        $(document).ready(function() {
+        $(document).ready(function () {
             initializeTheme();
             initializeEventListeners();
             fetchNotifications(); // Fetch notifications on page load
@@ -1880,11 +1887,11 @@
         // ========== END DYNAMIC NOTIFICATION SYSTEM ==========
 
         function initializeEventListeners() {
-            $('#theme-toggle').on('click', function() {
+            $('#theme-toggle').on('click', function () {
                 toggleTheme();
             });
 
-            $('#menu-toggle').on('click', function() {
+            $('#menu-toggle').on('click', function () {
                 toggleSidebar();
             });
 
@@ -1928,7 +1935,7 @@
         }
 
         // Handle responsive sidebar
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
 
